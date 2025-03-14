@@ -1,0 +1,72 @@
+name: Build Whiffle Game
+
+on:
+  push:
+    branches:
+      - main  # Trigger on pushes to main branch
+  pull_request:
+    branches:
+      - main  # Trigger on pull requests to main branch
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'  # Use the latest Python 3 version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install opencv-python numpy Pillow pyinstaller
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller --onefile --windowed whiffle_alpha_alpha.py
+          # Move the executable to a predictable location
+          mkdir dist_output
+          move dist\whiffle_alpha_alpha.exe dist_output\
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: whiffle-alpha-alpha-windows
+          path: dist_output/whiffle_alpha_alpha.exe
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install opencv-python numpy Pillow pyinstaller
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller --onefile --windowed whiffle_alpha_alpha.py
+          # Create a directory for the app
+          mkdir WhiffleAlphaAlpha
+          cp -r dist/whiffle_alpha_alpha WhiffleAlphaAlpha/
+
+      - name: Create DMG
+        run: |
+          hdiutil create -volname WhiffleAlphaAlpha -srcfolder WhiffleAlphaAlpha -ov -format UDZO WhiffleAlphaAlpha.dmg
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: whiffle-alpha-alpha-macos
+          path: WhiffleAlphaAlpha.dmg
