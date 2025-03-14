@@ -18,7 +18,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'  # Use the latest Python 3 version
+          python-version: '3.x'
 
       - name: Install dependencies
         run: |
@@ -28,12 +28,11 @@ jobs:
       - name: Build with PyInstaller
         run: |
           pyinstaller --onefile --windowed whiffle_alpha_alpha.py
-          # Move the executable to a predictable location
           mkdir dist_output
           move dist\whiffle_alpha_alpha.exe dist_output\
 
       - name: Upload Windows artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.2  # Pinned to specific version
         with:
           name: whiffle-alpha-alpha-windows
           path: dist_output/whiffle_alpha_alpha.exe
@@ -57,7 +56,6 @@ jobs:
       - name: Build with PyInstaller
         run: |
           pyinstaller --onefile --windowed whiffle_alpha_alpha.py
-          # Create a directory for the app
           mkdir WhiffleAlphaAlpha
           cp -r dist/whiffle_alpha_alpha WhiffleAlphaAlpha/
 
@@ -66,7 +64,7 @@ jobs:
           hdiutil create -volname WhiffleAlphaAlpha -srcfolder WhiffleAlphaAlpha -ov -format UDZO WhiffleAlphaAlpha.dmg
 
       - name: Upload macOS artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.2  # Pinned to specific version
         with:
           name: whiffle-alpha-alpha-macos
           path: WhiffleAlphaAlpha.dmg
