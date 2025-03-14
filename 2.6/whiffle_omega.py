@@ -88,8 +88,9 @@ def detect_balls(frame):
     print(f"Found {len(contours)} contours")  # Debug
     for contour in contours:
         area = cv2.contourArea(contour)
+        # Get bounding circle for all contours to have x, y defined
+        ((x, y), radius) = cv2.minEnclosingCircle(contour)
         if area > MIN_CONTOUR_AREA:
-            ((x, y), radius) = cv2.minEnclosingCircle(contour)
             if radius > 10:
                 balls.append((int(x), int(y), int(radius)))
                 print(f"Detected ball at ({x}, {y}) with radius {radius}, area {area}")  # Debug
@@ -338,6 +339,7 @@ class WhiffleGame:
         self.red_zone_circles = []  # Store canvas IDs for red circles
         self.red_zone_texts = []    # Store canvas IDs for red zone texts
         self.green_ball_circles = []  # Store canvas IDs for green ball circles
+        self.current_balls = []     # Store current ball positions to track across frames
 
         # Enable save button during calibration
         if self.calibrating:
@@ -517,16 +519,13 @@ class WhiffleGame:
             self.root.destroy()
             return
 
-        # Clear previous red circles, texts, and green balls
+        # Clear previous red circles and texts
         for circle_id in self.red_zone_circles:
             self.canvas.delete(circle_id)
         for text_id in self.red_zone_texts:
             self.canvas.delete(text_id)
-        for circle_id in self.green_ball_circles:
-            self.canvas.delete(circle_id)
         self.red_zone_circles = []
         self.red_zone_texts = []
-        self.green_ball_circles = []
 
         # Handle save and transition in the update loop to avoid GIL issues
         if self.save_triggered and self.calibrating:
@@ -551,7 +550,9 @@ class WhiffleGame:
             high_score = max(high_score, current_score)
             print(f"Calculated score: {current_score}, Total balls detected: {total_balls}")  # Debug
 
-            for (x, y, r) in balls:
+            # Update existing ball circles and add new ones
+            current_ball_positions = [(x, y, r) for x, y, r in balls]
+            for i, (x, y, r) in enumerate(current_ball_positions):
                 # Convert frame coordinates to canvas coordinates
                 canvas_width = self.canvas.winfo_width()
                 canvas_height = self.canvas.winfo_height()
@@ -570,11 +571,34 @@ class WhiffleGame:
                     x_canvas = int(x * scale_x) + offset_x
                     y_canvas = int(y * scale_y) + offset_y
                     r_canvas = int(r * scale_x)
-                    circle_id = self.canvas.create_oval(x_canvas - r_canvas, y_canvas - r_canvas,
-                                                        x_canvas + r_canvas, y_canvas + r_canvas,
-                                                        outline="green", width=2)
-                    self.green_ball_circles.append(circle_id)
-                    print(f"Drawing ball at canvas coordinates ({x_canvas}, {y_canvas}) with radius {r_canvas}")  # Debug
+
+                    # Check if this ball already has a circle
+                    existing = False
+                    for j, (prev_x, prev_y, circle_id) in enumerate(self.green_ball_circles):
+                        if abs(prev_x - x_canvas) < r_canvas and abs(prev_y - y_canvas) < r_canvas:
+                            # Update existing circle position
+                            self.canvas.coords(circle_id, x_canvas - r_canvas, y_canvas - r_canvas,
+                                               x_canvas + r_canvas, y_canvas + r_canvas)
+                            self.green_ball_circles[j] = (x_canvas, y_canvas, circle_id)
+                            existing = True
+                            break
+                    if not existing:
+                        # Add new circle
+                        circle_id = self.canvas.create_oval(x_canvas - r_canvas, y_canvas - r_canvas,
+                                                            x_canvas + r_canvas, y_canvas + r_canvas,
+                                                            outline="green", width=2)
+                        self.green_ball_circles.append((x_canvas, y_canvas, circle_id))
+                        print(f"Added new ball at canvas coordinates ({x_canvas}, {y_canvas}) with radius {r_canvas}")  # Debug
+
+            # Remove circles for balls no longer detected
+            self.green_ball_circles = [(x, y, circle_id) for x, y, circle_id in self.green_ball_circles 
+                                      if any(abs(x - cx) < r and abs(y - cy) < r 
+                                             for cx, cy, _ in current_ball_positions for r in [r * scale_x for _, _, r in balls])]
+            for x, y, circle_id in [(x, y, cid) for x, y, cid in self.green_ball_circles 
+                                    if not any(abs(x - cx) < r and abs(y - cy) < r 
+                                               for cx, cy, _ in current_ball_positions for r in [r * scale_x for _, _, r in balls])]:
+                self.canvas.delete(circle_id)
+                print(f"Removed ball at ({x}, {y}) no longer detected")  # Debug
 
             self.balls_label.config(text=f"Balls: {total_balls}")
             self.score_label.config(text=f"Score: {current_score}")
@@ -647,13 +671,14 @@ class WhiffleGame:
                 self.canvas.delete(circle_id)
             for text_id in self.red_zone_texts:
                 self.canvas.delete(text_id)
-            for circle_id in self.green_ball_circles:
+            for _, _, circle_id in self.green_ball_circles:
                 self.canvas.delete(circle_id)
             self.zone_circles = []
             self.zone_texts = []
             self.red_zone_circles = []
             self.red_zone_texts = []
             self.green_ball_circles = []
+            self.current_balls = []
 
         self.root.after(10, self.update_frame)
 
