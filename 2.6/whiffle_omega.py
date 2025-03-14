@@ -9,17 +9,18 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 
 # Fixed radius for scoring zones
-ZONE_RADIUS = 30  # Scoring radius
-CALIBRATION_VISUAL_RADIUS = 15  # Visual feedback radius
+ZONE_RADIUS = 20  # Scoring radius
+CALIBRATION_VISUAL_RADIUS = 20  # Visual feedback radius
 TOTAL_ZONES = 21  # Number of zones to trigger automatic save
 
 # Files
 CALIBRATION_FILE = "whiffle_zones.json"
 HIGH_SCORE_FILE = "whiffle_high_score.json"
 
-# Detection settings (relaxed for better ball detection)
-BALL_COLOR_RANGE = {"lower_white": [0, 0, 200], "upper_white": [180, 50, 255]}  # Widened range
-MIN_CONTOUR_AREA = 30  # Reduced to detect smaller or less contrasted balls
+# Detection settings (further relaxed for better ball detection)
+BALL_COLOR_RANGE = {"lower_white": [0, 0, 180], "upper_white": [180, 70, 255]}  # Even wider range
+MIN_CONTOUR_AREA = 20  # Further reduced to detect smaller balls
+MIN_RADIUS = 5  # Reduced minimum radius threshold
 
 # Game state
 current_score = 0
@@ -91,13 +92,14 @@ def detect_balls(frame):
         # Get bounding circle for all contours to have x, y defined
         ((x, y), radius) = cv2.minEnclosingCircle(contour)
         if area > MIN_CONTOUR_AREA:
-            if radius > 10:
+            if radius > MIN_RADIUS:
                 balls.append((int(x), int(y), int(radius)))
-                print(f"Detected ball at ({x}, {y}) with radius {radius}, area {area}")  # Debug
+                print(f"Detected ball at frame coordinates ({x}, {y}) with radius {radius}, area {area}")  # Debug
             else:
-                print(f"Filtered ball at ({x}, {y}) due to radius {radius} < 10")  # Debug
+                print(f"Filtered ball at ({x}, {y}) due to radius {radius} < {MIN_RADIUS}")  # Debug
         else:
             print(f"Filtered contour at ({x}, {y}) due to area {area} < {MIN_CONTOUR_AREA}")  # Debug
+    print(f"Detected {len(balls)} balls after filtering")  # Debug
     return balls
 
 def calculate_score(balls, point_zones):
@@ -339,7 +341,6 @@ class WhiffleGame:
         self.red_zone_circles = []  # Store canvas IDs for red circles
         self.red_zone_texts = []    # Store canvas IDs for red zone texts
         self.green_ball_circles = []  # Store canvas IDs for green ball circles
-        self.current_balls = []     # Store current ball positions to track across frames
 
         # Enable save button during calibration
         if self.calibrating:
@@ -519,6 +520,35 @@ class WhiffleGame:
             self.root.destroy()
             return
 
+        # Convert frame to RGB and display on canvas with proper resizing
+        frame_rgb = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
+        img = Image.fromarray(frame_rgb)
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
+        if canvas_width > 0 and canvas_height > 0:
+            # Maintain aspect ratio and resize
+            aspect_ratio = self.frame.shape[1] / self.frame.shape[0]
+            new_height = int(canvas_width / aspect_ratio)
+            if new_height > canvas_height:
+                new_height = canvas_height
+                new_width = int(canvas_height * aspect_ratio)
+            else:
+                new_width = canvas_width
+            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+            print(f"Resized image to {new_width}x{new_height}, canvas is {canvas_width}x{canvas_height}")  # Debug
+        else:
+            new_width, new_height = self.frame.shape[1], self.frame.shape[0]  # Use original size if canvas is not ready
+            print(f"Warning: Canvas dimensions invalid ({canvas_width}x{canvas_height}), using original frame size {new_width}x{new_height}")
+        
+        # Calculate offsets for centering the image
+        offset_x = (canvas_width - new_width) // 2
+        offset_y = (canvas_height - new_height) // 2
+
+        self.photo = ImageTk.PhotoImage(image=img)
+        # Draw the video feed first
+        self.canvas.create_image(offset_x, offset_y, image=self.photo, anchor="nw")
+        print(f"Drew video feed at ({offset_x}, {offset_y})")  # Debug
+
         # Clear previous red circles and texts
         for circle_id in self.red_zone_circles:
             self.canvas.delete(circle_id)
@@ -550,95 +580,28 @@ class WhiffleGame:
             high_score = max(high_score, current_score)
             print(f"Calculated score: {current_score}, Total balls detected: {total_balls}")  # Debug
 
-            # Update existing ball circles and add new ones
-            current_ball_positions = [(x, y, r) for x, y, r in balls]
-            for i, (x, y, r) in enumerate(current_ball_positions):
+            # Draw green circles for all detected balls each frame
+            for (x, y, r) in balls:
                 # Convert frame coordinates to canvas coordinates
-                canvas_width = self.canvas.winfo_width()
-                canvas_height = self.canvas.winfo_height()
-                if canvas_width > 0 and canvas_height > 0:
-                    aspect_ratio = self.frame.shape[1] / self.frame.shape[0]
-                    new_height = int(canvas_width / aspect_ratio)
-                    if new_height > canvas_height:
-                        new_height = canvas_height
-                        new_width = int(canvas_height * aspect_ratio)
-                    else:
-                        new_width = canvas_width
-                    offset_x = (canvas_width - new_width) // 2
-                    offset_y = (canvas_height - new_height) // 2
-                    scale_x = new_width / self.frame.shape[1]
-                    scale_y = new_height / self.frame.shape[0]
-                    x_canvas = int(x * scale_x) + offset_x
-                    y_canvas = int(y * scale_y) + offset_y
-                    r_canvas = int(r * scale_x)
-
-                    # Check if this ball already has a circle
-                    existing = False
-                    for j, (prev_x, prev_y, circle_id) in enumerate(self.green_ball_circles):
-                        if abs(prev_x - x_canvas) < r_canvas and abs(prev_y - y_canvas) < r_canvas:
-                            # Update existing circle position
-                            self.canvas.coords(circle_id, x_canvas - r_canvas, y_canvas - r_canvas,
-                                               x_canvas + r_canvas, y_canvas + r_canvas)
-                            self.green_ball_circles[j] = (x_canvas, y_canvas, circle_id)
-                            existing = True
-                            break
-                    if not existing:
-                        # Add new circle
-                        circle_id = self.canvas.create_oval(x_canvas - r_canvas, y_canvas - r_canvas,
-                                                            x_canvas + r_canvas, y_canvas + r_canvas,
-                                                            outline="green", width=2)
-                        self.green_ball_circles.append((x_canvas, y_canvas, circle_id))
-                        print(f"Added new ball at canvas coordinates ({x_canvas}, {y_canvas}) with radius {r_canvas}")  # Debug
-
-            # Remove circles for balls no longer detected
-            self.green_ball_circles = [(x, y, circle_id) for x, y, circle_id in self.green_ball_circles 
-                                      if any(abs(x - cx) < r and abs(y - cy) < r 
-                                             for cx, cy, _ in current_ball_positions for r in [r * scale_x for _, _, r in balls])]
-            for x, y, circle_id in [(x, y, cid) for x, y, cid in self.green_ball_circles 
-                                    if not any(abs(x - cx) < r and abs(y - cy) < r 
-                                               for cx, cy, _ in current_ball_positions for r in [r * scale_x for _, _, r in balls])]:
-                self.canvas.delete(circle_id)
-                print(f"Removed ball at ({x}, {y}) no longer detected")  # Debug
+                x_canvas = int(x * (new_width / self.frame.shape[1])) + offset_x
+                y_canvas = int(y * (new_height / self.frame.shape[0])) + offset_y
+                r_canvas = int(r * (new_width / self.frame.shape[1]))
+                circle_id = self.canvas.create_oval(x_canvas - r_canvas, y_canvas - r_canvas,
+                                                    x_canvas + r_canvas, y_canvas + r_canvas,
+                                                    outline="green", width=2)
+                self.green_ball_circles.append(circle_id)
+                print(f"Drawing ball at canvas coordinates ({x_canvas}, {y_canvas}) with radius {r_canvas}")  # Debug
 
             self.balls_label.config(text=f"Balls: {total_balls}")
             self.score_label.config(text=f"Score: {current_score}")
             self.res_label.config(text=f"Res: {self.width}x{self.height}")
 
-        # Convert frame to RGB and display on canvas with proper resizing
-        frame_rgb = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
-        img = Image.fromarray(frame_rgb)
-        canvas_width = self.canvas.winfo_width()
-        canvas_height = self.canvas.winfo_height()
-        if canvas_width > 0 and canvas_height > 0:
-            # Maintain aspect ratio and resize
-            aspect_ratio = self.frame.shape[1] / self.frame.shape[0]
-            new_height = int(canvas_width / aspect_ratio)
-            if new_height > canvas_height:
-                new_height = canvas_height
-                new_width = int(canvas_height * aspect_ratio)
-            else:
-                new_width = canvas_width
-            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-            print(f"Resized image to {new_width}x{new_height}, canvas is {canvas_width}x{canvas_height}")  # Debug
-        else:
-            new_width, new_height = self.frame.shape[1], self.frame.shape[0]  # Use original size if canvas is not ready
-            print(f"Warning: Canvas dimensions invalid ({canvas_width}x{canvas_height}), using original frame size {new_width}x{new_height}")
-        
-        # Calculate offsets for centering the image
-        offset_x = (canvas_width - new_width) // 2
-        offset_y = (canvas_height - new_height) // 2
-
-        self.photo = ImageTk.PhotoImage(image=img)
-        self.canvas.create_image(offset_x, offset_y, image=self.photo, anchor="nw")
-
         # Draw scoring zones on the canvas (convert frame coordinates to canvas coordinates)
         for x_frame, y_frame, r, points in self.point_zones:
             # Convert frame coordinates back to canvas coordinates
-            scale_x = new_width / self.frame.shape[1]
-            scale_y = new_height / self.frame.shape[0]
-            x_canvas = int(x_frame * scale_x) + offset_x
-            y_canvas = int(y_frame * scale_y) + offset_y
-            r_canvas = int(r * scale_x)  # Scale the radius as well
+            x_canvas = int(x_frame * (new_width / self.frame.shape[1])) + offset_x
+            y_canvas = int(y_frame * (new_height / self.frame.shape[0])) + offset_y
+            r_canvas = int(r * (new_width / self.frame.shape[1]))
             print(f"Rendering zone: frame ({x_frame}, {y_frame}) -> canvas ({x_canvas}, {y_canvas})")  # Debug
 
             # Draw red circle on the canvas
@@ -671,14 +634,13 @@ class WhiffleGame:
                 self.canvas.delete(circle_id)
             for text_id in self.red_zone_texts:
                 self.canvas.delete(text_id)
-            for _, _, circle_id in self.green_ball_circles:
+            for circle_id in self.green_ball_circles:
                 self.canvas.delete(circle_id)
             self.zone_circles = []
             self.zone_texts = []
             self.red_zone_circles = []
             self.red_zone_texts = []
             self.green_ball_circles = []
-            self.current_balls = []
 
         self.root.after(10, self.update_frame)
 
