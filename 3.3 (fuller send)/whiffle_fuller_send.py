@@ -23,21 +23,26 @@ CALIBRATION_FILE = "whiffle_zones.json"
 HIGH_SCORE_FILE = "whiffle_high_score.json"
 CONFIG_FILE = "whiffle_config.json"  # New file for sound settings
 
-# Detection settings (relaxed for better detection)
+# Detection settings (relaxed for white balls, strict for red balls)
 BALL_COLOR_RANGE = {
     "lower_white": [0, 0, 180],  # Slightly wider range for white balls
     "upper_white": [180, 70, 255],
-    "lower_red": [0, 100, 100],  # Red ball range (adjust as needed)
-    "upper_red": [10, 255, 255]  # Red ball range (adjust as needed)
+    "lower_red": [0, 120, 120],  # Calibrated from test_red_detection.py
+    "upper_red": [5, 255, 255]   # Calibrated from test_red_detection.py
 }
-MIN_CONTOUR_AREA = 30  # Reduced to detect smaller balls
-MIN_RADIUS = 6  # Reduced slightly
+MIN_CONTOUR_AREA = 30  # For white balls
+MIN_RADIUS = 6         # For white balls
+RED_MIN_CONTOUR_AREA = 50  # Stricter for red balls
+RED_MIN_RADIUS = 10        # Stricter for red balls
+RED_MIN_CIRCULARITY = 0.85 # Stricter circularity for red balls
+RED_BALL_LIMIT = 1         # Maximum number of red balls tracked at once
+RED_BALL_COOLDOWN = 2.0    # Cooldown in seconds for red ball scoring
 
 # Game state
 current_score = 0
 high_score = 0
 high_score_initials = "N/A"  # Added to store initials
-scored_ball_ids = set()  # Track ball IDs that have already scored
+scored_ball_ids = set()      # Track ball IDs that have already scored
 
 # Determine the platform and set the appropriate webcam backend
 system = platform.system()
@@ -84,6 +89,19 @@ def select_webcam():
             print("Invalid index. Please choose from the available indices.")
         except ValueError:
             print("Please enter a valid number.")
+
+def load_point_zones(filename=CALIBRATION_FILE):
+    if os.path.exists(filename):
+        with open(filename, 'r') as f:
+            data = json.load(f)
+            return [(zone['x'], zone['y'], ZONE_RADIUS, zone['points']) for zone in data]
+    return []
+
+def save_point_zones(point_zones, filename=CALIBRATION_FILE):
+    data = [{'x': x, 'y': y, 'points': points} for (x, y, _, points) in point_zones]
+    with open(filename, 'w') as f:
+        json.dump(data, f, indent=4)
+    print(f"Zones saved to {filename}")
 
 def load_high_score():
     global high_score, high_score_initials
@@ -209,6 +227,7 @@ def detect_and_track_balls(frame, tracker):
     mask_red = cv2.inRange(blurred, lower_red, upper_red)
     mask_red = cv2.erode(mask_red, None, iterations=2)
     mask_red = cv2.dilate(mask_red, None, iterations=2)
+    mask_red = cv2.dilate(mask_red, None, iterations=2)  # Additional dilation to fill holes
     contours_red, _ = cv2.findContours(mask_red, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     centroids = []
@@ -226,15 +245,19 @@ def detect_and_track_balls(frame, tracker):
             balls.append((int(x), int(y), int(radius), "white"))
             print(f"White ball at ({x}, {y}) with radius {radius}, area {area}, circularity {circularity}")
 
-    # Process red balls
+    # Process red balls with stricter criteria
+    red_balls_count = 0
     for contour in contours_red:
+        if red_balls_count >= RED_BALL_LIMIT:  # Limit the number of red balls tracked
+            break
         area = cv2.contourArea(contour)
         ((x, y), radius) = cv2.minEnclosingCircle(contour)
         perimeter = cv2.arcLength(contour, True)
         circularity = (4 * np.pi * area) / (perimeter ** 2) if perimeter > 0 else 0
-        if area > MIN_CONTOUR_AREA and radius > MIN_RADIUS and circularity > 0.6:
+        if area > RED_MIN_CONTOUR_AREA and radius > RED_MIN_RADIUS and circularity > RED_MIN_CIRCULARITY:
             centroids.append((int(x), int(y)))
             balls.append((int(x), int(y), int(radius), "red"))
+            red_balls_count += 1
             print(f"Red ball at ({x}, {y}) with radius {radius}, area {area}, circularity {circularity}")
 
     tracked_objects = tracker.update(centroids)
@@ -248,23 +271,25 @@ def detect_and_track_balls(frame, tracker):
     print(f"Tracked {len(tracked_balls)} balls")
     return tracked_balls
 
-def calculate_score(balls, point_zones):
+def calculate_score(balls, point_zones, last_red_score_time, red_score_cooldown):
     global scored_ball_ids
     round_score = 0
+    current_time = time.time()
     for ball_x, ball_y, _, ball_id, color in balls:
         if ball_id not in scored_ball_ids:  # Only score if ball hasn't scored before
             for zone_x, zone_y, zone_radius, points in point_zones:
                 distance = np.sqrt((ball_x - zone_x)**2 + (ball_y - zone_y)**2)
                 if distance <= zone_radius:
                     base_points = points
-                    if color == "red":
+                    if color == "red" and (current_time - last_red_score_time >= red_score_cooldown):
                         base_points *= 2  # Double points for red balls
                         print(f"Red ball ID {ball_id} doubled {points} to {base_points} points")
+                        last_red_score_time = current_time  # Update last red score time
                     round_score += base_points
                     scored_ball_ids.add(ball_id)  # Mark ball as scored
                     print(f"Ball ID {ball_id} scored {base_points} points")
                     break
-    return round_score
+    return round_score, last_red_score_time
 
 class CustomDialog:
     def __init__(self, parent, title, prompt):
@@ -282,7 +307,7 @@ class CustomDialog:
         style = ttk.Style()
         style.configure("Custom.TFrame", background="#2E2E2E")
         style.configure("Custom.TButton", font=("Helvetica", 10), background="#4CAF50", foreground="white")
-        style.map("Custom.TButton", background=[("active", "#45A049")])
+        style.map("Custom.TButton", background=[("active", "#45A049")], foreground=[("active", "white")])
 
         label = tk.Label(frame, text=prompt, font=("Helvetica", 10), bg="#2E2E2E", fg="white")
         label.pack(pady=5)
@@ -328,9 +353,12 @@ class OptionsWindow:
         style = ttk.Style()
         style.configure("Custom.TFrame", background="#2E2E2E")
         style.configure("Custom.TButton", font=("Helvetica", 10), background="#4CAF50", foreground="white")
-        style.map("Custom.TButton", background=[("active", "#45A049")])
+        style.map("Custom.TButton", background=[("active", "#45A049")], foreground=[("active", "white")])
+        style.configure("Custom.TCheckbutton", foreground="white", background="#2E2E2E")  # White text for checkbuttons
+        style.configure("Custom.TLabel", foreground="white", background="#2E2E2E")  # White text for labels
+        style.configure("Custom.TEntry", fieldbackground="#4A4A4A", foreground="white")  # White text for entry fields
 
-        tk.Label(self.frame, text="Options", font=("Helvetica", 14, "bold"), bg="#2E2E2E", fg="white").pack(pady=10)
+        ttk.Label(self.frame, text="Options", font=("Helvetica", 14, "bold"), style="Custom.TLabel").pack(pady=10)
 
         self.fields = [
             ("Lower Hue (0-180)", BALL_COLOR_RANGE["lower_white"][0], 0, 180),
@@ -342,19 +370,19 @@ class OptionsWindow:
         ]
         self.entries = []
         for i, (label, value, _, _) in enumerate(self.fields):
-            tk.Label(self.frame, text=label, font=("Helvetica", 10), bg="#2E2E2E", fg="white").pack(pady=2)
-            entry = ttk.Entry(self.frame, font=("Helvetica", 10))
+            ttk.Label(self.frame, text=label, font=("Helvetica", 10), style="Custom.TLabel").pack(pady=2)
+            entry = ttk.Entry(self.frame, font=("Helvetica", 10), style="Custom.TEntry")
             entry.insert(0, str(value))
             entry.pack(pady=2)
             self.entries.append(entry)
 
         # Add music mute/unmute toggle
         self.music_var = tk.BooleanVar(value=True)  # True means music is on
-        tk.Checkbutton(self.frame, text="Mute Music", variable=self.music_var, command=self.toggle_music).pack(pady=5)
+        ttk.Checkbutton(self.frame, text="Mute Music", variable=self.music_var, command=self.toggle_music, style="Custom.TCheckbutton").pack(pady=5)
 
         # Add sound effects enable/disable toggle
         self.sound_effects_var = tk.BooleanVar(value=not self.game.sound_effects_enabled)  # Invert because checkbox is "Disable"
-        tk.Checkbutton(self.frame, text="Disable Sound Effects", variable=self.sound_effects_var, command=self.toggle_sound_effects).pack(pady=5)
+        ttk.Checkbutton(self.frame, text="Disable Sound Effects", variable=self.sound_effects_var, command=self.toggle_sound_effects, style="Custom.TCheckbutton").pack(pady=5)
 
         button_frame = ttk.Frame(self.frame, style="Custom.TFrame")
         button_frame.pack(pady=10)
@@ -410,9 +438,10 @@ class HelpWindow:
         style = ttk.Style()
         style.configure("Custom.TFrame", background="#2E2E2E")
         style.configure("Custom.TButton", font=("Helvetica", 10), background="#F44336", foreground="white")
-        style.map("Custom.TButton", background=[("active", "#D32F2F")])
+        style.map("Custom.TButton", background=[("active", "#D32F2F")], foreground=[("active", "white")])
+        style.configure("Custom.TLabel", foreground="white", background="#2E2E2E")  # White text for labels
 
-        tk.Label(self.frame, text="Help", font=("Helvetica", 14, "bold"), bg="#2E2E2E", fg="white").pack(pady=10)
+        ttk.Label(self.frame, text="Help", font=("Helvetica", 14, "bold"), style="Custom.TLabel").pack(pady=10)
 
         help_lines = [
             "Hotkeys: 'q' to quit, 'c' to calibrate",
@@ -422,7 +451,7 @@ class HelpWindow:
             "Credits: Ideas by Blake Weibling, coding help from Grok3"
         ]
         for line in help_lines:
-            tk.Label(self.frame, text=line, font=("Helvetica", 10), bg="#2E2E2E", fg="white").pack(pady=5)
+            ttk.Label(self.frame, text=line, font=("Helvetica", 10), style="Custom.TLabel").pack(pady=5)
 
         ttk.Button(self.frame, text="Close", style="Custom.TButton", command=self.close).pack(pady=10)
 
@@ -531,6 +560,7 @@ class WhiffleGame:
         self.green_ball_circles = []
         self.tracker = CentroidTracker(max_disappeared=5)
         self.previous_balls = []  # Track previous balls to detect new ones
+        self.last_red_score_time = 0.0  # Track the last time a red ball scored
 
         if self.calibrating:
             self.save_button.config(state="normal")
@@ -741,10 +771,13 @@ class WhiffleGame:
             if new_balls and self.ball_detected_sound and self.sound_effects_enabled:
                 self.ball_detected_sound.play()
 
-            round_score = calculate_score(tracked_balls, self.point_zones)
+            round_score, self.last_red_score_time = calculate_score(tracked_balls, self.point_zones, self.last_red_score_time, RED_BALL_COOLDOWN)
             global current_score, high_score, high_score_initials, scored_ball_ids
             if round_score > 0 and self.score_sound and self.sound_effects_enabled:
                 self.score_sound.play()  # Play sound when points are scored
+                # Flash effect when a score is achieved
+                self.canvas.configure(bg="yellow")
+                self.root.after(100, lambda: self.canvas.configure(bg="#2E2E2E"))  # Reset after 100ms
             current_score += round_score  # Add only new scores
 
             # Check for new high score and prompt for initials
@@ -764,8 +797,8 @@ class WhiffleGame:
             self.previous_balls = tracked_balls  # Update previous balls
 
             for (x, y, r, ball_id, color) in tracked_balls:
-                x_canvas = int(x * (new_width / self.frame.shape[1])) + offset_x
-                y_canvas = int(y * (new_height / self.frame.shape[0])) + offset_y
+                x_canvas = int(x * (new_width / self.frame.shape[1]) + offset_x)
+                y_canvas = int(y * (new_height / self.frame.shape[0]) + offset_y)
                 r_canvas = int(r * (new_width / self.frame.shape[1]))
                 outline_color = "red" if color == "red" else "green"
                 circle_id = self.canvas.create_oval(x_canvas - r_canvas, y_canvas - r_canvas,
@@ -781,8 +814,8 @@ class WhiffleGame:
             self.res_label.config(text=f"Res: {self.width}x{self.height}")
 
         for x_frame, y_frame, r, points in self.point_zones:
-            x_canvas = int(x_frame * (new_width / self.frame.shape[1])) + offset_x
-            y_canvas = int(y_frame * (new_height / self.frame.shape[0])) + offset_y
+            x_canvas = int(x_frame * (new_width / self.frame.shape[1]) + offset_x)
+            y_canvas = int(y_frame * (new_height / self.frame.shape[0]) + offset_y)
             r_canvas = int(r * (new_width / self.frame.shape[1]))
             circle_id = self.canvas.create_oval(x_canvas - r_canvas, y_canvas - r_canvas, 
                                                 x_canvas + r_canvas, y_canvas + r_canvas, 
