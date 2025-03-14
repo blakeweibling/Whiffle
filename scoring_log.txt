@@ -1,0 +1,60 @@
+Scored ball at (952, 457): 200 points (hole at 949, 456, points: 200, red: False)
+Scored ball at (1629, 490): 2 points (hole at 1629, 483, points: 1, red: True)
+Base Score: 202, Special Hole Hit: False, Final Score: 202
+Game Over! Final Score: 202
+Scored ball at (952, 457): 200 points (hole at 949, 456, points: 200, red: False)
+Scored ball at (1629, 490): 2 points (hole at 1629, 483, points: 1, red: True)
+Scored ball at (1330, 439): 300 points (hole at 1324, 443, points: 150, red: True)
+Scored ball at (921, 304): 120 points (hole at 920, 296, points: 60, red: True)
+Base Score: 622, Special Hole Hit: False, Final Score: 622
+Game Over! Final Score: 622
+Scored ball at (952, 457): 200 points (hole at 949, 456, points: 200, red: False)
+Scored ball at (1630, 489): 2 points (hole at 1629, 483, points: 1, red: True)
+Scored ball at (812, 530): 600 points (hole at 817, 529, points: 300, red: True)
+Base Score: 802, Special Hole Hit: False, Final Score: 802
+Game Over! Final Score: 802
+Scored ball at (1630, 490): 2 points (hole at 1629, 483, points: 1, red: True)
+Scored ball at (952, 457): 200 points (hole at 949, 456, points: 200, red: False)
+Scored ball at (813, 530): 600 points (hole at 817, 529, points: 300, red: True)
+Scored ball at (603, 335): 40 points (hole at 601, 328, points: 20, red: True)
+Base Score: 842, Special Hole Hit: False, Final Score: 842
+Game Over! Final Score: 842
+Base Score: 0, Special Hole Hit: False, Final Score: 0
+Game Over! Final Score: 0
+Base Score: 0, Special Hole Hit: False, Final Score: 0
+Game Over! Final Score: 0
+Scored ball at (952, 457): 200 points (hole at 949, 456, points: 200, red: False)
+Scored ball at (917, 296): 120 points (hole at 920, 296, points: 60, red: True)
+Scored ball at (1323, 447): 300 points (hole at 1324, 443, points: 150, red: True)
+Base Score: 620, Special Hole Hit: False, Final Score: 620
+Game Over! Final Score: 620
+Scored ball at (952, 457): 200 points (hole at 949, 456, points: 200, red: False)
+Base Score: 200, Special Hole Hit: False, Final Score: 200
+Game Over! Final Score: 200
+Scored ball at (1629, 490): 2 points (hole at 1629, 483, points: 1, red: True)
+Scored ball at (952, 455): 200 points (hole at 949, 456, points: 200, red: False)
+Base Score: 202, Special Hole Hit: False, Final Score: 202
+Game Over! Final Score: 202
+Scored ball at (952, 457): 200 points (hole at 949, 456, points: 200, red: False)
+Scored ball at (1631, 488): 2 points (hole at 1629, 483, points: 1, red: True)
+Scored ball at (814, 527): 600 points (hole at 817, 529, points: 300, red: True)
+Base Score: 802, Special Hole Hit: False, Final Score: 802
+Game Over! Final Score: 802
+Scored ball at (1414, 279): 100 points (hole at 1412, 285, points: 100, red: False)
+Scored ball at (604, 322): 40 points (hole at 601, 328, points: 20, red: True)
+Base Score: 140, Special Hole Hit: False, Final Score: 140
+Game Over! Final Score: 140
+Scored ball at (437, 472): 100 points (hole at 434, 478, points: 100, red: False)
+Scored ball at (814, 529): 600 points (hole at 817, 529, points: 300, red: True)
+Scored ball at (605, 322): 40 points (hole at 601, 328, points: 20, red: True)
+Base Score: 740, Special Hole Hit: False, Final Score: 740
+Game Over! Final Score: 740
+Scored ball at (801, 478): 50 points (hole at 800, 464, points: 50, red: False)
+Scored ball at (1629, 484): 1 points (hole at 1629, 483, points: 1, red: False)
+Scored ball at (814, 393): 200 points (hole at 824, 395, points: 100, red: True)
+Scored ball at (1321, 449): 300 points (hole at 1324, 443, points: 150, red: True)
+Base Score: 551, Special Hole Hit: False, Final Score: 551
+Game Over! Final Score: 551
+Scored ball at (823, 394): 200 points (hole at 824, 395, points: 100, red: True)
+Base Score: 200, Special Hole Hit: False, Final Score: 200
+Game Over! Final Score: 200
