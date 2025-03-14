@@ -17,9 +17,9 @@ TOTAL_ZONES = 21  # Number of zones to trigger automatic save
 CALIBRATION_FILE = "whiffle_zones.json"
 HIGH_SCORE_FILE = "whiffle_high_score.json"
 
-# Detection settings (adjusted for better ball detection)
-BALL_COLOR_RANGE = {"lower_white": [0, 0, 220], "upper_white": [180, 30, 255]}  # Narrowed range
-MIN_CONTOUR_AREA = 50  # Minimum area to filter out noise
+# Detection settings (relaxed for better ball detection)
+BALL_COLOR_RANGE = {"lower_white": [0, 0, 200], "upper_white": [180, 50, 255]}  # Widened range
+MIN_CONTOUR_AREA = 30  # Reduced to detect smaller or less contrasted balls
 
 # Game state
 current_score = 0
@@ -85,13 +85,18 @@ def detect_balls(frame):
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     balls = []
+    print(f"Found {len(contours)} contours")  # Debug
     for contour in contours:
         area = cv2.contourArea(contour)
-        if area > MIN_CONTOUR_AREA:  # Filter out small noise or large background
+        if area > MIN_CONTOUR_AREA:
             ((x, y), radius) = cv2.minEnclosingCircle(contour)
             if radius > 10:
                 balls.append((int(x), int(y), int(radius)))
                 print(f"Detected ball at ({x}, {y}) with radius {radius}, area {area}")  # Debug
+            else:
+                print(f"Filtered ball at ({x}, {y}) due to radius {radius} < 10")  # Debug
+        else:
+            print(f"Filtered contour at ({x}, {y}) due to area {area} < {MIN_CONTOUR_AREA}")  # Debug
     return balls
 
 def calculate_score(balls, point_zones):
@@ -128,7 +133,7 @@ class CustomDialog:
         label = tk.Label(frame, text=prompt, font=("Helvetica", 10), bg="#2E2E2E", fg="white")
         label.pack(pady=5)
 
-        # Entry (using tk.Entry instead of ttk.Entry for direct styling control)
+        # Entry (using tk.Entry for direct styling control)
         self.entry = tk.Entry(frame, font=("Helvetica", 10), bg="#4A4A4A", fg="white", insertbackground="white")
         self.entry.pack(pady=5)
         self.entry.focus_set()
@@ -330,6 +335,9 @@ class WhiffleGame:
         self.zone_circles = []
         self.zone_texts = []
         self.frame = initial_frame  # Initialize with the first frame
+        self.red_zone_circles = []  # Store canvas IDs for red circles
+        self.red_zone_texts = []    # Store canvas IDs for red zone texts
+        self.green_ball_circles = []  # Store canvas IDs for green ball circles
 
         # Enable save button during calibration
         if self.calibrating:
@@ -437,10 +445,25 @@ class WhiffleGame:
         canvas_height = self.canvas.winfo_height()
         if self.frame is not None and canvas_width > 0 and canvas_height > 0:
             frame_width, frame_height = self.frame.shape[1], self.frame.shape[0]
-            scale_x = frame_width / canvas_width
-            scale_y = frame_height / canvas_height
-            x_frame = int(x * scale_x)
-            y_frame = int(y * scale_y)
+            # Calculate scaling factors based on displayed image size
+            aspect_ratio = frame_width / frame_height
+            new_height = int(canvas_width / aspect_ratio)
+            if new_height > canvas_height:
+                new_height = canvas_height
+                new_width = int(canvas_height * aspect_ratio)
+            else:
+                new_width = canvas_width
+            # Calculate offsets due to centering
+            offset_x = (canvas_width - new_width) // 2
+            offset_y = (canvas_height - new_height) // 2
+            # Adjust clicked coordinates to account for offsets and scaling
+            adjusted_x = x - offset_x
+            adjusted_y = y - offset_y
+            scale_x = frame_width / new_width
+            scale_y = frame_height / new_height
+            x_frame = int(adjusted_x * scale_x)
+            y_frame = int(adjusted_y * scale_y)
+            print(f"Converted canvas click ({x}, {y}) to frame coordinates ({x_frame}, {y_frame})")  # Debug
         else:
             x_frame = x
             y_frame = y
@@ -494,6 +517,17 @@ class WhiffleGame:
             self.root.destroy()
             return
 
+        # Clear previous red circles, texts, and green balls
+        for circle_id in self.red_zone_circles:
+            self.canvas.delete(circle_id)
+        for text_id in self.red_zone_texts:
+            self.canvas.delete(text_id)
+        for circle_id in self.green_ball_circles:
+            self.canvas.delete(circle_id)
+        self.red_zone_circles = []
+        self.red_zone_texts = []
+        self.green_ball_circles = []
+
         # Handle save and transition in the update loop to avoid GIL issues
         if self.save_triggered and self.calibrating:
             if self.point_zones:
@@ -515,15 +549,32 @@ class WhiffleGame:
             global current_score, high_score
             current_score = max(current_score, round_score)
             high_score = max(high_score, current_score)
+            print(f"Calculated score: {current_score}, Total balls detected: {total_balls}")  # Debug
 
             for (x, y, r) in balls:
-                cv2.circle(self.frame, (x, y), r, (0, 255, 0), 2)
-                print(f"Ball detected at ({x}, {y}) with radius {r}")  # Debug
-            
-            for (x, y, r, points) in self.point_zones:
-                cv2.circle(self.frame, (x, y), r, (0, 0, 255), 2)
-                cv2.putText(self.frame, str(points), (x - 10, y), cv2.FONT_HERSHEY_SIMPLEX, 
-                            0.5, (255, 255, 255), 2)
+                # Convert frame coordinates to canvas coordinates
+                canvas_width = self.canvas.winfo_width()
+                canvas_height = self.canvas.winfo_height()
+                if canvas_width > 0 and canvas_height > 0:
+                    aspect_ratio = self.frame.shape[1] / self.frame.shape[0]
+                    new_height = int(canvas_width / aspect_ratio)
+                    if new_height > canvas_height:
+                        new_height = canvas_height
+                        new_width = int(canvas_height * aspect_ratio)
+                    else:
+                        new_width = canvas_width
+                    offset_x = (canvas_width - new_width) // 2
+                    offset_y = (canvas_height - new_height) // 2
+                    scale_x = new_width / self.frame.shape[1]
+                    scale_y = new_height / self.frame.shape[0]
+                    x_canvas = int(x * scale_x) + offset_x
+                    y_canvas = int(y * scale_y) + offset_y
+                    r_canvas = int(r * scale_x)
+                    circle_id = self.canvas.create_oval(x_canvas - r_canvas, y_canvas - r_canvas,
+                                                        x_canvas + r_canvas, y_canvas + r_canvas,
+                                                        outline="green", width=2)
+                    self.green_ball_circles.append(circle_id)
+                    print(f"Drawing ball at canvas coordinates ({x_canvas}, {y_canvas}) with radius {r_canvas}")  # Debug
 
             self.balls_label.config(text=f"Balls: {total_balls}")
             self.score_label.config(text=f"Score: {current_score}")
@@ -548,9 +599,34 @@ class WhiffleGame:
         else:
             new_width, new_height = self.frame.shape[1], self.frame.shape[0]  # Use original size if canvas is not ready
             print(f"Warning: Canvas dimensions invalid ({canvas_width}x{canvas_height}), using original frame size {new_width}x{new_height}")
+        
+        # Calculate offsets for centering the image
+        offset_x = (canvas_width - new_width) // 2
+        offset_y = (canvas_height - new_height) // 2
+
         self.photo = ImageTk.PhotoImage(image=img)
-        self.canvas.create_image((canvas_width - new_width) // 2, (canvas_height - new_height) // 2, 
-                                image=self.photo, anchor="nw")
+        self.canvas.create_image(offset_x, offset_y, image=self.photo, anchor="nw")
+
+        # Draw scoring zones on the canvas (convert frame coordinates to canvas coordinates)
+        for x_frame, y_frame, r, points in self.point_zones:
+            # Convert frame coordinates back to canvas coordinates
+            scale_x = new_width / self.frame.shape[1]
+            scale_y = new_height / self.frame.shape[0]
+            x_canvas = int(x_frame * scale_x) + offset_x
+            y_canvas = int(y_frame * scale_y) + offset_y
+            r_canvas = int(r * scale_x)  # Scale the radius as well
+            print(f"Rendering zone: frame ({x_frame}, {y_frame}) -> canvas ({x_canvas}, {y_canvas})")  # Debug
+
+            # Draw red circle on the canvas
+            circle_id = self.canvas.create_oval(x_canvas - r_canvas, y_canvas - r_canvas, 
+                                                x_canvas + r_canvas, y_canvas + r_canvas, 
+                                                outline="red", width=2)
+            self.red_zone_circles.append(circle_id)
+
+            # Draw point text on the canvas
+            text_id = self.canvas.create_text(x_canvas, y_canvas, text=str(points), 
+                                              fill="white", font=("Helvetica", 10))
+            self.red_zone_texts.append(text_id)
 
         # Handle key presses
         key = cv2.waitKey(1) & 0xFF
@@ -567,8 +643,17 @@ class WhiffleGame:
                 self.canvas.delete(circle_id)
             for text_id in self.zone_texts:
                 self.canvas.delete(text_id)
+            for circle_id in self.red_zone_circles:
+                self.canvas.delete(circle_id)
+            for text_id in self.red_zone_texts:
+                self.canvas.delete(text_id)
+            for circle_id in self.green_ball_circles:
+                self.canvas.delete(circle_id)
             self.zone_circles = []
             self.zone_texts = []
+            self.red_zone_circles = []
+            self.red_zone_texts = []
+            self.green_ball_circles = []
 
         self.root.after(10, self.update_frame)
 
