@@ -41,8 +41,11 @@ def save_point_zones(point_zones, filename=CALIBRATION_FILE):
 def load_high_score():
     global high_score
     if os.path.exists(HIGH_SCORE_FILE):
+        print(f"High score file {HIGH_SCORE_FILE} found")  # Debug
         with open(HIGH_SCORE_FILE, 'r') as f:
             high_score = json.load(f).get("high_score", 0)
+    else:
+        print(f"High score file {HIGH_SCORE_FILE} not found, setting high_score to 0")
     print(f"Loaded high score: {high_score}")  # Debug output
     return high_score
 
@@ -111,24 +114,25 @@ class CustomDialog:
         self.result = None
 
         # Frame for styling
-        frame = ttk.Frame(self.root, padding=10, style="Custom.TFrame")
+        frame = ttk.Frame(self.root, padding=10)
         frame.pack(fill="both", expand=True)
+        frame.configure(style="Custom.TFrame")
 
-        # Style
+        # Style for frame and buttons
         style = ttk.Style()
         style.configure("Custom.TFrame", background="#2E2E2E")
         style.configure("Custom.TButton", font=("Helvetica", 10), background="#4CAF50", foreground="white")
         style.map("Custom.TButton", background=[("active", "#45A049")])
-        style.configure("Custom.TLabel", background="#2E2E2E", foreground="white")
-        style.configure("Custom.TEntry", fieldbackground="#2E2E2E", foreground="white")
 
         # Label
-        tk.Label(frame, text=prompt, style="Custom.TLabel").pack(pady=5)
+        label = tk.Label(frame, text=prompt, font=("Helvetica", 10), bg="#2E2E2E", fg="white")
+        label.pack(pady=5)
 
-        # Entry
-        self.entry = ttk.Entry(frame, style="Custom.TEntry")
+        # Entry (using tk.Entry instead of ttk.Entry for direct styling control)
+        self.entry = tk.Entry(frame, font=("Helvetica", 10), bg="#4A4A4A", fg="white", insertbackground="white")
         self.entry.pack(pady=5)
         self.entry.focus_set()
+        print("CustomDialog initialized with dark theme")  # Debug
 
         # Buttons
         button_frame = ttk.Frame(frame, style="Custom.TFrame")
@@ -331,8 +335,8 @@ class WhiffleGame:
         if self.calibrating:
             self.save_button.config(state="normal")
 
-        # Start video loop
-        self.update_frame()
+        # Delay the first update to ensure canvas is rendered
+        self.root.after(100, self.update_frame)
 
     def file_menu(self):
         print("File menu clicked")
@@ -541,6 +545,9 @@ class WhiffleGame:
                 new_width = canvas_width
             img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
             print(f"Resized image to {new_width}x{new_height}, canvas is {canvas_width}x{canvas_height}")  # Debug
+        else:
+            new_width, new_height = self.frame.shape[1], self.frame.shape[0]  # Use original size if canvas is not ready
+            print(f"Warning: Canvas dimensions invalid ({canvas_width}x{canvas_height}), using original frame size {new_width}x{new_height}")
         self.photo = ImageTk.PhotoImage(image=img)
         self.canvas.create_image((canvas_width - new_width) // 2, (canvas_height - new_height) // 2, 
                                 image=self.photo, anchor="nw")
