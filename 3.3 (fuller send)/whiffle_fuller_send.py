@@ -9,6 +9,7 @@ from PIL import Image, ImageTk
 from collections import OrderedDict
 import platform
 import pygame
+import random
 
 # Initialize Pygame mixer for sound effects and music
 pygame.mixer.init()
@@ -21,7 +22,7 @@ TOTAL_ZONES = 21
 # Files
 CALIBRATION_FILE = "whiffle_zones.json"
 HIGH_SCORE_FILE = "whiffle_high_score.json"
-CONFIG_FILE = "whiffle_config.json"  # New file for sound settings
+CONFIG_FILE = "whiffle_config.json"  # New file for sound settings and tutorial flag
 
 # Detection settings (relaxed for white balls, strict for red balls)
 BALL_COLOR_RANGE = {
@@ -37,6 +38,12 @@ RED_MIN_RADIUS = 10        # Stricter for red balls
 RED_MIN_CIRCULARITY = 0.85 # Stricter circularity for red balls
 RED_BALL_LIMIT = 1         # Maximum number of red balls tracked at once
 RED_BALL_COOLDOWN = 2.0    # Cooldown in seconds for red ball scoring
+
+# Particle effect settings
+PARTICLE_COUNT = 20  # Number of particles in explosion
+PARTICLE_LIFETIME = 500  # Lifetime of particles in milliseconds
+PARTICLE_MAX_SPEED = 5  # Maximum speed of particles
+PARTICLE_MAX_SIZE = 10  # Maximum size of particles
 
 # Game state
 current_score = 0
@@ -108,29 +115,58 @@ def load_high_score():
     if os.path.exists(HIGH_SCORE_FILE):
         with open(HIGH_SCORE_FILE, 'r') as f:
             data = json.load(f)
-            high_score = data.get("high_score", 0)
-            high_score_initials = data.get("initials", "N/A")
-    print(f"Loaded high score: {high_score} by {high_score_initials}")
-    return high_score
+            # Check if data is a list (new leaderboard format) or dict (old format)
+            if isinstance(data, list):
+                if data:
+                    high_score = data[0]["score"]
+                    high_score_initials = data[0]["initials"]
+                return data
+            else:
+                # Convert old format to new leaderboard format
+                high_score = data.get("high_score", 0)
+                high_score_initials = data.get("initials", "N/A")
+                leaderboard = [{"score": high_score, "initials": high_score_initials}]
+                save_high_score(high_score_initials, high_score, leaderboard)
+                return leaderboard
+    return []
 
-def save_high_score(initials="N/A"):
+def save_high_score(initials="N/A", new_score=None, leaderboard=None):
     global high_score, high_score_initials
-    high_score_initials = initials
+    if leaderboard is None:
+        leaderboard = load_high_score()
+    
+    if new_score is not None:
+        # Add the new score to the leaderboard
+        leaderboard.append({"score": new_score, "initials": initials})
+        # Sort by score in descending order and keep top 5
+        leaderboard = sorted(leaderboard, key=lambda x: x["score"], reverse=True)[:5]
+        # Update global high score
+        if leaderboard:
+            high_score = leaderboard[0]["score"]
+            high_score_initials = leaderboard[0]["initials"]
+    
     with open(HIGH_SCORE_FILE, 'w') as f:
-        json.dump({"high_score": high_score, "initials": high_score_initials}, f)
-    print(f"Saved high score: {high_score} by {high_score_initials}")
+        json.dump(leaderboard, f)
+    print(f"Saved high score leaderboard: {leaderboard}")
 
 def load_config():
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'r') as f:
             data = json.load(f)
-            return data.get("sound_effects_enabled", True)
-    return True  # Default to sound effects enabled if no config file exists
+            return {
+                "sound_effects_enabled": data.get("sound_effects_enabled", True),
+                "tutorial_shown": data.get("tutorial_shown", False)
+            }
+    return {"sound_effects_enabled": True, "tutorial_shown": False}
 
-def save_config(sound_effects_enabled):
+def save_config(sound_effects_enabled, tutorial_shown):
+    data = {
+        "sound_effects_enabled": sound_effects_enabled,
+        "tutorial_shown": tutorial_shown
+    }
     with open(CONFIG_FILE, 'w') as f:
-        json.dump({"sound_effects_enabled": sound_effects_enabled}, f)
-    print(f"Saved config: sound_effects_enabled = {sound_effects_enabled}")
+        json.dump(data, f)
+    print(f"Saved config: {data}")
 
 def set_webcam_resolution(cap):
     resolutions = [(1920, 1080), (1280, 720), (640, 480)]
@@ -274,6 +310,7 @@ def detect_and_track_balls(frame, tracker):
 def calculate_score(balls, point_zones, last_red_score_time, red_score_cooldown):
     global scored_ball_ids
     round_score = 0
+    scored_positions = []
     current_time = time.time()
     for ball_x, ball_y, _, ball_id, color in balls:
         if ball_id not in scored_ball_ids:  # Only score if ball hasn't scored before
@@ -288,8 +325,9 @@ def calculate_score(balls, point_zones, last_red_score_time, red_score_cooldown)
                     round_score += base_points
                     scored_ball_ids.add(ball_id)  # Mark ball as scored
                     print(f"Ball ID {ball_id} scored {base_points} points")
+                    scored_positions.append((ball_x, ball_y))
                     break
-    return round_score, last_red_score_time
+    return round_score, last_red_score_time, scored_positions
 
 class SplashScreen:
     def __init__(self, root, callback):
@@ -381,6 +419,86 @@ class CustomDialog:
         self.root.wait_window()
         return self.result
 
+class TutorialWindow:
+    def __init__(self, on_close_callback):
+        self.root = tk.Toplevel()
+        self.root.title("Tutorial")
+        self.root.geometry("600x400")
+        self.root.configure(bg="#2E2E2E")
+        self.root.resizable(False, False)
+        self.on_close_callback = on_close_callback
+
+        self.frame = ttk.Frame(self.root, padding=10, style="Custom.TFrame")
+        self.frame.pack(fill="both", expand=True)
+
+        style = ttk.Style()
+        style.configure("Custom.TFrame", background="#2E2E2E")
+        style.configure("Custom.TButton", font=("Helvetica", 10), background="#4CAF50", foreground="white")
+        style.map("Custom.TButton", background=[("active", "#45A049")], foreground=[("active", "white")])
+        style.configure("Custom.TLabel", foreground="white", background="#2E2E2E")  # White text for labels
+
+        # Tutorial steps
+        self.steps = [
+            "Welcome to Whiffle Playfield!\nClick 'Next' to learn how to play.",
+            "Step 1: Calibration\nClick on the playfield to define scoring zones (21 total).\nEach click prompts for points (e.g., 50, 100).",
+            "Step 2: Playing the Game\nDrop balls onto the playfield. White balls score normally, red balls double points!",
+            "Step 3: Scoring\nWhen a ball lands in a zone, you earn points. Watch for a flash and particle explosion!",
+            "Step 4: Menus\nUse 'File' to save/load zones, 'New Game' to reset, 'High Score' to see the leaderboard, and 'Options' to adjust settings.",
+            "You're ready to play!\nClick 'Finish' to start the game."
+        ]
+
+        self.current_step = 0
+
+        # Display area for tutorial text
+        self.tutorial_text = tk.StringVar()
+        self.tutorial_text.set(self.steps[self.current_step])
+        ttk.Label(self.frame, textvariable=self.tutorial_text, font=("Helvetica", 12), style="Custom.TLabel", wraplength=550).pack(pady=20)
+
+        # Navigation buttons
+        button_frame = ttk.Frame(self.frame, style="Custom.TFrame")
+        button_frame.pack(pady=10)
+        self.prev_button = ttk.Button(button_frame, text="Previous", style="Custom.TButton", command=self.prev_step)
+        self.prev_button.pack(side="left", padx=5)
+        self.next_button = ttk.Button(button_frame, text="Next", style="Custom.TButton", command=self.next_step)
+        self.next_button.pack(side="left", padx=5)
+        self.finish_button = ttk.Button(button_frame, text="Finish", style="Custom.TButton", command=self.close)
+        self.finish_button.pack(side="left", padx=5)
+
+        # Update button states
+        self.update_buttons()
+
+        self.root.protocol("WM_DELETE_WINDOW", self.close)
+
+    def update_buttons(self):
+        # Enable/disable buttons based on current step
+        if self.current_step == 0:
+            self.prev_button.config(state="disabled")
+        else:
+            self.prev_button.config(state="normal")
+        
+        if self.current_step == len(self.steps) - 1:
+            self.next_button.config(state="disabled")
+            self.finish_button.config(state="normal")
+        else:
+            self.next_button.config(state="normal")
+            self.finish_button.config(state="disabled")
+
+    def prev_step(self):
+        if self.current_step > 0:
+            self.current_step -= 1
+            self.tutorial_text.set(self.steps[self.current_step])
+            self.update_buttons()
+
+    def next_step(self):
+        if self.current_step < len(self.steps) - 1:
+            self.current_step += 1
+            self.tutorial_text.set(self.steps[self.current_step])
+            self.update_buttons()
+
+    def close(self):
+        self.root.destroy()
+        self.on_close_callback()
+
 class OptionsWindow:
     def __init__(self, on_close_callback, game_instance):
         self.root = tk.Toplevel()
@@ -440,7 +558,7 @@ class OptionsWindow:
         try:
             BALL_COLOR_RANGE["lower_white"] = [int(self.entries[0].get()), int(self.entries[1].get()), int(self.entries[2].get())]
             BALL_COLOR_RANGE["upper_white"] = [int(self.entries[3].get()), int(self.entries[4].get()), int(self.entries[5].get())]
-            save_config(not self.sound_effects_var.get())  # Save the inverted state (Disable = False means enabled)
+            save_config(not self.sound_effects_var.get(), self.game.tutorial_shown)
             print("Options saved")
         except ValueError:
             print("Invalid input in options")
@@ -468,13 +586,14 @@ class OptionsWindow:
         self.on_close_callback()
 
 class HelpWindow:
-    def __init__(self, on_close_callback):
+    def __init__(self, on_close_callback, game_instance):
         self.root = tk.Toplevel()
         self.root.title("Help")
         self.root.geometry("400x300")
         self.root.configure(bg="#2E2E2E")
         self.root.resizable(True, True)
         self.on_close_callback = on_close_callback
+        self.game = game_instance
 
         self.frame = ttk.Frame(self.root, padding=10, style="Custom.TFrame")
         self.frame.pack(fill="both", expand=True)
@@ -497,9 +616,15 @@ class HelpWindow:
         for line in help_lines:
             ttk.Label(self.frame, text=line, font=("Helvetica", 10), style="Custom.TLabel").pack(pady=5)
 
-        ttk.Button(self.frame, text="Close", style="Custom.TButton", command=self.close).pack(pady=10)
+        # Add a button to launch the tutorial
+        ttk.Button(self.frame, text="Show Tutorial", style="Custom.TButton", command=self.show_tutorial).pack(pady=5)
+        ttk.Button(self.frame, text="Close", style="Custom.TButton", command=self.close).pack(pady=5)
 
         self.root.protocol("WM_DELETE_WINDOW", self.close)
+
+    def show_tutorial(self):
+        self.root.destroy()  # Close the help window
+        TutorialWindow(self.on_close_callback)
 
     def close(self):
         self.root.destroy()
@@ -532,8 +657,10 @@ class WhiffleGame:
         except pygame.error as e:
             print(f"Error loading background music: {e}")
 
-        # Load sound effects setting from config file
-        self.sound_effects_enabled = load_config()
+        # Load config
+        config = load_config()
+        self.sound_effects_enabled = config["sound_effects_enabled"]
+        self.tutorial_shown = config["tutorial_shown"]
 
         style = ttk.Style()
         style.configure("Custom.TButton", font=("Helvetica", 10), background="#2196F3", foreground="black")
@@ -546,7 +673,7 @@ class WhiffleGame:
             ("New Game", self.new_game),
             ("High Score", self.high_score),
             ("Options", self.options_menu),
-            ("Help", self.help_menu),
+            ("Help", lambda: self.help_menu(self.resume_frame)),
         ]
         for text, command in buttons:
             ttk.Button(menu_frame, text=text, style="Custom.TButton", command=command).pack(side="left", padx=5)
@@ -589,7 +716,7 @@ class WhiffleGame:
             return
 
         global high_score, high_score_initials, current_score, scored_ball_ids
-        high_score = load_high_score()
+        leaderboard = load_high_score()
         current_score = 0
         self.point_zones = load_point_zones()
         self.calibrating = not self.point_zones
@@ -606,6 +733,9 @@ class WhiffleGame:
         self.previous_balls = []  # Track previous balls to detect new ones
         self.last_red_score_time = 0.0  # Track the last time a red ball scored
 
+        # Particle effect state
+        self.particles = []  # List to store active particles
+
         if self.calibrating:
             self.save_button.config(state="normal")
 
@@ -613,7 +743,60 @@ class WhiffleGame:
         if self.game_start_sound and self.sound_effects_enabled:
             self.game_start_sound.play()
 
+        # Show tutorial if not shown before
+        if not self.tutorial_shown:
+            self.tutorial_shown = True
+            save_config(self.sound_effects_enabled, self.tutorial_shown)
+            TutorialWindow(self.resume_frame)
+
         self.root.after(100, self.update_frame)
+
+    def create_particle(self, x, y):
+        # Create a particle with random properties
+        particle = {
+            "x": x,
+            "y": y,
+            "size": random.uniform(2, PARTICLE_MAX_SIZE),
+            "dx": random.uniform(-PARTICLE_MAX_SPEED, PARTICLE_MAX_SPEED),
+            "dy": random.uniform(-PARTICLE_MAX_SPEED, PARTICLE_MAX_SPEED),
+            "lifetime": PARTICLE_LIFETIME,
+            "start_time": time.time() * 1000,  # Current time in milliseconds
+            "color": random.choice(["yellow", "orange", "red"]),
+            "id": None  # Will store the canvas item ID
+        }
+        return particle
+
+    def update_particles(self):
+        current_time = time.time() * 1000  # Current time in milliseconds
+        for particle in self.particles[:]:  # Copy list to allow removal
+            elapsed = current_time - particle["start_time"]
+            if elapsed > particle["lifetime"]:
+                self.canvas.delete(particle["id"])
+                self.particles.remove(particle)
+                continue
+
+            # Update particle position
+            particle["x"] += particle["dx"]
+            particle["y"] += particle["dy"]
+
+            # Calculate alpha (fade effect)
+            alpha = 1.0 - (elapsed / particle["lifetime"])
+            size = particle["size"] * alpha
+
+            # Update the particle on the canvas
+            if particle["id"] is not None:
+                self.canvas.delete(particle["id"])
+            particle["id"] = self.canvas.create_oval(
+                particle["x"] - size, particle["y"] - size,
+                particle["x"] + size, particle["y"] + size,
+                fill=particle["color"], outline=""
+            )
+
+    def spawn_particle_explosion(self, x, y):
+        # Spawn multiple particles at the given position
+        for _ in range(PARTICLE_COUNT):
+            particle = self.create_particle(x, y)
+            self.particles.append(particle)
 
     def file_menu(self):
         self.paused = True
@@ -667,16 +850,29 @@ class WhiffleGame:
     def high_score(self):
         self.paused = True
         high_score_window = tk.Toplevel(self.root)
-        high_score_window.title("High Score")
-        high_score_window.geometry("200x100")
+        high_score_window.title("High Score Leaderboard")
+        high_score_window.geometry("300x400")
         high_score_window.configure(bg="#2E2E2E")
 
         frame = ttk.Frame(high_score_window, padding=10, style="Custom.TFrame")
         frame.pack(fill="both", expand=True)
 
-        tk.Label(frame, text=f"High Score: {high_score} by {high_score_initials}", font=("Helvetica", 14), bg="#2E2E2E", fg="white").pack(pady=10)
-        tk.Button(frame, text="Close", font=("Helvetica", 10), bg="#F44336", fg="white", 
-                  command=lambda: self.close_high_score(high_score_window)).pack(pady=5)
+        style = ttk.Style()
+        style.configure("Custom.TFrame", background="#2E2E2E")
+        style.configure("Custom.TLabel", foreground="white", background="#2E2E2E")
+
+        ttk.Label(frame, text="High Score Leaderboard", font=("Helvetica", 14, "bold"), style="Custom.TLabel").pack(pady=10)
+
+        # Load and display leaderboard
+        leaderboard = load_high_score()
+        if not leaderboard:
+            ttk.Label(frame, text="No scores yet!", font=("Helvetica", 12), style="Custom.TLabel").pack(pady=5)
+        else:
+            for i, entry in enumerate(leaderboard, 1):
+                score_text = f"{i}. {entry['initials']}: {entry['score']}"
+                ttk.Label(frame, text=score_text, font=("Helvetica", 12), style="Custom.TLabel").pack(pady=5)
+
+        ttk.Button(frame, text="Close", style="Custom.TButton", command=lambda: self.close_high_score(high_score_window)).pack(pady=10)
 
     def close_high_score(self, window):
         window.destroy()
@@ -685,11 +881,11 @@ class WhiffleGame:
 
     def options_menu(self):
         self.paused = True
-        OptionsWindow(self.resume_frame, self)  # Pass self to access game instance
+        OptionsWindow(self.resume_frame, self)
 
-    def help_menu(self):
+    def help_menu(self, on_close_callback):
         self.paused = True
-        HelpWindow(self.resume_frame)
+        HelpWindow(on_close_callback, self)
 
     def resume_frame(self):
         self.paused = False
@@ -815,27 +1011,36 @@ class WhiffleGame:
             if new_balls and self.ball_detected_sound and self.sound_effects_enabled:
                 self.ball_detected_sound.play()
 
-            round_score, self.last_red_score_time = calculate_score(tracked_balls, self.point_zones, self.last_red_score_time, RED_BALL_COOLDOWN)
+            round_score, self.last_red_score_time, scored_positions = calculate_score(tracked_balls, self.point_zones, self.last_red_score_time, RED_BALL_COOLDOWN)
             global current_score, high_score, high_score_initials, scored_ball_ids
-            if round_score > 0 and self.score_sound and self.sound_effects_enabled:
-                self.score_sound.play()  # Play sound when points are scored
+            if round_score > 0:
+                if self.score_sound and self.sound_effects_enabled:
+                    self.score_sound.play()  # Play sound when points are scored
                 # Flash effect when a score is achieved
                 self.canvas.configure(bg="yellow")
                 self.root.after(100, lambda: self.canvas.configure(bg="#2E2E2E"))  # Reset after 100ms
+                # Spawn particle explosions at scored positions
+                for pos_x, pos_y in scored_positions:
+                    # Adjust coordinates to canvas space
+                    canvas_x = int(pos_x * (new_width / self.frame.shape[1]) + offset_x)
+                    canvas_y = int(pos_y * (new_height / self.frame.shape[0]) + offset_y)
+                    self.spawn_particle_explosion(canvas_x, canvas_y)
             current_score += round_score  # Add only new scores
+
+            # Update and render particles
+            self.update_particles()
 
             # Check for new high score and prompt for initials
             if current_score > high_score:
-                high_score = current_score
                 self.paused = True
                 dialog = CustomDialog(self.root, "New High Score!", "Enter your initials (3 letters):")
                 initials = dialog.show()
                 if initials and len(initials) > 0:
                     # Limit to 3 characters and uppercase
                     initials = initials.upper()[:3]
-                    save_high_score(initials)
+                    save_high_score(initials, current_score)
                 else:
-                    save_high_score("N/A")  # Default if no initials entered
+                    save_high_score("N/A", current_score)
                 self.paused = False
 
             self.previous_balls = tracked_balls  # Update previous balls
@@ -871,7 +1076,7 @@ class WhiffleGame:
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
-            save_high_score(high_score_initials)
+            save_high_score(high_score_initials, current_score)
             self.root.destroy()
             return
         elif key == ord('c'):
@@ -897,7 +1102,7 @@ class WhiffleGame:
         self.cap.release()
         self.root.destroy()
 
-# Function to start the main game after the splash screen
+# Function to start the main game after the splash screen or tutorial
 def start_game():
     root = tk.Tk()
     app = WhiffleGame(root)
