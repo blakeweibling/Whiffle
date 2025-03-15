@@ -10,6 +10,7 @@ from collections import OrderedDict
 import platform
 import pygame
 import random
+import requests
 
 # Initialize Pygame mixer for sound effects and music
 pygame.mixer.init()
@@ -23,6 +24,12 @@ TOTAL_ZONES = 21
 CALIBRATION_FILE = "whiffle_zones.json"
 HIGH_SCORE_FILE = "whiffle_high_score.json"
 CONFIG_FILE = "whiffle_config.json"  # New file for sound settings and tutorial flag
+
+# Supabase configuration for online leaderboard
+# Replace these placeholders with your actual Supabase credentials
+SUPABASE_URL = "https://jtkbujumrobglftzokcs.supabase.co"  # e.g., https://xyz123.supabase.co
+SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0a2J1anVtcm9iZ2xmdHpva2NzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwMTM4NzcsImV4cCI6MjA1NzU4OTg3N30.OibLuqr3X922SUSBL8yGxDw8uwuTjivH97-2wNhJDqs"  # e.g., eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+LEADERBOARD_ENDPOINT = f"{SUPABASE_URL}/rest/v1/leaderboard"
 
 # Detection settings (relaxed for white balls, strict for red balls)
 BALL_COLOR_RANGE = {
@@ -101,53 +108,95 @@ def load_point_zones(filename=CALIBRATION_FILE):
     if os.path.exists(filename):
         with open(filename, 'r') as f:
             data = json.load(f)
-            return [(zone['x'], zone['y'], ZONE_RADIUS, zone['points']) for zone in data]
-    return []
+            zones = [(zone['x'], zone['y'], ZONE_RADIUS, zone['points']) for zone in data if not zone.get('special')]
+            special_hole = None
+            for zone in data:
+                if zone.get('special'):
+                    special_hole = (zone['x'], zone['y'], ZONE_RADIUS, zone['points'])
+                    break
+            return zones, special_hole
+    return [], None
 
-def save_point_zones(point_zones, filename=CALIBRATION_FILE):
+def save_point_zones(point_zones, special_hole, filename=CALIBRATION_FILE):
     data = [{'x': x, 'y': y, 'points': points} for (x, y, _, points) in point_zones]
+    if special_hole:
+        x, y, _, points = special_hole
+        data.append({'x': x, 'y': y, 'points': points, 'special': True})
     with open(filename, 'w') as f:
         json.dump(data, f, indent=4)
     print(f"Zones saved to {filename}")
 
 def load_high_score():
     global high_score, high_score_initials
-    if os.path.exists(HIGH_SCORE_FILE):
-        with open(HIGH_SCORE_FILE, 'r') as f:
-            data = json.load(f)
-            # Check if data is a list (new leaderboard format) or dict (old format)
-            if isinstance(data, list):
-                if data:
-                    high_score = data[0]["score"]
-                    high_score_initials = data[0]["initials"]
-                return data
-            else:
-                # Convert old format to new leaderboard format
-                high_score = data.get("high_score", 0)
-                high_score_initials = data.get("initials", "N/A")
-                leaderboard = [{"score": high_score, "initials": high_score_initials}]
-                save_high_score(high_score_initials, high_score, leaderboard)
-                return leaderboard
-    return []
+    try:
+        # Fetch leaderboard from Supabase
+        headers = {
+            "apikey": SUPABASE_API_KEY,
+            "Authorization": f"Bearer {SUPABASE_API_KEY}"
+        }
+        response = requests.get(LEADERBOARD_ENDPOINT, headers=headers, params={"order": "score.desc", "limit": 5})
+        response.raise_for_status()
+        leaderboard = response.json()
+        if leaderboard and len(leaderboard) > 0:  # Check if list is not empty
+            high_score = leaderboard[0]["score"]
+            high_score_initials = leaderboard[0]["initials"]
+        return leaderboard
+    except requests.RequestException as e:
+        print(f"Error fetching online leaderboard: {e}")
+        # Fallback to local leaderboard if online fails
+        if os.path.exists(HIGH_SCORE_FILE):
+            with open(HIGH_SCORE_FILE, 'r') as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    if data:
+                        high_score = data[0]["score"]
+                        high_score_initials = data[0]["initials"]
+                    return data
+                else:
+                    high_score = data.get("high_score", 0)
+                    high_score_initials = data.get("initials", "N/A")
+                    leaderboard = [{"score": high_score, "initials": high_score_initials}]
+                    save_high_score(high_score_initials, high_score, leaderboard)
+                    return leaderboard
+        return []
 
 def save_high_score(initials="N/A", new_score=None, leaderboard=None):
     global high_score, high_score_initials
-    if leaderboard is None:
-        leaderboard = load_high_score()
-    
-    if new_score is not None:
-        # Add the new score to the leaderboard
+    if new_score is None:
+        return
+
+    # Save to Supabase
+    try:
+        headers = {
+            "apikey": SUPABASE_API_KEY,
+            "Authorization": f"Bearer {SUPABASE_API_KEY}",
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal"
+        }
+        data = {
+            "initials": initials,
+            "score": new_score,
+            "created_at": time.strftime("%Y-%m-%dT%H:%M:%S+00:00", time.gmtime())
+        }
+        response = requests.post(LEADERBOARD_ENDPOINT, headers=headers, json=data)
+        response.raise_for_status()
+        print(f"Successfully uploaded score: {initials} - {new_score}")
+    except requests.RequestException as e:
+        print(f"Error uploading score to online leaderboard: {e}")
+        # Fallback to local save if online fails
+        if leaderboard is None:
+            leaderboard = load_high_score()
         leaderboard.append({"score": new_score, "initials": initials})
-        # Sort by score in descending order and keep top 5
         leaderboard = sorted(leaderboard, key=lambda x: x["score"], reverse=True)[:5]
-        # Update global high score
-        if leaderboard:
-            high_score = leaderboard[0]["score"]
-            high_score_initials = leaderboard[0]["initials"]
-    
-    with open(HIGH_SCORE_FILE, 'w') as f:
-        json.dump(leaderboard, f)
-    print(f"Saved high score leaderboard: {leaderboard}")
+        with open(HIGH_SCORE_FILE, 'w') as f:
+            json.dump(leaderboard, f)
+        print(f"Saved high score locally: {leaderboard}")
+
+    # Update global high score immediately after saving
+    leaderboard = load_high_score()
+    if leaderboard and len(leaderboard) > 0:
+        high_score = leaderboard[0]["score"]
+        high_score_initials = leaderboard[0]["initials"]
 
 def load_config():
     if os.path.exists(CONFIG_FILE):
@@ -233,7 +282,7 @@ class CentroidTracker:
                 used_cols.add(col)
 
             for row in range(len(object_centroids)):
-                if row not in used_rows:
+                if row in used_rows:
                     object_id = object_ids[row]
                     self.disappeared[object_id] += 1
                     if self.disappeared[object_id] > self.max_disappeared:
@@ -307,13 +356,26 @@ def detect_and_track_balls(frame, tracker):
     print(f"Tracked {len(tracked_balls)} balls")
     return tracked_balls
 
-def calculate_score(balls, point_zones, last_red_score_time, red_score_cooldown):
-    global scored_ball_ids
+def calculate_score(balls, point_zones, special_hole, last_red_score_time, red_score_cooldown):
+    global scored_ball_ids, current_score
     round_score = 0
     scored_positions = []
+    special_hole_triggered = False
     current_time = time.time()
     for ball_x, ball_y, _, ball_id, color in balls:
         if ball_id not in scored_ball_ids:  # Only score if ball hasn't scored before
+            # Check special hole first
+            if special_hole:
+                special_x, special_y, special_radius, _ = special_hole
+                distance = np.sqrt((ball_x - special_x)**2 + (ball_y - special_y)**2)
+                if distance <= special_radius:
+                    special_hole_triggered = True
+                    scored_ball_ids.add(ball_id)  # Mark ball as scored
+                    scored_positions.append((ball_x, ball_y))
+                    print(f"Ball ID {ball_id} landed in special hole! Doubling total score.")
+                    continue  # Skip regular scoring for this ball
+
+            # Check regular zones
             for zone_x, zone_y, zone_radius, points in point_zones:
                 distance = np.sqrt((ball_x - zone_x)**2 + (ball_y - zone_y)**2)
                 if distance <= zone_radius:
@@ -324,9 +386,15 @@ def calculate_score(balls, point_zones, last_red_score_time, red_score_cooldown)
                         last_red_score_time = current_time  # Update last red score time
                     round_score += base_points
                     scored_ball_ids.add(ball_id)  # Mark ball as scored
-                    print(f"Ball ID {ball_id} scored {base_points} points")
                     scored_positions.append((ball_x, ball_y))
+                    print(f"Ball ID {ball_id} scored {base_points} points")
                     break
+
+    # Apply special hole effect after calculating regular scores
+    if special_hole_triggered:
+        current_score = current_score * 2
+        print(f"Total score doubled to {current_score}")
+
     return round_score, last_red_score_time, scored_positions
 
 class SplashScreen:
@@ -374,13 +442,14 @@ class SplashScreen:
         self.callback()  # Call the callback to start the main game
 
 class CustomDialog:
-    def __init__(self, parent, title, prompt):
+    def __init__(self, parent, title, prompt, show_special_option=False):
         self.root = tk.Toplevel(parent)
         self.root.title(title)
         self.root.configure(bg="#2E2E2E")
         self.root.transient(parent)
         self.root.grab_set()
         self.result = None
+        self.is_special = False
 
         frame = ttk.Frame(self.root, padding=10)
         frame.pack(fill="both", expand=True)
@@ -398,6 +467,11 @@ class CustomDialog:
         self.entry.pack(pady=5)
         self.entry.focus_set()
 
+        if show_special_option:
+            self.special_var = tk.BooleanVar(value=False)
+            tk.Checkbutton(frame, text="Make this the special double-score hole", variable=self.special_var, 
+                           font=("Helvetica", 10), bg="#2E2E2E", fg="white", selectcolor="#4A4A4A").pack(pady=5)
+
         button_frame = ttk.Frame(frame, style="Custom.TFrame")
         button_frame.pack(pady=5)
         ttk.Button(button_frame, text="OK", style="Custom.TButton", command=self.ok).pack(side="left", padx=5)
@@ -409,15 +483,17 @@ class CustomDialog:
 
     def ok(self):
         self.result = self.entry.get()
+        self.is_special = getattr(self, 'special_var', tk.BooleanVar(value=False)).get()
         self.root.destroy()
 
     def cancel(self):
         self.result = None
+        self.is_special = False
         self.root.destroy()
 
     def show(self):
         self.root.wait_window()
-        return self.result
+        return self.result, self.is_special
 
 class TutorialWindow:
     def __init__(self, on_close_callback):
@@ -440,10 +516,10 @@ class TutorialWindow:
         # Tutorial steps
         self.steps = [
             "Welcome to Whiffle Playfield!\nClick 'Next' to learn how to play.",
-            "Step 1: Calibration\nClick on the playfield to define scoring zones (21 total).\nEach click prompts for points (e.g., 50, 100).",
+            "Step 1: Calibration\nClick on the playfield to define scoring zones (21 total).\nEach click prompts for points (e.g., 50, 100).\nYou can mark one zone as a special double-score hole!",
             "Step 2: Playing the Game\nDrop balls onto the playfield. White balls score normally, red balls double points!",
-            "Step 3: Scoring\nWhen a ball lands in a zone, you earn points. Watch for a flash and particle explosion!",
-            "Step 4: Menus\nUse 'File' to save/load zones, 'New Game' to reset, 'High Score' to see the leaderboard, and 'Options' to adjust settings.",
+            "Step 3: Scoring\nWhen a ball lands in a zone, you earn points. Watch for a flash and particle explosion!\nLanding in the special hole doubles your total score!",
+            "Step 4: Menus\nUse 'File' to save/load zones, 'New Game' to reset, 'High Score' to see the global leaderboard, and 'Options' to adjust settings.",
             "You're ready to play!\nClick 'Finish' to start the game."
         ]
 
@@ -609,7 +685,7 @@ class HelpWindow:
         help_lines = [
             "Hotkeys: 'q' to quit, 'c' to calibrate",
             "Menu: File (save/load)",
-            "New Game (reset), High Score (view)",
+            "New Game (reset), High Score (view global rankings)",
             "Options (settings)",
             "Credits: Ideas by Blake Weibling, coding help from Grok3"
         ]
@@ -637,6 +713,7 @@ class WhiffleGame:
         self.root.geometry("800x600")
         self.root.configure(bg="#2E2E2E")
         self.root.resizable(True, True)
+        self.new_high_score_prompted = False  # Flag to prevent repeated prompts
 
         # Load sound effects
         try:
@@ -683,7 +760,7 @@ class WhiffleGame:
         self.canvas.bind("<Button-1>", self.canvas_click)
 
         self.save_button = ttk.Button(self.root, text="Save Zones", style="Custom.TButton", command=self.queue_save_zones, state="disabled")
-        self.save_button.pack(pady=5)
+        self.save_button.pack(pady=5)  # Fixed from pdy to pady
 
         self.stats_frame = ttk.Frame(self.root, style="Custom.TFrame")
         self.stats_frame.pack(fill="x", padx=10, pady=5)
@@ -718,9 +795,10 @@ class WhiffleGame:
         global high_score, high_score_initials, current_score, scored_ball_ids
         leaderboard = load_high_score()
         current_score = 0
-        self.point_zones = load_point_zones()
-        self.calibrating = not self.point_zones
+        self.point_zones, self.special_hole = load_point_zones()
+        self.calibrating = not self.point_zones and not self.special_hole
         self.zone_count = len(self.point_zones)
+        self.special_hole_defined = bool(self.special_hole)
         self.paused = False
         self.save_triggered = False
         self.zone_circles = []
@@ -729,12 +807,15 @@ class WhiffleGame:
         self.red_zone_circles = []
         self.red_zone_texts = []
         self.green_ball_circles = []
+        self.special_hole_circle = None
+        self.special_hole_text = None
         self.tracker = CentroidTracker(max_disappeared=5)
         self.previous_balls = []  # Track previous balls to detect new ones
         self.last_red_score_time = 0.0  # Track the last time a red ball scored
 
         # Particle effect state
         self.particles = []  # List to store active particles
+        self.particle_ids = []  # List to store canvas IDs for particles
 
         if self.calibrating:
             self.save_button.config(state="normal")
@@ -761,42 +842,35 @@ class WhiffleGame:
             "dy": random.uniform(-PARTICLE_MAX_SPEED, PARTICLE_MAX_SPEED),
             "lifetime": PARTICLE_LIFETIME,
             "start_time": time.time() * 1000,  # Current time in milliseconds
-            "color": random.choice(["yellow", "orange", "red"]),
-            "id": None  # Will store the canvas item ID
+            "color": random.choice(["yellow", "orange", "red"])
         }
         return particle
-
-    def update_particles(self):
-        current_time = time.time() * 1000  # Current time in milliseconds
-        for particle in self.particles[:]:  # Copy list to allow removal
-            elapsed = current_time - particle["start_time"]
-            if elapsed > particle["lifetime"]:
-                self.canvas.delete(particle["id"])
-                self.particles.remove(particle)
-                continue
-
-            # Update particle position
-            particle["x"] += particle["dx"]
-            particle["y"] += particle["dy"]
-
-            # Calculate alpha (fade effect)
-            alpha = 1.0 - (elapsed / particle["lifetime"])
-            size = particle["size"] * alpha
-
-            # Update the particle on the canvas
-            if particle["id"] is not None:
-                self.canvas.delete(particle["id"])
-            particle["id"] = self.canvas.create_oval(
-                particle["x"] - size, particle["y"] - size,
-                particle["x"] + size, particle["y"] + size,
-                fill=particle["color"], outline=""
-            )
 
     def spawn_particle_explosion(self, x, y):
         # Spawn multiple particles at the given position
         for _ in range(PARTICLE_COUNT):
             particle = self.create_particle(x, y)
             self.particles.append(particle)
+
+    def update_particles(self):
+        current_time = time.time() * 1000  # Current time in milliseconds
+        # Remove old particles
+        self.particles = [p for p in self.particles if (current_time - p["start_time"]) <= p["lifetime"]]
+        # Update and draw particles
+        for particle in self.particles:
+            elapsed = current_time - particle["start_time"]
+            # Update position
+            particle["x"] += particle["dx"]
+            particle["y"] += particle["dy"]
+            # Calculate alpha and size (fade effect)
+            alpha = 1.0 - (elapsed / particle["lifetime"])
+            size = particle["size"] * alpha
+            # Draw particle
+            self.canvas.create_oval(
+                particle["x"] - size, particle["y"] - size,
+                particle["x"] + size, particle["y"] + size,
+                fill=particle["color"], outline=""
+            )
 
     def file_menu(self):
         self.paused = True
@@ -816,21 +890,23 @@ class WhiffleGame:
 
     def save_file(self, window):
         dialog = CustomDialog(window, "Save", "Enter filename:")
-        filename = dialog.show()
+        filename, _ = dialog.show()
         if filename:
-            save_point_zones(self.point_zones, filename)
+            save_point_zones(self.point_zones, self.special_hole, filename)
         window.destroy()
         self.paused = False
         self.update_frame()
 
     def load_file(self, window):
         dialog = CustomDialog(window, "Load", "Enter filename:")
-        filename = dialog.show()
+        filename, _ = dialog.show()
         if filename:
-            loaded_zones = load_point_zones(filename)
-            if loaded_zones:
+            loaded_zones, loaded_special_hole = load_point_zones(filename)
+            if loaded_zones or loaded_special_hole:
                 self.point_zones = loaded_zones
+                self.special_hole = loaded_special_hole
                 self.zone_count = len(self.point_zones)
+                self.special_hole_defined = bool(self.special_hole)
                 self.update_frame()
         window.destroy()
         self.paused = False
@@ -842,6 +918,7 @@ class WhiffleGame:
         scored_ball_ids.clear()  # Reset scored ball IDs
         self.tracker = CentroidTracker(max_disappeared=5)
         self.previous_balls = []  # Reset previous balls
+        self.new_high_score_prompted = False  # Reset the flag
         # Play game start sound
         if self.game_start_sound and self.sound_effects_enabled:
             self.game_start_sound.play()
@@ -861,7 +938,7 @@ class WhiffleGame:
         style.configure("Custom.TFrame", background="#2E2E2E")
         style.configure("Custom.TLabel", foreground="white", background="#2E2E2E")
 
-        ttk.Label(frame, text="High Score Leaderboard", font=("Helvetica", 14, "bold"), style="Custom.TLabel").pack(pady=10)
+        ttk.Label(frame, text="High Score Leaderboard (Online)", font=("Helvetica", 14, "bold"), style="Custom.TLabel").pack(pady=10)
 
         # Load and display leaderboard
         leaderboard = load_high_score()
@@ -892,7 +969,7 @@ class WhiffleGame:
         self.update_frame()
 
     def queue_save_zones(self):
-        if self.calibrating and self.point_zones:
+        if self.calibrating and (len(self.point_zones) + (1 if self.special_hole else 0)) >= TOTAL_ZONES:
             self.save_triggered = True
 
     def canvas_click(self, event):
@@ -924,27 +1001,36 @@ class WhiffleGame:
             y_frame = y
 
         radius = CALIBRATION_VISUAL_RADIUS
-        circle_id = self.canvas.create_oval(x - radius, y - radius, x + radius, y + radius, 
-                                           outline="blue", width=2)
-        self.zone_circles.append(circle_id)
-
+        show_special_option = not self.special_hole_defined and self.zone_count >= TOTAL_ZONES - 1
         self.paused = True
-        dialog = CustomDialog(self.root, "Points", f"Points for zone at ({x_frame}, {y_frame}):")
-        points = dialog.show()
+        dialog = CustomDialog(self.root, "Points", f"Points for zone at ({x_frame}, {y_frame}):", show_special_option=show_special_option)
+        points, is_special = dialog.show()
         if points is not None and points.strip():
             try:
                 points = int(points)
-                self.point_zones.append((x_frame, y_frame, ZONE_RADIUS, points))
-                self.zone_count += 1
-                text_id = self.canvas.create_text(x, y + radius + 15, text=str(points), fill="white", font=("Helvetica", 10))
-                self.zone_texts.append(text_id)
+                if is_special and not self.special_hole_defined:
+                    self.special_hole = (x_frame, y_frame, ZONE_RADIUS, points)
+                    self.special_hole_defined = True
+                    circle_id = self.canvas.create_oval(x - radius, y - radius, x + radius, y + radius, 
+                                                       outline="purple", width=2)
+                    self.zone_circles.append(circle_id)
+                    text_id = self.canvas.create_text(x, y + radius + 15, text="Double!", fill="purple", font=("Helvetica", 10))
+                    self.zone_texts.append(text_id)
+                else:
+                    self.point_zones.append((x_frame, y_frame, ZONE_RADIUS, points))
+                    self.zone_count += 1
+                    circle_id = self.canvas.create_oval(x - radius, y - radius, x + radius, y + radius, 
+                                                       outline="blue", width=2)
+                    self.zone_circles.append(circle_id)
+                    text_id = self.canvas.create_text(x, y + radius + 15, text=str(points), fill="white", font=("Helvetica", 10))
+                    self.zone_texts.append(text_id)
             except ValueError:
                 self.canvas.delete(self.zone_circles.pop())
                 if self.zone_texts:
                     self.canvas.delete(self.zone_texts.pop())
         self.paused = False
 
-        if self.zone_count >= TOTAL_ZONES:
+        if (len(self.point_zones) + (1 if self.special_hole else 0)) >= TOTAL_ZONES:
             self.save_triggered = True
 
     def update_frame(self):
@@ -977,28 +1063,42 @@ class WhiffleGame:
         offset_x = (canvas_width - new_width) // 2
         offset_y = (canvas_height - new_height) // 2
 
+        # Clear the canvas
+        self.canvas.delete("all")
+
+        # Draw the background image
         self.photo = ImageTk.PhotoImage(image=img)
         self.canvas.create_image(offset_x, offset_y, image=self.photo, anchor="nw")
 
+        # Draw particles (before zones and balls to ensure proper layering)
+        self.update_particles()
+
+        # Clear old drawings
         for circle_id in self.red_zone_circles:
             self.canvas.delete(circle_id)
         for text_id in self.red_zone_texts:
             self.canvas.delete(text_id)
         for circle_id in self.green_ball_circles:
             self.canvas.delete(circle_id)
+        if self.special_hole_circle:
+            self.canvas.delete(self.special_hole_circle)
+        if self.special_hole_text:
+            self.canvas.delete(self.special_hole_text)
         self.red_zone_circles = []
         self.red_zone_texts = []
         self.green_ball_circles = []
+        self.special_hole_circle = None
+        self.special_hole_text = None
 
         if self.save_triggered and self.calibrating:
-            if self.point_zones:
-                save_point_zones(self.point_zones)
+            if self.point_zones or self.special_hole:
+                save_point_zones(self.point_zones, self.special_hole)
             self.calibrating = False
             self.save_triggered = False
             self.save_button.config(state="disabled")
 
         if self.calibrating:
-            cv2.putText(self.frame, f"Click to define zones ({self.zone_count}/{TOTAL_ZONES})", 
+            cv2.putText(self.frame, f"Click to define zones ({self.zone_count + (1 if self.special_hole else 0)}/{TOTAL_ZONES})", 
                         (10, self.frame.shape[0] - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
             self.save_button.config(state="normal")
         else:
@@ -1011,7 +1111,7 @@ class WhiffleGame:
             if new_balls and self.ball_detected_sound and self.sound_effects_enabled:
                 self.ball_detected_sound.play()
 
-            round_score, self.last_red_score_time, scored_positions = calculate_score(tracked_balls, self.point_zones, self.last_red_score_time, RED_BALL_COOLDOWN)
+            round_score, self.last_red_score_time, scored_positions = calculate_score(tracked_balls, self.point_zones, self.special_hole, self.last_red_score_time, RED_BALL_COOLDOWN)
             global current_score, high_score, high_score_initials, scored_ball_ids
             if round_score > 0:
                 if self.score_sound and self.sound_effects_enabled:
@@ -1027,14 +1127,12 @@ class WhiffleGame:
                     self.spawn_particle_explosion(canvas_x, canvas_y)
             current_score += round_score  # Add only new scores
 
-            # Update and render particles
-            self.update_particles()
-
-            # Check for new high score and prompt for initials
-            if current_score > high_score:
+            # Check for new high score and prompt for initials only once
+            if current_score > high_score and not self.new_high_score_prompted:
                 self.paused = True
+                self.new_high_score_prompted = True  # Set flag to prevent repeated prompts
                 dialog = CustomDialog(self.root, "New High Score!", "Enter your initials (3 letters):")
-                initials = dialog.show()
+                initials, _ = dialog.show()
                 if initials and len(initials) > 0:
                     # Limit to 3 characters and uppercase
                     initials = initials.upper()[:3]
@@ -1074,6 +1172,18 @@ class WhiffleGame:
                                               fill="white", font=("Helvetica", 10))
             self.red_zone_texts.append(text_id)
 
+        # Draw the special hole if it exists
+        if self.special_hole:
+            x_frame, y_frame, r, points = self.special_hole
+            x_canvas = int(x_frame * (new_width / self.frame.shape[1]) + offset_x)
+            y_canvas = int(y_frame * (new_height / self.frame.shape[0]) + offset_y)
+            r_canvas = int(r * (new_width / self.frame.shape[1]))
+            self.special_hole_circle = self.canvas.create_oval(x_canvas - r_canvas, y_canvas - r_canvas, 
+                                                              x_canvas + r_canvas, y_canvas + r_canvas, 
+                                                              outline="purple", width=2)
+            self.special_hole_text = self.canvas.create_text(x_canvas, y_canvas, text="Double!", 
+                                                             fill="purple", font=("Helvetica", 10))
+
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
             save_high_score(high_score_initials, current_score)
@@ -1081,6 +1191,8 @@ class WhiffleGame:
             return
         elif key == ord('c'):
             self.point_zones = []
+            self.special_hole = None
+            self.special_hole_defined = False
             self.calibrating = True
             self.zone_count = 0
             global scored_ball_ids
@@ -1095,6 +1207,12 @@ class WhiffleGame:
             self.red_zone_circles = []
             self.red_zone_texts = []
             self.green_ball_circles = []
+            if self.special_hole_circle:
+                self.canvas.delete(self.special_hole_circle)
+                self.special_hole_circle = None
+            if self.special_hole_text:
+                self.canvas.delete(self.special_hole_text)
+                self.special_hole_text = None
 
         self.root.after(10, self.update_frame)
 
