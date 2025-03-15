@@ -165,6 +165,7 @@ def save_high_score(initials="N/A", new_score=None, leaderboard=None):
     if new_score is None:
         return
 
+    print(f"Attempting to save high score: {initials} - {new_score}")  # Debug print
     # Save to Supabase
     try:
         headers = {
@@ -180,9 +181,9 @@ def save_high_score(initials="N/A", new_score=None, leaderboard=None):
         }
         response = requests.post(LEADERBOARD_ENDPOINT, headers=headers, json=data)
         response.raise_for_status()
-        print(f"Successfully uploaded score: {initials} - {new_score}")
+        print(f"Successfully uploaded score to Supabase: {initials} - {new_score}")
     except requests.RequestException as e:
-        print(f"Error uploading score to online leaderboard: {e}")
+        print(f"Error uploading score to Supabase: {e}")
         # Fallback to local save if online fails
         if leaderboard is None:
             leaderboard = load_high_score()
@@ -197,6 +198,7 @@ def save_high_score(initials="N/A", new_score=None, leaderboard=None):
     if leaderboard and len(leaderboard) > 0:
         high_score = leaderboard[0]["score"]
         high_score_initials = leaderboard[0]["initials"]
+        print(f"Updated high score to: {high_score} by {high_score_initials}")
 
 def load_config():
     if os.path.exists(CONFIG_FILE):
@@ -690,11 +692,11 @@ class HelpWindow:
             "Credits: Ideas by Blake Weibling, coding help from Grok3"
         ]
         for line in help_lines:
-            ttk.Label(self.frame, text=line, font=("Helvetica", 10), style="Custom.TLabel").pack(pady=5)
+            ttk.Label(self.frame, text=line, font=("Helvetica", 10), style="Custom.TLabel").pack(pdy=5)
 
         # Add a button to launch the tutorial
         ttk.Button(self.frame, text="Show Tutorial", style="Custom.TButton", command=self.show_tutorial).pack(pady=5)
-        ttk.Button(self.frame, text="Close", style="Custom.TButton", command=self.close).pack(pady=5)
+        ttk.Button(frame, text="Close", style="Custom.TButton", command=self.close).pack(pady=5)
 
         self.root.protocol("WM_DELETE_WINDOW", self.close)
 
@@ -760,7 +762,7 @@ class WhiffleGame:
         self.canvas.bind("<Button-1>", self.canvas_click)
 
         self.save_button = ttk.Button(self.root, text="Save Zones", style="Custom.TButton", command=self.queue_save_zones, state="disabled")
-        self.save_button.pack(pady=5)  # Fixed from pdy to pady
+        self.save_button.pack(pady=5)  # Corrected from pdy to pady
 
         self.stats_frame = ttk.Frame(self.root, style="Custom.TFrame")
         self.stats_frame.pack(fill="x", padx=10, pady=5)
@@ -1137,8 +1139,10 @@ class WhiffleGame:
                     # Limit to 3 characters and uppercase
                     initials = initials.upper()[:3]
                     save_high_score(initials, current_score)
+                    print(f"Submitted new high score to online leaderboard: {initials} - {current_score}")
                 else:
                     save_high_score("N/A", current_score)
+                    print(f"Submitted new high score (no initials) to online leaderboard: {current_score}")
                 self.paused = False
 
             self.previous_balls = tracked_balls  # Update previous balls
