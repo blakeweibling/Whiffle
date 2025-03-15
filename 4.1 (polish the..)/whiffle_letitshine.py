@@ -631,7 +631,8 @@ class OptionsWindow:
     def __init__(self, on_close_callback, game_instance):
         self.root = tk.Toplevel()
         self.root.title("Options")
-        self.root.geometry("400x400")
+        # Widened window size and adjusted height to fit grid layout
+        self.root.geometry("600x300")
         self.root.configure(bg="#2E2E2E")
         self.on_close_callback = on_close_callback
         self.game = game_instance
@@ -642,8 +643,12 @@ class OptionsWindow:
         style.configure("Custom.TLabel", foreground="white", background="#2E2E2E")
         style.configure("Custom.TEntry", fieldbackground="#4A4A4A", foreground="white")
 
-        ttk.Label(frame, text="Options", font=("Helvetica", 14, "bold"), style="Custom.TLabel").pack(pady=10)
+        ttk.Label(frame, text="Options", font=("Helvetica", 14, "bold"), style="Custom.TLabel").pack(pady=5)
 
+        # Create a grid layout for the fields
+        fields_frame = ttk.Frame(frame)
+        fields_frame.pack(pady=5)
+        
         self.fields = [
             ("Lower Hue (0-180)", BALL_COLOR_RANGE["lower_white"][0], 0, 180),
             ("Lower Sat (0-255)", BALL_COLOR_RANGE["lower_white"][1], 0, 255),
@@ -653,17 +658,30 @@ class OptionsWindow:
             ("Upper Val (0-255)", BALL_COLOR_RANGE["upper_white"][2], 0, 255),
         ]
         self.entries = []
-        for label, value, _, _ in self.fields:
-            ttk.Label(frame, text=label, font=("Helvetica", 10), style="Custom.TLabel").pack(pady=2)
-            entry = ttk.Entry(frame, font=("Helvetica", 10), style="Custom.TEntry")
+
+        # Arrange fields in a 2-column grid
+        for i, (label, value, _, _) in enumerate(self.fields):
+            row = i // 2  # Two fields per row
+            col = (i % 2) * 2  # Columns 0 and 2 for labels, 1 and 3 for entries
+            ttk.Label(fields_frame, text=label, font=("Helvetica", 10), style="Custom.TLabel").grid(row=row, column=col, padx=5, pady=2, sticky="w")
+            entry = ttk.Entry(fields_frame, font=("Helvetica", 10), style="Custom.TEntry")
             entry.insert(0, str(value))
-            entry.pack(pady=2)
+            entry.grid(row=row, column=col + 1, padx=5, pady=2)
             self.entries.append(entry)
 
+        # Add frame rate toggle (30 FPS or 60 FPS)
+        self.fps_var = tk.StringVar(value="30")  # Default to 30 FPS
+        fps_frame = ttk.Frame(frame)
+        fps_frame.pack(pady=5)
+        ttk.Label(fps_frame, text="Frame Rate:", font=("Helvetica", 10), style="Custom.TLabel").pack(side="left")
+        ttk.Radiobutton(fps_frame, text="30 FPS", value="30", variable=self.fps_var, command=self.update_fps).pack(side="left", padx=5)
+        ttk.Radiobutton(fps_frame, text="60 FPS", value="60", variable=self.fps_var, command=self.update_fps).pack(side="left", padx=5)
+
+        # Add mute music and sound effects toggles
         self.music_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(frame, text="Mute Music", variable=self.music_var, command=self.toggle_music).pack(pady=5)
+        ttk.Checkbutton(frame, text="Mute Music", variable=self.music_var, command=self.toggle_music).pack(pady=2)
         self.sound_effects_var = tk.BooleanVar(value=not self.game.sound_effects_enabled)
-        ttk.Checkbutton(frame, text="Disable Sound Effects", variable=self.sound_effects_var, command=self.toggle_sound_effects).pack(pady=5)
+        ttk.Checkbutton(frame, text="Disable Sound Effects", variable=self.sound_effects_var, command=self.toggle_sound_effects).pack(pady=2)
 
         button_frame = ttk.Frame(frame)
         button_frame.pack(pady=10)
@@ -671,6 +689,11 @@ class OptionsWindow:
         ttk.Button(button_frame, text="Close", command=self.close).pack(side="left", padx=5)
 
         self.root.protocol("WM_DELETE_WINDOW", self.close)
+
+    def update_fps(self):
+        fps = self.fps_var.get()
+        self.game.target_frame_time = 0.033 if fps == "30" else 0.016  # 30 FPS = 0.033s, 60 FPS = 0.016s
+        print(f"Frame rate set to {fps} FPS")
 
     def save(self):
         global BALL_COLOR_RANGE
@@ -750,6 +773,7 @@ class WhiffleGame:
         self.last_power_up_spawn = 0
         self.frame_delay = 10
         self.last_frame_time = time.time()
+        self.target_frame_time = 0.033  # Default to 30 FPS (1/30 ≈ 0.033 seconds)
 
         try:
             self.ball_detected_sound = pygame.mixer.Sound("ball_detected.wav")
@@ -1089,9 +1113,8 @@ class WhiffleGame:
             return
 
         current_time = time.time()
-        target_frame_time = 0.033  # 30 FPS (1/30 ≈ 0.033 seconds)
-        if current_time - self.last_frame_time < target_frame_time:
-            self.root.after(int((target_frame_time - (current_time - self.last_frame_time)) * 1000), self.update_frame)
+        if current_time - self.last_frame_time < self.target_frame_time:
+            self.root.after(int((self.target_frame_time - (current_time - self.last_frame_time)) * 1000), self.update_frame)
             return
         self.last_frame_time = current_time
 
@@ -1101,8 +1124,7 @@ class WhiffleGame:
         self.update_game_logic(self.rendered_width, self.rendered_height, self.rendered_offset_x, self.rendered_offset_y)
 
         elapsed = (time.time() - current_time) * 1000  # Time taken in milliseconds
-        self.frame_delay = max(33, int(elapsed * 1.5))  # Dynamic adjustment, minimum 30 FPS
-        print(f"Frame processed in {elapsed}ms, next delay: {self.frame_delay}ms")
+        self.frame_delay = max(10, int(elapsed * 1.5))
         self.root.after(self.frame_delay, self.update_frame)
 
     def read_frame(self):
@@ -1184,7 +1206,6 @@ class WhiffleGame:
                     self.canvas.configure(highlightbackground="pink")
             else:
                 self.canvas.configure(highlightbackground="#2196F3")
-            print(f"Rendered frame with dimensions {new_width}x{new_height}")
         else:
             print("Frame is None, cannot render")
 
@@ -1266,7 +1287,6 @@ class WhiffleGame:
             self.score_label.config(text=f"Score: {current_score}")
             self.res_label.config(text=f"Res: {self.width}x{self.height}")
             self.previous_balls = tracked_balls
-            print(f"Updated game logic: {total_balls} balls detected, score: {current_score}")
 
     def handle_input(self):
         key = cv2.waitKey(1) & 0xFF
