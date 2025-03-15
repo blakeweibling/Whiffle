@@ -291,6 +291,50 @@ def calculate_score(balls, point_zones, last_red_score_time, red_score_cooldown)
                     break
     return round_score, last_red_score_time
 
+class SplashScreen:
+    def __init__(self, root, callback):
+        self.root = root
+        self.callback = callback
+
+        # Configure the splash screen window
+        self.root.overrideredirect(True)  # Remove window borders
+        self.root.attributes('-topmost', True)  # Keep on top
+
+        # Load the splash image
+        try:
+            self.splash_image = Image.open("splash.png")  # Adjust the filename as needed
+            # Optionally resize the image if it's too large
+            self.splash_image = self.splash_image.resize((800, 600), Image.Resampling.LANCZOS)
+            self.splash_photo = ImageTk.PhotoImage(self.splash_image)
+        except Exception as e:
+            print(f"Error loading splash image: {e}")
+            self.splash_photo = None
+
+        # Create a canvas to display the image
+        self.canvas = tk.Canvas(self.root, width=800, height=600, bg="black", highlightthickness=0)
+        self.canvas.pack()
+
+        if self.splash_photo:
+            # Center the image on the canvas
+            self.canvas.create_image(400, 300, image=self.splash_photo, anchor="center")
+
+        # Bind a click event to close the splash screen
+        self.canvas.bind("<Button-1>", self.close_splash)
+
+        # Center the window on the screen
+        self.root.update_idletasks()
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        window_width = 800
+        window_height = 600
+        x = (screen_width - window_width) // 2
+        y = (screen_height - window_height) // 2
+        self.root.geometry(f"{window_width}x{window_height}+{x}+{y}")
+
+    def close_splash(self, event=None):
+        self.root.destroy()
+        self.callback()  # Call the callback to start the main game
+
 class CustomDialog:
     def __init__(self, parent, title, prompt):
         self.root = tk.Toplevel(parent)
@@ -853,7 +897,14 @@ class WhiffleGame:
         self.cap.release()
         self.root.destroy()
 
-if __name__ == "__main__":
+# Function to start the main game after the splash screen
+def start_game():
     root = tk.Tk()
     app = WhiffleGame(root)
     root.mainloop()
+
+if __name__ == "__main__":
+    # Create the splash screen
+    splash_root = tk.Tk()
+    splash = SplashScreen(splash_root, start_game)
+    splash_root.mainloop()
