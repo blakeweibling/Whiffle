@@ -24,6 +24,7 @@ COOLDOWN_FRAMES = 30
 CONFIRMATION_FRAMES = 10
 SOUND_COOLDOWN = 1.0
 MENU_HEIGHT = 60  # Height of the persistent menu bar
+STATUS_BAR_HEIGHT = 50  # Height of the bottom status bar
 
 # Colors
 BLACK = (0, 0, 0)
@@ -32,7 +33,13 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
-GRAY = (128, 128, 128)  # For menu background
+GRAY = (128, 128, 128)  # For menu and status bar background
+
+# Initial HSV and Volume Settings
+lower_white = np.array([0, 0, 200])
+upper_white = np.array([180, 30, 255])
+volume = 0.5  # Initial volume (0 to 1)
+pygame.mixer.music.set_volume(volume)
 
 # Load sound effect
 try:
@@ -97,7 +104,9 @@ class Menu:
             "File": {
                 "(C)alibrate": lambda: calibrate_holes(),
             },
-            "Settings": {},
+            "Settings": {
+                "Adjust Settings": lambda: self.show_settings(),
+            },
             "Help": {
                 "(A)bout": lambda: self.show_about(),
                 "(T)utorial": lambda: self.show_tutorial(),
@@ -113,10 +122,12 @@ class Menu:
         self.hovered_sub = None
 
     def show_about(self):
-        print("About menu triggered (to be populated later)")
-        pygame.display.set_caption("About - Whiffle Playfield")
-        time.sleep(2)  # Simulate display time
-        pygame.display.set_caption("Whiffle Playfield")
+        global about_window
+        about_window.active = True
+
+    def show_settings(self):
+        global settings_window
+        settings_window.active = True
 
     def show_tutorial(self):
         print("Tutorial menu triggered (to be populated later)")
@@ -229,7 +240,6 @@ class Menu:
 
     def handle_mouse_input(self, event):
         if event.type == pygame.MOUSEMOTION:
-            # Check hover on main options
             self.hovered_main = None
             self.hovered_sub = None
             mouse_pos = event.pos
@@ -237,7 +247,6 @@ class Menu:
                 if rect.collidepoint(mouse_pos):
                     self.hovered_main = main_option
                     break
-            # Check hover on sub-options
             for sub_option, rect in self.sub_rects.items():
                 if rect.collidepoint(mouse_pos):
                     self.hovered_sub = sub_option
@@ -246,27 +255,222 @@ class Menu:
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Left click
             mouse_pos = event.pos
-            # Check clicks on main options
             for main_option, rect in self.main_rects.items():
                 if rect.collidepoint(mouse_pos):
                     if self.selected == main_option:
-                        self.selected = None  # Toggle off if clicking the same option
+                        self.selected = None
                         self.submenu = None
                     else:
                         self.selected = main_option
                         self.submenu = None
                     return True
-            # Check clicks on sub-options
             for sub_option, rect in self.sub_rects.items():
                 if rect.collidepoint(mouse_pos) and self.selected:
                     if sub_option in self.options[self.selected]:
                         self.options[self.selected][sub_option]()
                         self.submenu = None
-                        return True
+                    return True
             return False
         return False
 
-menu = Menu()
+menu = Menu()  # Initialize the menu object
+
+class AboutWindow:
+    def __init__(self):
+        self.active = False
+        self.font = pygame.font.Font(None, 24)
+        self.text = [
+            "In 1931, Automatic Industries introduced the 'Whiffle Board,' a pinball machine",
+            "considered by many to be the first true pinball machine, featuring an",
+            "electrically-powered scoring mechanism and the iconic plunger for launching",
+            "the ball. Here's a more detailed look at the history:",
+            "",
+            "• Early Pinball Origins: Before the Whiffle Board, pinball-like games existed,",
+            "  such as bagatelle, which involved players using a cue stick to shoot balls",
+            "  across a table into scoring holes. [2, 3]",
+            "• Automatic Industries' Innovation: In 1931, Automatic Industries, founded by",
+            "  Arthur Paulin, Earl Froom, Myrl Park, and William Howell, introduced the",
+            "  'Whiffle Board'. [2, 4]",
+            "• Key Features: The Whiffle Board was notable for its electrically-powered",
+            "  scoring mechanism and the introduction of the plunger, a key feature of",
+            "  modern pinball machines. [1, 2]",
+            "• Coin-Operated: The Whiffle Board was also one of the first coin-operated",
+            "  pinball machines. [3]",
+            "• 'Pinball' Term: The term 'pinball' emerged in 1936, referencing the nature",
+            "  of the game's playing field and the pins that held the scoring holes. [1, 3]",
+            "• Other games invented in the 1930s: Bingo by Bingo Novelty Company and",
+            "  Baffle Ball by D. Gottlieb & Co. [1]",
+            "• Golden Age of Pinball: Pinball experienced a temporary decline in popularity",
+            "  during World War II, but interest rebounded after the war, especially after",
+            "  D. Gottlieb & Co. invented flippers in 1947. The 'Golden Age' of pinball",
+            "  lasted from 1948 until 1958. [1]",
+            "",
+            "Generative AI is experimental.",
+            "[1] https://www.betson.com/history-of-pinball/",
+            "[2] https://www.arcade92.com/post/pinball-wizards-tracing-the-evolution-of-the-world-s-first-pinball-machine",
+            "[3] https://www.videoamusement.com/news/the-history-of-pinball/",
+            "[4] https://pinballnirvana.com/forums/threads/the-very-first-whiffle-board-automatic-industries-1931.21197/"
+        ]
+        self.window_surface = None
+        self.close_button_rect = None
+        self.scroll_y = 0  # Scroll offset for text
+        self.window_width = 600
+        self.window_height = 400
+        self.max_scroll = max(0, (len(self.text) * 20) - (self.window_height - 40))  # Max scroll based on text height
+
+    def draw(self, screen):
+        if not self.active:
+            return
+        if self.window_surface is None:
+            self.window_surface = pygame.Surface((self.window_width, self.window_height), pygame.SRCALPHA)
+            self.window_surface.fill((200, 200, 200, 200))  # Semi-transparent gray
+            self.close_button_rect = pygame.Rect(self.window_width - 40, 10, 30, 30)
+            pygame.draw.rect(self.window_surface, RED, self.close_button_rect)
+
+        # Clear and redraw text with scroll
+        self.window_surface.fill((200, 200, 200, 200))  # Refresh background
+        pygame.draw.rect(self.window_surface, RED, self.close_button_rect)  # Redraw close button
+        y_offset = 40 - self.scroll_y
+        for line in self.text:
+            text = self.font.render(line, True, BLACK)
+            if 40 <= y_offset + 20 <= self.window_height - 20:  # Only draw visible lines
+                self.window_surface.blit(text, (10, y_offset))
+            y_offset += 20
+
+        screen.blit(self.window_surface, ((WIDTH - self.window_width) // 2, (HEIGHT - self.window_height) // 2))
+
+    def handle_input(self, event):
+        if not self.active:
+            return False
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            mouse_pos = event.pos
+            window_x = (WIDTH - self.window_width) // 2
+            window_y = (HEIGHT - self.window_height) // 2
+            local_x = mouse_pos[0] - window_x
+            local_y = mouse_pos[1] - window_y
+            if self.close_button_rect.collidepoint(local_x, local_y):
+                self.active = False
+                return True
+        if event.type == pygame.MOUSEWHEEL:
+            self.scroll_y -= event.y * 20  # Scroll 20 pixels per wheel notch
+            self.scroll_y = max(0, min(self.scroll_y, self.max_scroll))
+            return True
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.active = False
+            return True
+        return False
+
+about_window = AboutWindow()
+
+class SettingsWindow:
+    def __init__(self):
+        self.active = False
+        self.font = pygame.font.Font(None, 24)
+        self.window_width = 400
+        self.window_height = 300
+        self.window_surface = None
+        self.close_button_rect = None
+        self.slider_values = {
+            "lower_h": lower_white[0],
+            "lower_s": lower_white[1],
+            "lower_v": lower_white[2],
+            "upper_h": upper_white[0],
+            "upper_s": upper_white[1],
+            "upper_v": upper_white[2],
+            "volume": volume * 100  # Convert to percentage for slider
+        }
+        self.slider_positions = {}
+        self.dragging_slider = None
+
+    def draw(self, screen):
+        if not self.active:
+            return
+        if self.window_surface is None:
+            self.window_surface = pygame.Surface((self.window_width, self.window_height), pygame.SRCALPHA)
+            self.window_surface.fill((200, 200, 200, 200))  # Semi-transparent gray
+            self.close_button_rect = pygame.Rect(self.window_width - 40, 10, 30, 30)
+            pygame.draw.rect(self.window_surface, RED, self.close_button_rect)
+
+        self.window_surface.fill((200, 200, 200, 200))  # Refresh background
+        pygame.draw.rect(self.window_surface, RED, self.close_button_rect)  # Redraw close button
+
+        # Draw sliders for HSV and volume
+        labels = [
+            "HSV Lower (H)", "HSV Lower (S)", "HSV Lower (V)",
+            "HSV Upper (H)", "HSV Upper (S)", "HSV Upper (V)",
+            "Volume"
+        ]
+        y_offset = 40
+        for label in labels:
+            key = label.lower().replace(" ", "_")
+            text = self.font.render(label + f": {int(self.slider_values[key])}", True, BLACK)
+            self.window_surface.blit(text, (10, y_offset))
+
+            slider_length = 200
+            slider_x = 150
+            slider_y = y_offset + 5
+            pygame.draw.rect(self.window_surface, WHITE, (slider_x, slider_y, slider_length, 10))
+            slider_value = self.slider_values[key]
+            max_value = 180 if "h" in key else 255 if "s" in key or "v" in key else 100
+            slider_pos = slider_x + (slider_length - 20) * (slider_value / max_value)
+            pygame.draw.rect(self.window_surface, BLUE, (slider_pos, slider_y - 5, 20, 20))
+            self.slider_positions[key] = (slider_x, slider_y, slider_length)
+            y_offset += 40
+
+        screen.blit(self.window_surface, ((WIDTH - self.window_width) // 2, (HEIGHT - self.window_height) // 2))
+
+    def handle_input(self, event):
+        if not self.active:
+            return False
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            mouse_pos = event.pos
+            window_x = (WIDTH - self.window_width) // 2
+            window_y = (HEIGHT - self.window_height) // 2
+            local_x = mouse_pos[0] - window_x
+            local_y = mouse_pos[1] - window_y
+            if self.close_button_rect.collidepoint(local_x, local_y):
+                self.active = False
+                return True
+            # Check for slider dragging
+            for key, (slider_x, slider_y, slider_length) in self.slider_positions.items():
+                slider_rect = pygame.Rect(slider_x + window_x, slider_y + window_y - 5, slider_length, 20)
+                if slider_rect.collidepoint(mouse_pos):
+                    self.dragging_slider = key
+                    self.slider_start_x = mouse_pos[0] - (slider_x + window_x + (slider_length - 20) * (self.slider_values[key] / (180 if "h" in key else 255 if "s" in key or "v" in key else 100)))
+                    return True
+        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            if self.dragging_slider:
+                slider_x, slider_y, slider_length = self.slider_positions[self.dragging_slider]
+                window_x = (WIDTH - self.window_width) // 2
+                mouse_x = max(slider_x + window_x, min(slider_x + window_x + slider_length - 20, event.pos[0]))
+                max_value = 180 if "h" in self.dragging_slider else 255 if "s" in self.dragging_slider or "v" in self.dragging_slider else 100
+                value = ((mouse_x - (slider_x + window_x)) / (slider_length - 20)) * max_value
+                if "lower_h" in self.dragging_slider:
+                    lower_white[0] = min(179, max(0, int(value)))
+                elif "lower_s" in self.dragging_slider:
+                    lower_white[1] = min(255, max(0, int(value)))
+                elif "lower_v" in self.dragging_slider:
+                    lower_white[2] = min(255, max(0, int(value)))
+                elif "upper_h" in self.dragging_slider:
+                    upper_white[0] = min(179, max(0, int(value)))
+                elif "upper_s" in self.dragging_slider:
+                    upper_white[1] = min(255, max(0, int(value)))
+                elif "upper_v" in self.dragging_slider:
+                    upper_white[2] = min(255, max(0, int(value)))
+                elif "volume" in self.dragging_slider:
+                    volume = min(1.0, max(0.0, value / 100))
+                    pygame.mixer.music.set_volume(volume)
+                    if score_sound:
+                        score_sound.set_volume(volume)
+                self.slider_values[self.dragging_slider] = value
+                self.dragging_slider = None
+                return True
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.active = False
+            return True
+        return False
+
+settings_window = SettingsWindow()
 
 # Calibration File
 CALIBRATION_FILE = "calibration.json"
@@ -459,9 +663,8 @@ if not reinitialize_camera():
 
 # Ball Detection
 def detect_ball_in_hole(image, hole_coords, game_state, frame_count):
+    global lower_white, upper_white
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    lower_white = np.array([0, 0, 200])
-    upper_white = np.array([180, 30, 255])
     mask = cv2.inRange(hsv, lower_white, upper_white)
 
     kernel = np.ones((5, 5), np.uint8)
@@ -570,16 +773,18 @@ def detect_ball_in_hole(image, hole_coords, game_state, frame_count):
 # Game Loop Setup
 font = pygame.font.Font(None, 36)
 def draw_ui():
+    status_surface = pygame.Surface((WIDTH, STATUS_BAR_HEIGHT))
+    status_surface.fill(GRAY)
     score_text = font.render(f"Balls: {game.balls}  Score: {game.score}  Time: {game.time}  Power-Up: {game.power_up or 'None'}", True, WHITE)
-    screen.blit(score_text, (10, HEIGHT - 50))
-    # Removed the blue rectangle: pygame.draw.rect(screen, BLUE, (10, 10, 100, 50))
+    status_surface.blit(score_text, (10, 10))
+    screen.blit(status_surface, (0, HEIGHT - STATUS_BAR_HEIGHT))
 
 # Main Game Loop (Stops around line 700)
 running = True
 frame_count = 0
 retry_count = 0
 max_retries = 10
-while running and game.running:
+while running:
     try:
         if not cap.isOpened():
             print("Camera not open. Reinitializing...")
@@ -657,6 +862,9 @@ while running and game.running:
         # Draw persistent menu bar at the top
         menu.draw(screen)
 
+        # Draw status bar at the bottom
+        draw_ui()
+
         for pos in game.detected_positions:
             if any(pos == game.confirming_balls[ball_id]["hole_pos"] for ball_id in game.confirming_balls
                    if game.confirming_balls[ball_id]["frames"] < CONFIRMATION_FRAMES):
@@ -668,7 +876,10 @@ while running and game.running:
                     x1, y1, x2, y2 = rect
                     cv2.rectangle(frame_to_display, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
-        draw_ui()
+        # Draw about and settings windows if active
+        about_window.draw(screen)
+        settings_window.draw(screen)
+
         pygame.display.flip()
         clock.tick(30)
 
@@ -677,17 +888,29 @@ while running and game.running:
             game.time = time.strftime("%H:%M:%S")
 
         for event in pygame.event.get():
-            if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+            if event.type == QUIT:
                 running = False
             elif event.type == KEYDOWN:
                 menu.handle_input(event)
-                if event.key == pygame.K_l:
-                    game.show_leaderboard = not game.show_leaderboard
-                elif event.key == pygame.K_r:
-                    game.reset()
-                elif event.key == pygame.K_c:
-                    game.hole_positions = calibrate_holes()
-            elif event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN):
+                if about_window.active:
+                    about_window.handle_input(event)
+                elif settings_window.active:
+                    settings_window.handle_input(event)
+                else:
+                    if event.key == pygame.K_l:
+                        game.show_leaderboard = not game.show_leaderboard
+                    elif event.key == pygame.K_r:
+                        game.reset()
+                    elif event.key == pygame.K_c:
+                        game.hole_positions = calibrate_holes()
+            elif event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEWHEEL):
+                # Prioritize pop-up windows over menu for mouse events
+                if about_window.active:
+                    if about_window.handle_input(event):
+                        continue
+                if settings_window.active:
+                    if settings_window.handle_input(event):
+                        continue
                 menu.handle_mouse_input(event)
 
         if game.balls <= 0:
