@@ -5,6 +5,7 @@ from menu_renderer import MenuRenderer
 from menu_input_handler import MenuInputHandler
 from menu_settings import MenuSettings
 from leaderboard import Leaderboard  # Import the new Leaderboard class
+from config import GameConfig  # Import GameConfig to create a default instance
 
 class MenuSystem:
     """Manages the game's menu system, including state, navigation, settings, and dragging."""
@@ -50,6 +51,8 @@ class MenuSystem:
         self.drag_offset_x = 0
         self.drag_offset_y = 0
         self.header_rect = None
+        # Reset button rect
+        self.reset_button_rect = None
 
         self.settings = MenuSettings()
         self.sound_manager = sound_manager  # Use the passed SoundManager instance
@@ -61,19 +64,31 @@ class MenuSystem:
             self.sound_manager.update_settings()
 
     def reset_menu(self):
-        """Reset the menu state to the top-level menu."""
+        """Reset the menu state to the top-level menu without changing the state."""
         self.current_menu = self.options
         self.menu_stack = []
         self.selection = 0
-        self.state = "main_menu"
-        print("Menu state reset to main menu")
+        print("Menu state reset to main menu (state unchanged)")
+
+    def reset_to_defaults(self):
+        """Reset all settings to their default values as defined in GameConfig."""
+        default_config = GameConfig()  # Create a new instance with default values
+        self.settings.config = default_config
+        self.save_settings()
+        print("Settings reset to default values")
 
     def set_state(self, state):
         """Set the current menu state and reset selection."""
+        print(f"Setting menu state to: {state}")  # Debug print
         self.state = state
         self.selection = 0
         if state == "closed":
-            self.reset_menu()  # Reset menu state when closing
+            self.menu_item_rects = []  # Clear menu items when closing
+            self.menu_area = None
+            self.back_button_rect = None
+            self.close_button_rect = None
+            self.header_rect = None
+            self.reset_button_rect = None  # Clear reset button rect
         if state != "closed" and self.sound_manager:
             self.sound_manager.play_sound_effect("menu_click")
 

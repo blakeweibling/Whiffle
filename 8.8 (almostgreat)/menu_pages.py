@@ -347,6 +347,7 @@ def draw_settings_menu(renderer, frame):
     text_y = close_y + (close_h + text_size[1]) // 2
     cv2.putText(overlay, "X", (text_x, text_y), font, 0.5, (255, 255, 255), 1)
 
+    # Draw the "Back" button
     back_x = menu_x1 + 20
     back_y = menu_y2 - 60
     back_w, back_h = 100, 30
@@ -357,6 +358,18 @@ def draw_settings_menu(renderer, frame):
     text_x = back_x + (back_w - text_size[0]) // 2
     text_y = back_y + (back_h + text_size[1]) // 2
     cv2.putText(overlay, "Back", (text_x, text_y), font, 0.5, (0, 0, 0), 1)
+
+    # Draw the "Reset to Defaults" button next to the "Back" button
+    reset_x = back_x + back_w + 20  # Place it to the right of the "Back" button
+    reset_y = menu_y2 - 60
+    reset_w, reset_h = 150, 30
+    renderer.menu_system.reset_button_rect = (reset_x, reset_y, reset_w, reset_h)
+    cv2.rectangle(overlay, (reset_x, reset_y), (reset_x + reset_w, reset_y + reset_h), (200, 200, 200), -1)
+    cv2.rectangle(overlay, (reset_x, reset_y), (reset_x + reset_w, reset_y + reset_h), (0, 0, 0), 1)
+    text_size = cv2.getTextSize("Reset to Defaults", font, 0.5, 1)[0]
+    text_x = reset_x + (reset_w - text_size[0]) // 2
+    text_y = reset_y + (reset_h + text_size[1]) // 2
+    cv2.putText(overlay, "Reset to Defaults", (text_x, text_y), font, 0.5, (0, 0, 0), 1)
 
     # Apply semi-transparency (same as HelpWindow)
     alpha = 0.95  # Match the opacity of HelpWindow

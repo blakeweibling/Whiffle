@@ -134,6 +134,7 @@ class MenuRenderer:
             rect_w = text_size[0] + 10
             rect_h = text_size[1] + 10
             self.menu_system.menu_item_rects.append((rect_x, rect_y, rect_w, rect_h))
+            print(f"Menu item {i}: {text} at rect ({rect_x}, {rect_y}, {rect_w}, {rect_h})")  # Debug print
             cv2.putText(overlay, text, (x_pos, y_pos), font, font_scale, color, thickness)
 
         if show_close:
@@ -141,6 +142,7 @@ class MenuRenderer:
             close_y = menu_y1 + 5
             close_w, close_h = 30, 20
             self.menu_system.close_button_rect = (close_x, close_y, close_w, close_h)
+            print(f"Close button rect set to: ({close_x}, {close_y}, {close_w}, {close_h})")  # Debug print
             cv2.rectangle(overlay, (close_x, close_y), (close_x + close_w, close_y + close_h), (0, 0, 255), -1)
             cv2.rectangle(overlay, (close_x, close_y), (close_x + close_w, close_y + close_h), (0, 0, 0), 1)
             text_size = cv2.getTextSize("X", font, 0.5, 1)[0]
@@ -153,6 +155,7 @@ class MenuRenderer:
             back_y = menu_y2 - 60
             back_w, back_h = 100, 30
             self.menu_system.back_button_rect = (back_x, back_y, back_w, back_h)
+            print(f"Back button rect set to: ({back_x}, {back_y}, {back_w}, {back_h})")  # Debug print
             cv2.rectangle(overlay, (back_x, back_y), (back_x + back_w, back_y + back_h), (200, 200, 200), -1)
             cv2.rectangle(overlay, (back_x, back_y), (back_x + back_w, back_y + back_h), (0, 0, 0), 1)
             text_size = cv2.getTextSize("Back", font, 0.5, 1)[0]
@@ -183,7 +186,7 @@ class MenuRenderer:
             )
             return draw_text_page(self, frame, help_text, "Help")
         elif self.menu_system.state == "about":
-            about_text = "Whiffle Tracker v8.8\nDeveloped by Blake Weibling\nPowered by OpenCV and xAI's Grok"
+            about_text = "Ball Tracking Game v1.0\nDeveloped by Bob Weibling\nPowered by OpenCV and xAI's Grok"
             return draw_text_page(self, frame, about_text, "About")
         elif self.menu_system.state == "leaderboard":
             # Fetch scores only if not already cached

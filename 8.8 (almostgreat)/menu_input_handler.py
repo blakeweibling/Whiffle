@@ -63,6 +63,7 @@ class MenuInputHandler:
     def mouse_callback(self, event, x, y, flags, param=None):
         """Handle mouse events for menu interaction."""
         if event == cv2.EVENT_LBUTTONDOWN:
+            print(f"Mouse clicked at ({x}, {y})")  # Debug print
             # Check if clicking the menu bar button
             if self.menu_system.button_rect:
                 bx, by, bw, bh = self.menu_system.button_rect
@@ -70,11 +71,12 @@ class MenuInputHandler:
                     if self.menu_system.state == "closed":
                         self.menu_system.reset_menu()  # Reset menu state when opening
                         self.menu_system.set_state("main_menu")
+                        print("Menu opened via button")
                     else:
                         self.menu_system.set_state("closed")
                         if self.menu_system.sound_manager:
                             self.menu_system.sound_manager.update_settings()
-                    print("Menu toggled via button")
+                        print("Menu closed via button")
                     return
 
             # Check if clicking the header for dragging
@@ -114,6 +116,7 @@ class MenuInputHandler:
                             menu_items = list(self.menu_system.current_menu.keys())
                             selected_item = menu_items[idx]
                             action = self.menu_system.current_menu[selected_item]
+                            print(f"Clicked menu item: {selected_item}")  # Debug print
                             if isinstance(action, dict):
                                 self.menu_system.menu_stack.append(self.menu_system.current_menu)
                                 self.menu_system.current_menu = action
@@ -153,9 +156,10 @@ class MenuInputHandler:
                     else:
                         self.menu_system.set_state("main_menu")
                     return
-            if self.menu_system.close_button_rect and self.menu_system.state in ["main_menu", "settings", "leaderboard", "help", "about"]:
+            if self.menu_system.close_button_rect and self.menu_system.state != "closed":
                 cx, cy, cw, ch = self.menu_system.close_button_rect
                 if cx <= x <= cx + cw and cy <= y <= cy + ch:
+                    print("Close button clicked")  # Debug print
                     self.menu_system.set_state("closed")
                     if self.menu_system.sound_manager:
                         self.menu_system.sound_manager.update_settings()

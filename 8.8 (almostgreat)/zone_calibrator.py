@@ -1,3 +1,4 @@
+# zone_calibrator.py
 import cv2
 import numpy as np
 from zone_utils import ZoneManager, ZoneAnimator, UndoRedoHandler
@@ -33,6 +34,8 @@ class ZoneCalibrator:
         self.calibrating = True
         window_closed = False  # Track if the window was closed via 'X'
         cv2.namedWindow("Calibration", cv2.WINDOW_NORMAL)
+        # Set the window size to match the game window
+        cv2.resizeWindow("Calibration", current_width, current_height)
         scale_x = current_width / frame.shape[1]
         scale_y = current_height / frame.shape[0]
         cv2.setMouseCallback("Calibration", lambda event, x, y, flags, param: self.mouse_handler.mouse_callback(event, x, y, flags, frame, scale_x, scale_y))
