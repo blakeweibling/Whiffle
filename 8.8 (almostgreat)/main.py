@@ -13,9 +13,21 @@ from sound_manager import SoundManager  # Import SoundManager
 import pandas as pd
 import os
 import pickle
+import sys  # Added for resource_path()
 
-def log_training_data(balls, scoring_zones, current_width, current_height, filename="training_data.csv", debug=False):
+# Add resource_path() function to handle file paths for PyInstaller
+def resource_path(relative_path):
+    """Get the absolute path to a resource, works for dev and for PyInstaller."""
+    if hasattr(sys, '_MEIPASS'):
+        # PyInstaller creates a temp folder and stores files there
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
+def log_training_data(balls, scoring_zones, current_width, current_height, filename="train_ball_detector.csv", debug=False):
     """Log training data for balls, including their position, type, and score."""
+    # Update filename with resource_path()
+    filename = resource_path(filename)
+    
     data = []
     scale = min(current_width / 1920, current_height / 1080)
     for ball in balls:
@@ -121,6 +133,9 @@ class LabelingSession:
 
 def save_labeled_data(frame, labels, filename="labeled_data.pkl"):
     """Save labeled data to a pickle file."""
+    # Update filename with resource_path()
+    filename = resource_path(filename)
+    
     patch_size = 20
     data = []
     for x, y, label in labels:
@@ -192,7 +207,8 @@ class Game:
 
     def show_splash(self, frame):
         """Display a splash screen with a fade-out effect."""
-        splash_img = cv2.imread("splash.png")
+        # Update splash.png path with resource_path()
+        splash_img = cv2.imread(resource_path("splash.png"))
         if splash_img is None:
             print("Warning: Could not load splash.png. Proceeding without splash screen.")
             return

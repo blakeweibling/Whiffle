@@ -1,25 +1,11 @@
+# menu_renderer.py
 import cv2
-import numpy as np
 from menu_pages import draw_text_page, draw_leaderboard, draw_settings_menu, draw_game_over_menu
 
 class MenuRenderer:
     """Renders the game's menu system based on the current state."""
     def __init__(self, menu_system):
         self.menu_system = menu_system
-        self.help_text = (
-            "Hotkeys:\n"
-            "  c: Calibrate zones\n"
-            "  r: Reset score\n"
-            "  f: Flip horizontal\n"
-            "  d: Toggle debug\n"
-            "  s: Start labeling\n"
-            "  p: Toggle processing\n"
-            "Calibration: Drag to draw zones, 'm' to toggle circle/rectangle, Enter to confirm\n"
-            "Labeling: 'r' for red, 'w' for white, 'h' to half, 'b' for background, 's' to skip\n"
-            "Menu: Up/Down arrows to navigate, Enter to select, Esc to go back/close\n"
-            "Drag the header to move the menu"
-        )
-        self.about_text = "Ball Tracking Game v1.0\nDeveloped by [Your Name]\nPowered by OpenCV and xAI's Grok"
         self.leaderboard_scores = None  # Cache the leaderboard scores
         self.leaderboard_is_online = False  # Indicates if scores are from online
         self.leaderboard_loading = False
@@ -50,23 +36,34 @@ class MenuRenderer:
 
     def draw_menu_bar(self, frame):
         """Draw the menu bar at the top of the frame with a button to toggle the menu."""
+        overlay = frame.copy()
         h, w = frame.shape[:2]
-        cv2.rectangle(frame, (0, 0), (w, 40), (128, 128, 128), -1)
+
+        # Draw the menu bar background
+        cv2.rectangle(overlay, (0, 0), (w, 40), (128, 128, 128), -1)
+
+        # Draw the menu button
         x, y, bw, bh = self.menu_system.button_rect
-        cv2.rectangle(frame, (x, y), (x + bw, y + bh), (200, 200, 200), -1)
-        cv2.rectangle(frame, (x, y), (x + bw, y + bh), (0, 0, 0), 1)
+        cv2.rectangle(overlay, (x, y), (x + bw, y + bh), (200, 200, 200), -1)
+        cv2.rectangle(overlay, (x, y), (x + bw, y + bh), (0, 0, 0), 1)
+
         font = cv2.FONT_HERSHEY_SIMPLEX
         font_scale = 0.5
         thickness = 1
         text_size = cv2.getTextSize(self.menu_system.button_text, font, font_scale, thickness)[0]
         text_x = x + (bw - text_size[0]) // 2
         text_y = y + (bh + text_size[1]) // 2
-        cv2.putText(frame, self.menu_system.button_text, (text_x, text_y), font, font_scale, (0, 0, 0), thickness)
+        cv2.putText(overlay, self.menu_system.button_text, (text_x, text_y), font, font_scale, (0, 0, 0), thickness)
+
+        # Draw the timer if active
         if self.menu_system.timer_text:
             timer_size = cv2.getTextSize(self.menu_system.timer_text, font, font_scale, thickness)[0]
             timer_x = w - timer_size[0] - 10
             timer_y = 10 + timer_size[1]
-            cv2.putText(frame, self.menu_system.timer_text, (timer_x, timer_y), font, font_scale, (255, 255, 255), thickness)
+            cv2.putText(overlay, self.menu_system.timer_text, (timer_x, timer_y), font, font_scale, (255, 255, 255), thickness)
+
+        alpha = 0.95  # Match the opacity of HelpWindow
+        cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
         return frame
 
     def draw_toggle(self, frame, x, y, width, height, is_on):
@@ -136,7 +133,7 @@ class MenuRenderer:
             rect_y = y_pos - text_size[1] - 5
             rect_w = text_size[0] + 10
             rect_h = text_size[1] + 10
-            self.menu_system.menu_item_rects.append((rect_x, rect_y, rect_w, rect_h, i))
+            self.menu_system.menu_item_rects.append((rect_x, rect_y, rect_w, rect_h))
             cv2.putText(overlay, text, (x_pos, y_pos), font, font_scale, color, thickness)
 
         if show_close:
@@ -171,9 +168,23 @@ class MenuRenderer:
     def draw_menu(self, frame):
         """Draw the current menu based on the menu system's state."""
         if self.menu_system.state == "help":
-            return draw_text_page(self, frame, self.help_text, "Help")
+            help_text = (
+                "Hotkeys:\n"
+                "  c: Calibrate zones\n"
+                "  r: Reset score\n"
+                "  f: Flip horizontal\n"
+                "  d: Toggle debug\n"
+                "  s: Start labeling\n"
+                "  p: Toggle processing\n"
+                "Calibration: Drag to draw zones, 'm' to toggle circle/rectangle, Enter to confirm\n"
+                "Labeling: 'r' for red, 'w' for white, 'h' to half, 'b' for background, 's' to skip\n"
+                "Menu: Up/Down arrows to navigate, Enter to select, Esc to go back/close\n"
+                "Drag the header to move the menu"
+            )
+            return draw_text_page(self, frame, help_text, "Help")
         elif self.menu_system.state == "about":
-            return draw_text_page(self, frame, self.about_text, "About")
+            about_text = "Whiffle Tracker v8.8\nDeveloped by Blake Weibling\nPowered by OpenCV and xAI's Grok"
+            return draw_text_page(self, frame, about_text, "About")
         elif self.menu_system.state == "leaderboard":
             # Fetch scores only if not already cached
             if self.leaderboard_scores is None and not self.leaderboard_loading:

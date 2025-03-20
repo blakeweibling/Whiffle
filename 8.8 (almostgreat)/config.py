@@ -1,22 +1,33 @@
-# config.py (updated)
+# config.py
 import json
 import os
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import shutil
+from datetime import datetime
 
 class GameConfig(BaseModel):
-    base_frame_width: int = 1920
-    base_frame_height: int = 1080
-    ball_radius: int = 10
-    gravity: float = 9.8
-    friction: float = 0.99
-    time_step: float = 0.033
-    game_duration: int = 120
+    """Configuration class for game settings with validation."""
+    # Game settings (from game_settings.py)
+    base_frame_width: int = Field(default=1920, ge=1)
+    base_frame_height: int = Field(default=1080, ge=1)
+    ball_radius: int = Field(default=10, ge=1)
+    gravity: float = Field(default=9.8, ge=0.0)
+    friction: float = Field(default=0.99, ge=0.0, le=1.0)
+    time_step: float = Field(default=0.033, ge=0.0)
+    # Menu settings (from menu_settings.py)
+    game_duration: int = Field(default=120, ge=1)
     white_ball_detection: bool = True
     red_ball_detection: bool = True
     game_sounds: bool = True
     background_music: bool = True
     mode: str = "classic"
+    # Ball detection settings (new)
+    detection_confidence_threshold: float = Field(default=0.7, ge=0.0, le=1.0)
+    detection_radius_tolerance: float = Field(default=20.0, ge=0.0)
+    detection_area_min: float = Field(default=100.0, ge=0.0)
+    detection_area_max: float = Field(default=2000.0, ge=0.0)
+    detection_circularity_min: float = Field(default=0.7, ge=0.0, le=1.0)
+    detection_circularity_max: float = Field(default=1.2, ge=0.0, le=2.0)
 
 def load_config(filename="config.json"):
     """Load the game configuration from a JSON file."""

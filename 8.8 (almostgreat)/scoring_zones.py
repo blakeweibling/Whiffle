@@ -4,6 +4,15 @@ import os
 import pandas as pd
 import numpy as np
 import cv2
+import sys  # Added for resource_path()
+
+# Add resource_path() function to handle file paths for PyInstaller
+def resource_path(relative_path):
+    """Get the absolute path to a resource, works for dev and for PyInstaller."""
+    if hasattr(sys, '_MEIPASS'):
+        # PyInstaller creates a temp folder and stores files there
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
 
 class ScoringZones:
     def __init__(self, reference_width=1920, reference_height=1080, sound_manager=None):
@@ -20,9 +29,11 @@ class ScoringZones:
         print("ML model disabled, using manual scoring")
 
     def load_zones(self):
-        if os.path.exists("zones.pkl"):
+        # Update zones.pkl path with resource_path()
+        zones_path = resource_path("zones.pkl")
+        if os.path.exists(zones_path):
             try:
-                with open("zones.pkl", "rb") as f:
+                with open(zones_path, "rb") as f:
                     self.zones = pickle.load(f)
                 print(f"Loaded zones: {self.zones}")
             except Exception as e:
@@ -32,8 +43,10 @@ class ScoringZones:
             print("No zones.pkl file found, starting with empty zones")
 
     def save_zones(self):
+        # Update zones.pkl path with resource_path()
+        zones_path = resource_path("zones.pkl")
         try:
-            with open("zones.pkl", "wb") as f:
+            with open(zones_path, "wb") as f:
                 pickle.dump(self.zones, f)
             print(f"Saved zones: {self.zones}")
         except Exception as e:

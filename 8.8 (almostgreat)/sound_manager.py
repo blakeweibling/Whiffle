@@ -1,6 +1,15 @@
 # sound_manager.py
 import pygame
 import os
+import sys  # Added for resource_path()
+
+# Add resource_path() function to handle file paths for PyInstaller
+def resource_path(relative_path):
+    """Get the absolute path to a resource, works for dev and for PyInstaller."""
+    if hasattr(sys, '_MEIPASS'):
+        # PyInstaller creates a temp folder and stores files there
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
 
 class SoundManager:
     """Manages sound effects and background music for the game."""
@@ -17,11 +26,12 @@ class SoundManager:
 
     def load_sounds(self):
         """Load sound files from the sounds directory."""
-        sound_dir = "sounds"
-        if not os.path.exists(sound_dir):
-            os.makedirs(sound_dir)
-            print(f"Created {sound_dir} directory. Please add sound files.")
-            return
+        sound_dir = resource_path("sounds")
+        # Note: We can't create directories in the bundled environment, so skip this
+        # if not os.path.exists(sound_dir):
+        #     os.makedirs(sound_dir)
+        #     print(f"Created {sound_dir} directory. Please add sound files.")
+        #     return
 
         music_path = os.path.join(sound_dir, "background_music.mp3")
         if os.path.exists(music_path):

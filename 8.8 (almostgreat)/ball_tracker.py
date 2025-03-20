@@ -58,18 +58,18 @@ class BallTracker:
             area = cv2.contourArea(cnt)
             if self.debug:
                 print(f"Contour area: {area}")
-            if 100 < area < 2000:  # Tightened area range
+            if self.settings.detection_area_min < area < self.settings.detection_area_max:
                 perimeter = cv2.arcLength(cnt, True)
                 if perimeter > 0:
                     circularity = 4 * np.pi * area / (perimeter * perimeter)
                     if self.debug:
                         print(f"Circularity: {circularity}")
-                    if 0.7 < circularity < 1.2:  # Tightened circularity range
+                    if self.settings.detection_circularity_min < circularity < self.settings.detection_circularity_max:
                         (x, y), radius = cv2.minEnclosingCircle(cnt)
                         scaled_radius = self.settings.scale_value(self.settings.ball_radius, current_width, current_height)
                         if self.debug:
                             print(f"Radius: {radius}, Scaled radius: {scaled_radius}")
-                        if scaled_radius - 15 <= radius <= scaled_radius + 15:  # Tightened tolerance
+                        if scaled_radius - self.settings.detection_radius_tolerance <= radius <= scaled_radius + self.settings.detection_radius_tolerance:
                             x_int, y_int = int(x), int(y)
                             x_start = max(0, x_int - patch_size // 2)
                             x_end = min(frame.shape[1], x_int + patch_size // 2)
@@ -88,7 +88,7 @@ class BallTracker:
                                     ball_type = self.label_map[label_idx]
                                     if self.debug:
                                         print(f"Predicted label: {label_idx} ({ball_type}) at position ({x_int}, {y_int}) with confidence {confidence.item():.2f}")
-                                    if ball_type != "background" and confidence.item() > 0.9:  # Added confidence threshold
+                                    if ball_type != "background" and confidence.item() > self.settings.detection_confidence_threshold:
                                         ball_id = (x_int, y_int)
                                         if len(self.tracked_balls) > 100:
                                             self.tracked_balls.clear()
@@ -100,6 +100,11 @@ class BallTracker:
                                             detected_balls.append([int(x / scale), int(y / scale), 0, 0, ball_type, 0, self.ball_id_counter])
                                             if self.debug:
                                                 print(f"Detected ball at ({int(x / scale)}, {int(y / scale)}) with ball_id {self.ball_id_counter} and type {ball_type}")
+                                    elif self.debug:
+                                        if ball_type == "background":
+                                            print(f"Rejected detection at ({x_int}, {y_int}): Classified as background")
+                                        else:
+                                            print(f"Rejected detection at ({x_int}, {y_int}): Confidence {confidence.item():.2f} below threshold {self.settings.detection_confidence_threshold}")
 
         if self.debug:
             print(f"Detected {len(detected_balls)} balls in this frame")

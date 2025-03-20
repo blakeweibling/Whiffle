@@ -10,5 +10,11 @@
     "red_ball_detection": true,
     "game_sounds": true,
     "background_music": true,
-    "mode": "classic"
+    "mode": "timed",
+    "detection_confidence_threshold": 0.7,
+    "detection_radius_tolerance": 20.0,
+    "detection_area_min": 100.0,
+    "detection_area_max": 2000.0,
+    "detection_circularity_min": 0.7,
+    "detection_circularity_max": 1.2
 }

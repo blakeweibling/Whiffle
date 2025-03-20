@@ -60,10 +60,20 @@ class MenuSystem:
         if self.sound_manager:
             self.sound_manager.update_settings()
 
+    def reset_menu(self):
+        """Reset the menu state to the top-level menu."""
+        self.current_menu = self.options
+        self.menu_stack = []
+        self.selection = 0
+        self.state = "main_menu"
+        print("Menu state reset to main menu")
+
     def set_state(self, state):
         """Set the current menu state and reset selection."""
         self.state = state
         self.selection = 0
+        if state == "closed":
+            self.reset_menu()  # Reset menu state when closing
         if state != "closed" and self.sound_manager:
             self.sound_manager.play_sound_effect("menu_click")
 
