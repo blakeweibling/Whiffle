@@ -1,3 +1,4 @@
+# zone_help_window.py
 import cv2
 
 class HelpWindow:
@@ -22,6 +23,11 @@ class HelpWindow:
             print("Help window opened")
         else:
             print("Help window closed")
+
+    def is_point_inside(self, x, y):
+        """Check if the point (x, y) is inside the help window."""
+        return (self.pos_x <= x <= self.pos_x + self.width and
+                self.pos_y <= y <= self.pos_y + self.height)
 
     def mouse_callback(self, event, x, y, flags):
         """Handle mouse events for dragging and closing the help window."""

@@ -1,3 +1,4 @@
+# zone_mouse_handler.py
 import cv2
 import numpy as np
 
@@ -54,9 +55,15 @@ class ZoneMouseHandler:
         if not self.calibrator.calibrating:
             return
 
-        # Handle mouse events for the help window
+        # Handle mouse events for the help window first
         if self.calibrator.help_window:
             self.calibrator.help_window.mouse_callback(event, x, y, flags)
+
+        # Check if the mouse event is within the HelpWindow's bounds when it's visible
+        if (self.calibrator.help_window and self.calibrator.help_window.is_visible and
+                self.calibrator.help_window.is_point_inside(x, y)):
+            # If the event is within the HelpWindow, skip zone-related actions
+            return
 
         # Handle clicks on the "Help" button to reopen the help window
         if self.calibrator.help_button_rect and event == cv2.EVENT_LBUTTONDOWN:

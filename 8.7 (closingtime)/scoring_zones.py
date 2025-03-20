@@ -1,3 +1,4 @@
+# scoring_zones.py
 import pickle
 import os
 import pandas as pd
@@ -5,13 +6,14 @@ import numpy as np
 import cv2
 
 class ScoringZones:
-    def __init__(self, reference_width=1920, reference_height=1080):
+    def __init__(self, reference_width=1920, reference_height=1080, sound_manager=None):
         self.zones = []  # List of [x, y, radius, points] for circles or [x, y, width, height, points] for rectangles
         self.scored_balls = {}  # ball_id -> set of zone indices
         self.zone_scores = {}
         self.debug = True  # Enable debug output
         self.reference_width = reference_width  # Resolution at which zones were recorded
         self.reference_height = reference_height
+        self.sound_manager = sound_manager  # Store the SoundManager instance
         self.load_zones()
         self.model = None
         self.ball_type_encoder = None
@@ -107,6 +109,9 @@ class ScoringZones:
                         self.scored_balls[ball_id] = set()
                     self.scored_balls[ball_id].add(best_zone_idx)
                     print(f"Scored {best_score} points for ball_id {ball_id} (type: {ball_type}) in zone {best_zone_idx}")
+                    # Play the score sound effect
+                    if self.sound_manager:
+                        self.sound_manager.play_sound_effect("score")
 
         if self.debug:
             print(f"Total score this frame: {total_score}, Scored balls: {self.scored_balls}")

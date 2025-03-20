@@ -1,4 +1,3 @@
-# game.py
 import cv2
 import time
 import numpy as np
@@ -9,7 +8,6 @@ from game_settings import GameSettings
 from menu_system import MenuSystem
 from leaderboard import Leaderboard
 from initials_input import InitialsInput  # Import the new InitialsInput class
-from sound_manager import SoundManager  # Import SoundManager
 import pandas as pd
 import os
 import pickle
@@ -152,18 +150,10 @@ class Game:
         self.current_width = 1280
         self.current_height = 720
         self.settings = GameSettings()
-        # Initialize SoundManager with the settings
-        self.sound_manager = SoundManager(self.settings)
         self.tracker = BallTracker()
-        # Pass the SoundManager to ScoringZones
-        self.scoring_zones = ScoringZones(
-            reference_width=self.current_width,
-            reference_height=self.current_height,
-            sound_manager=self.sound_manager
-        )
+        self.scoring_zones = ScoringZones(reference_width=self.current_width, reference_height=self.current_height)
         self.zone_calibrator = ZoneCalibrator(self.scoring_zones)
-        # Pass the SoundManager to MenuSystem
-        self.menu = MenuSystem(self.scoring_zones, game_duration=120, sound_manager=self.sound_manager)
+        self.menu = MenuSystem(self.scoring_zones, game_duration=120)
         self.leaderboard = Leaderboard()
         self.total_score = 0
         self.flip_horizontal = False

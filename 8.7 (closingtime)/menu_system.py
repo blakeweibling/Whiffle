@@ -4,12 +4,11 @@ import time
 from menu_renderer import MenuRenderer
 from menu_input_handler import MenuInputHandler
 from menu_settings import MenuSettings
-from sound_manager import SoundManager
 from leaderboard import Leaderboard  # Import the new Leaderboard class
 
 class MenuSystem:
     """Manages the game's menu system, including state, navigation, settings, and dragging."""
-    def __init__(self, scoring_zones, game_duration=120):
+    def __init__(self, scoring_zones, game_duration=120, sound_manager=None):
         # Menu states: "main_menu", "settings", "help", "about", "game_over", "closed", "leaderboard"
         self.state = "closed"
         self.options = {
@@ -53,18 +52,19 @@ class MenuSystem:
         self.header_rect = None
 
         self.settings = MenuSettings()
-        self.sound_manager = SoundManager(self.settings)
+        self.sound_manager = sound_manager  # Use the passed SoundManager instance
         self.renderer = MenuRenderer(self)
         self.input_handler = MenuInputHandler(self)
         self.leaderboard = Leaderboard()  # Initialize the leaderboard
         self.load_settings()
-        self.sound_manager.update_settings()
+        if self.sound_manager:
+            self.sound_manager.update_settings()
 
     def set_state(self, state):
         """Set the current menu state and reset selection."""
         self.state = state
         self.selection = 0
-        if state != "closed":
+        if state != "closed" and self.sound_manager:
             self.sound_manager.play_sound_effect("menu_click")
 
     def is_menu_active(self):
@@ -79,6 +79,8 @@ class MenuSystem:
     def save_settings(self):
         """Save the current game settings."""
         self.settings.save_settings(self.mode)
+        if self.sound_manager:
+            self.sound_manager.update_settings()
 
     def new_game(self):
         """Start a new game, resetting the score and starting the timer if in timed mode."""
@@ -88,7 +90,8 @@ class MenuSystem:
         self.timer_active = self.mode == "timed"
         print("New game started")
         self.set_state("closed")
-        self.sound_manager.update_settings()
+        if self.sound_manager:
+            self.sound_manager.update_settings()
 
     def set_mode(self, mode):
         """Set the game mode and update the timer state."""
@@ -98,7 +101,8 @@ class MenuSystem:
         self.timer_active = self.mode == "timed"
         print(f"Game mode set to: {mode}")
         self.set_state("closed")
-        self.sound_manager.update_settings()
+        if self.sound_manager:
+            self.sound_manager.update_settings()
 
     def update_timer(self):
         """Update the game timer for timed mode."""
@@ -111,7 +115,8 @@ class MenuSystem:
             if remaining <= 0:
                 self.timer_active = False
                 self.set_state("game_over")
-                self.sound_manager.play_sound_effect("game_over")
+                if self.sound_manager:
+                    self.sound_manager.play_sound_effect("game_over")
                 print("Time's up! Game Over")
         else:
             self.timer_text = ""
