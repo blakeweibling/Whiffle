@@ -1,4 +1,3 @@
-# menu_renderer.py
 import cv2
 from menu_pages import draw_text_page, draw_leaderboard, draw_settings_menu, draw_game_over_menu
 
@@ -170,6 +169,7 @@ class MenuRenderer:
 
     def draw_menu(self, frame):
         """Draw the current menu based on the menu system's state."""
+        # Draw the base menu content first
         if self.menu_system.state == "help":
             help_text = (
                 "Hotkeys:\n"
@@ -184,10 +184,10 @@ class MenuRenderer:
                 "Menu: Up/Down arrows to navigate, Enter to select, Esc to go back/close\n"
                 "Drag the header to move the menu"
             )
-            return draw_text_page(self, frame, help_text, "Help")
+            frame = draw_text_page(self, frame, help_text, "Help")
         elif self.menu_system.state == "about":
             about_text = "Whiffle Game v8.8\nDeveloped by Blake Weibling\nPowered by OpenCV and xAI's Grok"
-            return draw_text_page(self, frame, about_text, "About")
+            frame = draw_text_page(self, frame, about_text, "About")
         elif self.menu_system.state == "leaderboard":
             # Fetch scores only if not already cached
             if self.leaderboard_scores is None and not self.leaderboard_loading:
@@ -201,11 +201,11 @@ class MenuRenderer:
                     self.leaderboard_is_online = False
                 finally:
                     self.leaderboard_loading = False
-            return draw_leaderboard(self, frame)
+            frame = draw_leaderboard(self, frame)
         elif self.menu_system.state == "settings":
-            return draw_settings_menu(self, frame)
+            frame = draw_settings_menu(self, frame)
         elif self.menu_system.state == "game_over":
-            return draw_game_over_menu(self, frame)
+            frame = draw_game_over_menu(self, frame)
         elif self.menu_system.state == "main_menu":
             # Reset leaderboard state when returning to main menu
             self.leaderboard_scores = None
@@ -216,11 +216,23 @@ class MenuRenderer:
             for key, action in self.menu_system.current_menu.items():
                 text = f"{key} {'>' if isinstance(action, dict) else ''}"
                 items.append((text, action))
-            return self.draw_menu_items(frame, items, title="Menu")
+            frame = self.draw_menu_items(frame, items, title="Menu")
         else:
             self.menu_system.menu_item_rects = []
             self.menu_system.menu_area = None
             self.menu_system.back_button_rect = None
             self.menu_system.close_button_rect = None
             self.menu_system.header_rect = None
-            return frame
+
+        # Overlay splash.png if show_splash is True
+        if self.menu_system.show_splash:
+            splash_img = cv2.imread("splash.png")
+            if splash_img is not None:
+                h, w = frame.shape[:2]
+                splash_img = cv2.resize(splash_img, (w, h))  # Resize to full frame
+                alpha = 1.0  # Fully opaque splash
+                cv2.addWeighted(splash_img, alpha, frame, 1 - alpha, 0, frame)
+            else:
+                print("Warning: Could not load splash.png for display")
+
+        return frame

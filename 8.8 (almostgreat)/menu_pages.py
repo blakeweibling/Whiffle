@@ -1,4 +1,3 @@
-# menu_pages.py
 import cv2
 from datetime import datetime
 
@@ -62,6 +61,34 @@ def draw_text_page(renderer, frame, text, title):
         y_pos = menu_y1 + header_height + 30 + i * 20
         cv2.putText(overlay, line, (menu_x1 + 20, y_pos), font, font_scale, (220, 220, 220), thickness)
 
+    # Add small image to "About" page
+    if title == "About":
+        # Load a small image (e.g., a thumbnail of splash.png or another image)
+        small_img = cv2.imread("logo.png")  # Ensure this path is correct
+        if small_img is not None:
+            # Resize to a larger size (e.g., 100x100)
+            small_img = cv2.resize(small_img, (100, 100))
+            img_h, img_w = small_img.shape[:2]
+            img_x = menu_x1 + ((menu_x2 - menu_x1) - img_w) // 2  # Center horizontally
+            img_y = menu_y1 + header_height + 30 + len(wrapped_lines) * 20 + 10  # Below text
+            # Ensure the image fits within the menu, including space for text below
+            text_below = "Click for a Surprise!"
+            text_size_below = cv2.getTextSize(text_below, font, font_scale, thickness)[0]
+            total_height = img_h + text_size_below[1] + 5  # Image height + text height + padding
+            if img_y + total_height < menu_y2 - back_button_margin - back_button_height:
+                overlay[img_y:img_y + img_h, img_x:img_x + img_w] = small_img
+                # Add text below the image
+                text_x = menu_x1 + ((menu_x2 - menu_x1) - text_size_below[0]) // 2  # Center text
+                text_y = img_y + img_h + text_size_below[1] + 5  # Below image with padding
+                cv2.putText(overlay, text_below, (text_x, text_y), font, font_scale, (220, 220, 220), thickness)
+                # Define clickable area for the image (image only, not text)
+                renderer.menu_system.image_rect = (img_x, img_y, img_w, img_h)
+            else:
+                renderer.menu_system.image_rect = None  # Image and text don't fit
+        else:
+            print("Warning: Could not load splash.png for About page")
+            renderer.menu_system.image_rect = None
+
     close_x = menu_x2 - 40
     close_y = menu_y1 + 5
     close_w, close_h = 30, 20
@@ -84,8 +111,7 @@ def draw_text_page(renderer, frame, text, title):
     text_y = back_y + (back_h + text_size[1]) // 2
     cv2.putText(overlay, "Back", (text_x, text_y), font, 0.5, (0, 0, 0), 1)
 
-    # Apply semi-transparency (same as HelpWindow)
-    alpha = 0.95  # Match the opacity of HelpWindow
+    alpha = 0.95
     cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
     return frame
 

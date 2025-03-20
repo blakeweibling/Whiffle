@@ -1,4 +1,3 @@
-# menu_system.py
 import cv2
 import time
 from menu_renderer import MenuRenderer
@@ -53,6 +52,9 @@ class MenuSystem:
         self.header_rect = None
         # Reset button rect
         self.reset_button_rect = None
+        # New attributes for image and splash display
+        self.image_rect = None  # Clickable area for the small image in About
+        self.show_splash = False  # Whether to display splash.png
 
         self.settings = MenuSettings()
         self.sound_manager = sound_manager  # Use the passed SoundManager instance
@@ -88,7 +90,7 @@ class MenuSystem:
             self.back_button_rect = None
             self.close_button_rect = None
             self.header_rect = None
-            self.reset_button_rect = None  # Clear reset button rect
+            self.reset_button_rect = None
         if state != "closed" and self.sound_manager:
             self.sound_manager.play_sound_effect("menu_click")
 

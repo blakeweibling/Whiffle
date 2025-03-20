@@ -1,4 +1,3 @@
-# menu_input_handler.py
 import cv2
 
 class MenuInputHandler:
@@ -63,13 +62,41 @@ class MenuInputHandler:
     def mouse_callback(self, event, x, y, flags, param=None):
         """Handle mouse events for menu interaction."""
         if event == cv2.EVENT_LBUTTONDOWN:
-            print(f"Mouse clicked at ({x}, {y})")  # Debug print
-            # Check if clicking the menu bar button
+            print(f"Mouse clicked at ({x}, {y})")
+            
+            # Check close button first
+            if self.menu_system.close_button_rect and self.menu_system.state != "closed":
+                cx, cy, cw, ch = self.menu_system.close_button_rect
+                print(f"Close button rect: ({cx}, {cy}, {cw}, {ch})")
+                if cx <= x <= cx + cw and cy <= y <= cy + ch:
+                    print("Close button clicked")
+                    self.menu_system.set_state("closed")
+                    self.menu_system.show_splash = False  # Hide splash when closing
+                    if self.menu_system.sound_manager:
+                        self.menu_system.sound_manager.update_settings()
+                    return
+
+            # Check image click in About section
+            if (self.menu_system.state == "about" and self.menu_system.image_rect and 
+                not self.menu_system.show_splash):  # Only trigger if splash isn't already shown
+                ix, iy, iw, ih = self.menu_system.image_rect
+                if ix <= x <= ix + iw and iy <= y <= iy + ih:
+                    print("Small image clicked in About - showing splash")
+                    self.menu_system.show_splash = True
+                    return
+
+            # Hide splash if clicked anywhere else when it's shown
+            if self.menu_system.show_splash:
+                print("Clicked outside splash - hiding splash")
+                self.menu_system.show_splash = False
+                return
+
+            # Check menu bar button
             if self.menu_system.button_rect:
                 bx, by, bw, bh = self.menu_system.button_rect
                 if bx <= x <= bx + bw and by <= y <= by + bh:
                     if self.menu_system.state == "closed":
-                        self.menu_system.reset_menu()  # Reset menu state when opening
+                        self.menu_system.reset_menu()
                         self.menu_system.set_state("main_menu")
                         print("Menu opened via button")
                     else:
@@ -79,7 +106,7 @@ class MenuInputHandler:
                         print("Menu closed via button")
                     return
 
-            # Check if clicking the header for dragging
+            # Check header for dragging
             if self.menu_system.header_rect and self.menu_system.state != "closed":
                 hx, hy, hw, hh = self.menu_system.header_rect
                 if hx <= x <= hx + hw and hy <= y <= hy + hh:
@@ -88,7 +115,7 @@ class MenuInputHandler:
                     self.menu_system.drag_offset_y = y - self.menu_system.menu_pos_y
                     return
 
-            # Check if clicking a menu item
+            # Check menu items
             for idx, item in enumerate(self.menu_system.menu_item_rects):
                 if isinstance(item, dict) and item["type"] == "slider":
                     sx, sy, sw, sh = item["rect"]
@@ -98,25 +125,23 @@ class MenuInputHandler:
                         self.update_slider_value(item, x)
                         return
                 else:
-                    # Handle both 4-tuples (main menu) and 5-tuples (settings toggles)
                     if isinstance(item, tuple):
-                        if len(item) == 4:  # Main menu items
+                        if len(item) == 4:
                             ix, iy, iw, ih = item
                             item_idx = idx
-                        elif len(item) == 5:  # Settings toggle items
+                        elif len(item) == 5:
                             ix, iy, iw, ih, item_idx = item
                         else:
-                            continue  # Skip malformed items
+                            continue
                     else:
-                        continue  # Skip if item is not a tuple
-
+                        continue
                     if ix <= x <= ix + iw and iy <= y <= iy + ih:
                         self.menu_system.selection = idx
                         if self.menu_system.state == "main_menu":
                             menu_items = list(self.menu_system.current_menu.keys())
                             selected_item = menu_items[idx]
                             action = self.menu_system.current_menu[selected_item]
-                            print(f"Clicked menu item: {selected_item}")  # Debug print
+                            print(f"Clicked menu item: {selected_item}")
                             if isinstance(action, dict):
                                 self.menu_system.menu_stack.append(self.menu_system.current_menu)
                                 self.menu_system.current_menu = action
@@ -143,38 +168,26 @@ class MenuInputHandler:
                                     self.menu_system.save_settings()
                         return
 
-            # Check if clicking the back/close button
             if self.menu_system.back_button_rect and self.menu_system.state in ["settings", "leaderboard", "help", "about", "main_menu"]:
                 bx, by, bw, bh = self.menu_system.back_button_rect
                 if bx <= x <= bx + bw and by <= y <= by + bh:
                     if self.menu_system.menu_stack:
                         self.menu_system.current_menu = self.menu_system.menu_stack.pop()
                         self.menu_system.selection = 0
-                        # If the stack is now empty, ensure we're in the main_menu state
                         if not self.menu_system.menu_stack:
                             self.menu_system.set_state("main_menu")
                     else:
                         self.menu_system.set_state("main_menu")
                     return
-            if self.menu_system.close_button_rect and self.menu_system.state != "closed":
-                cx, cy, cw, ch = self.menu_system.close_button_rect
-                if cx <= x <= cx + cw and cy <= y <= cy + ch:
-                    print("Close button clicked")  # Debug print
-                    self.menu_system.set_state("closed")
-                    if self.menu_system.sound_manager:
-                        self.menu_system.sound_manager.update_settings()
-                    return
 
         elif event == cv2.EVENT_MOUSEMOVE and self.menu_system.is_dragging:
             if self.menu_system.state != "closed":
-                # Dragging the menu window
                 if self.menu_system.header_rect:
                     hx, hy, hw, hh = self.menu_system.header_rect
                     if hx <= x <= hx + hw and hy <= y <= hy + hh:
                         self.menu_system.menu_pos_x = x - self.menu_system.drag_offset_x
                         self.menu_system.menu_pos_y = y - self.menu_system.drag_offset_y
                         return
-                # Dragging a slider
                 for idx, item in enumerate(self.menu_system.menu_item_rects):
                     if isinstance(item, dict) and item["type"] == "slider":
                         sx, sy, sw, sh = item["rect"]
