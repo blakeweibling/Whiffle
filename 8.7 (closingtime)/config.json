@@ -1,0 +1,14 @@
+{
+    "base_frame_width": 1920,
+    "base_frame_height": 1080,
+    "ball_radius": 10,
+    "gravity": 9.8,
+    "friction": 0.99,
+    "time_step": 0.033,
+    "game_duration": 120,
+    "white_ball_detection": true,
+    "red_ball_detection": true,
+    "game_sounds": true,
+    "background_music": true,
+    "mode": "classic"
+}

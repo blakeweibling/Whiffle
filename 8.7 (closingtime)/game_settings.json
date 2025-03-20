@@ -1,0 +1,9 @@
+{
+    "mode": "classic",
+    "game_settings": {
+        "white_ball_detection": true,
+        "red_ball_detection": true,
+        "game_sounds": true,
+        "background_music": true
+    }
+}
