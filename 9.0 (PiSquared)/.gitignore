@@ -1,0 +1,7 @@
+# PyInstaller build directories
+dist/
+build/
+
+# Python cache directories
+__pycache__/
+*.pyc
