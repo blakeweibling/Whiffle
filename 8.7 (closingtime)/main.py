@@ -151,7 +151,7 @@ class Game:
         self.current_height = 720
         self.settings = GameSettings()
         self.tracker = BallTracker()
-        self.scoring_zones = ScoringZones()
+        self.scoring_zones = ScoringZones(reference_width=self.current_width, reference_height=self.current_height)
         self.zone_calibrator = ZoneCalibrator(self.scoring_zones)
         self.menu = MenuSystem(self.scoring_zones, game_duration=120)
         self.leaderboard = Leaderboard()
@@ -262,6 +262,10 @@ class Game:
 
                 self.menu.update_timer()
 
+                # Debug: Print the current state of zones to verify they are loaded
+                if self.debug:
+                    print(f"Zones in main loop: {self.scoring_zones.zones}")
+
                 # Handle initials input
                 if self.initials_input:
                     frame = self.initials_input.draw(frame)
@@ -277,8 +281,8 @@ class Game:
                         self.menu.timer_active = False
                     continue
 
-                # Modified condition: Remove self.menu.timer_active to allow detection in classic mode
-                if self.full_processing and not self.menu.is_menu_active():
+                # Game logic: Detect balls, update physics, and check scores
+                if self.full_processing and not self.menu.is_menu_active() and self.menu.timer_active:
                     balls = self.tracker.detect_balls(frame, self.current_width, self.current_height)
                     filtered_balls = [
                         ball for ball in balls
@@ -289,13 +293,22 @@ class Game:
                     if filtered_balls:
                         self.tracker.update_physics(self.current_width, self.current_height)
                     frame = self.tracker.draw_balls(frame, self.current_width, self.current_height)
-                    frame = self.scoring_zones.draw_zones(frame, self.current_width, self.current_height)
                     score = self.scoring_zones.check_scores(filtered_balls, self.current_width, self.current_height)
                     log_training_data(filtered_balls, self.scoring_zones, self.current_width, self.current_height, debug=self.debug)
                     self.total_score += score
                     self.menu.total_score = self.total_score
                     if score > 0:
                         print(f"Adding {score} to total score. New total: {self.total_score}")
+
+                # Always draw zones, unless the menu is active (to avoid cluttering the menu)
+                if not self.menu.is_menu_active():
+                    # Debug: Print before drawing zones to confirm the method is called
+                    if self.debug:
+                        print(f"Drawing zones with current resolution {self.current_width}x{self.current_height}")
+                    frame = self.scoring_zones.draw_zones(frame, self.current_width, self.current_height)
+                    # Debug: Verify that the frame has been modified (optional, can be removed if too verbose)
+                    if self.debug and self.scoring_zones.zones:
+                        print("Zones should now be drawn on the frame")
 
                 frame = self.menu.draw_menu_bar(frame)
                 frame = self.menu.draw_menu(frame)

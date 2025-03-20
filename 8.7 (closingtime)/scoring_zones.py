@@ -5,13 +5,13 @@ import numpy as np
 import cv2
 
 class ScoringZones:
-    def __init__(self):
+    def __init__(self, reference_width=1920, reference_height=1080):
         self.zones = []  # List of [x, y, radius, points] for circles or [x, y, width, height, points] for rectangles
         self.scored_balls = {}  # ball_id -> set of zone indices
         self.zone_scores = {}
         self.debug = True  # Enable debug output
-        self.reference_width = 1920  # Resolution at which zones were recorded
-        self.reference_height = 1080
+        self.reference_width = reference_width  # Resolution at which zones were recorded
+        self.reference_height = reference_height
         self.load_zones()
         self.model = None
         self.ball_type_encoder = None

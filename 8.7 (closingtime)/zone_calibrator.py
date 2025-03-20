@@ -1,7 +1,9 @@
-# zone_calibrator.py
 import cv2
 import numpy as np
 from zone_utils import ZoneManager, ZoneAnimator, UndoRedoHandler
+from zone_mouse_handler import ZoneMouseHandler
+from zone_help_window import HelpWindow
+from zone_shape_utils import toggle_zone_shape
 
 class ZoneCalibrator:
     """Handles the calibration of scoring zones with a graphical interface."""
@@ -22,199 +24,65 @@ class ZoneCalibrator:
         self.is_editing = False
         self.hovered_zone_idx = None
         self.resize_handle = None
-
-    def get_zone_at_position(self, x, y, scale_x, scale_y):
-        """Check if the given position (x, y) is inside any existing zone."""
-        for idx, zone in enumerate(self.zones):
-            if len(zone) == 4:  # Circle
-                zx, zy, radius, _ = zone
-                scaled_zx = zx * scale_x
-                scaled_zy = zy * scale_y
-                scaled_radius = radius * min(scale_x, scale_y)
-                distance = np.sqrt((x - scaled_zx)**2 + (y - scaled_zy)**2)
-                if distance <= scaled_radius:
-                    return idx
-            else:  # Rectangle
-                zx, zy, zw, zh, _ = zone
-                scaled_zx = zx * scale_x
-                scaled_zy = zy * scale_y
-                scaled_zw = zw * scale_x
-                scaled_zh = zh * scale_y
-                if scaled_zx <= x <= scaled_zx + scaled_zw and scaled_zy <= y <= scaled_zy + scaled_zh:
-                    return idx
-        return None
-
-    def get_resize_handle(self, x, y, zone, scale_x, scale_y):
-        """Check if the position (x, y) is over a resize handle of the given zone."""
-        if len(zone) != 5:  # Only rectangles have resize handles
-            return None
-        zx, zy, zw, zh, _ = zone
-        scaled_zx = zx * scale_x
-        scaled_zy = zy * scale_y
-        scaled_zw = zw * scale_x
-        scaled_zh = zh * scale_y
-        handle_size = 10
-        handles = {
-            "top-left": (scaled_zx, scaled_zy),
-            "top-right": (scaled_zx + scaled_zw, scaled_zy),
-            "bottom-left": (scaled_zx, scaled_zy + scaled_zh),
-            "bottom-right": (scaled_zx + scaled_zw, scaled_zy + scaled_zh)
-        }
-        for handle_name, (hx, hy) in handles.items():
-            if (hx - handle_size <= x <= hx + handle_size and
-                hy - handle_size <= y <= hy + handle_size):
-                return handle_name
-        return None
-
-    def toggle_zone_shape(self, zone_idx):
-        """Toggle the shape of the zone at the given index between circle and rectangle."""
-        if zone_idx is None or zone_idx >= len(self.zones):
-            return
-        self.undo_redo.save_state("toggle_shape", self.zones)
-        zone = self.zones[zone_idx]
-        if len(zone) == 4:  # Circle to Rectangle
-            x, y, radius, points = zone
-            side = int(np.sqrt(np.pi * radius**2))
-            self.zones[zone_idx] = [x - side//2, y - side//2, side, side, points]
-        else:  # Rectangle to Circle
-            x, y, w, h, points = zone
-            radius = int(np.sqrt(w * h / np.pi))
-            self.zones[zone_idx] = [x + w//2, y + h//2, radius, points]
-        self.scoring_zones.save_zones()
-        self.manager.save_current_zone_set()
-        print(f"Toggled shape for zone {zone_idx}")
-
-    def mouse_callback(self, event, x, y, flags, frame, scale_x, scale_y):
-        """Handle mouse events for zone calibration."""
-        if not self.calibrating:
-            return
-
-        scaled_x = x / scale_x
-        scaled_y = y / scale_y
-        self.hovered_zone_idx = self.get_zone_at_position(scaled_x, scaled_y, scale_x, scale_y)
-
-        if self.is_editing and self.selected_zone_idx is not None:
-            self.resize_handle = self.get_resize_handle(scaled_x, scaled_y, self.zones[self.selected_zone_idx], scale_x, scale_y)
-        else:
-            self.resize_handle = None
-
-        zone_idx = self.hovered_zone_idx
-
-        if event == cv2.EVENT_LBUTTONDOWN:
-            if self.resize_handle:
-                self.start_point = (scaled_x, scaled_y)
-            elif zone_idx is not None and not self.is_editing:
-                self.undo_redo.save_state("start_edit", self.zones)
-                self.selected_zone_idx = zone_idx
-                self.is_editing = True
-                self.start_point = None
-                self.end_point = None
-                self.pending_zone = None
-                self.current_points = self.zones[zone_idx][-1]
-                print(f"Editing zone {zone_idx}")
-            elif not self.is_editing:
-                self.start_point = (scaled_x, scaled_y)
-                self.pending_zone = None
-                self.selected_zone_idx = None
-                self.current_points = 0
-        elif event == cv2.EVENT_RBUTTONDOWN and zone_idx is not None:
-            self.undo_redo.save_state("delete", self.zones)
-            deleted_zone = self.zones.pop(zone_idx)
-            self.animator.start_fade_out(deleted_zone, zone_idx)
-            self.scoring_zones.save_zones()
-            self.manager.save_current_zone_set()
-            print(f"Deleted zone {zone_idx}: {deleted_zone}")
-            if self.selected_zone_idx == zone_idx:
-                self.selected_zone_idx = None
-                self.is_editing = False
-            elif self.selected_zone_idx is not None and zone_idx < self.selected_zone_idx:
-                self.selected_zone_idx -= 1
-            if self.hovered_zone_idx == zone_idx:
-                self.hovered_zone_idx = None
-            elif self.hovered_zone_idx is not None and zone_idx < self.hovered_zone_idx:
-                self.hovered_zone_idx -= 1
-        elif event == cv2.EVENT_LBUTTONUP and not self.is_editing:
-            if self.start_point:
-                self.end_point = (scaled_x, scaled_y)
-                x1, y1 = self.start_point
-                x2, y2 = self.end_point
-                if self.is_rectangle_mode:
-                    width = abs(x2 - x1)
-                    height = abs(y2 - y1)
-                    x = min(x1, x2)
-                    y = min(y1, y2)
-                    self.pending_zone = [x, y, width, height, 0]
-                else:
-                    radius = int(np.sqrt((x2 - x1)**2 + (y2 - y1)**2))
-                    self.pending_zone = [x1, y1, radius, 0]
-        elif event == cv2.EVENT_MOUSEMOVE and self.start_point and not self.end_point and not self.is_editing:
-            self.end_point = (scaled_x, scaled_y)
-        elif event == cv2.EVENT_LBUTTONDOWN and self.is_editing and not self.resize_handle:
-            if self.selected_zone_idx is not None:
-                self.undo_redo.save_state("reposition", self.zones)
-                zone = self.zones[self.selected_zone_idx]
-                if len(zone) == 4:
-                    zone[0] = scaled_x
-                    zone[1] = scaled_y
-                else:
-                    zone[0] = scaled_x
-                    zone[1] = scaled_y
-                self.scoring_zones.save_zones()
-                self.manager.save_current_zone_set()
-                print(f"Updated position of zone {self.selected_zone_idx} to ({scaled_x}, {scaled_y})")
-        elif event == cv2.EVENT_MOUSEMOVE and flags & cv2.EVENT_FLAG_LBUTTON and self.is_editing:
-            if self.resize_handle and self.start_point:
-                self.undo_redo.save_state("resize_handle", self.zones)
-                zone = self.zones[self.selected_zone_idx]
-                x0, y0 = zone[0], zone[1]
-                if self.resize_handle == "top-left":
-                    w = zone[2] + (x0 - scaled_x)
-                    h = zone[3] + (y0 - scaled_y)
-                    zone[0] = scaled_x
-                    zone[1] = scaled_y
-                elif self.resize_handle == "top-right":
-                    w = scaled_x - x0
-                    h = zone[3] + (y0 - scaled_y)
-                    zone[1] = scaled_y
-                elif self.resize_handle == "bottom-left":
-                    w = zone[2] + (x0 - scaled_x)
-                    h = scaled_y - y0
-                    zone[0] = scaled_x
-                elif self.resize_handle == "bottom-right":
-                    w = scaled_x - x0
-                    h = scaled_y - y0
-                zone[2] = max(10, w)
-                zone[3] = max(10, h)
-                self.scoring_zones.save_zones()
-                self.manager.save_current_zone_set()
-                print(f"Resized zone {self.selected_zone_idx} using {self.resize_handle}")
-            elif self.is_editing and not self.resize_handle:
-                self.undo_redo.save_state("resize", self.zones)
-                zone = self.zones[self.selected_zone_idx]
-                if len(zone) == 4:
-                    x1, y1 = zone[0], zone[1]
-                    radius = int(np.sqrt((scaled_x - x1)**2 + (scaled_y - y1)**2))
-                    zone[2] = max(10, radius)
-                else:
-                    x1, y1 = zone[0], zone[1]
-                    width = abs(scaled_x - x1)
-                    height = abs(scaled_y - y1)
-                    zone[2] = max(10, width)
-                    zone[3] = max(10, height)
-                self.scoring_zones.save_zones()
-                self.manager.save_current_zone_set()
-                print(f"Resized zone {self.selected_zone_idx}")
+        self.mouse_handler = ZoneMouseHandler(self)
+        self.help_window = None
+        self.help_button_rect = None
 
     def calibrate_zones(self, frame, current_width, current_height):
         """Run the zone calibration process with a graphical interface."""
         self.calibrating = True
+        window_closed = False  # Track if the window was closed via 'X'
         cv2.namedWindow("Calibration", cv2.WINDOW_NORMAL)
         scale_x = current_width / frame.shape[1]
         scale_y = current_height / frame.shape[0]
-        cv2.setMouseCallback("Calibration", lambda event, x, y, flags, param: self.mouse_callback(event, x, y, flags, frame, scale_x, scale_y))
+        cv2.setMouseCallback("Calibration", lambda event, x, y, flags, param: self.mouse_handler.mouse_callback(event, x, y, flags, frame, scale_x, scale_y))
+
+        # Initialize the help window in the top right
+        help_text = (
+            "Calibration Controls:\n"
+            "Drag to draw zone\n"
+            "m: Toggle circle/rectangle\n"
+            "Left-click: Edit zone\n"
+            "Right-click: Delete zone\n"
+            "s: Save zones\n"
+            "e: Save & exit\n"
+            "q: Discard & exit\n"
+            "u: Undo\n"
+            "r: Redo\n"
+            "c: Clear all zones\n"
+            "h: Toggle help window\n"
+            "Editing Zone:\n"
+            "Left-click: Reposition\n"
+            "Drag: Resize\n"
+            "Up/Down: Adjust points\n"
+            "s: Toggle shape\n"
+            "x: Exit edit mode"
+        )
+        help_window_width = 300
+        help_window_height = 400
+        self.help_window = HelpWindow(
+            help_text,
+            initial_x=current_width - help_window_width - 10,  # Top right
+            initial_y=10,
+            width=help_window_width,
+            height=help_window_height
+        )
 
         while self.calibrating:
-            if cv2.getWindowProperty("Calibration", cv2.WND_PROP_VISIBLE) < 1:
+            # Check if the window was closed via 'X'
+            try:
+                if cv2.getWindowProperty("Calibration", cv2.WND_PROP_VISIBLE) < 1:
+                    self.calibrating = False
+                    self.is_editing = False
+                    self.selected_zone_idx = None
+                    self.hovered_zone_idx = None
+                    self.resize_handle = None
+                    self.animator.animations = []
+                    self.exit_method = "x"
+                    window_closed = True  # Mark that the window was closed
+                    break
+            except cv2.error:
+                # Window was already destroyed
                 self.calibrating = False
                 self.is_editing = False
                 self.selected_zone_idx = None
@@ -222,7 +90,7 @@ class ZoneCalibrator:
                 self.resize_handle = None
                 self.animator.animations = []
                 self.exit_method = "x"
-                cv2.destroyWindow("Calibration")
+                window_closed = True  # Mark that the window was closed
                 break
 
             calib_frame = cv2.resize(frame, (current_width, current_height))
@@ -309,22 +177,34 @@ class ZoneCalibrator:
                     cv2.putText(calib_frame, f"Enter Points: {self.current_points} (Enter to confirm)",
                                (scaled_x + 5, scaled_y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
-            if self.is_editing and self.selected_zone_idx is not None:
-                text = ("Editing Zone: Left-click to reposition, drag to resize, Up/Down to adjust points, "
-                        "'s' to toggle shape, 'e' to exit edit, 'u' undo, 'r' redo, 'c' clear, 'q' quit")
+            # Draw the help window
+            if self.help_window:
+                calib_frame = self.help_window.draw(calib_frame)
+
+            # Draw the "Help" button if the help window is closed
+            if self.help_window and not self.help_window.is_visible:
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                font_scale = 0.5
+                thickness = 1
+                button_text = "Help"
+                button_size = cv2.getTextSize(button_text, font, font_scale, thickness)[0]
+                button_width = button_size[0] + 20
+                button_height = button_size[1] + 10
+                button_x = current_width - button_width - 10
+                button_y = 10
+                self.help_button_rect = (button_x, button_y, button_width, button_height)
+                cv2.rectangle(calib_frame, (button_x, button_y), (button_x + button_width, button_y + button_height), (200, 200, 200), -1)
+                cv2.rectangle(calib_frame, (button_x, button_y), (button_x + button_width, button_y + button_height), (0, 0, 0), 1)
+                text_x = button_x + (button_width - button_size[0]) // 2
+                text_y = button_y + (button_height + button_size[1]) // 2
+                cv2.putText(calib_frame, button_text, (text_x, text_y), font, font_scale, (0, 0, 0), thickness)
             else:
-                text = ("Drag to draw zone (m to toggle mode). Left-click to edit, Right-click to delete, "
-                        "'u' undo, 'r' redo, 'c' clear, 'q' quit")
+                self.help_button_rect = None
+
+            # Draw the undo/redo stack at the top left
             font = cv2.FONT_HERSHEY_SIMPLEX
             font_scale = 0.5
             thickness = 1
-            text_size = cv2.getTextSize(text, font, font_scale, thickness)[0]
-            text_x = 10
-            text_y = current_height - 10
-            box_coords = ((text_x, text_y + 5), (text_x + text_size[0], text_y - text_size[1] - 5))
-            cv2.rectangle(calib_frame, box_coords[0], box_coords[1], (128, 128, 128), -1)
-            cv2.putText(calib_frame, text, (text_x, text_y), font, font_scale, (255, 255, 255), thickness)
-
             stack_text = f"Undo: {len(self.undo_redo.undo_stack)} actions, Redo: {len(self.undo_redo.redo_stack)} actions"
             stack_size = cv2.getTextSize(stack_text, font, font_scale, thickness)[0]
             stack_x = 10
@@ -333,14 +213,16 @@ class ZoneCalibrator:
             cv2.rectangle(calib_frame, box_coords[0], box_coords[1], (128, 128, 128), -1)
             cv2.putText(calib_frame, stack_text, (stack_x, stack_y), font, font_scale, (255, 255, 255), thickness)
 
+            # Draw "Zone Set" at the bottom left
             set_text = f"Zone Set: {self.manager.current_zone_set}"
             set_size = cv2.getTextSize(set_text, font, font_scale, thickness)[0]
-            set_x = current_width - set_size[0] - 10
-            set_y = 30
+            set_x = 10
+            set_y = current_height - 10
             box_coords = ((set_x, set_y + 5), (set_x + set_size[0], set_y - set_size[1] - 5))
             cv2.rectangle(calib_frame, box_coords[0], box_coords[1], (128, 128, 128), -1)
             cv2.putText(calib_frame, set_text, (set_x, set_y), font, font_scale, (255, 255, 255), thickness)
 
+            # Draw the mode text at the bottom right
             mode_text = f"Mode: {'Rectangle' if self.is_rectangle_mode else 'Circle'}"
             mode_size = cv2.getTextSize(mode_text, font, font_scale, thickness)[0]
             mode_x = current_width - mode_size[0] - 10
@@ -352,22 +234,45 @@ class ZoneCalibrator:
             cv2.imshow("Calibration", calib_frame)
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
+                # Discard changes since last save (reload zones from file)
+                self.zones.clear()
+                self.scoring_zones.load_zones()
+                self.zones.extend(self.scoring_zones.zones)
+                self.calibrating = False
+                self.is_editing = False
+                self.selected_zone_idx = None
+                self.hovered_zone_idx = None
+                self.animator.animations = []
+                self.exit_method = "q"
+                break
+            elif key == ord('s'):
+                # Save zones without exiting
+                self.scoring_zones.save_zones()
+                self.manager.save_current_zone_set()
+                print("Saved zones without exiting calibration")
+            elif key == ord('e'):
+                # Save and exit
+                self.scoring_zones.save_zones()
+                self.manager.save_current_zone_set()
                 self.calibrating = False
                 self.is_editing = False
                 self.selected_zone_idx = None
                 self.hovered_zone_idx = None
                 self.resize_handle = None
                 self.animator.animations = []
-                self.exit_method = "q"
-                cv2.destroyWindow("Calibration")
+                self.exit_method = "e"
                 break
+            elif key == ord('h'):
+                # Toggle help window visibility
+                if self.help_window:
+                    self.help_window.toggle_visibility()
             elif key == ord('m') and not self.is_editing:
                 self.is_rectangle_mode = not self.is_rectangle_mode
                 self.start_point = None
                 self.end_point = None
                 self.pending_zone = None
                 print(f"Switched to {'rectangle' if self.is_rectangle_mode else 'circle'} mode")
-            elif key == ord('e') and self.is_editing:
+            elif key == ord('x') and self.is_editing:
                 self.is_editing = False
                 self.selected_zone_idx = None
                 self.start_point = None
@@ -395,7 +300,7 @@ class ZoneCalibrator:
                 self.resize_handle = None
                 print("Cleared all zones")
             elif key == ord('s') and self.is_editing:
-                self.toggle_zone_shape(self.selected_zone_idx)
+                toggle_zone_shape(self, zone_idx=self.selected_zone_idx)
             elif key == 13:  # Enter
                 if self.pending_zone:
                     self.undo_redo.save_state("add_zone", self.zones)
@@ -404,6 +309,8 @@ class ZoneCalibrator:
                     self.animator.start_scale_up(self.pending_zone[:], len(self.zones) - 1)
                     self.pending_zone = None
                     self.current_points = 0
+                    self.start_point = None  # Reset start_point to prevent artifact
+                    self.end_point = None    # Reset end_point to prevent artifact
                     self.scoring_zones.save_zones()
                     self.manager.save_current_zone_set()
                 elif self.is_editing and self.selected_zone_idx is not None:
@@ -424,3 +331,11 @@ class ZoneCalibrator:
                     self.undo_redo.save_state("decrement_points", self.zones)
                     self.current_points = max(0, self.current_points - 1)
                     print(f"Decremented points to {self.current_points}")
+
+        # Destroy the window only if it wasn't already closed via 'X'
+        if not window_closed:
+            try:
+                if cv2.getWindowProperty("Calibration", cv2.WND_PROP_VISIBLE) >= 0:
+                    cv2.destroyWindow("Calibration")
+            except cv2.error as e:
+                print(f"Window 'Calibration' already destroyed: {e}")
