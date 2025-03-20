@@ -37,6 +37,11 @@ class ScoringZones:
         except Exception as e:
             print(f"Error saving zones: {e}")
 
+    def reset_scored_balls(self):
+        """Reset the scored_balls dictionary to start fresh."""
+        self.scored_balls = {}
+        print("Reset scored_balls dictionary")
+
     def check_scores(self, balls, current_width, current_height):
         total_score = 0
         scale_x = current_width / self.reference_width
@@ -103,8 +108,6 @@ class ScoringZones:
                     self.scored_balls[ball_id].add(best_zone_idx)
                     print(f"Scored {best_score} points for ball_id {ball_id} (type: {ball_type}) in zone {best_zone_idx}")
 
-        # Only remove balls from scored_balls if they are no longer in the frame for a long time
-        # This is handled in ball_tracker.py, so we don't need to clean up here
         if self.debug:
             print(f"Total score this frame: {total_score}, Scored balls: {self.scored_balls}")
         return total_score

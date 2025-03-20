@@ -45,7 +45,7 @@ class BallTracker:
         scale = min(current_width / self.settings.base_frame_width, current_height / self.settings.base_frame_height)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         blurred = cv2.GaussianBlur(gray, (7, 7), 0)
-        edges = cv2.Canny(blurred, 30, 100)  # Tightened thresholds
+        edges = cv2.Canny(blurred, 50, 150)  # Tightened thresholds
         contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         if self.debug:
@@ -57,18 +57,18 @@ class BallTracker:
             area = cv2.contourArea(cnt)
             if self.debug:
                 print(f"Contour area: {area}")
-            if 50 < area < 5000:  # Tightened area range
+            if 100 < area < 2000:  # Tightened area range
                 perimeter = cv2.arcLength(cnt, True)
                 if perimeter > 0:
                     circularity = 4 * np.pi * area / (perimeter * perimeter)
                     if self.debug:
                         print(f"Circularity: {circularity}")
-                    if 0.5 < circularity < 1.5:  # Tightened circularity range
+                    if 0.7 < circularity < 1.2:  # Tightened circularity range
                         (x, y), radius = cv2.minEnclosingCircle(cnt)
                         scaled_radius = self.settings.scale_value(self.settings.ball_radius, current_width, current_height)
                         if self.debug:
                             print(f"Radius: {radius}, Scaled radius: {scaled_radius}")
-                        if scaled_radius - 20 <= radius <= scaled_radius + 20:  # Adjusted tolerance
+                        if scaled_radius - 15 <= radius <= scaled_radius + 15:  # Tightened tolerance
                             x_int, y_int = int(x), int(y)
                             x_start = max(0, x_int - patch_size // 2)
                             x_end = min(frame.shape[1], x_int + patch_size // 2)
@@ -81,12 +81,13 @@ class BallTracker:
                                 patch_tensor = patch_tensor.unsqueeze(0).to(self.device)
                                 with torch.no_grad():
                                     output = self.model(patch_tensor)
-                                    _, predicted = torch.max(output, 1)
+                                    probabilities = torch.softmax(output, dim=1)
+                                    confidence, predicted = torch.max(probabilities, 1)
                                     label_idx = predicted.item()
                                     ball_type = self.label_map[label_idx]
                                     if self.debug:
-                                        print(f"Predicted label: {label_idx} ({ball_type}) at position ({x_int}, {y_int})")
-                                    if ball_type != "background":
+                                        print(f"Predicted label: {label_idx} ({ball_type}) at position ({x_int}, {y_int}) with confidence {confidence.item():.2f}")
+                                    if ball_type != "background" and confidence.item() > 0.9:  # Added confidence threshold
                                         ball_id = (x_int, y_int)
                                         if len(self.tracked_balls) > 100:
                                             self.tracked_balls.clear()
@@ -128,8 +129,10 @@ class BallTracker:
         for ball in self.balls[:]:
             if (ball[0], ball[1]) not in current_positions:
                 ball[5] += 1
-            if ball[5] >= 3:  # Further reduced threshold to remove balls faster
+            if ball[5] >= 1:  # Reduced threshold to remove balls immediately if not detected
                 self.balls.remove(ball)
+                if self.debug:
+                    print(f"Removed ball {ball[6]} due to missed frames")
             # Remove balls that are outside the frame
             scaled_x = ball[0] * scale
             scaled_y = ball[1] * scale
