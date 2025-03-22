@@ -1,4 +1,3 @@
-# game.py (with pandas removed)
 import cv2
 import time
 import numpy as np
@@ -10,152 +9,21 @@ from menu_system import MenuSystem
 from leaderboard import Leaderboard
 from initials_input import InitialsInput
 from sound_manager import SoundManager
+from menu_settings import MenuSettings
 import os
-import pickle
 import sys
-import csv  # Add csv import for log_training_data
-
-def resource_path(relative_path):
-    """Get the absolute path to a resource, works for dev and for PyInstaller."""
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS, relative_path)
-    return os.path.join(os.path.abspath("."), relative_path)
-
-def log_training_data(balls, scoring_zones, current_width, current_height, filename="train_ball_detector.csv", debug=False):
-    """Log training data for balls, including their position, type, and score."""
-    filename = resource_path(filename)
-    data = []
-    scale = min(current_width / 1920, current_height / 1080)
-    for ball in balls:
-        x, y, _, _, ball_type, _, ball_id = ball
-        scaled_x = x * scale
-        scaled_y = y * scale
-        score = 0
-        in_zone = False
-        for zone_idx, zone in enumerate(scoring_zones.zones):
-            points = zone[-1]
-            if len(zone) == 4:  # Circle
-                zx, zy, radius, _ = zone
-                scaled_radius = radius * scale
-                distance = np.sqrt((scaled_x - (zx * scale))**2 + (scaled_y - (zy * scale))**2)
-                if distance <= scaled_radius:
-                    in_zone = True
-            else:  # Rectangle
-                zx, zy, zw, zh, _ = zone
-                scaled_zx = zx * scale
-                scaled_zy = zy * scale
-                scaled_zw = zw * scale
-                scaled_zh = zh * scale
-                if scaled_zx <= scaled_x <= scaled_x + scaled_zw and scaled_zy <= scaled_y <= scaled_zy + scaled_zh:
-                    in_zone = True
-            if in_zone:
-                multiplier = 1.0
-                if ball_type == "red":
-                    multiplier = 2.0
-                elif ball_type == "half":
-                    multiplier = 1.5
-                score = points * multiplier
-                break
-        data.append({"x": scaled_x, "y": scaled_y, "ball_type": ball_type, "score": score})
-
-    mode = 'a' if os.path.exists(filename) else 'w'
-    with open(filename, mode, newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=["x", "y", "ball_type", "score"])
-        if mode == 'w':
-            writer.writeheader()
-        writer.writerows(data)
-    if debug:
-        print(f"Logged data to {filename}: {data}")
-
-class LabelingSession:
-    """Handles the labeling of balls in a frame for training data collection."""
-    def __init__(self, frame):
-        self.frame = frame.copy()
-        self.labels = []
-        self.current_label = None
-        self.window_name = "Label Balls (r: red, w: white, h: half, b: background, s: skip)"
-        print(f"Creating labeling window: {self.window_name}")
-        cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
-        cv2.moveWindow(self.window_name, 0, 0)
-        cv2.setWindowProperty(self.window_name, cv2.WND_PROP_VISIBLE, 1)
-        cv2.setWindowProperty(self.window_name, cv2.WND_PROP_TOPMOST, 1)
-        cv2.setMouseCallback(self.window_name, self.mouse_callback)
-
-    def mouse_callback(self, event, x, y, flags, param):
-        """Handle mouse events for labeling balls."""
-        if event == cv2.EVENT_LBUTTONDOWN and self.current_label is not None:
-            self.labels.append((x, y, self.current_label))
-            print(f"Labeled point at ({x}, {y}) as {self.current_label}")
-            color = {
-                "red": (0, 0, 255),
-                "white": (255, 255, 255),
-                "half": (0, 255, 255),
-                "background": (0, 255, 0)
-            }.get(self.current_label, (0, 255, 0))
-            cv2.circle(self.frame, (x, y), 5, color, -1)
-            cv2.imshow(self.window_name, self.frame)
-
-    def run(self):
-        """Run the labeling session, allowing the user to label balls."""
-        while True:
-            cv2.imshow(self.window_name, self.frame)
-            key = cv2.waitKey(30) & 0xFF
-            if key == ord('r'):
-                self.current_label = "red"
-                print("Labeling as red")
-            elif key == ord('w'):
-                self.current_label = "white"
-                print("Labeling as white")
-            elif key == ord('h'):
-                self.current_label = "half"
-                print("Labeling as half_red_white")
-            elif key == ord('b'):
-                self.current_label = "background"
-                print("Labeling as background")
-            elif key == ord('s'):
-                self.current_label = None
-                print("Skipping label")
-            elif key == ord('q'):
-                break
-        cv2.destroyWindow(self.window_name)
-        return self.labels
-
-def save_labeled_data(frame, labels, filename="labeled_data.pkl"):
-    """Save labeled data to a pickle file."""
-    filename = resource_path(filename)
-    
-    patch_size = 20
-    data = []
-    for x, y, label in labels:
-        x_start = max(0, x - patch_size // 2)
-        x_end = min(frame.shape[1], x + patch_size // 2)
-        y_start = max(0, y - patch_size // 2)
-        y_end = min(frame.shape[0], y + patch_size // 2)
-        patch = frame[y_start:y_end, x_start:x_end]
-        if patch.shape[0] > 0 and patch.shape[1] > 0:
-            patch = cv2.resize(patch, (20, 20))
-            data.append((patch, label))
-
-    if os.path.exists(filename):
-        with open(filename, "rb") as f:
-            existing_data = pickle.load(f)
-        data.extend(existing_data)
-
-    try:
-        with open(filename, "wb") as f:
-            pickle.dump(data, f)
-        print(f"Saved {len(data)} labeled patches to {filename}")
-    except Exception as e:
-        print(f"Error saving labeled data to {filename}: {e}")
+import pygame
+from types import MethodType
+from game_utils import resource_path, log_training_data, LabelingSession, save_labeled_data
 
 class Game:
-    """Encapsulates the game logic, including camera, tracking, scoring, and menu handling."""
     def __init__(self):
         self.cap = None
         self.current_width = 1280
         self.current_height = 720
         self.settings = GameSettings()
-        self.sound_manager = SoundManager(self.settings)
+        self.menu_settings = MenuSettings()
+        self.sound_manager = SoundManager(self.menu_settings)
         self.tracker = BallTracker()
         self.scoring_zones = ScoringZones(
             reference_width=self.current_width,
@@ -164,6 +32,8 @@ class Game:
         )
         self.zone_calibrator = ZoneCalibrator(self.scoring_zones)
         self.menu = MenuSystem(self.scoring_zones, game_duration=120, sound_manager=self.sound_manager)
+        self.menu.mouse_callback = MethodType(MenuSystem.mouse_callback, self.menu)
+        print(f"Initialized self.menu.mouse_callback: {self.menu.mouse_callback}")
         self.leaderboard = Leaderboard()
         self.total_score = 0
         self.flip_horizontal = False
@@ -172,9 +42,12 @@ class Game:
         self.initials_input = None
         self.use_still_image = False
         self.still_image = None
+        self.is_splash_active = False
+        self.splash_dissolve = False
+        self.splash_alpha = 1.0
+        self.splash_start_time = None
 
     def initialize_camera(self):
-        """Initialize the camera with the specified resolution, or load a still image if camera fails."""
         print("Opening camera with DirectShow backend")
         self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
         if not self.cap.isOpened():
@@ -204,7 +77,6 @@ class Game:
             raise RuntimeError(f"Failed to set camera properties: {e}")
 
     def show_splash(self, frame):
-        """Display a splash screen with a fade-out effect."""
         splash_img = cv2.imread(resource_path("splash.png"))
         if splash_img is None:
             print("Warning: Could not load splash.png. Proceeding without splash screen.")
@@ -229,7 +101,6 @@ class Game:
             cv2.waitKey(int(1000 * fade_duration / fade_steps))
 
     def run(self):
-        """Run the main game loop without a frame rate cap."""
         try:
             self.initialize_camera()
         except RuntimeError as e:
@@ -242,14 +113,22 @@ class Game:
             cv2.setWindowProperty("Game", cv2.WND_PROP_VISIBLE, 1)
             cv2.setWindowProperty("Game", cv2.WND_PROP_AUTOSIZE, 0)
             cv2.resizeWindow("Game", self.current_width, self.current_height)
-            cv2.setMouseCallback("Game", self.menu.mouse_callback)
+            if not callable(self.menu.mouse_callback):
+                print(f"Warning: self.menu.mouse_callback was {self.menu.mouse_callback}, resetting to method")
+                self.menu.mouse_callback = MethodType(MenuSystem.mouse_callback, self.menu)
+            print(f"Using self.menu.mouse_callback: {self.menu.mouse_callback}")
+            try:
+                cv2.setMouseCallback("Game", self.menu.mouse_callback, self)
+                print("Mouse callback set successfully")
+            except Exception as e:
+                print(f"Error in cv2.setMouseCallback: {type(e).__name__}: {e}")
+                raise
         except cv2.error as e:
             print(f"Error setting up game window: {e}")
             if not self.use_still_image:
                 self.cap.release()
             return
 
-        # Get the initial frame
         if self.use_still_image:
             frame = self.still_image.copy()
         else:
@@ -266,14 +145,14 @@ class Game:
         if self.tracker.model is None:
             print("Reminder: No CNN ball detector model loaded. Run train_ball_detector.py with labeled data to enable detection.")
 
-        # Track the previous frame time to calculate delta_time
         prev_frame_time = time.time()
+        splash_img = cv2.imread(resource_path("splash.png"))
+        if splash_img is not None:
+            splash_img = cv2.resize(splash_img, (self.current_width, self.current_height))
 
         while True:
             try:
-                # Measure the start time of the frame
                 frame_start_time = time.time()
-                # Calculate delta_time as the time since the last frame
                 delta_time = frame_start_time - prev_frame_time
                 prev_frame_time = frame_start_time
 
@@ -281,7 +160,6 @@ class Game:
                     print("Game window closed via 'X'. Exiting...")
                     break
 
-                # Use the still image if applicable, otherwise capture from camera
                 if self.use_still_image:
                     frame = self.still_image.copy()
                 else:
@@ -298,7 +176,6 @@ class Game:
                 if self.current_width == 0 or self.current_height == 0:
                     self.current_width, self.current_height = 1280, 720
 
-                # Resize frame once per loop
                 frame = cv2.resize(frame, (self.current_width, self.current_height))
 
                 self.menu.update_timer()
@@ -306,13 +183,43 @@ class Game:
                 if self.debug:
                     print(f"Zones in main loop: {self.scoring_zones.zones}")
 
-                # Handle initials input
+                if self.is_splash_active and splash_img is not None:
+                    if not self.splash_dissolve:
+                        cv2.imshow("Game", splash_img)
+                        self.splash_start_time = time.time()
+                        self.splash_dissolve = True
+                        cv2.waitKey(1)
+                        continue
+                    else:
+                        elapsed = time.time() - self.splash_start_time
+                        fade_duration = 0.5
+                        if elapsed < fade_duration:
+                            self.splash_alpha = 1.0 - (elapsed / fade_duration)
+                            blended = frame.copy()
+                            cv2.addWeighted(splash_img, self.splash_alpha, frame, 1 - self.splash_alpha, 0, blended)
+                            cv2.imshow("Game", blended)
+                            cv2.waitKey(1)
+                            continue
+                        else:
+                            self.is_splash_active = False
+                            self.splash_dissolve = False
+                            self.splash_alpha = 1.0
+
+                if self.menu.confirmation_dialog:
+                    frame = self.menu.confirmation_dialog.draw(frame)
+                    cv2.imshow("Game", frame)
+                    key = cv2.waitKey(1) & 0xFF
+                    self.menu.confirmation_dialog.handle_key(key)
+                    if not self.menu.confirmation_dialog.is_active():
+                        self.menu.restart_game()
+                    continue
+
                 if self.initials_input:
-                    frame = self.initials_input.draw(frame, delta_time)
+                    frame = self.initials_input.draw(frame)
                     cv2.imshow("Game", frame)
                     key = cv2.waitKey(1) & 0xFF
                     self.initials_input.handle_key(key)
-                    self.initials_input.handle_mouse(key, self.current_width // 2, self.current_height // 2)
+                    self.initials_input.handle_mouse(event, x, y)  # Fixed to use mouse event
                     if self.initials_input.is_submitted():
                         initials = self.initials_input.get_initials()
                         if initials:
@@ -321,11 +228,10 @@ class Game:
                         self.menu.timer_active = False
                     continue
 
-                # Game logic: Detect balls, update physics, and check scores
                 print(f"Processing conditions: full_processing={self.full_processing}, "
                       f"menu_active={self.menu.is_menu_active()}, timer_active={self.menu.timer_active}")
                 if self.full_processing and not self.menu.is_menu_active():
-                    balls = self.tracker.detect_balls(frame, self.current_width, self.current_height)
+                    balls = self.tracker.detect_balls(frame)
                     print(f"Detected balls: {balls}")
                     filtered_balls = [
                         ball for ball in balls
@@ -354,7 +260,7 @@ class Game:
                 frame = self.menu.draw_menu_bar(frame)
                 frame = self.menu.draw_menu(frame)
 
-                # Draw score at the bottom
+                # Draw score text
                 score_text = f"Score: {self.total_score} (Mode: {self.menu.mode})"
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 font_scale = 0.5
@@ -365,6 +271,16 @@ class Game:
                 box_coords = ((text_x, text_y + 5), (text_x + text_size[0], text_y - text_size[1] - 5))
                 cv2.rectangle(frame, box_coords[0], box_coords[1], (128, 128, 128), -1)
                 cv2.putText(frame, score_text, (text_x, text_y), font, font_scale, (255, 255, 255), thickness)
+
+                # Draw timer text during gameplay (when menu is not active)
+                if self.menu.timer_active and not self.menu.is_menu_active():
+                    timer_text = self.menu.timer_text
+                    timer_size = cv2.getTextSize(timer_text, font, font_scale, thickness)[0]
+                    timer_x = self.current_width - timer_size[0] - 10
+                    timer_y = 20 + timer_size[1]
+                    timer_box_coords = ((timer_x - 5, timer_y + 5), (timer_x + timer_size[0] + 5, timer_y - timer_size[1] - 5))
+                    cv2.rectangle(frame, timer_box_coords[0], timer_box_coords[1], (128, 128, 128), -1)
+                    cv2.putText(frame, timer_text, (timer_x, timer_y), font, font_scale, (255, 255, 255), thickness)
 
                 cv2.imshow("Game", frame)
 
@@ -388,7 +304,7 @@ class Game:
                         print(f"Calibration error: {e}")
                 elif key == ord('r'):
                     self.total_score = 0
-                    self.scoring_zones.scored_balls.clear()
+                    self.scoring_zones.reset_scored_balls()
                     print("Score reset to 0")
                 elif key == ord('f'):
                     self.flip_horizontal = not self.flip_horizontal
@@ -406,6 +322,8 @@ class Game:
                         save_labeled_data(frame, labels)
                     print("Labeling complete.")
                 elif key == ord('p'):
+                    if self.menu.is_game_in_progress and not self.menu.timer_active:
+                        self.menu.resume_game()
                     self.full_processing = not self.full_processing
                     print(f"Full processing mode: {self.full_processing}")
                 elif key == ord('q') and not self.menu.is_menu_active():
@@ -417,6 +335,9 @@ class Game:
             except cv2.error as e:
                 print(f"Error in game loop: {e}")
                 break
+            except Exception as e:
+                print(f"Error: {e}")
+                break
 
         if not self.use_still_image:
             self.cap.release()
@@ -425,8 +346,14 @@ class Game:
 
 if __name__ == "__main__":
     try:
+        pygame.init()
+        pygame.font.init()
+        pygame.display.set_mode((1, 1), pygame.NOFRAME)
+        print("Pygame video mode initialized successfully")
         game = Game()
         game.run()
     except Exception as e:
         print(f"Error: {e}")
         cv2.destroyAllWindows()
+    finally:
+        pygame.quit()

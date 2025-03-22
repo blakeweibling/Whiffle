@@ -1,35 +1,31 @@
 # scoring_zones.py
 import pickle
 import os
-import pandas as pd
 import numpy as np
 import cv2
-import sys  # Added for resource_path()
+import sys
 
-# Add resource_path() function to handle file paths for PyInstaller
 def resource_path(relative_path):
     """Get the absolute path to a resource, works for dev and for PyInstaller."""
     if hasattr(sys, '_MEIPASS'):
-        # PyInstaller creates a temp folder and stores files there
         return os.path.join(sys._MEIPASS, relative_path)
     return os.path.join(os.path.abspath("."), relative_path)
 
 class ScoringZones:
     def __init__(self, reference_width=1920, reference_height=1080, sound_manager=None):
-        self.zones = []  # List of [x, y, radius, points] for circles or [x, y, width, height, points] for rectangles
-        self.scored_balls = {}  # ball_id -> set of zone indices
+        self.zones = []
+        self.scored_balls = {}
         self.zone_scores = {}
-        self.debug = True  # Enable debug output
-        self.reference_width = reference_width  # Resolution at which zones were recorded
+        self.debug = True
+        self.reference_width = reference_width
         self.reference_height = reference_height
-        self.sound_manager = sound_manager  # Store the SoundManager instance
+        self.sound_manager = sound_manager
         self.load_zones()
         self.model = None
         self.ball_type_encoder = None
         print("ML model disabled, using manual scoring")
 
     def load_zones(self):
-        # Update zones.pkl path with resource_path()
         zones_path = resource_path("zones.pkl")
         if os.path.exists(zones_path):
             try:
@@ -43,7 +39,6 @@ class ScoringZones:
             print("No zones.pkl file found, starting with empty zones")
 
     def save_zones(self):
-        # Update zones.pkl path with resource_path()
         zones_path = resource_path("zones.pkl")
         try:
             with open(zones_path, "wb") as f:
@@ -73,6 +68,8 @@ class ScoringZones:
 
         for ball in balls:
             x, y, _, _, ball_type, missed_frames, ball_id = ball
+            scaled_x = x * scale_x
+            scaled_y = y * scale_y
             best_score = 0
             best_zone_idx = None
             for zone_idx, zone in enumerate(self.zones):
@@ -83,21 +80,21 @@ class ScoringZones:
                     scaled_zx = zx * scale_x
                     scaled_zy = zy * scale_y
                     scaled_radius = radius * min(scale_x, scale_y)
-                    distance = np.sqrt((x - scaled_zx)**2 + (y - scaled_zy)**2)
+                    distance = np.sqrt((scaled_x - scaled_zx)**2 + (scaled_y - scaled_zy)**2)
                     if distance <= scaled_radius:
                         in_zone = True
                         if self.debug:
-                            print(f"Ball at ({x:.1f}, {y:.1f}) is in circle zone {zone_idx} at ({scaled_zx:.1f}, {scaled_zy:.1f}) with radius {scaled_radius:.1f}, points {points}")
+                            print(f"Ball at ({scaled_x:.1f}, {scaled_y:.1f}) is in circle zone {zone_idx} at ({scaled_zx:.1f}, {scaled_zy:.1f}) with radius {scaled_radius:.1f}, points {points}")
                 else:  # Rectangle
                     zx, zy, zw, zh, _ = zone
                     scaled_zx = zx * scale_x
                     scaled_zy = zy * scale_y
                     scaled_zw = zw * scale_x
                     scaled_zh = zh * scale_y
-                    if scaled_zx <= x <= scaled_zx + scaled_zw and scaled_zy <= y <= scaled_zy + scaled_zh:
+                    if scaled_zx <= scaled_x <= scaled_zx + scaled_zw and scaled_zy <= scaled_y <= scaled_zy + scaled_zh:
                         in_zone = True
                         if self.debug:
-                            print(f"Ball at ({x:.1f}, {y:.1f}) is in rectangle zone {zone_idx} at ({scaled_zx:.1f}, {scaled_zy:.1f}) with size ({scaled_zw:.1f}, {scaled_zh:.1f}), points {points}")
+                            print(f"Ball at ({scaled_x:.1f}, {scaled_y:.1f}) is in rectangle zone {zone_idx} at ({scaled_zx:.1f}, {scaled_zy:.1f}) with size ({scaled_zw:.1f}, {scaled_zh:.1f}), points {points}")
 
                 if in_zone:
                     multiplier = 1.0
@@ -122,7 +119,6 @@ class ScoringZones:
                         self.scored_balls[ball_id] = set()
                     self.scored_balls[ball_id].add(best_zone_idx)
                     print(f"Scored {best_score} points for ball_id {ball_id} (type: {ball_type}) in zone {best_zone_idx}")
-                    # Play the score sound effect
                     if self.sound_manager:
                         self.sound_manager.play_sound_effect("score")
 

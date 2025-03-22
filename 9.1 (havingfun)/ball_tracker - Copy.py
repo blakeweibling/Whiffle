@@ -2,7 +2,7 @@
 import cv2
 import numpy as np
 from game_settings import GameSettings
-import torch
+import torch  # Full import instead of selective
 from models import BallClassifier
 
 class BallTracker:
@@ -42,9 +42,6 @@ class BallTracker:
 
         if self.debug:
             print(f"Frame resolution: {current_width}x{current_height}")
-            print(f"Detection Parameters: area_min={self.settings.detection_area_min}, area_max={self.settings.detection_area_max}, "
-                  f"circularity_min={self.settings.detection_circularity_min}, circularity_max={self.settings.detection_circularity_max}, "
-                  f"radius_tolerance={self.settings.detection_radius_tolerance}, confidence_threshold={self.settings.detection_confidence_threshold}")
 
         scale = min(current_width / self.settings.base_frame_width, current_height / self.settings.base_frame_height)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)

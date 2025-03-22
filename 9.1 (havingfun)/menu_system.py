@@ -110,15 +110,14 @@ class MenuSystem:
             self.sound_manager.update_settings()
 
     def new_game(self):
-        """Start a new game, resetting the score and starting the timer if in timed mode."""
-        self.total_score = 0
-        self.scoring_zones.scored_balls.clear()
-        self.game_start_time = time.time() if self.mode == "timed" else None
-        self.timer_active = self.mode == "timed"
-        print("New game started")
-        self.set_state("closed")
-        if self.sound_manager:
-            self.sound_manager.update_settings()
+    	self.total_score = 0
+    	self.scoring_zones.reset_scored_balls()  # Ensure this is called
+    	self.game_start_time = time.time() if self.mode == "timed" else None
+    	self.timer_active = self.mode == "timed"
+    	print("New game started")
+    	self.set_state("closed")
+    	if self.sound_manager:
+        self.sound_manager.update_settings()
 
     def set_mode(self, mode):
         """Set the game mode and update the timer state."""
