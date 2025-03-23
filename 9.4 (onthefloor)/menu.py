@@ -176,6 +176,10 @@ def draw_menu_window(frame: np.ndarray, game_state: Any) -> None:
         frame: Frame to draw on.
         game_state: Game state object containing menu properties.
     """
+    if game_state.debug_mode:
+        logger.debug(f"draw_menu_window: menu_active={game_state.menu_active}, "
+                     f"submenu_active={game_state.submenu_active}, len(submenu_items)={len(game_state.submenu_items)}")
+
     if not game_state.menu_active:
         return
 
@@ -298,7 +302,7 @@ def draw_menu_window(frame: np.ndarray, game_state: Any) -> None:
             logo = cv2.resize(logo, LOGO_SIZE)
             logo_y, logo_x = 320, 50
             menu_frame[logo_y:logo_y+LOGO_SIZE[1], logo_x:logo_x+LOGO_SIZE[0]] = logo
-            game_state.submenu_items = [(logo_x, logo_y, LOGO_SIZE[0], LOGO_SIZE[1], "Show Splash",
+            game_state.submenu_items = [(logo_x, logo_y, 50, 50, "Show Splash",
                                         lambda: show_splash_on_click(frame, game_state))]
         else:
             logger.warning("Failed to load logo.png, skipping logo display")
@@ -318,8 +322,7 @@ def draw_menu_window(frame: np.ndarray, game_state: Any) -> None:
                         cv2.FONT_HERSHEY_SIMPLEX, FONT_SCALE_SMALL, YELLOW, 1)
     elif game_state.submenu_active:
         for smx, smy, smw, smh, label, _ in game_state.submenu_items:
-            adjusted_smy = smy - 110
-            _draw_button(menu_frame, smx, adjusted_smy, smw, smh, label, BLUE)
+            _draw_button(menu_frame, smx, smy, smw, smh, label, BLUE)
 
     # Overlay menu onto frame
     x1, y1 = game_state.menu_pos_x, game_state.menu_pos_y

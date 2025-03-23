@@ -116,27 +116,42 @@ def _handle_menu_click(x: int, y: int, game_state: Any) -> None:
     # Check for submenu item clicks
     if game_state.submenu_active and game_state.submenu_items:
         for item in game_state.submenu_items:
-            if len(item) == 6:  # Non-toggle items
+            if len(item) == 6:  # Non-toggle items (e.g., File, About)
                 smx, smy, smw, smh, label, action = item
-                adjusted_smy = smy if game_state.submenu_active == "About" else smy - 110
+                # Adjust smy to match the drawing offset in draw_menu_window
+                adjusted_smy = smy  # Remove the -110 offset to match draw_menu_window
+                if game_state.debug_mode:
+                    logger.debug(f"Checking submenu item: {label} at ({smx}, {adjusted_smy}) to ({smx + smw}, {adjusted_smy + smh})")
+                    logger.debug(f"Mouse click at: menu_x={menu_x}, menu_y={menu_y}")
                 if smx <= menu_x <= smx + smw and adjusted_smy <= menu_y <= adjusted_smy + smh:
                     if game_state.debug_mode:
                         logger.info(f"Submenu item clicked: {label} at ({smx}, {adjusted_smy})")
                     result = action()
-                    if label in ["New Game", "Start Timer"]:
-                        pass
-                    elif label in ["Save Zones", "Clear Zones"]:
-                        game_state.scoring_zones = result if result else game_state.scoring_zones
+                    if label == "New Game":
+                        if game_state.debug_mode:
+                            logger.info("New Game action executed")
+                    elif label == "Save Zones":
+                        if game_state.debug_mode:
+                            logger.info("Save Zones action executed")
+                    elif label == "Clear Zones":
+                        game_state.scoring_zones = result  # clear_zones returns the cleared list
+                        if game_state.debug_mode:
+                            logger.info("Clear Zones action executed")
                     elif label == "Exit":
-                        pass  # Handled by clean_exit
+                        if game_state.debug_mode:
+                            logger.info("Exit action executed")
                     elif label == "Show Splash":
                         result  # Execute splash screen display
-                        break
+                        if game_state.debug_mode:
+                            logger.info("Show Splash action executed")
+                    # Close the menu after the action
                     game_state.menu_active = False
                     game_state.submenu_active = None
                     game_state.submenu_items = []
+                    if game_state.debug_mode:
+                        logger.info("Menu closed after submenu action")
                     break
-            else:  # Toggle items
+            else:  # Toggle items (e.g., Settings)
                 smx, smy, smw, smh, label, action, toggle_x, toggle_y, toggle_w, toggle_h = item
                 if toggle_x <= menu_x <= toggle_x + toggle_w and smy <= menu_y <= smy + smh:
                     if game_state.debug_mode:

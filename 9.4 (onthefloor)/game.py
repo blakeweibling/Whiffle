@@ -101,7 +101,7 @@ class GameState:
         self.score: int = 0
         self.high_score: int = 0
         self.scoring_zones: List[Tuple[int, int, int, int, int]] = []
-        self.tracked_balls: List[Tuple[int, int, float, int, int]] = []
+        self.tracked_balls: List[Tuple[int, int, float, int, int]] = []  # (x, y, radius, ball_id, age)
         self.scored_balls: set = set()
         self.scored_positions: Dict[Tuple[int, int], int] = {}
         self.potential_small_balls: Dict[Tuple[int, int], Tuple[int, int]] = {}
@@ -263,7 +263,8 @@ def _detect_and_track_balls(frame: np.ndarray, game_state: GameState) -> List[Tu
         game_state: Game state object.
 
     Returns:
-        List of tracked balls as (x, y, radius, ball_id) tuples.
+        Tuple of (tracked_detected_balls, detected_red_balls), where tracked_detected_balls is a list
+        of (x, y, radius, ball_id) tuples, and detected_red_balls is a list of detected red balls.
     """
     # Convert to HSV once for both white and red ball detection
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV) if (game_state.white_ball_detection_on or
@@ -283,6 +284,7 @@ def _detect_and_track_balls(frame: np.ndarray, game_state: GameState) -> List[Tu
     tracked_detected_balls, game_state.next_ball_id = track_balls(detected_balls, game_state.tracked_balls,
                                                                  game_state.next_ball_id, game_state.frame_count,
                                                                  game_state.scored_positions, game_state.debug_mode)
+    # Update tracked_balls with the age (frame_count) for tracking purposes
     game_state.tracked_balls = [(x, y, radius, ball_id, game_state.frame_count)
                                 for x, y, radius, ball_id in tracked_detected_balls]
     return tracked_detected_balls, detected_red_balls
@@ -295,7 +297,7 @@ def _draw_balls(frame: np.ndarray, game_state: GameState, tracked_detected_balls
     Args:
         frame: Frame to draw on.
         game_state: Game state object.
-        tracked_detected_balls: List of tracked balls.
+        tracked_detected_balls: List of tracked balls as (x, y, radius, ball_id) tuples.
         detected_red_balls: List of detected red balls.
     """
     # Update and draw ball trails
@@ -304,7 +306,7 @@ def _draw_balls(frame: np.ndarray, game_state: GameState, tracked_detected_balls
         if not game_state.ball_trails[ball_id]:
             del game_state.ball_trails[ball_id]
 
-    for x, y, radius, ball_id, _ in tracked_detected_balls:
+    for x, y, radius, ball_id in tracked_detected_balls:  # Unpack 4 elements
         is_red = any((x, y, radius) in detected_red_balls for _ in [detected_red_balls]
                      if game_state.red_ball_detection_on)
         game_state.ball_trails.setdefault(ball_id, []).append((x, y, 0))
@@ -326,9 +328,9 @@ def _update_score(frame: np.ndarray, game_state: GameState, tracked_detected_bal
     Args:
         frame: Input frame.
         game_state: Game state object.
-        tracked_detected_balls: List of tracked balls.
+        tracked_detected_balls: List of tracked balls as (x, y, radius, ball_id) tuples.
     """
-    for x, y, radius, ball_id, _ in tracked_detected_balls:
+    for x, y, radius, ball_id in tracked_detected_balls:  # Unpack 4 elements
         ball = (x, y, radius, ball_id)
         current_zone = None
         for zone in game_state.scoring_zones:
@@ -403,6 +405,10 @@ def main() -> None:
     # Load Supabase credentials from environment variables
     supabase_url = os.getenv("SUPABASE_URL", "https://default-supabase-url.supabase.co")
     supabase_key = os.getenv("SUPABASE_KEY", "default-supabase-api-key")
+
+    # Warn if default Supabase URL is used
+    if supabase_url == "https://default-supabase-url.supabase.co":
+        logger.warning("Supabase URL not set in .env file. Using default URL, which will fail. Please set SUPABASE_URL and SUPABASE_KEY in .env file.")
 
     game_state = show_splash_screen(supabase_url, supabase_key)
     if game_state is None:
