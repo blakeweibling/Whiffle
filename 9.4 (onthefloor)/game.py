@@ -244,11 +244,7 @@ def _draw_ui(frame: np.ndarray, game_state: GameState) -> None:
     if game_state.temp_zone and game_state.drawing:
         x, y, w, h = game_state.temp_zone
         cv2.rectangle(frame, (x, y), (x + w, y + h), YELLOW, FONT_THICKNESS)
-        points = max(1, cv2.getTrackbarPos("Points", WINDOW_NAME) or 100)
-        text_x = x + w + 10 if x + w + 100 < frame.shape[1] else x
-        text_y = y if x + w + 100 < frame.shape[1] else y + h + 20
-        cv2.putText(frame, f"{points} pts", (text_x, text_y),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, YELLOW, FONT_THICKNESS)
+        # Note: Points are now handled in define_scoring_zone, no need for trackbar here
 
     # Draw menu
     draw_menu(frame, game_state)

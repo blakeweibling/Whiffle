@@ -44,21 +44,21 @@ def _get_text_position(
 def define_scoring_zone(
     frame: np.ndarray,
     cap: cv2.VideoCapture,
-    trackbar_created: bool,
+    trackbar_created: bool,  # Kept for compatibility, but no longer used
     scoring_zones: List[Tuple[int, int, int, int, int]]
 ) -> Tuple[Optional[Tuple[int, int, int, int, int]], bool]:
     """
-    Define a scoring zone with points, allowing user input via mouse and trackbar.
+    Define a scoring zone with points, allowing user input via mouse and keyboard.
 
     Args:
         frame: Input BGR frame to draw on.
         cap: Video capture object to check if the camera is open.
-        trackbar_created: Flag indicating if the trackbar has been created.
+        trackbar_created: Flag indicating if the trackbar has been created (unused).
         scoring_zones: List of existing scoring zones.
 
     Returns:
         Tuple of (zone, trackbar_created), where zone is (x, y, w, h, points) or None,
-        and trackbar_created indicates if the trackbar was created.
+        and trackbar_created is always False since we no longer use a trackbar.
     """
     if frame.shape[0] == 0 or frame.shape[1] == 0:
         raise ValueError("Invalid frame dimensions")
@@ -66,11 +66,7 @@ def define_scoring_zone(
     temp_zone: Optional[Tuple[int, int, int, int]] = None
     drawing: bool = False
     start_x, start_y = -1, -1
-
-    # Create trackbar if not already created
-    if not trackbar_created:
-        cv2.createTrackbar("Points", WINDOW_NAME, DEFAULT_POINTS, MAX_POINTS, lambda x: None)
-        trackbar_created = True
+    points_input: str = ""  # String to build the points value from keyboard input
 
     # Set up a local mouse callback for drawing
     def local_mouse_callback(event: int, x: int, y: int, flags: int, param: None) -> None:
@@ -94,7 +90,7 @@ def define_scoring_zone(
 
     while True:
         if not cap.isOpened():
-            return None, trackbar_created
+            return None, False
 
         temp_frame = frame.copy()
 
@@ -110,27 +106,34 @@ def define_scoring_zone(
         if temp_zone:
             x, y, w, h = temp_zone
             cv2.rectangle(temp_frame, (x, y), (x + w, y + h), YELLOW, FONT_THICKNESS)
-            points = max(1, cv2.getTrackbarPos("Points", WINDOW_NAME) or DEFAULT_POINTS)
+            points_display = points_input if points_input else str(DEFAULT_POINTS)
             text_x, text_y = _get_text_position(x, y, w, h, temp_frame.shape[1], temp_frame.shape[0])
-            cv2.putText(temp_frame, f"{points} pts", (text_x, text_y),
+            cv2.putText(temp_frame, f"{points_display} pts", (text_x, text_y),
                         cv2.FONT_HERSHEY_SIMPLEX, FONT_SCALE, YELLOW, FONT_THICKNESS)
 
         # Display instructions
-        cv2.putText(temp_frame, "Drag to draw zone, release to set points, Enter to confirm, 'c' to cancel",
-                    (TEXT_OFFSET_X, 60), cv2.FONT_HERSHEY_SIMPLEX, FONT_SCALE, WHITE, FONT_THICKNESS)
+        instructions = "Drag to draw zone, release to input points (0-9), Enter to confirm, 'c' to cancel"
+        cv2.putText(temp_frame, instructions, (TEXT_OFFSET_X, 60),
+                    cv2.FONT_HERSHEY_SIMPLEX, FONT_SCALE, WHITE, FONT_THICKNESS)
 
         cv2.imshow(WINDOW_NAME, temp_frame)
 
         key = cv2.waitKey(1) & 0xFF
         if key == 13 and temp_zone and not drawing:  # Enter to confirm
-            x, y, w, h = temp_zone
-            points = max(1, cv2.getTrackbarPos("Points", WINDOW_NAME) or DEFAULT_POINTS)
-            cv2.setTrackbarPos("Points", WINDOW_NAME, DEFAULT_POINTS)
-            zone = (x, y, w, h, points)
-            return zone, trackbar_created
+            if not points_input:  # If no input, use default
+                points = DEFAULT_POINTS
+            else:
+                try:
+                    points = int(points_input)
+                    points = max(1, min(points, MAX_POINTS))  # Clamp between 1 and MAX_POINTS
+                except ValueError:
+                    points = DEFAULT_POINTS  # Fallback to default if invalid
+            zone = (temp_zone[0], temp_zone[1], temp_zone[2], temp_zone[3], points)
+            return zone, False
         elif key == ord('c'):  # Cancel
-            cv2.setTrackbarPos("Points", WINDOW_NAME, DEFAULT_POINTS)
-            return None, trackbar_created
+            return None, False
+        elif not drawing and temp_zone and ord('0') <= key <= ord('9'):  # Numeric input
+            points_input += chr(key)
 
 def is_in_scoring_zone(ball: Tuple[int, int, float, int], zone: Tuple[int, int, int, int, int]) -> bool:
     """
