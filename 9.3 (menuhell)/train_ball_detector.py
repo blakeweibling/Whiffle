@@ -67,6 +67,7 @@ def train_model():
     transform = transforms.Compose([
         transforms.RandomHorizontalFlip(),
         transforms.RandomRotation(10),
+        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
     ])
 
     # Create datasets and loaders
@@ -79,10 +80,14 @@ def train_model():
     model = BallClassifier().to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.1, patience=5, verbose=True)
 
-    # Training loop
-    num_epochs = 50
+    # Training loop with early stopping
+    num_epochs = 100  # Increased for potentially better results
     best_accuracy = 0.0
+    patience = 10
+    epochs_without_improvement = 0
+
     for epoch in range(num_epochs):
         model.train()
         running_loss = 0.0
@@ -111,14 +116,23 @@ def train_model():
         accuracy = correct / total
         print(f"Validation Accuracy: {accuracy:.4f}")
 
-        # Save best model
+        # Learning rate scheduling
+        scheduler.step(accuracy)
+
+        # Early stopping
         if accuracy > best_accuracy:
             best_accuracy = accuracy
+            epochs_without_improvement = 0
             try:
                 torch.save(model.state_dict(), "ball_detector_cnn.pth")
                 print(f"Saved model with accuracy {accuracy:.4f} to ball_detector_cnn.pth")
             except Exception as e:
                 print(f"Error saving model: {e}")
+        else:
+            epochs_without_improvement += 1
+            if epochs_without_improvement >= patience:
+                print(f"Early stopping triggered after {epoch+1} epochs. Best validation accuracy: {best_accuracy:.4f}")
+                break
 
     print(f"Training completed. Best validation accuracy: {best_accuracy:.4f}")
 

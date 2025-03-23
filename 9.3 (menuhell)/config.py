@@ -1,3 +1,4 @@
+# config.py
 import json
 import os
 from pydantic import BaseModel, Field, validator
@@ -6,27 +7,27 @@ from datetime import datetime
 
 class GameConfig(BaseModel):
     """Configuration class for game settings with validation."""
-    # Game settings (from game_settings.py)
+    # Game settings
     base_frame_width: int = Field(default=1920, ge=1)
     base_frame_height: int = Field(default=1080, ge=1)
     ball_radius: int = Field(default=10, ge=1)
     gravity: float = Field(default=9.8, ge=0.0)
     friction: float = Field(default=0.99, ge=0.0, le=1.0)
     time_step: float = Field(default=0.033, ge=0.0)
-    # Menu settings (from menu_settings.py)
+    # Menu settings
     game_duration: int = Field(default=120, ge=1)
     white_ball_detection: bool = True
     red_ball_detection: bool = True
     game_sounds: bool = True
     background_music: bool = True
     mode: str = "classic"
-    # Ball detection settings (new)
-    detection_confidence_threshold: float = Field(default=0.5, ge=0.0, le=1.0)  # Increased from 0.1 to 0.5
+    # Ball detection settings
+    detection_confidence_threshold: float = Field(default=0.7, ge=0.0, le=1.0)  # Increased from 0.04 to 0.7
     detection_radius_tolerance: float = Field(default=20.0, ge=0.0)
-    detection_area_min: float = Field(default=50.0, ge=0.0)
-    detection_area_max: float = Field(default=3000.0, ge=0.0)
-    detection_circularity_min: float = Field(default=0.3, ge=0.0, le=1.0)  # Increased from 0.1 to 0.3
-    detection_circularity_max: float = Field(default=1.2, ge=0.0, le=2.0)
+    detection_area_min: float = Field(default=5.0, ge=0.0)
+    detection_area_max: float = Field(default=4000.0, ge=0.0)
+    detection_circularity_min: float = Field(default=0.01, ge=0.0, le=1.0)
+    detection_circularity_max: float = Field(default=2.0, ge=0.0, le=2.0)
 
     @validator("detection_area_max")
     def validate_areas(cls, v, values):
@@ -38,7 +39,6 @@ class GameConfig(BaseModel):
 def load_config(filename="config.json"):
     """Load the game configuration from a JSON file."""
     config = GameConfig()
-    # Force overwrite config.json with new defaults if it exists
     if os.path.exists(filename):
         print(f"Found existing {filename}. Overwriting with updated defaults.")
         save_config(config, filename)
@@ -56,7 +56,7 @@ def load_config(filename="config.json"):
         backup_filename = f"{filename}.backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         shutil.copy(filename, backup_filename)
         print(f"Created backup: {backup_filename}")
-        save_config(config, filename)  # Save default settings
+        save_config(config, filename)
     return config
 
 def save_config(config, filename="config.json"):

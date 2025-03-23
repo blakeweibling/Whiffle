@@ -317,6 +317,7 @@ class ZoneCalibrator:
                     self.pending_zone[-1] = max(0, self.current_points)
                     self.zones.append(self.pending_zone)
                     self.animator.start_scale_up(self.pending_zone[:], len(self.zones) - 1)
+                    print(f"Added new zone: {self.pending_zone}")
                     self.pending_zone = None
                     self.current_points = 0
                     self.start_point = None  # Reset start_point to prevent artifact

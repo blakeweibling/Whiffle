@@ -13,28 +13,31 @@ def resource_path(relative_path):
 def log_training_data(balls, scoring_zones, current_width, current_height, filename="train_ball_detector.csv", debug=False):
     filename = resource_path(filename)
     data = []
-    scale = min(current_width / 1920, current_height / 1080)
+    scale_x = current_width / 1920  # Reference width
+    scale_y = current_height / 1080  # Reference height
     for ball in balls:
         x, y, _, _, ball_type, _, ball_id, _ = ball  # Updated to handle 8 elements
-        scaled_x = x * scale
-        scaled_y = y * scale
+        scaled_x = x * scale_x
+        scaled_y = y * scale_y
         score = 0
         in_zone = False
         for zone_idx, zone in enumerate(scoring_zones.zones):
             points = zone[-1]
             if len(zone) == 4:  # Circle
                 zx, zy, radius, _ = zone
-                scaled_radius = radius * scale
-                distance = np.sqrt((scaled_x - (zx * scale))**2 + (scaled_y - (zy * scale))**2)
+                scaled_zx = zx * scale_x
+                scaled_zy = zy * scale_y
+                scaled_radius = radius * scale_x  # Assuming uniform scaling for radius
+                distance = np.sqrt((scaled_x - scaled_zx)**2 + (scaled_y - scaled_zy)**2)
                 if distance <= scaled_radius:
                     in_zone = True
             else:  # Rectangle
                 zx, zy, zw, zh, _ = zone
-                scaled_zx = zx * scale
-                scaled_zy = zy * scale
-                scaled_zw = zw * scale
-                scaled_zh = zh * scale
-                if scaled_zx <= scaled_x <= scaled_x + scaled_zw and scaled_zy <= scaled_y <= scaled_zy + scaled_zh:
+                scaled_zx = zx * scale_x
+                scaled_zy = zy * scale_y
+                scaled_zw = zw * scale_x
+                scaled_zh = zh * scale_y
+                if scaled_zx <= scaled_x <= scaled_zx + scaled_zw and scaled_zy <= scaled_y <= scaled_zy + scaled_zh:
                     in_zone = True
             if in_zone:
                 multiplier = 1.0

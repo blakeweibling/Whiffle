@@ -13,10 +13,25 @@ class MenuSystem:
         self.button_rect = None
         self.close_button_rect = None
         self.back_button_rect = None
+        self.reset_button_rect = None
         self.image_rect = None
         self.menu_area = None
+        self.header_rect = None
         self.menu_item_rects = []
         self.settings_sliders = []
+        self.is_dragging = False
+        self.drag_offset_x = 0
+        self.drag_offset_y = 0
+        self.mouse_x = 0
+        self.mouse_y = 0
+        self.is_close_hovered = False
+        self.is_back_hovered = False
+        self.is_reset_hovered = False
+        self.is_slider_dragging = False
+        self.dragged_slider = None
+        # Initialize menu position
+        self.menu_pos_x = None
+        self.menu_pos_y = None
         self.renderer = MenuRenderer(self)
         self.input_handler = MenuInputHandler(self)
         self.scoring_zones = scoring_zones
@@ -51,6 +66,8 @@ class MenuSystem:
         self.menu_stack = []
         self.selection = 0
         self.scroll_offset = 0
+        self.menu_pos_x = None
+        self.menu_pos_y = None
 
     def set_state(self, state):
         print(f"Setting state to: {state}")
@@ -113,7 +130,13 @@ class MenuSystem:
                 (f"Game Sounds: {'On' if self.settings.config.game_sounds else 'Off'}", 
                  lambda: self.toggle_setting("game_sounds")),
                 (f"Background Music: {'On' if self.settings.config.background_music else 'Off'}", 
-                 lambda: self.toggle_setting("background_music"))
+                 lambda: self.toggle_setting("background_music")),
+                (f"Confidence Threshold: {self.settings.config.detection_confidence_threshold:.2f}", lambda: None),
+                (f"Radius Tolerance: {self.settings.config.detection_radius_tolerance:.2f}", lambda: None),
+                (f"Area Min: {self.settings.config.detection_area_min:.2f}", lambda: None),
+                (f"Area Max: {self.settings.config.detection_area_max:.2f}", lambda: None),
+                (f"Circularity Min: {self.settings.config.detection_circularity_min:.2f}", lambda: None),
+                (f"Circularity Max: {self.settings.config.detection_circularity_max:.2f}", lambda: None),
             ]
         elif self.state == "leaderboard":
             scores, is_online = self.leaderboard.get_top_scores(self.mode)
@@ -230,19 +253,7 @@ class MenuSystem:
         if not menu:
             return frame
 
-        if self.state in ["main_menu", "mode_selection"]:
-            return self.renderer.draw_text_page(frame, menu["items"], menu["title"])
-        elif self.state == "settings":
-            return self.renderer.draw_settings_page(frame, menu["items"], menu["title"])
-        elif self.state == "leaderboard":
-            return self.renderer.draw_leaderboard_page(frame, menu["items"], menu["title"])
-        elif self.state == "help":
-            return self.renderer.draw_help_page(frame, menu["items"], menu["title"])
-        elif self.state == "about":
-            return self.renderer.draw_about_page(frame, menu["items"], menu["title"])
-        elif self.state == "game_over":
-            return self.renderer.draw_game_over_page(frame, menu["items"], menu["title"])
-        return frame
+        return self.renderer.draw_menu(frame, menu)
 
     def handle_input(self, key):
         if self.confirmation_dialog and self.confirmation_dialog.is_active():
@@ -253,4 +264,184 @@ class MenuSystem:
         return self.input_handler.handle_input(key)
 
     def mouse_callback(self, event, x, y, flags, param):
-        self.input_handler.mouse_callback(event, x, y, flags, param)
+        self.mouse_x = x
+        self.mouse_y = y
+
+        # Check hover states
+        self.is_close_hovered = False
+        self.is_back_hovered = False
+        self.is_reset_hovered = False
+
+        if self.close_button_rect:
+            cx, cy, cw, ch = self.close_button_rect
+            if cx <= x <= cx + cw and cy <= y <= cy + ch:
+                self.is_close_hovered = True
+
+        if self.back_button_rect:
+            bx, by, bw, bh = self.back_button_rect
+            if bx <= x <= bx + bw and by <= y <= by + bh:
+                self.is_back_hovered = True
+
+        if self.reset_button_rect:
+            rx, ry, rw, rh = self.reset_button_rect
+            if rx <= x <= rx + rw and ry <= y <= ry + rh:
+                self.is_reset_hovered = True
+
+        # Handle dragging
+        if event == cv2.EVENT_LBUTTONDOWN and self.header_rect:
+            hx, hy, hw, hh = self.header_rect
+            if hx <= x <= hx + hw and hy <= y <= hy + hh:
+                self.is_dragging = True
+                self.drag_offset_x = x - self.menu_pos_x
+                self.drag_offset_y = y - self.menu_pos_y
+
+        elif event == cv2.EVENT_MOUSEMOVE and self.is_dragging:
+            self.menu_pos_x = x - self.drag_offset_x
+            self.menu_pos_y = y - self.drag_offset_y
+
+        elif event == cv2.EVENT_LBUTTONUP and self.is_dragging:
+            self.is_dragging = False
+
+        # Handle slider dragging
+        if event == cv2.EVENT_LBUTTONDOWN and self.state == "settings":
+            for idx, rect in enumerate(self.menu_item_rects):
+                if isinstance(rect, dict) and rect["type"] == "slider":
+                    rx, ry, rw, rh = rect["rect"]
+                    if rx <= x <= rx + rw and ry <= y <= ry + rh:
+                        self.is_slider_dragging = True
+                        self.dragged_slider = rect
+                        self.selection = rect["index"]
+                        setting_name = rect["key"]
+                        min_val = rect["min_val"]
+                        max_val = rect["max_val"]
+                        slider_pos = (x - rx) / rw
+                        new_value = min_val + (max_val - min_val) * slider_pos
+                        new_value = max(min_val, min(max_val, new_value))
+                        setattr(self.settings.config, setting_name, new_value)
+                        self.settings.save_config()
+                        print(f"Updated {setting_name} to {new_value}")
+                        break
+
+        elif event == cv2.EVENT_MOUSEMOVE and self.is_slider_dragging and self.dragged_slider:
+            rx, ry, rw, rh = self.dragged_slider["rect"]
+            setting_name = self.dragged_slider["key"]
+            min_val = self.dragged_slider["min_val"]
+            max_val = self.dragged_slider["max_val"]
+            slider_pos = min(1.0, max(0.0, (x - rx) / rw))
+            new_value = min_val + (max_val - min_val) * slider_pos
+            new_value = max(min_val, min(max_val, new_value))
+            setattr(self.settings.config, setting_name, new_value)
+            self.settings.save_config()
+            print(f"Updated {setting_name} to {new_value}")
+
+        elif event == cv2.EVENT_LBUTTONUP and self.is_slider_dragging:
+            self.is_slider_dragging = False
+            self.dragged_slider = None
+
+        # Handle menu bar button click
+        if event == cv2.EVENT_LBUTTONDOWN and self.button_rect:
+            bx, by, bw, bh = self.button_rect
+            if bx <= x <= bx + bw and by <= y <= by + bh:
+                if self.state == "closed":
+                    self.reset_menu()
+                    self.set_state("main_menu")
+                else:
+                    self.set_state("closed")
+                    if self.sound_manager:
+                        self.sound_manager.update_settings()
+                return
+
+        # Handle close button click
+        if event == cv2.EVENT_LBUTTONDOWN and self.is_close_hovered:
+            self.set_state("closed")
+            if self.sound_manager:
+                self.sound_manager.update_settings()
+            return
+
+        # Handle back button click
+        if event == cv2.EVENT_LBUTTONDOWN and self.is_back_hovered:
+            if self.menu_stack:
+                self.current_menu = self.menu_stack.pop()
+                self.selection = 0
+                if not self.menu_stack:
+                    self.set_state("main_menu")
+            else:
+                self.set_state("main_menu")
+            return
+
+        # Handle reset button click in settings
+        if event == cv2.EVENT_LBUTTONDOWN and self.is_reset_hovered and self.state == "settings":
+            self.settings.config.white_ball_detection = True
+            self.settings.config.red_ball_detection = True
+            self.settings.config.game_sounds = True
+            self.settings.config.background_music = True
+            self.settings.config.detection_confidence_threshold = 0.7
+            self.settings.config.detection_radius_tolerance = 20.0
+            self.settings.config.detection_area_min = 5.0
+            self.settings.config.detection_area_max = 4000.0
+            self.settings.config.detection_circularity_min = 0.01
+            self.settings.config.detection_circularity_max = 2.0
+            self.settings.save_config()
+            if self.sound_manager:
+                self.sound_manager.update_settings()
+            return
+
+        # Handle logo click on About page
+        if event == cv2.EVENT_LBUTTONDOWN and self.state == "about" and self.image_rect:
+            ix, iy, iw, ih = self.image_rect
+            if ix <= x <= ix + iw and iy <= y <= iy + ih:
+                if param and hasattr(param, 'is_splash_active'):
+                    param.is_splash_active = True
+                return
+
+        # Handle menu item clicks
+        if event == cv2.EVENT_LBUTTONDOWN and self.state in ["main_menu", "mode_selection"]:
+            menu = self.get_current_menu()
+            for idx, rect in enumerate(self.menu_item_rects):
+                rx, ry, rw, rh, item_idx = rect
+                if rx <= x <= rx + rw and ry <= y <= ry + rh:
+                    self.selection = item_idx
+                    _, action = menu["items"][item_idx]
+                    action()
+                    return
+
+        # Handle settings menu interactions
+        if event == cv2.EVENT_LBUTTONDOWN and self.state == "settings":
+            for idx, rect in enumerate(self.menu_item_rects):
+                if isinstance(rect, tuple):  # Toggle
+                    rx, ry, rw, rh, item_idx = rect
+                    if rx <= x <= rx + rw and ry <= y <= ry + rh:
+                        self.selection = item_idx
+                        menu = self.get_current_menu()
+                        _, action = menu["items"][item_idx]
+                        action()
+                        return
+
+        # Handle mouse wheel for scrolling
+        if event == cv2.EVENT_MOUSEWHEEL:
+            if flags > 0:  # Scroll up
+                self.scroll_offset = max(0, self.scroll_offset - 1)
+                if self.state in ["main_menu", "mode_selection", "settings", "leaderboard", "help"]:
+                    if self.selection > self.scroll_offset + 5:  # Adjust based on max visible items
+                        self.selection -= 1
+            else:  # Scroll down
+                if self.state == "main_menu" or self.state == "mode_selection":
+                    max_items = len(self.get_current_menu()["items"])
+                    if self.scroll_offset < max_items - 6:  # Adjust based on max visible items
+                        self.scroll_offset += 1
+                    if self.selection < self.scroll_offset:
+                        self.selection += 1
+                elif self.state == "settings":
+                    max_items = len(self.get_current_menu()["items"])
+                    if self.scroll_offset < max_items - 6:
+                        self.scroll_offset += 1
+                    if self.selection < self.scroll_offset:
+                        self.selection += 1
+                elif self.state == "leaderboard":
+                    max_items = len(self.leaderboard_scores) + (2 if self.renderer.leaderboard_error else 1)
+                    if self.scroll_offset < max_items - 7:  # Adjust based on max visible lines
+                        self.scroll_offset += 1
+                elif self.state == "help":
+                    max_items = 11  # Total help items
+                    if self.scroll_offset < max_items - 9:
+                        self.scroll_offset += 1
