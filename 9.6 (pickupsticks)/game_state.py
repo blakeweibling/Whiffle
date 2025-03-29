@@ -10,16 +10,17 @@ import time
 import json
 import os
 import numpy as np
-from typing import Optional, List, Tuple, Dict, Any
+from typing import Optional, List, Tuple, Dict, Any, Callable
 from enum import Enum
 
-from constants import UIConstants, GameConstants, GameSpecificConstants  # Import classes
-from detection import detect_white_balls
-from tracking import track_balls
-from menu import load_zones  # Updated to import from menu.py
+from constants import UIConstants, GameConstants
+from detection import BallDetector
+from tracking import BallTracker
+from menu import load_zones
 from leaderboard import Leaderboard
-from player import Player  # Import Player class
-from achievement import Achievement  # Import Achievement class
+from player import Player
+from achievement import Achievement
+from scoring import is_in_scoring_zone
 
 logger = logging.getLogger(__name__)
 
@@ -31,8 +32,8 @@ class MenuState(Enum):
 class GameState:
     def __init__(self, supabase_url: str, supabase_key: str) -> None:
         self.cap: Optional[cv2.VideoCapture] = cv2.VideoCapture(0)
-        self.camera_available: bool = True  # Flag to indicate if camera is available
-        self.static_frame: Optional[np.ndarray] = None  # Store the static image if camera fails
+        self.camera_available: bool = True
+        self.static_frame: Optional[np.ndarray] = None
 
         # Attempt to set camera properties and check resolution
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, UIConstants.WINDOW_WIDTH)
@@ -43,27 +44,24 @@ class GameState:
             logger.warning(f"Camera resolution {width}x{height} does not match {UIConstants.WINDOW_WIDTH}x{UIConstants.WINDOW_HEIGHT}")
         logger.info(f"Camera resolution: {width}x{height}")
 
-        # Check if camera opened successfully
         if not self.cap.isOpened():
             logger.error("Failed to open camera, attempting to load static image")
             self.camera_available = False
-            # Load static image as fallback
             self.static_frame = cv2.imread("last_frame.png")
             if self.static_frame is None:
                 logger.error("Failed to load last_frame.png, cannot proceed without camera or static image")
                 raise RuntimeError("Camera initialization failed and no static image available")
-            # Resize static image to match window dimensions
             self.static_frame = cv2.resize(self.static_frame, (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT))
             logger.info("Loaded static image last_frame.png as fallback")
 
-        self.score: int = 0  # This will now be managed by the Player class
+        self.score: int = 0  # Managed by Player class
         self.high_score: int = 0
         self.scoring_zones: List[Tuple[int, int, int, int, int]] = []
-        self.tracked_balls: List[Tuple[int, int, float, int, int]] = []
+        self.tracked_balls: List[Tuple[int, int, float, int, int, str]] = []  # (x, y, radius, ball_id, frame_count, ball_type)
         self.scored_balls: set = set()
         self.scored_positions: Dict[Tuple[int, int], int] = {}
-        self.potential_small_balls_white: Dict[Tuple[int, int], Tuple[int, int]] = {}
-        self.potential_small_balls_red: Dict[Tuple[int, int], Tuple[int, int]] = {}
+        self.potential_small_balls_white: Dict[Tuple[int, int], Tuple[int, int]] = {}  # Used by new detection.py
+        self.potential_small_balls_red: Dict[Tuple[int, int], Tuple[int, int]] = {}  # Used by new detection.py
         self.next_ball_id: int = 0
         self.frame_count: int = 0
         self.balls_in_zone: Dict[int, Optional[Tuple[int, int, int, int, int]]] = {}
@@ -71,10 +69,31 @@ class GameState:
         self.game_timer: Optional[float] = None
         self.start_time: Optional[float] = None
         self.ball_trails: Dict[int, List[Tuple[int, int, int]]] = {}
+        self.scored_cooldown: Dict[int, int] = {}  # ball_id -> frames remaining for cooldown
+
+        # Add ball_states and previous_ball_states for state tracking
+        self.ball_states: Dict[int, str] = {}  # ball_id -> state (on_playfield or in_hole)
+        self.previous_ball_states: Dict[int, str] = {}  # ball_id -> previous state for transition detection
+
+        # HSV ranges for ball detection
+        self.white_hsv_min = (0, 0, 100)
+        self.white_hsv_max = (179, 100, 255)
+        self.red_hsv_min = (0, 100, 100)    # Adjusted for broader red detection
+        self.red_hsv_max = (10, 255, 255)
+        self.red_hsv_min2 = (170, 100, 100) # Adjusted for broader red detection
+        self.red_hsv_max2 = (179, 255, 255)
+
+        self._load_hsv_ranges()
+        self.red_hsv_calibrated: bool = False
+
+        # Calibration mode state
+        self.calibrating_color: Optional[str] = None
+        self.calibration_point: Optional[Tuple[int, int]] = None
+        self.calibration_hsv: Optional[Tuple[int, int, int]] = None
 
         # Multiplayer support
-        self.players: List[Player] = [Player("Player 1")]  # Start with one default player
-        self.current_player_index: int = 0  # Index of the current player
+        self.players: List[Player] = [Player("Player 1")]
+        self.current_player_index: int = 0
 
         # Achievements support
         self.achievements: List[Achievement] = []
@@ -91,8 +110,7 @@ class GameState:
 
         self.game_sounds_on: bool = True
         self.background_music_on: bool = True
-        self.red_ball_detection_on: bool = False
-        self.white_ball_detection_on: bool = True
+        self.ball_tracking_on: bool = True  # New setting to enable/disable ball tracking
 
         self.toggle_background_music()
 
@@ -121,10 +139,18 @@ class GameState:
         self.dragging_menu: bool = False
         self.drag_start_x: int = 0
         self.drag_start_y: int = 0
-        self.menu_active: bool = False  # Added menu_active attribute
+        self.menu_active: bool = False
 
-        self.debug_mode: bool = False
-        self.excluded_positions: List[Tuple[int, int]] = GameSpecificConstants.EXCLUDED_POSITIONS
+        self.debug_mode: bool = False  # Disabled by default to prevent debug windows
+
+        # Toggle for displaying scoring zones (green rectangles)
+        self.show_scoring_zones: bool = True  # Toggle to show/hide scoring zones display
+
+        # Flag to track if the red ball has scored in the current game session
+        self.red_ball_scored: bool = False  # Tracks if the red ball has scored
+
+        # Add scored_zones for tracking which zones have been scored in
+        self.scored_zones: set = set()
 
         self.scoring_zones = load_zones(self.scoring_zones)
         self._initialize_balls_in_zone()
@@ -144,6 +170,10 @@ class GameState:
             self.background_music_on = False
 
     def _initialize_balls_in_zone(self) -> None:
+        if not self.ball_tracking_on:
+            logger.info("Ball tracking is disabled, skipping initial ball detection")
+            return
+
         if self.camera_available:
             ret, frame = self.cap.read()
             if not ret:
@@ -153,26 +183,35 @@ class GameState:
             frame = self.static_frame
             logger.info("Using static frame for ball initialization")
 
-        detected_balls = detect_white_balls(frame, self.frame_count, self.potential_small_balls_white,
-                                            self.excluded_positions, self.debug_mode)
-        tracked_detected_balls, self.next_ball_id = track_balls(detected_balls, self.tracked_balls,
-                                                               self.next_ball_id, self.frame_count,
-                                                               self.scored_positions, self.debug_mode)
-        self.tracked_balls = [(x, y, radius, ball_id, self.frame_count)
-                              for x, y, radius, ball_id in tracked_detected_balls]
-        for x, y, radius, ball_id, _ in self.tracked_balls:
+        detector = BallDetector()
+        white_balls, red_balls, half_balls = detector.detect_all_balls(
+            frame, self.frame_count, self, scoring_zones=self.scoring_zones, debug_mode=self.debug_mode
+        )
+        tracker = BallTracker()
+        tracked_detected_balls, self.next_ball_id = tracker.track_balls(
+            white_balls, red_balls, half_balls, self.tracked_balls, self.next_ball_id,
+            self.frame_count, self.scored_positions, self.debug_mode
+        )
+        self.tracked_balls = [(x, y, radius, ball_id, self.frame_count, ball_type)
+                              for x, y, radius, ball_id, ball_type in tracked_detected_balls]
+        for x, y, radius, ball_id, _, ball_type in self.tracked_balls:
             ball = (x, y, radius, ball_id)
             for zone in self.scoring_zones:
                 if is_in_scoring_zone(ball, zone):
                     self.balls_in_zone[ball_id] = zone
+                    self.ball_states[ball_id] = "in_hole"
+                    self.previous_ball_states[ball_id] = "on_playfield"  # Allow scoring on transition
                     if self.debug_mode:
                         logger.info(f"Ball ID {ball_id} at ({x}, {y}) already in zone {zone} at startup")
                     break
             if ball_id not in self.balls_in_zone:
                 self.balls_in_zone[ball_id] = None
+                self.ball_states[ball_id] = "on_playfield"
+                self.previous_ball_states[ball_id] = "on_playfield"
+        if self.debug_mode:
+            logger.debug(f"Initialized balls in zones: {self.balls_in_zone}")
 
     def _initialize_achievements(self) -> None:
-        """Initialize the list of achievements."""
         self.achievements = [
             Achievement("First Score", "Score your first points", lambda gs: gs.get_current_player().score >= 100),
             Achievement("High Roller", "Score 1000 points in one game", lambda gs: gs.get_current_player().score >= 1000),
@@ -181,7 +220,6 @@ class GameState:
         ]
 
     def _load_achievements(self) -> None:
-        """Load unlocked achievements from a file."""
         try:
             if os.path.exists("achievements.json"):
                 with open("achievements.json", "r", encoding='utf-8') as f:
@@ -193,7 +231,6 @@ class GameState:
             logger.error(f"Failed to load achievements: {e}")
 
     def _save_achievements(self) -> None:
-        """Save unlocked achievements to a file."""
         try:
             data = {a.name: {"unlocked": a.unlocked} for a in self.achievements}
             with open("achievements.json", "w", encoding='utf-8') as f:
@@ -201,41 +238,83 @@ class GameState:
         except (IOError, PermissionError) as e:
             logger.error(f"Failed to save achievements: {e}")
 
+    def _load_hsv_ranges(self) -> None:
+        hsv_file = "hsv_ranges.json"
+        if os.path.exists(hsv_file):
+            try:
+                with open(hsv_file, "r", encoding='utf-8') as f:
+                    data = json.load(f)
+                    if "white_hsv_min" in data and "white_hsv_max" in data:
+                        self.white_hsv_min = tuple(data["white_hsv_min"])
+                        self.white_hsv_max = tuple(data["white_hsv_max"])
+                        logger.info(f"Loaded white ball HSV ranges: min={self.white_hsv_min}, max={self.white_hsv_max}")
+                    if all(k in data for k in ["red_hsv_min", "red_hsv_max", "red_hsv_min2", "red_hsv_max2"]):
+                        self.red_hsv_min = tuple(data["red_hsv_min"])
+                        self.red_hsv_max = tuple(data["red_hsv_max"])
+                        self.red_hsv_min2 = tuple(data["red_hsv_min2"])
+                        self.red_hsv_max2 = tuple(data["red_hsv_max2"])
+                        self.red_hsv_calibrated = True
+                        logger.info(f"Loaded red ball HSV ranges: min={self.red_hsv_min}, max={self.red_hsv_max}, "
+                                    f"min2={self.red_hsv_min2}, max2={self.red_hsv_max2}")
+            except (json.JSONDecodeError, IOError, KeyError) as e:
+                logger.error(f"Failed to load HSV ranges from {hsv_file}: {e}")
+        else:
+            logger.info(f"{hsv_file} does not exist, using default HSV ranges")
+
+    def _save_hsv_ranges(self) -> None:
+        hsv_file = "hsv_ranges.json"
+        data = {
+            "white_hsv_min": [int(val) for val in self.white_hsv_min],
+            "white_hsv_max": [int(val) for val in self.white_hsv_max],
+            "red_hsv_min": [int(val) for val in self.red_hsv_min],
+            "red_hsv_max": [int(val) for val in self.red_hsv_max],
+            "red_hsv_min2": [int(val) for val in self.red_hsv_min2],
+            "red_hsv_max2": [int(val) for val in self.red_hsv_max2]
+        }
+        try:
+            with open(hsv_file, "w", encoding='utf-8') as f:
+                json.dump(data, f, indent=4)
+            self.red_hsv_calibrated = True
+            logger.info(f"Saved HSV ranges to {hsv_file}")
+        except (IOError, PermissionError) as e:
+            logger.error(f"Failed to save HSV ranges to {hsv_file}: {e}")
+
     def get_current_player(self) -> Player:
-        """Get the current player."""
         return self.players[self.current_player_index]
 
     def switch_player(self) -> None:
-        """Switch to the next player, saving the current player's score."""
         current_player = self.get_current_player()
-        self.save_score(current_player.name, mode="classic")  # Save the current player's score
-        current_player.reset_score()  # Reset score for the next game
+        self.save_score(current_player.name, mode="classic")
+        current_player.reset_score()
         self.current_player_index = (self.current_player_index + 1) % len(self.players)
-        self.scored_balls.clear()  # Clear scored balls for the new player
+        self.scored_balls.clear()
         self.scored_positions.clear()
         self.tracked_balls.clear()
         self.balls_in_zone.clear()
         self.ball_trails.clear()
+        self.potential_small_balls_white.clear()  # Clear potential small balls when switching players
+        self.potential_small_balls_red.clear()
+        self.scored_cooldown.clear()  # Clear scoring cooldowns when switching players
+        self.red_ball_scored = False  # Reset red ball scoring flag when switching players
+        self.ball_states.clear()  # Clear ball states when switching players
+        self.previous_ball_states.clear()  # Clear previous ball states when switching players
         logger.info(f"Switched to player: {self.get_current_player().name}")
 
     def add_player(self, name: str) -> None:
-        """Add a new player to the game."""
         self.players.append(Player(name))
         logger.info(f"Added player: {name}")
 
     def check_achievements(self) -> None:
-        """Check all achievements and display notifications for newly unlocked ones."""
         for achievement in self.achievements:
             if achievement.check(self):
                 self.achievement_notification = f"Achievement Unlocked: {achievement.name}"
-                self.achievement_notification_timer = 3.0  # Display for 3 seconds
+                self.achievement_notification_timer = 3.0
                 self._save_achievements()
                 if self.game_sounds_on and self.score_sound:
                     self.score_sound.play()
                 logger.info(f"Achievement unlocked: {achievement.name}")
 
     def update_achievement_notification(self, delta_time: float) -> None:
-        """Update the achievement notification timer."""
         if self.achievement_notification:
             self.achievement_notification_timer -= delta_time
             if self.achievement_notification_timer <= 0:
@@ -266,3 +345,68 @@ class GameState:
         if self.game_timer is not None and self.start_time is not None:
             elapsed = time.time() - self.start_time
             self.game_timer = max(0, self.time_limit - elapsed)
+
+    def update_score(self, frame: np.ndarray, tracked_detected_balls: List[Tuple[int, int, float, int, str]]) -> None:
+        """
+        Update the score based on detected balls and their states.
+        """
+        logger.debug("Updating score")
+
+        # Update ball states and balls_in_zone based on current positions
+        detector = BallDetector()
+        for x, y, radius, ball_id, ball_type in tracked_detected_balls:
+            ball = (x, y, radius, ball_id)
+            state = "in_hole" if detector._is_in_scoring_zone(x, y, radius, self.scoring_zones) else "on_playfield"
+            self.ball_states[ball_id] = state
+
+            # Update balls_in_zone
+            current_zone = None
+            for zone in self.scoring_zones:
+                if is_in_scoring_zone(ball, zone):
+                    current_zone = zone
+                    break
+            self.balls_in_zone[ball_id] = current_zone
+
+            if self.debug_mode:
+                logger.debug(f"Ball ID {ball_id} at ({x}, {y}) state: {state}, zone: {current_zone}, type: {ball_type}")
+
+        for i, ball_data in enumerate(tracked_detected_balls):
+            if len(ball_data) != 5:
+                logger.error(f"Invalid ball data structure at index {i}: {ball_data}")
+                continue
+
+            x, y, radius, ball_id, ball_type = ball_data
+            ball = (x, y, radius, ball_id)
+
+            # Get the current state from ball_states
+            current_state = self.ball_states.get(ball_id, "on_playfield")
+            previous_state = self.previous_ball_states.get(ball_id, "on_playfield")
+            current_zone = self.balls_in_zone.get(ball_id)
+            zone_id = id(current_zone) if current_zone else None
+
+            # Score the ball if it's in a scoring zone and hasn't scored before
+            if (current_zone and
+                    ball_id not in self.scored_balls):
+                current_player = self.get_current_player()
+                points = current_zone[4]
+                if ball_type == "red":
+                    points *= 2
+                    self.red_ball_scored = True
+                elif ball_type == "half":
+                    points *= 1.5
+                current_player.add_score(points)
+                self.scored_balls.add(ball_id)
+                self.scored_positions[(x, y)] = ball_id
+                self.scored_zones.add(zone_id)
+                if self.game_sounds_on and self.score_sound:
+                    self.score_sound.play()
+                logger.info(f"{ball_type} ball ID {ball_id} at ({x}, {y}) scored {points} points in zone {current_zone}")
+
+            # Update previous state for the next frame
+            self.previous_ball_states[ball_id] = current_state
+
+        # Clean up
+        self.balls_in_zone = {ball_id: zone for ball_id, zone in self.balls_in_zone.items()
+                              if ball_id in {ball[3] for ball in self.tracked_balls}}
+        self.tracked_balls = [(x, y, radius, ball_id, self.frame_count, ball_type)
+                              for x, y, radius, ball_id, ball_type in tracked_detected_balls]

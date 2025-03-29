@@ -8,6 +8,8 @@ import logging
 import pygame
 import numpy as np
 import json
+import time  # Added for frame capture timing
+import os  # Added for frame capture directory handling
 from typing import List, Tuple, Optional, Any
 
 from constants import UIConstants, GameConstants
@@ -204,10 +206,14 @@ def _handle_input(game_state: Any) -> int:
     logger.debug("Input handled")
     return key
 
-def run_game_loop(game_state: Any) -> None:
+def run_game_loop(game_state: Any, captured_frames_dir: str, frame_capture_interval: float) -> None:
     logger.debug("Starting game loop")
     clock = pygame.time.Clock()
     tracked_detected_balls: List[Tuple[int, int, float, int, str]] = []
+
+    # Initialize the frame capture timer
+    last_capture_time = time.time()
+
     while True:
         logger.debug(f"Game loop iteration {game_state.frame_count}, menu_active={game_state.menu_active}")
         frame = _capture_frame(game_state.cap, game_state)
@@ -216,6 +222,16 @@ def run_game_loop(game_state: Any) -> None:
             game_state.save_score(game_state.get_current_player().name)
             clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on)
             break
+
+        # Automatically capture frames at the specified interval
+        current_time = time.time()
+        if current_time - last_capture_time >= frame_capture_interval:
+            # Generate a unique filename based on the number of existing frames
+            frame_count = len(os.listdir(captured_frames_dir))
+            frame_filename = os.path.join(captured_frames_dir, f"frame_{frame_count}.jpg")
+            cv2.imwrite(frame_filename, frame)
+            logger.info(f"Captured {frame_filename}")
+            last_capture_time = current_time  # Reset the timer
 
         if not game_state.menu_active:
             tracked_detected_balls = _process_frame(frame, game_state)

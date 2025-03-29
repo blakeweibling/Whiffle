@@ -1,438 +1,301 @@
-Microsoft Windows [Version 10.0.19045.5608]
-(c) Microsoft Corporation. All rights reserved.
 
-C:\Users\minds>F:
-
-F:\>cd Whiffle
-
-F:\Whiffle>cd "9.5 (itsalive)"
-
-F:\Whiffle\9.5 (itsalive)>py game.py
-pygame 2.6.1 (SDL 2.28.4, Python 3.11.9)
-Hello from the pygame community. https://www.pygame.org/contribute.html
-Traceback (most recent call last):
-  File "F:\Whiffle\9.5 (itsalive)\game.py", line 12, in <module>
-    from game_loop import run_game_loop
-  File "F:\Whiffle\9.5 (itsalive)\game_loop.py", line 17, in <module>
-    from ui import draw_ui, draw_balls
-  File "F:\Whiffle\9.5 (itsalive)\ui.py", line 13, in <module>
-    from constants import GREEN, RED, YELLOW, BLUE  # Keep direct imports for colors
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ImportError: cannot import name 'GREEN' from 'constants' (F:\Whiffle\9.5 (itsalive)\constants.py)
-
-F:\Whiffle\9.5 (itsalive)>py game.py
-pygame 2.6.1 (SDL 2.28.4, Python 3.11.9)
-Hello from the pygame community. https://www.pygame.org/contribute.html
-Traceback (most recent call last):
-  File "F:\Whiffle\9.5 (itsalive)\game.py", line 12, in <module>
-    from game_loop import run_game_loop
-  File "F:\Whiffle\9.5 (itsalive)\game_loop.py", line 17, in <module>
-    from ui import draw_ui, draw_balls
-  File "F:\Whiffle\9.5 (itsalive)\ui.py", line 20, in <module>
-    def draw_ui(frame: np.ndarray, game_state: Any) -> None:
-                                               ^^^
-NameError: name 'Any' is not defined. Did you mean: 'any'?
-
-F:\Whiffle\9.5 (itsalive)>py game.py
-pygame 2.6.1 (SDL 2.28.4, Python 3.11.9)
-Hello from the pygame community. https://www.pygame.org/contribute.html
-Traceback (most recent call last):
-  File "F:\Whiffle\9.5 (itsalive)\game.py", line 12, in <module>
-    from game_loop import run_game_loop
-  File "F:\Whiffle\9.5 (itsalive)\game_loop.py", line 17, in <module>
-    from ui import draw_ui, draw_balls
-  File "F:\Whiffle\9.5 (itsalive)\ui.py", line 59, in <module>
-    def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional[GameState]:
-                                                                    ^^^^^^^^
-NameError: name 'Optional' is not defined
-
-F:\Whiffle\9.5 (itsalive)>py game.py
-pygame 2.6.1 (SDL 2.28.4, Python 3.11.9)
-Hello from the pygame community. https://www.pygame.org/contribute.html
-Traceback (most recent call last):
-  File "F:\Whiffle\9.5 (itsalive)\game.py", line 12, in <module>
-    from game_loop import run_game_loop
-  File "F:\Whiffle\9.5 (itsalive)\game_loop.py", line 21, in <module>
-    def _capture_frame(cap: cv2.VideoCapture) -> Optional[np.ndarray]:
-                                                 ^^^^^^^^
-NameError: name 'Optional' is not defined
-
-F:\Whiffle\9.5 (itsalive)>py game.py
-pygame 2.6.1 (SDL 2.28.4, Python 3.11.9)
-Hello from the pygame community. https://www.pygame.org/contribute.html
-Traceback (most recent call last):
-  File "F:\Whiffle\9.5 (itsalive)\game.py", line 12, in <module>
-    from game_loop import run_game_loop
-  File "F:\Whiffle\9.5 (itsalive)\game_loop.py", line 31, in <module>
-    def _detect_balls(frame: np.ndarray, game_state: Any, hsv: np.ndarray) -> List[Tuple[int, int, float]]:
-                                                     ^^^
-NameError: name 'Any' is not defined. Did you mean: 'any'?
-
-F:\Whiffle\9.5 (itsalive)>py game.py
-pygame 2.6.1 (SDL 2.28.4, Python 3.11.9)
-Hello from the pygame community. https://www.pygame.org/contribute.html
-Traceback (most recent call last):
-  File "F:\Whiffle\9.5 (itsalive)\game.py", line 15, in <module>
-    from constants import WINDOW_NAME
-ImportError: cannot import name 'WINDOW_NAME' from 'constants' (F:\Whiffle\9.5 (itsalive)\constants.py)
-
-F:\Whiffle\9.5 (itsalive)>py game.py
+F:\Whiffle\9.6 (pickupsticks)>py game.py
 pygame 2.6.1 (SDL 2.28.4, Python 3.11.9)
 Hello from the pygame community. https://www.pygame.org/contribute.html
 libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:25:55,873 - INFO - Camera resolution: 1280.0x720.0
-2025-03-23 16:25:56,167 - INFO - Local leaderboard file whiffle_leaderboard.json does not exist, initializing empty scores
-2025-03-23 16:25:56,167 - WARNING - scoring_zones.json is empty, treating as if it doesn't exist
-2025-03-23 16:25:57,032 - INFO - Tracked 3 balls in frame 0
-Traceback (most recent call last):
-  File "F:\Whiffle\9.5 (itsalive)\game.py", line 58, in <module>
-    main()
-  File "F:\Whiffle\9.5 (itsalive)\game.py", line 35, in main
-    game_state = show_splash_screen(supabase_url, supabase_key)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "F:\Whiffle\9.5 (itsalive)\ui.py", line 86, in show_splash_screen
-    if cv2.waitKey(GameConstants.WAIT_KEY_DELAY) & 0xFF == ord('q'):
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AttributeError: type object 'GameConstants' has no attribute 'WAIT_KEY_DELAY'
+2025-03-28 15:31:11,151 - INFO - Camera resolution: 1280.0x720.0
+2025-03-28 15:31:11,152 - INFO - Loaded white ball HSV ranges: min=(0, 0, 200), max=(179, 50, 255)
+2025-03-28 15:31:11,152 - INFO - Loaded red ball HSV ranges: min=(0, 92, 49), max=(10, 192, 149), min2=(164, 92, 49), max2=(179, 192, 149)
+2025-03-28 15:31:11,504 - INFO - Scoring zones loaded from scoring_zones.json
 
-F:\Whiffle\9.5 (itsalive)>py game.py
-pygame 2.6.1 (SDL 2.28.4, Python 3.11.9)
-Hello from the pygame community. https://www.pygame.org/contribute.html
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:28:32,588 - INFO - Camera resolution: 1280.0x720.0
-2025-03-23 16:28:32,820 - INFO - Local leaderboard file whiffle_leaderboard.json does not exist, initializing empty scores
-2025-03-23 16:28:32,821 - WARNING - scoring_zones.json is empty, treating as if it doesn't exist
-2025-03-23 16:28:33,655 - INFO - Tracked 2 balls in frame 0
+0: 384x640 5 whites, 2 reds, 59.4ms
+Speed: 3.2ms preprocess, 59.4ms inference, 1.1ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:13,499 - INFO - Tracked 7 balls in frame 0
 Press 'q' to quit, 's' to start drawing a scoring zone, 'd' to toggle debug mode
-2025-03-23 16:28:41,389 - INFO - Tracked 2 balls in frame 0
-2025-03-23 16:28:41,389 - ERROR - Unexpected error in main loop: 'GameState' object has no attribute 'menu_active'
-2025-03-23 16:28:41,391 - INFO - Saved local leaderboard to whiffle_leaderboard.json
-2025-03-23 16:28:41,717 - INFO - Successfully submitted score to online leaderboard: ANO - 0 (classic)
-2025-03-23 16:28:41,717 - INFO - Cleaning up and exiting game...
-2025-03-23 16:28:41,766 - INFO - Resources released, exiting program.
 
-F:\Whiffle\9.5 (itsalive)>py game.py
-pygame 2.6.1 (SDL 2.28.4, Python 3.11.9)
-Hello from the pygame community. https://www.pygame.org/contribute.html
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:18,692 - INFO - Camera resolution: 1280.0x720.0
-2025-03-23 16:30:18,932 - WARNING - scoring_zones.json is empty, treating as if it doesn't exist
-2025-03-23 16:30:19,779 - INFO - Tracked 3 balls in frame 0
-Press 'q' to quit, 's' to start drawing a scoring zone, 'd' to toggle debug mode
-2025-03-23 16:30:27,542 - WARNING - No match found for new ball at (143, 327) within 50.0
-2025-03-23 16:30:27,542 - INFO - Tracked 4 balls in frame 0
-2025-03-23 16:30:27,586 - INFO - Tracked 4 balls in frame 1
-2025-03-23 16:30:27,633 - INFO - Tracked 4 balls in frame 2
-2025-03-23 16:30:27,677 - INFO - Tracked 4 balls in frame 3
-2025-03-23 16:30:27,737 - INFO - Tracked 4 balls in frame 4
-2025-03-23 16:30:27,788 - INFO - Tracked 4 balls in frame 5
-2025-03-23 16:30:27,839 - INFO - Tracked 4 balls in frame 6
-2025-03-23 16:30:27,885 - WARNING - No match found for new ball at (181, 42) within 50.0
-2025-03-23 16:30:27,886 - INFO - Tracked 5 balls in frame 7
-2025-03-23 16:30:27,933 - INFO - Tracked 5 balls in frame 8
-2025-03-23 16:30:27,979 - INFO - Tracked 5 balls in frame 9
-2025-03-23 16:30:28,028 - INFO - Tracked 5 balls in frame 10
-2025-03-23 16:30:28,075 - INFO - Tracked 5 balls in frame 11
-2025-03-23 16:30:28,123 - INFO - Tracked 5 balls in frame 12
-2025-03-23 16:30:28,169 - INFO - Tracked 5 balls in frame 13
-2025-03-23 16:30:28,215 - INFO - Tracked 5 balls in frame 14
-2025-03-23 16:30:28,262 - INFO - Tracked 5 balls in frame 15
-2025-03-23 16:30:28,307 - INFO - Tracked 5 balls in frame 16
-2025-03-23 16:30:28,356 - INFO - Tracked 5 balls in frame 17
-2025-03-23 16:30:28,404 - INFO - Tracked 5 balls in frame 18
-2025-03-23 16:30:28,449 - INFO - Tracked 5 balls in frame 19
-2025-03-23 16:30:28,498 - INFO - Tracked 5 balls in frame 20
-2025-03-23 16:30:28,546 - INFO - Tracked 5 balls in frame 21
-2025-03-23 16:30:28,594 - INFO - Tracked 5 balls in frame 22
-2025-03-23 16:30:28,641 - INFO - Tracked 5 balls in frame 23
-2025-03-23 16:30:28,687 - INFO - Tracked 5 balls in frame 24
-2025-03-23 16:30:28,735 - INFO - Tracked 5 balls in frame 25
-2025-03-23 16:30:28,780 - INFO - Tracked 5 balls in frame 26
-2025-03-23 16:30:28,827 - INFO - Tracked 5 balls in frame 27
-2025-03-23 16:30:28,874 - INFO - Tracked 5 balls in frame 28
-2025-03-23 16:30:28,920 - INFO - Tracked 5 balls in frame 29
-2025-03-23 16:30:28,968 - INFO - Tracked 5 balls in frame 30
-2025-03-23 16:30:29,016 - INFO - Tracked 5 balls in frame 31
-2025-03-23 16:30:29,066 - INFO - Tracked 5 balls in frame 32
-2025-03-23 16:30:29,114 - INFO - Tracked 5 balls in frame 33
-2025-03-23 16:30:29,160 - INFO - Tracked 5 balls in frame 34
-2025-03-23 16:30:29,207 - INFO - Tracked 5 balls in frame 35
-2025-03-23 16:30:29,254 - INFO - Tracked 5 balls in frame 36
-2025-03-23 16:30:29,303 - INFO - Tracked 5 balls in frame 37
-2025-03-23 16:30:29,349 - INFO - Tracked 5 balls in frame 38
-2025-03-23 16:30:29,399 - INFO - Tracked 5 balls in frame 39
-2025-03-23 16:30:29,448 - INFO - Tracked 5 balls in frame 40
-2025-03-23 16:30:29,496 - INFO - Tracked 5 balls in frame 41
-2025-03-23 16:30:29,543 - INFO - Tracked 5 balls in frame 42
-2025-03-23 16:30:29,590 - INFO - Tracked 5 balls in frame 43
-2025-03-23 16:30:29,639 - WARNING - No match found for new ball at (107, 11) within 50.0
-2025-03-23 16:30:29,640 - INFO - Tracked 6 balls in frame 44
-2025-03-23 16:30:29,690 - INFO - Tracked 6 balls in frame 45
-2025-03-23 16:30:29,741 - INFO - Tracked 6 balls in frame 46
-2025-03-23 16:30:29,789 - INFO - Tracked 6 balls in frame 47
-2025-03-23 16:30:29,837 - INFO - Tracked 6 balls in frame 48
-2025-03-23 16:30:29,887 - INFO - Tracked 6 balls in frame 49
-2025-03-23 16:30:29,934 - INFO - Tracked 6 balls in frame 50
-2025-03-23 16:30:29,982 - INFO - Tracked 6 balls in frame 51
-2025-03-23 16:30:30,033 - INFO - Tracked 6 balls in frame 52
-2025-03-23 16:30:30,081 - INFO - Tracked 6 balls in frame 53
-2025-03-23 16:30:30,131 - INFO - Tracked 6 balls in frame 54
-2025-03-23 16:30:30,177 - INFO - Tracked 6 balls in frame 55
-2025-03-23 16:30:30,224 - INFO - Tracked 6 balls in frame 56
-2025-03-23 16:30:30,285 - INFO - Tracked 6 balls in frame 57
-2025-03-23 16:30:30,337 - INFO - Tracked 6 balls in frame 58
-2025-03-23 16:30:30,384 - INFO - Tracked 6 balls in frame 59
-2025-03-23 16:30:30,433 - INFO - Tracked 6 balls in frame 60
-2025-03-23 16:30:30,483 - INFO - Tracked 6 balls in frame 61
-2025-03-23 16:30:30,537 - INFO - Tracked 6 balls in frame 62
-2025-03-23 16:30:30,587 - INFO - Tracked 6 balls in frame 63
-2025-03-23 16:30:30,642 - INFO - Tracked 6 balls in frame 64
-2025-03-23 16:30:30,693 - INFO - Tracked 6 balls in frame 65
-2025-03-23 16:30:30,746 - INFO - Tracked 6 balls in frame 66
-2025-03-23 16:30:30,798 - INFO - Tracked 6 balls in frame 67
-2025-03-23 16:30:30,851 - INFO - Tracked 6 balls in frame 68
-2025-03-23 16:30:30,903 - INFO - Tracked 6 balls in frame 69
-2025-03-23 16:30:30,959 - INFO - Tracked 6 balls in frame 70
-2025-03-23 16:30:31,007 - INFO - Tracked 6 balls in frame 71
-2025-03-23 16:30:31,071 - INFO - Tracked 6 balls in frame 72
-2025-03-23 16:30:31,128 - INFO - Tracked 6 balls in frame 73
-2025-03-23 16:30:31,195 - INFO - Tracked 6 balls in frame 74
-2025-03-23 16:30:31,253 - INFO - Tracked 6 balls in frame 75
-2025-03-23 16:30:31,308 - INFO - Tracked 6 balls in frame 76
-2025-03-23 16:30:31,357 - INFO - Tracked 6 balls in frame 77
-2025-03-23 16:30:31,407 - INFO - Tracked 6 balls in frame 78
-2025-03-23 16:30:31,457 - INFO - Tracked 6 balls in frame 79
-2025-03-23 16:30:31,509 - INFO - Tracked 6 balls in frame 80
-2025-03-23 16:30:31,562 - INFO - Tracked 6 balls in frame 81
-2025-03-23 16:30:31,612 - INFO - Tracked 6 balls in frame 82
-2025-03-23 16:30:31,665 - INFO - Tracked 6 balls in frame 83
-2025-03-23 16:30:31,717 - INFO - Tracked 6 balls in frame 84
-2025-03-23 16:30:31,769 - INFO - Tracked 6 balls in frame 85
-2025-03-23 16:30:31,819 - INFO - Tracked 6 balls in frame 86
-2025-03-23 16:30:31,873 - INFO - Tracked 6 balls in frame 87
-2025-03-23 16:30:31,927 - INFO - Tracked 6 balls in frame 88
-2025-03-23 16:30:31,978 - INFO - Tracked 6 balls in frame 89
-2025-03-23 16:30:32,031 - INFO - Tracked 6 balls in frame 90
-2025-03-23 16:30:32,084 - INFO - Tracked 6 balls in frame 91
-2025-03-23 16:30:32,138 - INFO - Tracked 6 balls in frame 92
-2025-03-23 16:30:32,197 - INFO - Tracked 6 balls in frame 93
-2025-03-23 16:30:32,247 - WARNING - No match found for new ball at (71, 3) within 50.0
-2025-03-23 16:30:32,248 - INFO - Tracked 7 balls in frame 94
-2025-03-23 16:30:32,299 - INFO - Tracked 7 balls in frame 95
-2025-03-23 16:30:32,352 - INFO - Tracked 7 balls in frame 96
-2025-03-23 16:30:32,405 - INFO - Tracked 7 balls in frame 97
-2025-03-23 16:30:32,457 - INFO - Tracked 7 balls in frame 98
-2025-03-23 16:30:32,521 - INFO - Tracked 7 balls in frame 99
-2025-03-23 16:30:32,579 - INFO - Tracked 7 balls in frame 100
-2025-03-23 16:30:32,634 - INFO - Tracked 7 balls in frame 101
-2025-03-23 16:30:32,684 - INFO - Tracked 7 balls in frame 102
-2025-03-23 16:30:32,737 - INFO - Tracked 7 balls in frame 103
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:32,794 - INFO - Tracked 7 balls in frame 104
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:32,852 - INFO - Tracked 7 balls in frame 105
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:32,909 - INFO - Tracked 7 balls in frame 106
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:32,963 - INFO - Tracked 7 balls in frame 107
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:33,023 - INFO - Tracked 7 balls in frame 108
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:33,080 - INFO - Tracked 7 balls in frame 109
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:33,139 - INFO - Tracked 7 balls in frame 110
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:33,194 - INFO - Tracked 7 balls in frame 111
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:33,268 - INFO - Tracked 7 balls in frame 112
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:33,336 - INFO - Tracked 7 balls in frame 113
-2025-03-23 16:30:33,639 - INFO - Successfully retrieved 2 scores from online leaderboard for mode: classic
-2025-03-23 16:30:33,690 - INFO - Tracked 7 balls in frame 114
-2025-03-23 16:30:33,882 - INFO - Successfully retrieved 2 scores from online leaderboard for mode: classic
-2025-03-23 16:30:33,936 - INFO - Tracked 7 balls in frame 115
-2025-03-23 16:30:34,108 - INFO - Successfully retrieved 2 scores from online leaderboard for mode: classic
-2025-03-23 16:30:34,161 - INFO - Tracked 7 balls in frame 116
-2025-03-23 16:30:34,344 - INFO - Successfully retrieved 2 scores from online leaderboard for mode: classic
-2025-03-23 16:30:34,394 - INFO - Tracked 7 balls in frame 117
-2025-03-23 16:30:34,560 - INFO - Successfully retrieved 2 scores from online leaderboard for mode: classic
-2025-03-23 16:30:34,609 - INFO - Tracked 7 balls in frame 118
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:34,668 - INFO - Tracked 7 balls in frame 119
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:34,725 - INFO - Tracked 7 balls in frame 120
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:34,783 - INFO - Tracked 7 balls in frame 121
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:34,842 - INFO - Tracked 7 balls in frame 122
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:34,900 - INFO - Tracked 7 balls in frame 123
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:34,956 - INFO - Tracked 7 balls in frame 124
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:35,013 - INFO - Tracked 7 balls in frame 125
-libpng warning: iCCP: known incorrect sRGB profile
-2025-03-23 16:30:35,073 - INFO - Tracked 7 balls in frame 126
-2025-03-23 16:30:35,124 - INFO - Tracked 7 balls in frame 127
-2025-03-23 16:30:35,178 - INFO - Tracked 7 balls in frame 128
-2025-03-23 16:30:35,230 - INFO - Tracked 7 balls in frame 129
-2025-03-23 16:30:35,282 - INFO - Tracked 7 balls in frame 130
-2025-03-23 16:30:35,336 - INFO - Tracked 7 balls in frame 131
-2025-03-23 16:30:35,387 - INFO - Tracked 7 balls in frame 132
-2025-03-23 16:30:35,438 - INFO - Tracked 7 balls in frame 133
-2025-03-23 16:30:35,489 - INFO - Tracked 7 balls in frame 134
-2025-03-23 16:30:35,542 - INFO - Tracked 7 balls in frame 135
-2025-03-23 16:30:35,594 - INFO - Tracked 7 balls in frame 136
-2025-03-23 16:30:35,647 - INFO - Tracked 7 balls in frame 137
-2025-03-23 16:30:35,702 - INFO - Tracked 7 balls in frame 138
-2025-03-23 16:30:35,766 - INFO - Tracked 7 balls in frame 139
-2025-03-23 16:30:35,835 - INFO - Tracked 7 balls in frame 140
-2025-03-23 16:30:35,895 - INFO - Tracked 7 balls in frame 141
-2025-03-23 16:30:35,948 - INFO - Tracked 7 balls in frame 142
-2025-03-23 16:30:36,001 - INFO - Tracked 7 balls in frame 143
-2025-03-23 16:30:36,054 - INFO - Tracked 7 balls in frame 144
-2025-03-23 16:30:36,105 - INFO - Tracked 7 balls in frame 145
-2025-03-23 16:30:36,158 - INFO - Tracked 7 balls in frame 146
-2025-03-23 16:30:36,209 - INFO - Tracked 7 balls in frame 147
-2025-03-23 16:30:36,262 - INFO - Tracked 7 balls in frame 148
-2025-03-23 16:30:36,314 - INFO - Tracked 7 balls in frame 149
-2025-03-23 16:30:36,369 - INFO - Tracked 7 balls in frame 150
-2025-03-23 16:30:36,422 - INFO - Tracked 7 balls in frame 151
-2025-03-23 16:30:36,477 - INFO - Tracked 7 balls in frame 152
-2025-03-23 16:30:36,530 - INFO - Tracked 7 balls in frame 153
-2025-03-23 16:30:36,583 - INFO - Tracked 7 balls in frame 154
-2025-03-23 16:30:36,638 - INFO - Tracked 7 balls in frame 155
-2025-03-23 16:30:36,690 - INFO - Tracked 7 balls in frame 156
-2025-03-23 16:30:36,741 - INFO - Tracked 7 balls in frame 157
-2025-03-23 16:30:36,794 - INFO - Tracked 7 balls in frame 158
-2025-03-23 16:30:36,846 - INFO - Tracked 7 balls in frame 159
-2025-03-23 16:30:36,902 - INFO - Tracked 7 balls in frame 160
-2025-03-23 16:30:36,954 - INFO - Tracked 7 balls in frame 161
-2025-03-23 16:30:37,006 - INFO - Tracked 7 balls in frame 162
-2025-03-23 16:30:37,058 - INFO - Tracked 7 balls in frame 163
-2025-03-23 16:30:37,111 - INFO - Tracked 7 balls in frame 164
-2025-03-23 16:30:37,158 - INFO - Tracked 7 balls in frame 165
-2025-03-23 16:30:37,208 - INFO - Tracked 7 balls in frame 166
-2025-03-23 16:30:37,255 - INFO - Tracked 7 balls in frame 167
-2025-03-23 16:30:37,305 - INFO - Tracked 7 balls in frame 168
-2025-03-23 16:30:37,353 - INFO - Tracked 7 balls in frame 169
-2025-03-23 16:30:37,406 - INFO - Tracked 7 balls in frame 170
-2025-03-23 16:30:37,457 - INFO - Tracked 7 balls in frame 171
-2025-03-23 16:30:37,505 - INFO - Tracked 7 balls in frame 172
-2025-03-23 16:30:37,552 - INFO - Tracked 7 balls in frame 173
-2025-03-23 16:30:37,600 - INFO - Tracked 7 balls in frame 174
-2025-03-23 16:30:37,648 - INFO - Tracked 7 balls in frame 175
-2025-03-23 16:30:37,711 - INFO - Tracked 7 balls in frame 176
-2025-03-23 16:30:37,761 - INFO - Tracked 7 balls in frame 177
-2025-03-23 16:30:37,823 - INFO - Tracked 7 balls in frame 178
-2025-03-23 16:30:37,879 - INFO - Tracked 7 balls in frame 179
-2025-03-23 16:30:37,934 - INFO - Tracked 7 balls in frame 180
-2025-03-23 16:30:37,984 - INFO - Tracked 7 balls in frame 181
-2025-03-23 16:30:38,035 - INFO - Tracked 7 balls in frame 182
-2025-03-23 16:30:38,084 - INFO - Tracked 7 balls in frame 183
-2025-03-23 16:30:38,136 - INFO - Tracked 7 balls in frame 184
-2025-03-23 16:30:38,186 - INFO - Tracked 7 balls in frame 185
-2025-03-23 16:30:38,237 - INFO - Tracked 7 balls in frame 186
-2025-03-23 16:30:38,286 - INFO - Tracked 7 balls in frame 187
-2025-03-23 16:30:38,339 - INFO - Tracked 7 balls in frame 188
-2025-03-23 16:30:38,390 - INFO - Tracked 7 balls in frame 189
-2025-03-23 16:30:38,438 - INFO - Tracked 7 balls in frame 190
-2025-03-23 16:30:38,489 - INFO - Tracked 7 balls in frame 191
-2025-03-23 16:30:38,538 - INFO - Tracked 7 balls in frame 192
-2025-03-23 16:30:38,588 - INFO - Tracked 7 balls in frame 193
-2025-03-23 16:30:38,639 - INFO - Tracked 7 balls in frame 194
-2025-03-23 16:30:38,687 - INFO - Tracked 7 balls in frame 195
-2025-03-23 16:30:38,738 - INFO - Tracked 7 balls in frame 196
-2025-03-23 16:30:38,788 - INFO - Tracked 7 balls in frame 197
-2025-03-23 16:30:38,850 - INFO - Tracked 7 balls in frame 198
-2025-03-23 16:30:38,910 - INFO - Tracked 7 balls in frame 199
-2025-03-23 16:30:38,958 - INFO - Tracked 7 balls in frame 200
-2025-03-23 16:30:39,005 - INFO - Tracked 7 balls in frame 201
-2025-03-23 16:30:39,054 - INFO - Tracked 7 balls in frame 202
-2025-03-23 16:30:39,109 - INFO - Tracked 7 balls in frame 203
-2025-03-23 16:30:39,157 - INFO - Tracked 7 balls in frame 204
-2025-03-23 16:30:39,205 - INFO - Tracked 7 balls in frame 205
-2025-03-23 16:30:39,257 - INFO - Tracked 7 balls in frame 206
-2025-03-23 16:30:39,306 - INFO - Tracked 7 balls in frame 207
-2025-03-23 16:30:39,356 - INFO - Tracked 7 balls in frame 208
-2025-03-23 16:30:39,404 - INFO - Tracked 7 balls in frame 209
-2025-03-23 16:30:39,451 - INFO - Tracked 7 balls in frame 210
-2025-03-23 16:30:39,500 - INFO - Tracked 7 balls in frame 211
-2025-03-23 16:30:39,551 - INFO - Tracked 7 balls in frame 212
-2025-03-23 16:30:39,600 - INFO - Tracked 7 balls in frame 213
-2025-03-23 16:30:39,647 - INFO - Tracked 7 balls in frame 214
-2025-03-23 16:30:39,699 - INFO - Tracked 7 balls in frame 215
-2025-03-23 16:30:39,746 - INFO - Tracked 7 balls in frame 216
-2025-03-23 16:30:39,804 - INFO - Tracked 7 balls in frame 217
-2025-03-23 16:30:39,859 - INFO - Tracked 7 balls in frame 218
-2025-03-23 16:30:39,910 - INFO - Tracked 7 balls in frame 219
-2025-03-23 16:30:39,958 - INFO - Tracked 7 balls in frame 220
-2025-03-23 16:30:40,006 - INFO - Tracked 7 balls in frame 221
-2025-03-23 16:30:40,054 - INFO - Tracked 7 balls in frame 222
-2025-03-23 16:30:40,105 - INFO - Tracked 7 balls in frame 223
-2025-03-23 16:30:40,155 - INFO - Tracked 7 balls in frame 224
-2025-03-23 16:30:40,206 - INFO - Tracked 7 balls in frame 225
-2025-03-23 16:30:40,253 - INFO - Tracked 7 balls in frame 226
-2025-03-23 16:30:40,304 - INFO - Tracked 7 balls in frame 227
-2025-03-23 16:30:40,354 - INFO - Tracked 7 balls in frame 228
-2025-03-23 16:30:40,414 - INFO - Tracked 7 balls in frame 229
-2025-03-23 16:30:40,472 - INFO - Tracked 7 balls in frame 230
-2025-03-23 16:30:40,521 - INFO - Tracked 7 balls in frame 231
-2025-03-23 16:30:40,571 - INFO - Tracked 7 balls in frame 232
-2025-03-23 16:30:40,621 - INFO - Tracked 7 balls in frame 233
-2025-03-23 16:30:40,671 - INFO - Tracked 7 balls in frame 234
-2025-03-23 16:30:40,719 - INFO - Tracked 7 balls in frame 235
-2025-03-23 16:30:40,767 - INFO - Tracked 7 balls in frame 236
-2025-03-23 16:30:40,815 - INFO - Tracked 7 balls in frame 237
-2025-03-23 16:30:40,864 - INFO - Tracked 7 balls in frame 238
-2025-03-23 16:30:40,913 - INFO - Tracked 7 balls in frame 239
-2025-03-23 16:30:40,961 - INFO - Tracked 7 balls in frame 240
-2025-03-23 16:30:41,010 - INFO - Tracked 7 balls in frame 241
-2025-03-23 16:30:41,059 - INFO - Tracked 7 balls in frame 242
-2025-03-23 16:30:41,109 - INFO - Tracked 7 balls in frame 243
-2025-03-23 16:30:41,161 - INFO - Tracked 7 balls in frame 244
-2025-03-23 16:30:41,210 - INFO - Tracked 7 balls in frame 245
-2025-03-23 16:30:41,260 - INFO - Tracked 7 balls in frame 246
-2025-03-23 16:30:41,313 - INFO - Tracked 7 balls in frame 247
-2025-03-23 16:30:41,365 - INFO - Tracked 7 balls in frame 248
-2025-03-23 16:30:41,413 - INFO - Tracked 7 balls in frame 249
-2025-03-23 16:30:41,473 - INFO - Tracked 7 balls in frame 250
-2025-03-23 16:30:41,522 - INFO - Tracked 7 balls in frame 251
-2025-03-23 16:30:41,573 - INFO - Tracked 7 balls in frame 252
-2025-03-23 16:30:41,622 - INFO - Tracked 7 balls in frame 253
-2025-03-23 16:30:41,672 - INFO - Tracked 7 balls in frame 254
-2025-03-23 16:30:41,725 - INFO - Tracked 7 balls in frame 255
-2025-03-23 16:30:41,776 - INFO - Tracked 7 balls in frame 256
-2025-03-23 16:30:41,826 - INFO - Tracked 7 balls in frame 257
-2025-03-23 16:30:41,874 - INFO - Tracked 7 balls in frame 258
-2025-03-23 16:30:41,924 - INFO - Tracked 7 balls in frame 259
-2025-03-23 16:30:41,976 - INFO - Tracked 7 balls in frame 260
-2025-03-23 16:30:42,026 - INFO - Tracked 7 balls in frame 261
-2025-03-23 16:30:42,076 - INFO - Tracked 7 balls in frame 262
-2025-03-23 16:30:42,127 - INFO - Tracked 7 balls in frame 263
-2025-03-23 16:30:42,176 - INFO - Tracked 7 balls in frame 264
-2025-03-23 16:30:42,227 - INFO - Tracked 7 balls in frame 265
-2025-03-23 16:30:42,282 - INFO - Tracked 7 balls in frame 266
-2025-03-23 16:30:42,345 - INFO - Tracked 7 balls in frame 267
-2025-03-23 16:30:42,403 - INFO - Tracked 7 balls in frame 268
-2025-03-23 16:30:42,452 - INFO - Tracked 7 balls in frame 269
-2025-03-23 16:30:42,503 - INFO - Tracked 7 balls in frame 270
-2025-03-23 16:30:42,553 - INFO - Tracked 7 balls in frame 271
-2025-03-23 16:30:42,602 - INFO - Tracked 7 balls in frame 272
-2025-03-23 16:30:42,653 - INFO - Tracked 7 balls in frame 273
-2025-03-23 16:30:42,705 - INFO - Tracked 7 balls in frame 274
-2025-03-23 16:30:42,754 - INFO - Tracked 7 balls in frame 275
-2025-03-23 16:30:42,805 - INFO - Tracked 7 balls in frame 276
-2025-03-23 16:30:42,854 - INFO - Tracked 7 balls in frame 277
-2025-03-23 16:30:42,905 - INFO - Tracked 7 balls in frame 278
-2025-03-23 16:30:42,953 - INFO - Tracked 7 balls in frame 279
-2025-03-23 16:30:43,004 - INFO - Tracked 7 balls in frame 280
-2025-03-23 16:30:43,055 - INFO - Tracked 7 balls in frame 281
-2025-03-23 16:30:43,155 - INFO - Window closed via red X
-2025-03-23 16:30:43,156 - INFO - Saved local leaderboard to whiffle_leaderboard.json
-2025-03-23 16:30:43,363 - INFO - Successfully submitted score to online leaderboard: ANO - 0 (classic)
-2025-03-23 16:30:43,363 - INFO - Cleaning up and exiting game...
-2025-03-23 16:30:43,424 - INFO - Resources released, exiting program.
-2025-03-23 16:30:43,424 - INFO - Program exited via clean_exit
+0: 384x640 5 whites, 2 reds, 45.4ms
+Speed: 2.2ms preprocess, 45.4ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:20,140 - INFO - Tracked 7 balls in frame 0
+2025-03-28 15:31:20,178 - INFO - white ball ID 0 at (600, 526) scored 30 points in zone [586, 515, 42, 33, 30]
+2025-03-28 15:31:20,179 - INFO - white ball ID 1 at (512, 326) scored 50 points in zone [493, 287, 41, 55, 50]
+2025-03-28 15:31:20,179 - INFO - white ball ID 2 at (1223, 410) scored 1 points in zone [1194, 295, 84, 227, 1]
+2025-03-28 15:31:20,179 - INFO - white ball ID 3 at (1212, 384) scored 1 points in zone [1194, 295, 84, 227, 1]
+2025-03-28 15:31:20,179 - INFO - white ball ID 4 at (1202, 359) scored 1 points in zone [1194, 295, 84, 227, 1]
+2025-03-28 15:31:20,179 - INFO - red ball ID 5 at (295, 457) scored 20 points in zone [274, 445, 34, 44, 10]
+2025-03-28 15:31:20,179 - INFO - red ball ID 6 at (1233, 436) scored 2 points in zone [1194, 295, 84, 227, 1]
 
-F:\Whiffle\9.5 (itsalive)>
+0: 384x640 5 whites, 2 reds, 39.9ms
+Speed: 1.5ms preprocess, 39.9ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:20,368 - INFO - Tracked 7 balls in frame 1
+
+0: 384x640 5 whites, 2 reds, 39.8ms
+Speed: 1.5ms preprocess, 39.8ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:20,584 - INFO - Tracked 7 balls in frame 2
+
+0: 384x640 5 whites, 2 reds, 43.4ms
+Speed: 1.5ms preprocess, 43.4ms inference, 0.9ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:20,922 - INFO - Tracked 7 balls in frame 3
+
+0: 384x640 5 whites, 2 reds, 43.0ms
+Speed: 1.5ms preprocess, 43.0ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:21,149 - INFO - Tracked 7 balls in frame 4
+
+0: 384x640 5 whites, 2 reds, 46.5ms
+Speed: 2.1ms preprocess, 46.5ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:21,480 - INFO - Tracked 7 balls in frame 5
+
+0: 384x640 5 whites, 2 reds, 44.8ms
+Speed: 1.5ms preprocess, 44.8ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:22,114 - INFO - Tracked 7 balls in frame 6
+
+0: 384x640 5 whites, 2 reds, 42.1ms
+Speed: 1.5ms preprocess, 42.1ms inference, 0.9ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:22,338 - INFO - Tracked 7 balls in frame 7
+
+0: 384x640 5 whites, 2 reds, 41.0ms
+Speed: 1.6ms preprocess, 41.0ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:22,564 - INFO - Tracked 7 balls in frame 8
+
+0: 384x640 5 whites, 2 reds, 41.1ms
+Speed: 1.5ms preprocess, 41.1ms inference, 0.5ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:22,784 - INFO - Tracked 7 balls in frame 9
+
+0: 384x640 5 whites, 2 reds, 41.6ms
+Speed: 1.5ms preprocess, 41.6ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:23,007 - INFO - Tracked 7 balls in frame 10
+
+0: 384x640 5 whites, 2 reds, 42.4ms
+Speed: 1.6ms preprocess, 42.4ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:23,230 - INFO - Tracked 7 balls in frame 11
+
+0: 384x640 5 whites, 2 reds, 42.0ms
+Speed: 1.5ms preprocess, 42.0ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:23,447 - INFO - Tracked 7 balls in frame 12
+
+0: 384x640 5 whites, 2 reds, 42.4ms
+Speed: 1.8ms preprocess, 42.4ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:23,678 - INFO - Tracked 7 balls in frame 13
+
+0: 384x640 5 whites, 2 reds, 41.1ms
+Speed: 1.6ms preprocess, 41.1ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:23,893 - INFO - Tracked 7 balls in frame 14
+
+0: 384x640 5 whites, 2 reds, 42.8ms
+Speed: 1.7ms preprocess, 42.8ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:24,115 - INFO - Tracked 7 balls in frame 15
+
+0: 384x640 5 whites, 2 reds, 41.4ms
+Speed: 1.6ms preprocess, 41.4ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:24,349 - INFO - Tracked 7 balls in frame 16
+
+0: 384x640 5 whites, 2 reds, 41.2ms
+Speed: 1.5ms preprocess, 41.2ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:24,569 - INFO - Tracked 7 balls in frame 17
+
+0: 384x640 5 whites, 2 reds, 42.6ms
+Speed: 1.5ms preprocess, 42.6ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:24,789 - INFO - Tracked 7 balls in frame 18
+
+0: 384x640 5 whites, 2 reds, 40.0ms
+Speed: 1.5ms preprocess, 40.0ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:25,010 - INFO - Tracked 7 balls in frame 19
+
+0: 384x640 5 whites, 2 reds, 41.5ms
+Speed: 1.5ms preprocess, 41.5ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:25,238 - INFO - Tracked 7 balls in frame 20
+
+0: 384x640 5 whites, 2 reds, 41.1ms
+Speed: 1.5ms preprocess, 41.1ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:25,460 - INFO - Tracked 7 balls in frame 21
+
+0: 384x640 5 whites, 2 reds, 42.0ms
+Speed: 1.5ms preprocess, 42.0ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:25,697 - INFO - Tracked 7 balls in frame 22
+
+0: 384x640 5 whites, 2 reds, 41.3ms
+Speed: 1.5ms preprocess, 41.3ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:25,920 - INFO - Tracked 7 balls in frame 23
+
+0: 384x640 5 whites, 2 reds, 49.0ms
+Speed: 1.5ms preprocess, 49.0ms inference, 0.9ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:26,146 - INFO - Tracked 7 balls in frame 24
+
+0: 384x640 5 whites, 2 reds, 40.8ms
+Speed: 1.6ms preprocess, 40.8ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:27,411 - INFO - Tracked 7 balls in frame 25
+
+0: 384x640 5 whites, 2 reds, 41.2ms
+Speed: 1.5ms preprocess, 41.2ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:27,931 - INFO - Tracked 7 balls in frame 26
+
+0: 384x640 5 whites, 2 reds, 41.6ms
+Speed: 1.6ms preprocess, 41.6ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:28,372 - INFO - Tracked 7 balls in frame 27
+
+0: 384x640 5 whites, 2 reds, 41.9ms
+Speed: 1.5ms preprocess, 41.9ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:29,025 - INFO - Tracked 7 balls in frame 28
+
+0: 384x640 5 whites, 2 reds, 44.6ms
+Speed: 1.5ms preprocess, 44.6ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:29,749 - INFO - Tracked 7 balls in frame 29
+
+0: 384x640 5 whites, 2 reds, 41.3ms
+Speed: 1.5ms preprocess, 41.3ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:30,021 - INFO - Tracked 7 balls in frame 30
+
+0: 384x640 5 whites, 2 reds, 41.9ms
+Speed: 1.3ms preprocess, 41.9ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:30,366 - INFO - Tracked 7 balls in frame 31
+
+0: 384x640 5 whites, 2 reds, 43.6ms
+Speed: 1.9ms preprocess, 43.6ms inference, 0.5ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:30,589 - INFO - Tracked 7 balls in frame 32
+
+0: 384x640 5 whites, 2 reds, 42.5ms
+Speed: 1.6ms preprocess, 42.5ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:30,808 - INFO - Tracked 7 balls in frame 33
+
+0: 384x640 5 whites, 2 reds, 42.8ms
+Speed: 1.4ms preprocess, 42.8ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:31,029 - INFO - Tracked 7 balls in frame 34
+
+0: 384x640 5 whites, 2 reds, 41.9ms
+Speed: 1.5ms preprocess, 41.9ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:31,252 - INFO - Tracked 7 balls in frame 35
+
+0: 384x640 5 whites, 2 reds, 42.3ms
+Speed: 1.5ms preprocess, 42.3ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:31,473 - INFO - Tracked 7 balls in frame 36
+
+0: 384x640 5 whites, 2 reds, 42.2ms
+Speed: 1.5ms preprocess, 42.2ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:31,831 - INFO - Tracked 7 balls in frame 37
+
+0: 384x640 5 whites, 2 reds, 41.1ms
+Speed: 1.5ms preprocess, 41.1ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:32,055 - INFO - Tracked 7 balls in frame 38
+
+0: 384x640 5 whites, 2 reds, 42.4ms
+Speed: 1.5ms preprocess, 42.4ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:32,274 - INFO - Tracked 7 balls in frame 39
+
+0: 384x640 5 whites, 2 reds, 42.3ms
+Speed: 1.5ms preprocess, 42.3ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:32,490 - INFO - Tracked 7 balls in frame 40
+
+0: 384x640 5 whites, 2 reds, 39.6ms
+Speed: 1.5ms preprocess, 39.6ms inference, 0.5ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:32,713 - INFO - Tracked 7 balls in frame 41
+
+0: 384x640 5 whites, 2 reds, 40.6ms
+Speed: 1.5ms preprocess, 40.6ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:32,929 - INFO - Tracked 7 balls in frame 42
+
+0: 384x640 5 whites, 2 reds, 42.5ms
+Speed: 1.6ms preprocess, 42.5ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:33,151 - INFO - Tracked 7 balls in frame 43
+
+0: 384x640 5 whites, 2 reds, 41.5ms
+Speed: 1.7ms preprocess, 41.5ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:33,369 - INFO - Tracked 7 balls in frame 44
+
+0: 384x640 5 whites, 2 reds, 42.3ms
+Speed: 1.5ms preprocess, 42.3ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:33,581 - INFO - Tracked 7 balls in frame 45
+
+0: 384x640 5 whites, 2 reds, 43.4ms
+Speed: 1.6ms preprocess, 43.4ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:33,807 - INFO - Tracked 7 balls in frame 46
+
+0: 384x640 5 whites, 2 reds, 41.6ms
+Speed: 1.5ms preprocess, 41.6ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:34,020 - INFO - Tracked 7 balls in frame 47
+
+0: 384x640 5 whites, 2 reds, 44.8ms
+Speed: 1.5ms preprocess, 44.8ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:34,247 - INFO - Tracked 7 balls in frame 48
+
+0: 384x640 5 whites, 2 reds, 42.5ms
+Speed: 1.6ms preprocess, 42.5ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:34,584 - INFO - Tracked 7 balls in frame 49
+
+0: 384x640 5 whites, 2 reds, 42.6ms
+Speed: 1.5ms preprocess, 42.6ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:34,808 - INFO - Tracked 7 balls in frame 50
+
+0: 384x640 5 whites, 2 reds, 43.2ms
+Speed: 1.6ms preprocess, 43.2ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:35,027 - INFO - Tracked 7 balls in frame 51
+
+0: 384x640 5 whites, 2 reds, 45.1ms
+Speed: 1.3ms preprocess, 45.1ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:35,264 - INFO - Tracked 7 balls in frame 52
+
+0: 384x640 5 whites, 2 reds, 43.0ms
+Speed: 1.5ms preprocess, 43.0ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:35,585 - INFO - Tracked 7 balls in frame 53
+
+0: 384x640 5 whites, 2 reds, 41.2ms
+Speed: 1.3ms preprocess, 41.2ms inference, 0.6ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:35,903 - INFO - Tracked 7 balls in frame 54
+
+0: 384x640 5 whites, 2 reds, 40.6ms
+Speed: 1.6ms preprocess, 40.6ms inference, 1.0ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:36,128 - INFO - Tracked 7 balls in frame 55
+
+0: 384x640 5 whites, 2 reds, 39.5ms
+Speed: 1.6ms preprocess, 39.5ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:36,347 - INFO - Tracked 7 balls in frame 56
+
+0: 384x640 6 whites, 2 reds, 41.2ms
+Speed: 1.5ms preprocess, 41.2ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:36,832 - INFO - Tracked 7 balls in frame 57
+
+0: 384x640 5 whites, 2 reds, 43.7ms
+Speed: 1.4ms preprocess, 43.7ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:37,052 - INFO - Tracked 7 balls in frame 58
+
+0: 384x640 5 whites, 2 reds, 42.9ms
+Speed: 1.4ms preprocess, 42.9ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:37,269 - INFO - Tracked 7 balls in frame 59
+
+0: 384x640 5 whites, 2 reds, 42.2ms
+Speed: 1.5ms preprocess, 42.2ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:37,548 - INFO - Tracked 7 balls in frame 60
+
+0: 384x640 5 whites, 2 reds, 43.0ms
+Speed: 1.5ms preprocess, 43.0ms inference, 0.5ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:38,607 - INFO - Tracked 7 balls in frame 61
+
+0: 384x640 5 whites, 2 reds, 42.9ms
+Speed: 1.5ms preprocess, 42.9ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:39,191 - INFO - Tracked 7 balls in frame 62
+
+0: 384x640 5 whites, 2 reds, 41.0ms
+Speed: 1.5ms preprocess, 41.0ms inference, 0.8ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:39,416 - INFO - Tracked 7 balls in frame 63
+
+0: 384x640 5 whites, 2 reds, 42.2ms
+Speed: 1.5ms preprocess, 42.2ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:39,635 - INFO - Tracked 7 balls in frame 64
+
+0: 384x640 5 whites, 2 reds, 41.6ms
+Speed: 1.6ms preprocess, 41.6ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:39,858 - INFO - Tracked 7 balls in frame 65
+
+0: 384x640 5 whites, 2 reds, 46.1ms
+Speed: 1.5ms preprocess, 46.1ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:40,712 - INFO - Tracked 7 balls in frame 66
+
+0: 384x640 5 whites, 2 reds, 40.6ms
+Speed: 1.5ms preprocess, 40.6ms inference, 0.7ms postprocess per image at shape (1, 3, 384, 640)
+2025-03-28 15:31:40,930 - INFO - Tracked 7 balls in frame 67
+2025-03-28 15:31:40,999 - INFO - Window closed via red X
+2025-03-28 15:31:41,000 - INFO - Saved local leaderboard to whiffle_leaderboard.json
+2025-03-28 15:31:41,286 - INFO - Successfully submitted score to online leaderboard: Player 1 - 105 (classic)
+2025-03-28 15:31:41,286 - INFO - Cleaning up and exiting game...
+2025-03-28 15:31:41,330 - INFO - Resources released, exiting program.
+2025-03-28 15:31:41,330 - INFO - Program exited via clean_exit
+
+F:\Whiffle\9.6 (pickupsticks)>

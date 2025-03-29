@@ -57,7 +57,7 @@ class GameState:
         self.score: int = 0  # Managed by Player class
         self.high_score: int = 0
         self.scoring_zones: List[Tuple[int, int, int, int, int]] = []
-        self.tracked_balls: List[Tuple[int, int, float, int, int, str, int]] = []  # (x, y, radius, ball_id, frame_count, ball_type, zone_frames)
+        self.tracked_balls: List[Tuple[int, int, float, int, int, str]] = []  # (x, y, radius, ball_id, frame_count, ball_type)
         self.scored_balls: set = set()
         self.scored_positions: Dict[Tuple[int, int], int] = {}
         self.potential_small_balls_white: Dict[Tuple[int, int], Tuple[int, int]] = {}  # Used by new detection.py
@@ -69,6 +69,11 @@ class GameState:
         self.game_timer: Optional[float] = None
         self.start_time: Optional[float] = None
         self.ball_trails: Dict[int, List[Tuple[int, int, int]]] = {}
+        self.scored_cooldown: Dict[int, int] = {}  # ball_id -> frames remaining for cooldown
+
+        # Add ball_states and previous_ball_states for state tracking
+        self.ball_states: Dict[int, str] = {}  # ball_id -> state (on_playfield or in_hole)
+        self.previous_ball_states: Dict[int, str] = {}  # ball_id -> previous state for transition detection
 
         # HSV ranges for ball detection
         self.white_hsv_min = (0, 0, 100)
@@ -144,7 +149,13 @@ class GameState:
         # Flag to track if the red ball has scored in the current game session
         self.red_ball_scored: bool = False  # Tracks if the red ball has scored
 
+        # Add scored_zones for tracking which zones have been scored in
+        self.scored_zones: set = set()
+
         self.scoring_zones = load_zones(self.scoring_zones)
+        # Sort scoring zones by area (smallest to largest) to prioritize smaller zones
+        self.scoring_zones.sort(key=lambda zone: zone[2] * zone[3])
+        logger.info(f"Sorted scoring zones by area: {self.scoring_zones}")
         self._initialize_balls_in_zone()
 
     def _initialize_sounds(self) -> None:
@@ -184,18 +195,22 @@ class GameState:
             white_balls, red_balls, half_balls, self.tracked_balls, self.next_ball_id,
             self.frame_count, self.scored_positions, self.debug_mode
         )
-        self.tracked_balls = [(x, y, radius, ball_id, self.frame_count, ball_type, zone_frames)
-                              for x, y, radius, ball_id, ball_type, zone_frames in tracked_detected_balls]
-        for x, y, radius, ball_id, _, _, _ in self.tracked_balls:
+        self.tracked_balls = [(x, y, radius, ball_id, self.frame_count, ball_type)
+                              for x, y, radius, ball_id, ball_type in tracked_detected_balls]
+        for x, y, radius, ball_id, _, ball_type in self.tracked_balls:
             ball = (x, y, radius, ball_id)
             for zone in self.scoring_zones:
                 if is_in_scoring_zone(ball, zone):
                     self.balls_in_zone[ball_id] = zone
+                    self.ball_states[ball_id] = "in_hole"
+                    self.previous_ball_states[ball_id] = "on_playfield"  # Allow scoring on transition
                     if self.debug_mode:
                         logger.info(f"Ball ID {ball_id} at ({x}, {y}) already in zone {zone} at startup")
                     break
             if ball_id not in self.balls_in_zone:
                 self.balls_in_zone[ball_id] = None
+                self.ball_states[ball_id] = "on_playfield"
+                self.previous_ball_states[ball_id] = "on_playfield"
         if self.debug_mode:
             logger.debug(f"Initialized balls in zones: {self.balls_in_zone}")
 
@@ -241,7 +256,7 @@ class GameState:
                         self.red_hsv_max = tuple(data["red_hsv_max"])
                         self.red_hsv_min2 = tuple(data["red_hsv_min2"])
                         self.red_hsv_max2 = tuple(data["red_hsv_max2"])
-                        self.red_hsv_calibrating = True
+                        self.red_hsv_calibrated = True
                         logger.info(f"Loaded red ball HSV ranges: min={self.red_hsv_min}, max={self.red_hsv_max}, "
                                     f"min2={self.red_hsv_min2}, max2={self.red_hsv_max2}")
             except (json.JSONDecodeError, IOError, KeyError) as e:
@@ -282,7 +297,10 @@ class GameState:
         self.ball_trails.clear()
         self.potential_small_balls_white.clear()  # Clear potential small balls when switching players
         self.potential_small_balls_red.clear()
+        self.scored_cooldown.clear()  # Clear scoring cooldowns when switching players
         self.red_ball_scored = False  # Reset red ball scoring flag when switching players
+        self.ball_states.clear()  # Clear ball states when switching players
+        self.previous_ball_states.clear()  # Clear previous ball states when switching players
         logger.info(f"Switched to player: {self.get_current_player().name}")
 
     def add_player(self, name: str) -> None:
@@ -330,3 +348,71 @@ class GameState:
         if self.game_timer is not None and self.start_time is not None:
             elapsed = time.time() - self.start_time
             self.game_timer = max(0, self.time_limit - elapsed)
+
+    def update_score(self, frame: np.ndarray, tracked_detected_balls: List[Tuple[int, int, float, int, str]]) -> None:
+        """
+        Update the score based on detected balls and their states.
+        """
+        logger.debug("Updating score")
+
+        # Log all tracked balls' positions for debugging
+        logger.info(f"Tracked balls in frame {self.frame_count}: {[(x, y, ball_type, ball_id) for x, y, _, ball_id, ball_type in tracked_detected_balls]}")
+
+        # Update ball states and balls_in_zone based on current positions
+        detector = BallDetector()
+        for x, y, radius, ball_id, ball_type in tracked_detected_balls:
+            ball = (x, y, radius, ball_id)
+            state = "in_hole" if detector._is_in_scoring_zone(x, y, radius, self.scoring_zones) else "on_playfield"
+            self.ball_states[ball_id] = state
+
+            # Update balls_in_zone
+            current_zone = None
+            for zone in self.scoring_zones:
+                if is_in_scoring_zone(ball, zone):
+                    current_zone = zone
+                    break
+            self.balls_in_zone[ball_id] = current_zone
+
+            if self.debug_mode:
+                logger.debug(f"Ball ID {ball_id} at ({x}, {y}) state: {state}, zone: {current_zone}, type: {ball_type}")
+
+        for i, ball_data in enumerate(tracked_detected_balls):
+            if len(ball_data) != 5:
+                logger.error(f"Invalid ball data structure at index {i}: {ball_data}")
+                continue
+
+            x, y, radius, ball_id, ball_type = ball_data
+            ball = (x, y, radius, ball_id)
+
+            # Get the current state from ball_states
+            current_state = self.ball_states.get(ball_id, "on_playfield")
+            previous_state = self.previous_ball_states.get(ball_id, "on_playfield")
+            current_zone = self.balls_in_zone.get(ball_id)
+            zone_id = id(current_zone) if current_zone else None
+
+            # Score the ball if it's in a scoring zone and hasn't scored before
+            if (current_zone and
+                    ball_id not in self.scored_balls):
+                current_player = self.get_current_player()
+                points = current_zone[4]
+                if ball_type == "red":
+                    points *= 2
+                    self.red_ball_scored = True
+                elif ball_type == "half":
+                    points *= 1.5
+                current_player.add_score(points)
+                self.scored_balls.add(ball_id)
+                self.scored_positions[(x, y)] = ball_id
+                self.scored_zones.add(zone_id)
+                if self.game_sounds_on and self.score_sound:
+                    self.score_sound.play()
+                logger.info(f"{ball_type} ball ID {ball_id} at ({x}, {y}) scored {points} points in zone {current_zone}")
+
+            # Update previous state for the next frame
+            self.previous_ball_states[ball_id] = current_state
+
+        # Clean up
+        self.balls_in_zone = {ball_id: zone for ball_id, zone in self.balls_in_zone.items()
+                              if ball_id in {ball[3] for ball in self.tracked_balls}}
+        self.tracked_balls = [(x, y, radius, ball_id, self.frame_count, ball_type)
+                              for x, y, radius, ball_id, ball_type in tracked_detected_balls]

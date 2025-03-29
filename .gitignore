@@ -1,6 +1,7 @@
 # PyInstaller build directories
 dist/
 build/
+runs/
 
 # Python cache directories
 __pycache__/

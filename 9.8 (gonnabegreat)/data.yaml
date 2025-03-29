@@ -1,0 +1,4 @@
+train: F:/Whiffle/9.6 (pickupsticks)/dataset/images/train
+val: F:/Whiffle/9.6 (pickupsticks)/dataset/images/val
+nc: 3
+names: ['white', 'red', 'half']
