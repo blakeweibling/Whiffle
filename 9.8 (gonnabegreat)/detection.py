@@ -19,7 +19,7 @@ EXCLUDED_POSITIONS: List[Tuple[int, int]] = GameSpecificConstants.EXCLUDED_POSIT
 class BallDetector:
     def __init__(self):
         # Load the trained YOLOv8 model
-        self.model = YOLO('best.pt')  # Update with your model path
+        self.model = YOLO('whiffle_new_best.pt')  # Update with your model path
         self.class_names = ['white', 'red', 'half']
         self.state_names = ['on_playfield', 'in_hole']
 

@@ -27,9 +27,6 @@ def coco_to_yolo(coco_json_path, output_dir):
     category_id_to_yolo_id = {cat['id']: idx for idx, cat in enumerate(coco_data['categories'])}
     print("Category ID mapping:", category_id_to_yolo_id)
 
-    # Map state values to numerical IDs
-    state_map = {'on_playfield': 0, 'in_hole': 1}
-
     # Process each annotation
     annotations_by_image = {}
     for ann in coco_data['annotations']:
@@ -65,12 +62,8 @@ def coco_to_yolo(coco_json_path, output_dir):
                 width_norm = width / image_width
                 height_norm = height / image_height
 
-                # Get state attribute
-                state = ann.get('attributes', {}).get('state', 'on_playfield')  # Default to 'on_playfield' if missing
-                state_id = state_map[state]
-
-                # Write to YOLO .txt file
-                f.write(f"{class_id} {x_center:.6f} {y_center:.6f} {width_norm:.6f} {height_norm:.6f} {state_id}\n")
+                # Write to YOLO .txt file (without state_id)
+                f.write(f"{class_id} {x_center:.6f} {y_center:.6f} {width_norm:.6f} {height_norm:.6f}\n")
 
         print(f"Created {txt_path}")
 
