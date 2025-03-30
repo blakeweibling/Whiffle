@@ -29,17 +29,17 @@ a = Analysis(
         'dotenv',
         'ultralytics',
         'numpy',
+        'Pillow',
+        'matplotlib',
+        'requests',  # Added to ensure requests is included
     ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[
         'tkinter',
-        'matplotlib',
         'pandas',
-        'scipy',
-        'PIL',
-        'requests',
+        'scipy',  # Removed 'requests' from excludes
     ],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
@@ -62,7 +62,7 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=True,  # Set to False if you don't want a console window
+    console=False,  # Set to False if you don't want a console window
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,

@@ -6,3 +6,5 @@ runs/
 # Python cache directories
 __pycache__/
 *.pyc
+10.4 (onthefloor)/installer/WhiffleTrackerSetup.exe
+10.4 (onthefloor)/WhiffleTracker.spec
