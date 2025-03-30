@@ -23,6 +23,14 @@ from game_state import MenuState
 
 logger = logging.getLogger(__name__)
 
+# Check if Qt backend is available
+try:
+    cv2.namedWindow(UIConstants.WINDOW_NAME, cv2.WINDOW_GUI_NORMAL)  # Try to use Qt if available
+    logger.info("Attempted to use Qt backend for display (WINDOW_GUI_NORMAL).")
+except cv2.error as e:
+    logger.warning(f"Failed to set Qt backend: {e}. Falling back to default backend.")
+    cv2.namedWindow(UIConstants.WINDOW_NAME, cv2.WINDOW_NORMAL)
+
 # Profiling decorator (Change 7)
 def profile(func):
     @wraps(func)
@@ -43,14 +51,22 @@ def _capture_frame(cap: cv2.VideoCapture, game_state: Any) -> Optional[np.ndarra
             if not ret:
                 logger.error("Camera read failed, switching to static frame")
                 game_state.camera_available = False
-                return game_state.static_frame
-            return frame
+                frame = game_state.static_frame
+            else:
+                # Log frame details
+                logger.debug(f"Camera frame shape: {frame.shape}, dtype: {frame.dtype}, checksum: {np.sum(frame)}")
         except cv2.error as e:
             logger.error(f"Camera error: {e}, switching to static frame")
             game_state.camera_available = False
-            return game_state.static_frame
+            frame = game_state.static_frame
     else:
-        return game_state.static_frame
+        frame = game_state.static_frame
+        # Log static frame details
+        logger.debug(f"Static frame shape: {frame.shape}, dtype: {frame.dtype}, checksum: {np.sum(frame)}")
+    if frame is None:
+        logger.error("Frame is None after capture")
+        return None
+    return frame
 
 @profile
 def _detect_balls(frame: np.ndarray, game_state: Any, hsv: np.ndarray) -> Tuple[List[Tuple[int, int, float]], List[Tuple[int, int, float]], List[Tuple[int, int, float]]]:
@@ -125,13 +141,29 @@ def _render_calibration_overlay(frame: np.ndarray, game_state: Any) -> None:
 @profile
 def _render_frame(frame: np.ndarray, game_state: Any, tracked_detected_balls: List[Tuple[int, int, float, int, str]], render_balls: bool = True) -> None:
     logger.debug("Rendering frame")
+    # Log frame details before rendering
+    logger.debug(f"Frame before rendering - shape: {frame.shape}, dtype: {frame.dtype}, checksum: {np.sum(frame)}")
+    
     draw_ui(frame, game_state)
     if render_balls:
         draw_balls(frame, game_state, tracked_detected_balls)
     if game_state.calibrating_color is not None:
         _render_calibration_overlay(frame, game_state)
-    cv2.imshow(UIConstants.WINDOW_NAME, frame)
-    logger.debug("Frame rendered and displayed")
+    
+    # Log frame details after rendering
+    logger.debug(f"Frame after rendering - shape: {frame.shape}, dtype: {frame.dtype}, checksum: {np.sum(frame)}")
+    
+    # Save the frame to disk for debugging
+    debug_frame_path = f"debug_frame_{game_state.frame_count}.png"
+    cv2.imwrite(debug_frame_path, frame)
+    logger.debug(f"Saved frame to {debug_frame_path} for debugging")
+
+    try:
+        cv2.imshow(UIConstants.WINDOW_NAME, frame)
+        logger.debug("Frame rendered and displayed")
+    except cv2.error as e:
+        logger.error(f"Failed to display frame with cv2.imshow: {e}")
+        logger.info("Falling back to saving frames to disk for debugging.")
 
 def _update_hsv_ranges(game_state: Any) -> None:
     """
@@ -201,10 +233,10 @@ def _handle_input(game_state: Any) -> int:
             if new_zone:
                 game_state.scoring_zones.append(new_zone)
                 try:
-                    # Updated to pass game_state (Fix for TypeError)
-                    save_zones(game_state.scoring_zones, game_state)
+                    with open("scoring_zones.json", "w") as json_file:
+                        json.dump(game_state.scoring_zones, json_file)
                     if game_state.debug_mode:
-                        logger.info("Scoring zones saved to cache")
+                        logger.info("Scoring zones saved to scoring_zones.json")
                 except Exception as e:
                     logger.error(f"Failed to save scoring zones: {e}")
                 # Update the special hole after adding a new zone
