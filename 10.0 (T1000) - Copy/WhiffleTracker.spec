@@ -55,5 +55,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='pinball_icon.ico',
+    icon='pinball_icon.png',
 )
