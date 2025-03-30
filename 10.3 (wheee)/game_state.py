@@ -65,8 +65,10 @@ class GameState:
         self.high_score: int = 0
         self.scoring_zones: List[Tuple[int, int, int, int, int]] = []
         self.tracked_balls: List[Tuple[int, int, float, int, int, str]] = []  # (x, y, radius, ball_id, frame_count, ball_type)
-        self.scored_balls: set = set()
-        self.scored_positions: Dict[Tuple[int, int], int] = {}
+        self.scored_balls: set = set()  # Tracks ball_ids that have scored
+        self.scored_positions: Dict[Tuple[int, int], int] = {}  # Tracks (x, y) positions that have scored
+        self.ball_scored_zones: Dict[int, int] = {}  # Tracks ball_id -> zone_id where it last scored
+        self.ball_positions_history: Dict[int, List[Tuple[int, int]]] = {}  # Tracks ball_id -> list of (x, y) positions over recent frames
         self.potential_small_balls_white: Dict[Tuple[int, int], Tuple[int, int]] = {}  # Used by new detection.py
         self.potential_small_balls_red: Dict[Tuple[int, int], Tuple[int, int]] = {}  # Used by new detection.py
         self.next_ball_id: int = 0
@@ -328,6 +330,8 @@ class GameState:
         self.current_player_index = (self.current_player_index + 1) % len(self.players)
         self.scored_balls.clear()
         self.scored_positions.clear()
+        self.ball_scored_zones.clear()  # Clear scored zones on player switch
+        self.ball_positions_history.clear()  # Clear position history on player switch
         self.tracked_balls.clear()
         self.balls_in_zone.clear()
         self.ball_trails.clear()
@@ -413,9 +417,51 @@ class GameState:
             elapsed = time.time() - self.start_time
             self.game_timer = max(0, self.time_limit - elapsed)
 
+    def _is_ball_at_rest(self, ball_id: int, x: int, y: int) -> bool:
+        """
+        Determine if a ball has come to rest by checking its movement over recent frames.
+
+        Args:
+            ball_id: The ID of the ball to check.
+            x: Current x-coordinate of the ball.
+            y: Current y-coordinate of the ball.
+
+        Returns:
+            bool: True if the ball is at rest, False otherwise.
+        """
+        # Constants for movement tracking
+        HISTORY_LENGTH = 5  # Number of frames to track
+        MOVEMENT_THRESHOLD = 5.0  # Maximum distance (in pixels) to consider the ball at rest
+
+        # Update the position history for this ball
+        if ball_id not in self.ball_positions_history:
+            self.ball_positions_history[ball_id] = []
+        self.ball_positions_history[ball_id].append((x, y))
+
+        # Keep only the last HISTORY_LENGTH positions
+        if len(self.ball_positions_history[ball_id]) > HISTORY_LENGTH:
+            self.ball_positions_history[ball_id] = self.ball_positions_history[ball_id][-HISTORY_LENGTH:]
+
+        # If we don't have enough history to determine movement, assume the ball is not at rest
+        if len(self.ball_positions_history[ball_id]) < HISTORY_LENGTH:
+            if self.debug_mode:
+                logger.debug(f"Ball ID {ball_id} at ({x}, {y}) does not have enough history ({len(self.ball_positions_history[ball_id])}/{HISTORY_LENGTH}) to determine if at rest")
+            return False
+
+        # Calculate the total movement over the history
+        positions = self.ball_positions_history[ball_id]
+        first_x, first_y = positions[0]
+        last_x, last_y = positions[-1]
+        distance = np.sqrt((last_x - first_x) ** 2 + (last_y - first_y) ** 2)
+
+        if self.debug_mode:
+            logger.debug(f"Ball ID {ball_id} movement over {HISTORY_LENGTH} frames: {distance:.2f} pixels (threshold: {MOVEMENT_THRESHOLD})")
+
+        return distance < MOVEMENT_THRESHOLD
+
     def update_score(self, frame: np.ndarray, tracked_detected_balls: List[Tuple[int, int, float, int, str]]) -> None:
         """
-        Update the score based on detected balls and their positions, ensuring live scoring for all ball types.
+        Update the score based on detected balls, scoring only when a ball comes to rest in a zone.
         """
         logger.debug("Updating score")
 
@@ -423,53 +469,70 @@ class GameState:
         logger.info(f"Tracked balls in frame {self.frame_count}: {[(x, y, ball_type, ball_id) for x, y, _, ball_id, ball_type in tracked_detected_balls]}")
 
         # Update ball states and balls_in_zone based on current positions
-        detector = BallDetector()
         for x, y, radius, ball_id, ball_type in tracked_detected_balls:
             ball = (x, y, radius, ball_id)
-            # Use is_in_scoring_zone directly to determine if the ball is in a zone
+            # Use is_in_scoring_zone to determine if the ball is in a zone
             current_zone = None
             for zone in self.scoring_zones:
                 if is_in_scoring_zone(ball, zone):
                     current_zone = zone
                     break
+
             # Update balls_in_zone and ball_states
+            previous_zone = self.balls_in_zone.get(ball_id)
             self.balls_in_zone[ball_id] = current_zone
             state = "in_hole" if current_zone else "on_playfield"
             self.ball_states[ball_id] = state
 
             if self.debug_mode:
-                logger.debug(f"Ball ID {ball_id} at ({x}, {y}) type: {ball_type}, state: {state}, zone: {current_zone}")
+                logger.debug(f"Ball ID {ball_id} at ({x}, {y}) type: {ball_type}, state: {state}, current_zone: {current_zone}, previous_zone: {previous_zone}")
 
-            # Score the ball if it's in a scoring zone and hasn't scored before
-            if current_zone and ball_id not in self.scored_balls:
-                current_player = self.get_current_player()
-                points = current_zone[4]
-                if ball_type == "red":
-                    points *= 2
-                    self.red_ball_scored = True
-                elif ball_type == "half":
-                    points *= 1.5
-                current_player.add_score(points)
-                self.scored_balls.add(ball_id)
-                self.scored_positions[(x, y)] = ball_id
-                zone_id = id(current_zone)
-                self.scored_zones.add(zone_id)
-                if self.game_sounds_on and self.score_sound:
-                    self.score_sound.play()
-                logger.info(f"{ball_type} ball ID {ball_id} at ({x}, {y}) scored {points} points in zone {current_zone}")
-            elif not current_zone and ball_id in self.scored_balls:
-                # If the ball is no longer in a scoring zone, remove it from scored_balls to allow re-scoring
-                logger.debug(f"Ball ID {ball_id} ({ball_type}) is no longer in a scoring zone, removing from scored_balls")
-                self.scored_balls.remove(ball_id)
+            # Score the ball if it's in a scoring zone, hasn't scored in this zone before, and is at rest
+            if current_zone:
+                current_zone_id = id(current_zone)
+                last_scored_zone_id = self.ball_scored_zones.get(ball_id)
+
+                # Check if the ball is at rest
+                if self._is_ball_at_rest(ball_id, x, y):
+                    # Score if the ball hasn't scored in this zone before
+                    if last_scored_zone_id != current_zone_id:
+                        current_player = self.get_current_player()
+                        points = current_zone[4]
+                        if ball_type == "red":
+                            points *= 2
+                            self.red_ball_scored = True
+                        elif ball_type == "half":
+                            points *= 1.5
+                        current_player.add_score(points)
+                        self.scored_balls.add(ball_id)
+                        self.scored_positions[(x, y)] = ball_id
+                        self.ball_scored_zones[ball_id] = current_zone_id
+                        self.scored_zones.add(current_zone_id)
+                        if self.game_sounds_on and self.score_sound:
+                            self.score_sound.play()
+                        logger.info(f"{ball_type} ball ID {ball_id} at ({x}, {y}) scored {points} points in zone {current_zone}")
+                    else:
+                        if self.debug_mode:
+                            logger.debug(f"Ball ID {ball_id} ({ball_type}) is in zone {current_zone} but already scored in this zone")
+                else:
+                    if self.debug_mode:
+                        logger.debug(f"Ball ID {ball_id} ({ball_type}) is in zone {current_zone} but is still moving, not scoring yet")
+            else:
+                # If the ball is no longer in a scoring zone, clear its scored zone to allow re-scoring
+                if ball_id in self.ball_scored_zones:
+                    logger.debug(f"Ball ID {ball_id} ({ball_type}) is no longer in a scoring zone, clearing scored zone")
+                    del self.ball_scored_zones[ball_id]
+                if ball_id in self.scored_balls:
+                    logger.debug(f"Ball ID {ball_id} ({ball_type}) is no longer in a scoring zone, removing from scored_balls")
+                    self.scored_balls.remove(ball_id)
                 if (x, y) in self.scored_positions:
                     del self.scored_positions[(x, y)]
-            elif current_zone:
-                logger.debug(f"Ball ID {ball_id} ({ball_type}) is in zone {current_zone} but already scored")
 
-        # Clean up balls_in_zone to remove balls that are no longer tracked
+        # Clean up balls_in_zone and other dictionaries to remove balls that are no longer tracked
         current_ball_ids = {ball[3] for ball in self.tracked_balls}
         self.balls_in_zone = {ball_id: zone for ball_id, zone in self.balls_in_zone.items() if ball_id in current_ball_ids}
         self.ball_states = {ball_id: state for ball_id, state in self.ball_states.items() if ball_id in current_ball_ids}
-        self.previous_ball_states = {ball_id: state for ball_id, state in self.previous_ball_states.items() if ball_id in current_ball_ids}
+        self.ball_scored_zones = {ball_id: zone_id for ball_id, zone_id in self.ball_scored_zones.items() if ball_id in current_ball_ids}
+        self.ball_positions_history = {ball_id: positions for ball_id, positions in self.ball_positions_history.items() if ball_id in current_ball_ids}
         self.tracked_balls = [(x, y, radius, ball_id, self.frame_count, ball_type)
                               for x, y, radius, ball_id, ball_type in tracked_detected_balls]

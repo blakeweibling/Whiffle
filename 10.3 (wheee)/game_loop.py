@@ -100,7 +100,7 @@ def _process_frame(frame: np.ndarray, game_state: Any) -> List[Tuple[int, int, f
         return []
 
     # Run detection every 5 frames (Change 1: Less frequent inference)
-    DETECTION_INTERVAL = 5
+    DETECTION_INTERVAL = 1
     if game_state.frame_count % DETECTION_INTERVAL == 0:
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)  # Moved inside the detection block to reduce processing (Change 2)
         white_balls, red_balls, half_balls = _detect_balls(frame, game_state, hsv)

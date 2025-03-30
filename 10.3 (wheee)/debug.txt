@@ -1,0 +1,1151 @@
+F:\Whiffle\10.3 (wheee)>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.10.9)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+[ERROR:0@10.391] global obsensor_uvc_stream_channel.cpp:158 cv::obsensor::getStreamChannelGroup Camera index out of range
+2025-03-29 19:39:13,042 - WARNING - Camera resolution 0.0x0.0 does not match 1280x720
+2025-03-29 19:39:13,042 - INFO - Camera resolution: 0.0x0.0
+2025-03-29 19:39:13,043 - ERROR - Failed to open camera, attempting to load static image
+2025-03-29 19:39:13,060 - INFO - Loaded static image last_frame.png as fallback
+2025-03-29 19:39:13,065 - INFO - Loaded white ball HSV ranges: min=(0, 0, 200), max=(179, 50, 255)
+2025-03-29 19:39:13,066 - INFO - Loaded red ball HSV ranges: min=(0, 92, 49), max=(10, 192, 149), min2=(164, 92, 49), max2=(179, 192, 149)
+2025-03-29 19:39:13,326 - INFO - Debug mode enabled for profiling
+2025-03-29 19:39:13,332 - INFO - Scoring zones loaded from scoring_zones.json
+2025-03-29 19:39:13,332 - INFO - Sorted scoring zones by area: [[82, 292, 31, 32, 100], [282, 294, 36, 31, 30], [1008, 170, 39, 32, 100], [349, 182, 37, 34, 20], [602, 160, 36, 37, 60], [506, 348, 38, 38, 300], [144, 289, 38, 39, 50], [874, 195, 40, 38, 50], [275, 435, 41, 40, 10], [521, 241, 42, 41, 100], [919, 435, 44, 41, 60], [927, 290, 42, 45, 150], [617, 285, 42, 46, 200], [215, 279, 36, 57, 100], [495, 286, 39, 57, 50], [568, 501, 58, 46, 30], [1122, 495, 53, 53, 80], [1076, 286, 50, 61, 300], [804, 256, 69, 52, 60], [813, 319, 66, 60, 80], [1180, 339, 96, 231, 1]]
+2025-03-29 19:39:13,332 - INFO - Using static frame for ball initialization
+2025-03-29 19:39:13,387 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 35.0ms
+Speed: 4.1ms preprocess, 35.0ms inference, 132.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:15,454 - INFO - Tracked 2 balls in frame 0
+2025-03-29 19:39:15,454 - INFO - Ball ID 1 at (313, 453) already in zone [275, 435, 41, 40, 10] at startup
+2025-03-29 19:39:15,455 - INFO - Special hole set to leftmost zone: [82, 292, 31, 32, 100]
+2025-03-29 19:39:15,455 - INFO - Camera unavailable, using static frame for splash screen transition
+Press 'q' to quit, 's' to start drawing a scoring zone, 'd' to toggle debug mode
+2025-03-29 19:39:23,968 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.6ms
+Speed: 2.9ms preprocess, 15.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:24,039 - INFO - Tracked 2 balls in frame 0
+2025-03-29 19:39:24,039 - INFO - Tracked balls in frame 0: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:24,039 - INFO - white ball ID 1 at (313, 453) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:39:24,136 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:24,203 - INFO - Tracked balls in frame 1: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:24,296 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.5ms
+Speed: 1.9ms preprocess, 15.5ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:24,364 - INFO - Tracked balls in frame 2: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:24,458 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.8ms
+Speed: 2.0ms preprocess, 15.8ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:24,526 - INFO - Tracked balls in frame 3: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:24,643 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 16.8ms
+Speed: 2.3ms preprocess, 16.8ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:24,712 - INFO - Tracked balls in frame 4: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:24,823 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.5ms
+Speed: 2.5ms preprocess, 15.5ms inference, 0.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:24,889 - INFO - Tracked balls in frame 5: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:25,002 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:25,067 - INFO - Tracked balls in frame 6: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:25,168 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 16.8ms
+Speed: 2.0ms preprocess, 16.8ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:25,235 - INFO - Tracked balls in frame 7: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:25,352 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.7ms
+Speed: 1.9ms preprocess, 15.7ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:25,418 - INFO - Tracked balls in frame 8: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:25,537 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.7ms
+Speed: 1.9ms preprocess, 15.7ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:25,604 - INFO - Tracked balls in frame 9: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:25,702 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 16.9ms
+Speed: 1.9ms preprocess, 16.9ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:25,771 - INFO - Tracked balls in frame 10: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:25,867 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 0.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:25,932 - INFO - Tracked balls in frame 11: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:26,024 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:26,087 - INFO - Tracked balls in frame 12: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:26,182 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:26,250 - INFO - Tracked balls in frame 13: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:26,345 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:26,409 - INFO - Tracked balls in frame 14: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:26,530 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.7ms
+Speed: 1.9ms preprocess, 15.7ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:26,594 - INFO - Tracked balls in frame 15: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:26,692 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 17.8ms
+Speed: 1.9ms preprocess, 17.8ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:26,763 - INFO - Tracked balls in frame 16: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:26,858 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.7ms
+Speed: 1.9ms preprocess, 15.7ms inference, 0.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:26,924 - INFO - Tracked balls in frame 17: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:27,050 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:27,116 - INFO - Tracked balls in frame 18: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:27,214 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 16.8ms
+Speed: 2.7ms preprocess, 16.8ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:27,284 - INFO - Tracked balls in frame 19: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:27,380 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.5ms
+Speed: 1.8ms preprocess, 15.5ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:27,444 - INFO - Tracked balls in frame 20: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:27,546 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.7ms
+Speed: 1.9ms preprocess, 15.7ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:27,611 - INFO - Tracked balls in frame 21: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:27,709 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 16.1ms
+Speed: 2.0ms preprocess, 16.1ms inference, 0.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:27,778 - INFO - Tracked balls in frame 22: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:27,888 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.9ms
+Speed: 1.9ms preprocess, 15.9ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:27,957 - INFO - Tracked balls in frame 23: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:28,066 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.7ms
+Speed: 2.9ms preprocess, 15.7ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:28,135 - INFO - Tracked balls in frame 24: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:28,289 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:28,357 - INFO - Tracked balls in frame 25: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:28,469 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:28,534 - INFO - Tracked balls in frame 26: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:28,629 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 17.1ms
+Speed: 1.9ms preprocess, 17.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:28,699 - INFO - Tracked balls in frame 27: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:28,799 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.4ms
+Speed: 1.9ms preprocess, 15.4ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:28,863 - INFO - Tracked balls in frame 28: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:28,957 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:29,022 - INFO - Tracked balls in frame 29: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:29,117 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:29,183 - INFO - Tracked balls in frame 30: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:29,280 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.5ms
+Speed: 1.9ms preprocess, 15.5ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:29,344 - INFO - Tracked balls in frame 31: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:29,466 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:29,533 - INFO - Tracked balls in frame 32: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:29,628 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 18.9ms
+Speed: 2.3ms preprocess, 18.9ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:29,700 - INFO - Tracked balls in frame 33: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:29,797 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:29,863 - INFO - Tracked balls in frame 34: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:29,958 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.5ms
+Speed: 1.9ms preprocess, 15.5ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:30,027 - INFO - Tracked balls in frame 35: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:30,123 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.4ms
+Speed: 1.9ms preprocess, 15.4ms inference, 0.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:30,188 - INFO - Tracked balls in frame 36: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:30,285 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 (no detections), 15.5ms
+Speed: 1.8ms preprocess, 15.5ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:39:30,353 - INFO - Tracked balls in frame 37: [(644, 501, 'white', 0), (313, 453, 'white', 1)]
+2025-03-29 19:39:30,675 - INFO - Window closed via red X
+2025-03-29 19:39:30,677 - INFO - Saved local leaderboard to whiffle_leaderboard.json
+2025-03-29 19:39:30,678 - INFO - Score queued for batch submission: Player 1 - 10 (classic)
+2025-03-29 19:39:30,678 - INFO - Cleaning up and exiting game...
+2025-03-29 19:39:31,067 - INFO - Successfully submitted 1 scores to online leaderboard
+2025-03-29 19:39:31,112 - INFO - Resources released, exiting program.
+2025-03-29 19:39:31,112 - INFO - Program exited via clean_exit
+
+F:\Whiffle\10.3 (wheee)>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.10.9)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2025-03-29 19:40:47,637 - INFO - Camera resolution: 1280.0x720.0
+2025-03-29 19:40:47,638 - INFO - Loaded white ball HSV ranges: min=(0, 0, 200), max=(179, 50, 255)
+2025-03-29 19:40:47,638 - INFO - Loaded red ball HSV ranges: min=(0, 92, 49), max=(10, 192, 149), min2=(164, 92, 49), max2=(179, 192, 149)
+2025-03-29 19:40:47,876 - INFO - Debug mode enabled for profiling
+2025-03-29 19:40:47,877 - INFO - Scoring zones loaded from scoring_zones.json
+2025-03-29 19:40:47,877 - INFO - Sorted scoring zones by area: [[82, 292, 31, 32, 100], [282, 294, 36, 31, 30], [1008, 170, 39, 32, 100], [349, 182, 37, 34, 20], [602, 160, 36, 37, 60], [506, 348, 38, 38, 300], [144, 289, 38, 39, 50], [874, 195, 40, 38, 50], [275, 435, 41, 40, 10], [521, 241, 42, 41, 100], [919, 435, 44, 41, 60], [927, 290, 42, 45, 150], [617, 285, 42, 46, 200], [215, 279, 36, 57, 100], [495, 286, 39, 57, 50], [568, 501, 58, 46, 30], [1122, 495, 53, 53, 80], [1076, 286, 50, 61, 300], [804, 256, 69, 52, 60], [813, 319, 66, 60, 80], [1180, 339, 96, 231, 1]]
+2025-03-29 19:40:48,641 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 31.2ms
+Speed: 2.3ms preprocess, 31.2ms inference, 71.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:49,925 - INFO - Tracked 1 balls in frame 0
+2025-03-29 19:40:49,925 - INFO - Ball ID 0 at (1197, 374) already in zone [1180, 339, 96, 231, 1] at startup
+2025-03-29 19:40:49,926 - INFO - Special hole set to leftmost zone: [82, 292, 31, 32, 100]
+Press 'q' to quit, 's' to start drawing a scoring zone, 'd' to toggle debug mode
+2025-03-29 19:40:56,319 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 9.2ms
+Speed: 2.6ms preprocess, 9.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:56,365 - INFO - Tracked 1 balls in frame 0
+2025-03-29 19:40:56,365 - INFO - Tracked balls in frame 0: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:56,365 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:40:56,466 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 9.1ms
+Speed: 1.4ms preprocess, 9.1ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:56,509 - INFO - Tracked 1 balls in frame 1
+2025-03-29 19:40:56,510 - INFO - Tracked balls in frame 1: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:56,617 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 9.1ms
+Speed: 1.4ms preprocess, 9.1ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:56,660 - INFO - Tracked 1 balls in frame 2
+2025-03-29 19:40:56,661 - INFO - Tracked balls in frame 2: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:56,761 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 9.6ms
+Speed: 1.5ms preprocess, 9.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:56,806 - INFO - Tracked 1 balls in frame 3
+2025-03-29 19:40:56,806 - INFO - Tracked balls in frame 3: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:56,907 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 10.3ms
+Speed: 1.8ms preprocess, 10.3ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:56,951 - INFO - Tracked 1 balls in frame 4
+2025-03-29 19:40:56,952 - INFO - Tracked balls in frame 4: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:57,054 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 9.4ms
+Speed: 1.7ms preprocess, 9.4ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:57,095 - INFO - Tracked 1 balls in frame 5
+2025-03-29 19:40:57,095 - INFO - Tracked balls in frame 5: [(1196, 374, 'white', 0)]
+2025-03-29 19:40:57,196 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 9.7ms
+Speed: 1.4ms preprocess, 9.7ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:57,239 - INFO - Tracked 1 balls in frame 6
+2025-03-29 19:40:57,240 - INFO - Tracked balls in frame 6: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:57,347 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 9.4ms
+Speed: 1.7ms preprocess, 9.4ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:57,389 - INFO - Tracked 1 balls in frame 7
+2025-03-29 19:40:57,390 - INFO - Tracked balls in frame 7: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:57,494 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 9.2ms
+Speed: 1.5ms preprocess, 9.2ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:57,536 - INFO - Tracked 1 balls in frame 8
+2025-03-29 19:40:57,537 - INFO - Tracked balls in frame 8: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:57,648 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 8.9ms
+Speed: 1.4ms preprocess, 8.9ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:57,690 - INFO - Tracked 1 balls in frame 9
+2025-03-29 19:40:57,691 - INFO - Tracked balls in frame 9: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:57,793 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 9.6ms
+Speed: 1.4ms preprocess, 9.6ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:57,836 - INFO - Tracked 1 balls in frame 10
+2025-03-29 19:40:57,837 - INFO - Tracked balls in frame 10: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:58,298 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:58,368 - INFO - Tracked 1 balls in frame 11
+2025-03-29 19:40:58,368 - INFO - Tracked balls in frame 11: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:58,469 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.2ms preprocess, 18.7ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:58,546 - INFO - Tracked 1 balls in frame 12
+2025-03-29 19:40:58,546 - INFO - Tracked balls in frame 12: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:58,656 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.5ms
+Speed: 1.9ms preprocess, 15.5ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:58,726 - INFO - Tracked 1 balls in frame 13
+2025-03-29 19:40:58,726 - INFO - Tracked balls in frame 13: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:58,828 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:58,899 - INFO - Tracked 1 balls in frame 14
+2025-03-29 19:40:58,899 - INFO - Tracked balls in frame 14: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:59,003 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.0ms preprocess, 18.7ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:59,078 - INFO - Tracked 1 balls in frame 15
+2025-03-29 19:40:59,078 - INFO - Tracked balls in frame 15: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:59,179 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 17.7ms
+Speed: 1.9ms preprocess, 17.7ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:59,251 - INFO - Tracked 1 balls in frame 16
+2025-03-29 19:40:59,251 - INFO - Tracked balls in frame 16: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:59,354 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:59,433 - INFO - Tracked 1 balls in frame 17
+2025-03-29 19:40:59,434 - INFO - Tracked balls in frame 17: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:59,535 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 18.0ms
+Speed: 1.9ms preprocess, 18.0ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:59,609 - INFO - Tracked 1 balls in frame 18
+2025-03-29 19:40:59,609 - INFO - Tracked balls in frame 18: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:59,739 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:59,810 - INFO - Tracked 1 balls in frame 19
+2025-03-29 19:40:59,810 - INFO - Tracked balls in frame 19: [(1197, 374, 'white', 0)]
+2025-03-29 19:40:59,911 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 17.5ms
+Speed: 1.9ms preprocess, 17.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:40:59,984 - INFO - Tracked 1 balls in frame 20
+2025-03-29 19:40:59,984 - INFO - Tracked balls in frame 20: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:00,086 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.7ms
+Speed: 1.8ms preprocess, 15.7ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:00,161 - INFO - Tracked 1 balls in frame 21
+2025-03-29 19:41:00,161 - INFO - Tracked balls in frame 21: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:00,264 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.7ms
+Speed: 1.8ms preprocess, 15.7ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:00,338 - INFO - Tracked 1 balls in frame 22
+2025-03-29 19:41:00,339 - INFO - Tracked balls in frame 22: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:00,440 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 17.5ms
+Speed: 2.2ms preprocess, 17.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:00,517 - INFO - Tracked 1 balls in frame 23
+2025-03-29 19:41:00,517 - INFO - Tracked balls in frame 23: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:00,621 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:00,697 - INFO - Tracked 1 balls in frame 24
+2025-03-29 19:41:00,697 - INFO - Tracked balls in frame 24: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:00,862 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 31.4ms
+Speed: 2.8ms preprocess, 31.4ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:00,988 - INFO - Tracked 1 balls in frame 25
+2025-03-29 19:41:00,988 - INFO - Tracked balls in frame 25: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:01,092 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:01,164 - INFO - Tracked 1 balls in frame 26
+2025-03-29 19:41:01,165 - INFO - Tracked balls in frame 26: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:01,267 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 18.6ms
+Speed: 2.1ms preprocess, 18.6ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:01,346 - INFO - Tracked 1 balls in frame 27
+2025-03-29 19:41:01,346 - INFO - Tracked balls in frame 27: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:01,448 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 16.2ms
+Speed: 2.8ms preprocess, 16.2ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:01,518 - INFO - Tracked 1 balls in frame 28
+2025-03-29 19:41:01,519 - INFO - Tracked balls in frame 28: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:01,621 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 18.1ms
+Speed: 2.1ms preprocess, 18.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:01,696 - INFO - Tracked 1 balls in frame 29
+2025-03-29 19:41:01,696 - INFO - Tracked balls in frame 29: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:01,796 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:01,867 - INFO - Tracked 1 balls in frame 30
+2025-03-29 19:41:01,867 - INFO - Tracked balls in frame 30: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:01,970 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 17.2ms
+Speed: 1.9ms preprocess, 17.2ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:02,042 - INFO - Tracked 1 balls in frame 31
+2025-03-29 19:41:02,042 - INFO - Tracked balls in frame 31: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:02,143 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:02,214 - INFO - Tracked 1 balls in frame 32
+2025-03-29 19:41:02,214 - INFO - Tracked balls in frame 32: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:02,317 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.1ms preprocess, 15.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:02,386 - INFO - Tracked 1 balls in frame 33
+2025-03-29 19:41:02,387 - INFO - Tracked balls in frame 33: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:02,486 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.5ms
+Speed: 1.9ms preprocess, 15.5ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:02,558 - INFO - Tracked 1 balls in frame 34
+2025-03-29 19:41:02,559 - INFO - Tracked balls in frame 34: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:02,662 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 16.9ms
+Speed: 1.9ms preprocess, 16.9ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:02,737 - INFO - Tracked 1 balls in frame 35
+2025-03-29 19:41:02,737 - INFO - Tracked balls in frame 35: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:02,857 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.7ms
+Speed: 1.9ms preprocess, 15.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:02,930 - INFO - Tracked 1 balls in frame 36
+2025-03-29 19:41:02,930 - INFO - Tracked balls in frame 36: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:03,031 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:03,103 - INFO - Tracked 1 balls in frame 37
+2025-03-29 19:41:03,103 - INFO - Tracked balls in frame 37: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:03,206 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 17.3ms
+Speed: 1.9ms preprocess, 17.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:03,277 - INFO - Tracked 1 balls in frame 38
+2025-03-29 19:41:03,277 - INFO - Tracked balls in frame 38: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:03,383 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.1ms preprocess, 15.6ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:03,455 - INFO - Tracked 1 balls in frame 39
+2025-03-29 19:41:03,455 - INFO - Tracked balls in frame 39: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:03,559 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 18.0ms
+Speed: 1.9ms preprocess, 18.0ms inference, 2.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:03,632 - INFO - Tracked 1 balls in frame 40
+2025-03-29 19:41:03,633 - INFO - Tracked balls in frame 40: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:03,734 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 16.5ms
+Speed: 2.0ms preprocess, 16.5ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:03,804 - INFO - Tracked 1 balls in frame 41
+2025-03-29 19:41:03,804 - INFO - Tracked balls in frame 41: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:03,906 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 17.8ms
+Speed: 2.0ms preprocess, 17.8ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:03,976 - INFO - Tracked 1 balls in frame 42
+2025-03-29 19:41:03,976 - INFO - Tracked balls in frame 42: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:04,082 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.8ms
+Speed: 2.7ms preprocess, 15.8ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:04,155 - INFO - Tracked 1 balls in frame 43
+2025-03-29 19:41:04,155 - INFO - Tracked balls in frame 43: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:04,259 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 17.5ms
+Speed: 1.9ms preprocess, 17.5ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:04,337 - INFO - Tracked 1 balls in frame 44
+2025-03-29 19:41:04,337 - INFO - Tracked balls in frame 44: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:04,442 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 16.5ms
+Speed: 1.9ms preprocess, 16.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:04,513 - INFO - Tracked 1 balls in frame 45
+2025-03-29 19:41:04,514 - INFO - Tracked balls in frame 45: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:04,621 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.3ms preprocess, 15.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:04,700 - INFO - Tracked 1 balls in frame 46
+2025-03-29 19:41:04,700 - INFO - Tracked balls in frame 46: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:04,801 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:04,874 - INFO - Tracked 1 balls in frame 47
+2025-03-29 19:41:04,874 - INFO - Tracked balls in frame 47: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:04,978 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 16.6ms
+Speed: 2.0ms preprocess, 16.6ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:05,050 - INFO - Tracked 1 balls in frame 48
+2025-03-29 19:41:05,050 - INFO - Tracked balls in frame 48: [(1199, 374, 'white', 0)]
+2025-03-29 19:41:05,153 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.7ms
+Speed: 1.8ms preprocess, 15.7ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:05,229 - INFO - Tracked 1 balls in frame 49
+2025-03-29 19:41:05,229 - INFO - Tracked balls in frame 49: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:05,360 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:05,437 - INFO - Tracked 1 balls in frame 50
+2025-03-29 19:41:05,437 - INFO - Tracked balls in frame 50: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:05,537 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.0ms preprocess, 18.9ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:05,610 - INFO - Tracked 1 balls in frame 51
+2025-03-29 19:41:05,610 - INFO - Tracked balls in frame 51: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:05,750 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:05,822 - INFO - Tracked 1 balls in frame 52
+2025-03-29 19:41:05,822 - INFO - Tracked balls in frame 52: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:05,924 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 18.1ms
+Speed: 1.9ms preprocess, 18.1ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:05,994 - INFO - Tracked 1 balls in frame 53
+2025-03-29 19:41:05,994 - INFO - Tracked balls in frame 53: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:06,101 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 18.8ms
+Speed: 2.3ms preprocess, 18.8ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:06,179 - INFO - Tracked 1 balls in frame 54
+2025-03-29 19:41:06,179 - INFO - Tracked balls in frame 54: [(1198, 374, 'white', 0)]
+2025-03-29 19:41:06,282 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:06,352 - INFO - Tracked 1 balls in frame 55
+2025-03-29 19:41:06,352 - INFO - Tracked balls in frame 55: [(1198, 374, 'white', 0)]
+2025-03-29 19:41:06,455 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.5ms
+Speed: 1.9ms preprocess, 15.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:06,528 - INFO - Tracked 1 balls in frame 56
+2025-03-29 19:41:06,528 - INFO - Tracked balls in frame 56: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:06,643 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 15.5ms
+Speed: 1.9ms preprocess, 15.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:06,716 - INFO - Tracked 1 balls in frame 57
+2025-03-29 19:41:06,716 - INFO - Tracked balls in frame 57: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:06,818 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 1 white, 17.7ms
+Speed: 2.0ms preprocess, 17.7ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:06,892 - INFO - Tracked 1 balls in frame 58
+2025-03-29 19:41:06,892 - INFO - Tracked balls in frame 58: [(1197, 374, 'white', 0)]
+2025-03-29 19:41:06,996 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:07,068 - INFO - Tracked 2 balls in frame 59
+2025-03-29 19:41:07,068 - INFO - Tracked balls in frame 59: [(1197, 374, 'white', 0), (441, 118, 'white', 0)]
+2025-03-29 19:41:07,173 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.1ms
+Speed: 1.9ms preprocess, 18.1ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:07,248 - INFO - Tracked 3 balls in frame 60
+2025-03-29 19:41:07,248 - INFO - Tracked balls in frame 60: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0)]
+2025-03-29 19:41:07,248 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:07,352 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:07,427 - INFO - Tracked 4 balls in frame 61
+2025-03-29 19:41:07,427 - INFO - Tracked balls in frame 61: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (182, 169, 'white', 0)]
+2025-03-29 19:41:07,428 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:07,529 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.8ms
+Speed: 1.8ms preprocess, 15.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:07,600 - INFO - Tracked 4 balls in frame 62
+2025-03-29 19:41:07,600 - INFO - Tracked balls in frame 62: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (111, 223, 'white', 0)]
+2025-03-29 19:41:07,600 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:07,704 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.9ms
+Speed: 2.1ms preprocess, 17.9ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:07,780 - INFO - Tracked 4 balls in frame 63
+2025-03-29 19:41:07,780 - INFO - Tracked balls in frame 63: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (70, 268, 'white', 0)]
+2025-03-29 19:41:07,781 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:07,910 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.8ms
+Speed: 2.7ms preprocess, 15.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:07,985 - INFO - Tracked 4 balls in frame 64
+2025-03-29 19:41:07,985 - INFO - Tracked balls in frame 64: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (50, 302, 'white', 0)]
+2025-03-29 19:41:07,985 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:08,087 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.6ms
+Speed: 2.0ms preprocess, 17.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:08,165 - INFO - Tracked 4 balls in frame 65
+2025-03-29 19:41:08,165 - INFO - Tracked balls in frame 65: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (42, 366, 'white', 0)]
+2025-03-29 19:41:08,165 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:08,267 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.8ms
+Speed: 1.9ms preprocess, 15.8ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:08,343 - INFO - Tracked 4 balls in frame 66
+2025-03-29 19:41:08,343 - INFO - Tracked balls in frame 66: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (56, 405, 'white', 0)]
+2025-03-29 19:41:08,343 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:08,445 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.2ms
+Speed: 2.0ms preprocess, 18.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:08,517 - INFO - Tracked 4 balls in frame 67
+2025-03-29 19:41:08,517 - INFO - Tracked balls in frame 67: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (104, 465, 'white', 0)]
+2025-03-29 19:41:08,518 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:08,619 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.9ms
+Speed: 2.0ms preprocess, 15.9ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:08,701 - INFO - Tracked 4 balls in frame 68
+2025-03-29 19:41:08,701 - INFO - Tracked balls in frame 68: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0)]
+2025-03-29 19:41:08,702 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:08,835 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:08,908 - INFO - Tracked 5 balls in frame 69
+2025-03-29 19:41:08,908 - INFO - Tracked balls in frame 69: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (291, 578, 'white', 0)]
+2025-03-29 19:41:08,908 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:09,011 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.5ms
+Speed: 2.8ms preprocess, 17.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:09,083 - INFO - Tracked 5 balls in frame 70
+2025-03-29 19:41:09,084 - INFO - Tracked balls in frame 70: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (278, 511, 'white', 0)]
+2025-03-29 19:41:09,084 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:09,188 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 16.7ms
+Speed: 2.1ms preprocess, 16.7ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:09,261 - INFO - Tracked 5 balls in frame 71
+2025-03-29 19:41:09,261 - INFO - Tracked balls in frame 71: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (291, 464, 'white', 0)]
+2025-03-29 19:41:09,262 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:09,262 - INFO - white ball ID 0 at (291, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:09,366 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.9ms
+Speed: 2.8ms preprocess, 17.9ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:09,442 - INFO - Tracked 5 balls in frame 72
+2025-03-29 19:41:09,442 - INFO - Tracked balls in frame 72: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (291, 464, 'white', 0)]
+2025-03-29 19:41:09,442 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:09,442 - INFO - white ball ID 0 at (291, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:09,546 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:09,619 - INFO - Tracked 5 balls in frame 73
+2025-03-29 19:41:09,619 - INFO - Tracked balls in frame 73: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 465, 'white', 0)]
+2025-03-29 19:41:09,620 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:09,620 - INFO - white ball ID 0 at (292, 465) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:09,726 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.7ms
+Speed: 1.9ms preprocess, 15.7ms inference, 3.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:09,802 - INFO - Tracked 5 balls in frame 74
+2025-03-29 19:41:09,802 - INFO - Tracked balls in frame 74: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 463, 'white', 0)]
+2025-03-29 19:41:09,803 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:09,804 - INFO - white ball ID 0 at (292, 463) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:09,927 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.7ms
+Speed: 2.1ms preprocess, 15.7ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:09,999 - INFO - Tracked 5 balls in frame 75
+2025-03-29 19:41:10,000 - INFO - Tracked balls in frame 75: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 465, 'white', 0)]
+2025-03-29 19:41:10,001 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:10,001 - INFO - white ball ID 0 at (292, 465) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:10,103 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.1ms
+Speed: 2.1ms preprocess, 18.1ms inference, 4.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:10,180 - INFO - Tracked 5 balls in frame 76
+2025-03-29 19:41:10,181 - INFO - Tracked balls in frame 76: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:10,181 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:10,183 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:10,286 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.9ms
+Speed: 2.3ms preprocess, 15.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:10,361 - INFO - Tracked 5 balls in frame 77
+2025-03-29 19:41:10,361 - INFO - Tracked balls in frame 77: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 464, 'white', 0)]
+2025-03-29 19:41:10,362 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:10,362 - INFO - white ball ID 0 at (292, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:10,465 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.7ms
+Speed: 1.9ms preprocess, 18.7ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:10,540 - INFO - Tracked 5 balls in frame 78
+2025-03-29 19:41:10,541 - INFO - Tracked balls in frame 78: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 463, 'white', 0)]
+2025-03-29 19:41:10,541 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:10,541 - INFO - white ball ID 0 at (293, 463) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:10,644 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 21.1ms
+Speed: 2.1ms preprocess, 21.1ms inference, 3.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:10,725 - INFO - Tracked 5 balls in frame 79
+2025-03-29 19:41:10,725 - INFO - Tracked balls in frame 79: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:10,725 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:10,726 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:10,828 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 3.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:10,900 - INFO - Tracked 5 balls in frame 80
+2025-03-29 19:41:10,900 - INFO - Tracked balls in frame 80: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:10,900 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:10,901 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:11,024 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.5ms
+Speed: 2.8ms preprocess, 15.5ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:11,095 - INFO - Tracked 5 balls in frame 81
+2025-03-29 19:41:11,095 - INFO - Tracked balls in frame 81: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:11,095 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:11,096 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:11,204 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.9ms
+Speed: 1.9ms preprocess, 17.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:11,281 - INFO - Tracked 5 balls in frame 82
+2025-03-29 19:41:11,281 - INFO - Tracked balls in frame 82: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 464, 'white', 0)]
+2025-03-29 19:41:11,281 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:11,282 - INFO - white ball ID 0 at (292, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:11,385 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.8ms
+Speed: 2.0ms preprocess, 15.8ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:11,459 - INFO - Tracked 5 balls in frame 83
+2025-03-29 19:41:11,460 - INFO - Tracked balls in frame 83: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:11,460 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:11,460 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:11,562 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 16.1ms
+Speed: 2.0ms preprocess, 16.1ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:11,640 - INFO - Tracked 5 balls in frame 84
+2025-03-29 19:41:11,640 - INFO - Tracked balls in frame 84: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:11,641 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:11,641 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:11,751 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:11,824 - INFO - Tracked 5 balls in frame 85
+2025-03-29 19:41:11,824 - INFO - Tracked balls in frame 85: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:11,824 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:11,825 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:11,927 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.6ms
+Speed: 1.8ms preprocess, 15.6ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:11,999 - INFO - Tracked 5 balls in frame 86
+2025-03-29 19:41:11,999 - INFO - Tracked balls in frame 86: [(1197, 375, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 464, 'white', 0)]
+2025-03-29 19:41:11,999 - INFO - white ball ID 0 at (1197, 375) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:12,000 - INFO - white ball ID 0 at (292, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:12,103 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.2ms
+Speed: 2.0ms preprocess, 17.2ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:12,178 - INFO - Tracked 5 balls in frame 87
+2025-03-29 19:41:12,178 - INFO - Tracked balls in frame 87: [(1197, 375, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:12,179 - INFO - white ball ID 0 at (1197, 375) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:12,179 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:12,285 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 16.6ms
+Speed: 2.0ms preprocess, 16.6ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:12,360 - INFO - Tracked 5 balls in frame 88
+2025-03-29 19:41:12,360 - INFO - Tracked balls in frame 88: [(1197, 375, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 464, 'white', 0)]
+2025-03-29 19:41:12,360 - INFO - white ball ID 0 at (1197, 375) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:12,361 - INFO - white ball ID 0 at (292, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:12,467 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:12,538 - INFO - Tracked 5 balls in frame 89
+2025-03-29 19:41:12,538 - INFO - Tracked balls in frame 89: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 464, 'white', 0)]
+2025-03-29 19:41:12,539 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:12,539 - INFO - white ball ID 0 at (292, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:12,641 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.1ms
+Speed: 2.8ms preprocess, 18.1ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:12,717 - INFO - Tracked 5 balls in frame 90
+2025-03-29 19:41:12,717 - INFO - Tracked balls in frame 90: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:12,719 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:12,720 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:12,824 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.3ms
+Speed: 1.9ms preprocess, 17.3ms inference, 3.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:12,900 - INFO - Tracked 5 balls in frame 91
+2025-03-29 19:41:12,900 - INFO - Tracked balls in frame 91: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:12,900 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:12,901 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:13,003 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.6ms
+Speed: 1.8ms preprocess, 15.6ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:13,076 - INFO - Tracked 5 balls in frame 92
+2025-03-29 19:41:13,077 - INFO - Tracked balls in frame 92: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:13,077 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:13,077 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:13,179 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.9ms
+Speed: 2.4ms preprocess, 15.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:13,257 - INFO - Tracked 5 balls in frame 93
+2025-03-29 19:41:13,258 - INFO - Tracked balls in frame 93: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:13,259 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:13,260 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:13,365 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:13,435 - INFO - Tracked 5 balls in frame 94
+2025-03-29 19:41:13,436 - INFO - Tracked balls in frame 94: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:13,436 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:13,437 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:13,540 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.0ms
+Speed: 1.9ms preprocess, 18.0ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:13,615 - INFO - Tracked 5 balls in frame 95
+2025-03-29 19:41:13,615 - INFO - Tracked balls in frame 95: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:13,615 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:13,616 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:13,722 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 19.3ms
+Speed: 1.9ms preprocess, 19.3ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:13,805 - INFO - Tracked 5 balls in frame 96
+2025-03-29 19:41:13,805 - INFO - Tracked balls in frame 96: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:13,806 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:13,806 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:13,907 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.1ms
+Speed: 1.9ms preprocess, 17.1ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:13,981 - INFO - Tracked 5 balls in frame 97
+2025-03-29 19:41:13,981 - INFO - Tracked balls in frame 97: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:13,981 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:13,982 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:14,083 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:14,155 - INFO - Tracked 5 balls in frame 98
+2025-03-29 19:41:14,156 - INFO - Tracked balls in frame 98: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:14,157 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:14,158 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:14,914 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.0ms
+Speed: 1.9ms preprocess, 18.0ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:14,989 - INFO - Tracked 5 balls in frame 99
+2025-03-29 19:41:14,989 - INFO - Tracked balls in frame 99: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:14,990 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:14,990 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:15,287 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.5ms
+Speed: 1.9ms preprocess, 15.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:15,361 - INFO - Tracked 5 balls in frame 100
+2025-03-29 19:41:15,361 - INFO - Tracked balls in frame 100: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:15,362 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:15,362 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:15,465 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.5ms
+Speed: 1.9ms preprocess, 17.5ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:15,540 - INFO - Tracked 5 balls in frame 101
+2025-03-29 19:41:15,541 - INFO - Tracked balls in frame 101: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:15,542 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:15,542 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:15,648 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.5ms
+Speed: 1.9ms preprocess, 15.5ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:15,724 - INFO - Tracked 5 balls in frame 102
+2025-03-29 19:41:15,724 - INFO - Tracked balls in frame 102: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:15,726 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:15,728 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:15,836 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.4ms
+Speed: 1.9ms preprocess, 15.4ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:15,905 - INFO - Tracked 5 balls in frame 103
+2025-03-29 19:41:15,906 - INFO - Tracked balls in frame 103: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 464, 'white', 0)]
+2025-03-29 19:41:15,906 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:15,908 - INFO - white ball ID 0 at (292, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:16,080 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:16,151 - INFO - Tracked 5 balls in frame 104
+2025-03-29 19:41:16,151 - INFO - Tracked balls in frame 104: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 464, 'white', 0)]
+2025-03-29 19:41:16,152 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:16,152 - INFO - white ball ID 0 at (292, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:16,259 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.2ms
+Speed: 1.8ms preprocess, 17.2ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:16,332 - INFO - Tracked 5 balls in frame 105
+2025-03-29 19:41:16,333 - INFO - Tracked balls in frame 105: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:16,333 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:16,333 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:16,462 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.7ms
+Speed: 1.9ms preprocess, 18.7ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:16,538 - INFO - Tracked 5 balls in frame 106
+2025-03-29 19:41:16,539 - INFO - Tracked balls in frame 106: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:16,539 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:16,539 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:16,642 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.5ms
+Speed: 2.1ms preprocess, 15.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:16,716 - INFO - Tracked 5 balls in frame 107
+2025-03-29 19:41:16,716 - INFO - Tracked balls in frame 107: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:16,717 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:16,718 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:16,829 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.4ms
+Speed: 1.8ms preprocess, 17.4ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:16,901 - INFO - Tracked 5 balls in frame 108
+2025-03-29 19:41:16,901 - INFO - Tracked balls in frame 108: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:16,901 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:16,901 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:17,007 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.3ms
+Speed: 2.0ms preprocess, 17.3ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:17,081 - INFO - Tracked 5 balls in frame 109
+2025-03-29 19:41:17,081 - INFO - Tracked balls in frame 109: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:17,081 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:17,082 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:17,300 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.3ms
+Speed: 2.0ms preprocess, 17.3ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:17,375 - INFO - Tracked 5 balls in frame 110
+2025-03-29 19:41:17,375 - INFO - Tracked balls in frame 110: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:17,376 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:17,376 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:17,552 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:17,628 - INFO - Tracked 5 balls in frame 111
+2025-03-29 19:41:17,628 - INFO - Tracked balls in frame 111: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:17,629 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:17,630 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:18,159 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.9ms
+Speed: 1.9ms preprocess, 15.9ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:18,237 - INFO - Tracked 5 balls in frame 112
+2025-03-29 19:41:18,237 - INFO - Tracked balls in frame 112: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 464, 'white', 0)]
+2025-03-29 19:41:18,238 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:18,238 - INFO - white ball ID 0 at (292, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:18,474 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.7ms
+Speed: 2.1ms preprocess, 17.7ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:18,546 - INFO - Tracked 5 balls in frame 113
+2025-03-29 19:41:18,547 - INFO - Tracked balls in frame 113: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:18,547 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:18,548 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:18,955 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.7ms
+Speed: 2.1ms preprocess, 15.7ms inference, 2.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:19,029 - INFO - Tracked 5 balls in frame 114
+2025-03-29 19:41:19,029 - INFO - Tracked balls in frame 114: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:19,030 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:19,030 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:19,633 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 16.5ms
+Speed: 2.0ms preprocess, 16.5ms inference, 3.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:19,710 - INFO - Tracked 5 balls in frame 115
+2025-03-29 19:41:19,710 - INFO - Tracked balls in frame 115: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:19,711 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:19,712 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:19,816 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 16.0ms
+Speed: 1.9ms preprocess, 16.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:19,893 - INFO - Tracked 5 balls in frame 116
+2025-03-29 19:41:19,893 - INFO - Tracked balls in frame 116: [(1197, 375, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:19,893 - INFO - white ball ID 0 at (1197, 375) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:19,893 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:20,001 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.4ms
+Speed: 1.9ms preprocess, 18.4ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:20,080 - INFO - Tracked 5 balls in frame 117
+2025-03-29 19:41:20,081 - INFO - Tracked balls in frame 117: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:20,082 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:20,082 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:20,182 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:20,255 - INFO - Tracked 5 balls in frame 118
+2025-03-29 19:41:20,255 - INFO - Tracked balls in frame 118: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 464, 'white', 0)]
+2025-03-29 19:41:20,256 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:20,256 - INFO - white ball ID 0 at (292, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:20,385 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:20,460 - INFO - Tracked 5 balls in frame 119
+2025-03-29 19:41:20,461 - INFO - Tracked balls in frame 119: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:20,461 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:20,462 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:20,564 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.5ms
+Speed: 1.9ms preprocess, 15.5ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:20,637 - INFO - Tracked 5 balls in frame 120
+2025-03-29 19:41:20,637 - INFO - Tracked balls in frame 120: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:20,637 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:20,637 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:20,741 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.8ms
+Speed: 2.9ms preprocess, 18.8ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:20,822 - INFO - Tracked 5 balls in frame 121
+2025-03-29 19:41:20,823 - INFO - Tracked balls in frame 121: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 464, 'white', 0)]
+2025-03-29 19:41:20,824 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:20,824 - INFO - white ball ID 0 at (292, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:20,958 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.5ms
+Speed: 1.8ms preprocess, 15.5ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:21,029 - INFO - Tracked 5 balls in frame 122
+2025-03-29 19:41:21,029 - INFO - Tracked balls in frame 122: [(1197, 375, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:21,029 - INFO - white ball ID 0 at (1197, 375) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:21,030 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:21,133 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.2ms
+Speed: 2.0ms preprocess, 18.2ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:21,210 - INFO - Tracked 5 balls in frame 123
+2025-03-29 19:41:21,210 - INFO - Tracked balls in frame 123: [(1197, 375, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:21,211 - INFO - white ball ID 0 at (1197, 375) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:21,212 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:21,320 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 17.1ms
+Speed: 2.0ms preprocess, 17.1ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:21,399 - INFO - Tracked 5 balls in frame 124
+2025-03-29 19:41:21,399 - INFO - Tracked balls in frame 124: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:21,400 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:21,400 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:21,529 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:21,605 - INFO - Tracked 5 balls in frame 125
+2025-03-29 19:41:21,605 - INFO - Tracked balls in frame 125: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:21,605 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:21,606 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:21,708 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.5ms
+Speed: 2.1ms preprocess, 18.5ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:21,781 - INFO - Tracked 5 balls in frame 126
+2025-03-29 19:41:21,781 - INFO - Tracked balls in frame 126: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (292, 464, 'white', 0)]
+2025-03-29 19:41:21,782 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:21,782 - INFO - white ball ID 0 at (292, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:21,888 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:21,959 - INFO - Tracked 5 balls in frame 127
+2025-03-29 19:41:21,960 - INFO - Tracked balls in frame 127: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:21,960 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:21,961 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:22,064 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+
+0: 416x736 2 whites, 18.1ms
+Speed: 1.9ms preprocess, 18.1ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-29 19:41:22,138 - INFO - Tracked 5 balls in frame 128
+2025-03-29 19:41:22,138 - INFO - Tracked balls in frame 128: [(1197, 374, 'white', 0), (441, 118, 'white', 0), (311, 123, 'white', 0), (173, 519, 'white', 0), (293, 464, 'white', 0)]
+2025-03-29 19:41:22,139 - INFO - white ball ID 0 at (1197, 374) scored 1 points in zone [1180, 339, 96, 231, 1]
+2025-03-29 19:41:22,139 - INFO - white ball ID 0 at (293, 464) scored 10 points in zone [275, 435, 41, 40, 10]
+2025-03-29 19:41:22,297 - INFO - Window closed via red X
+2025-03-29 19:41:22,300 - INFO - Saved local leaderboard to whiffle_leaderboard.json
+2025-03-29 19:41:22,300 - INFO - Score queued for batch submission: Player 1 - 650 (classic)
+2025-03-29 19:41:22,302 - INFO - Cleaning up and exiting game...
+2025-03-29 19:41:22,594 - INFO - Successfully submitted 1 scores to online leaderboard
+2025-03-29 19:41:22,667 - INFO - Resources released, exiting program.
+2025-03-29 19:41:22,667 - INFO - Program exited via clean_exit
+
+F:\Whiffle\10.3 (wheee)>
