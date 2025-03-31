@@ -3,6 +3,7 @@ Player management for the Whiffle Tracker project.
 Defines the Player class to manage player data.
 """
 
+
 class Player:
     def __init__(self, name: str) -> None:
         self.name = name
