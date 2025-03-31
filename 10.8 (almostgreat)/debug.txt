@@ -1,0 +1,195 @@
+C:\Users\bweibling\Documents\GitHub\Whiffle\10.8 (almostgreat)>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.13.2)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2025-03-31 15:32:32,235 - INFO - constants - Trying camera index 0 with backend dshow (700)...
+2025-03-31 15:32:33,043 - INFO - constants - Successfully opened camera at index 0 with backend dshow
+2025-03-31 15:32:33,147 - INFO - constants - Camera at index 0 with backend dshow is functional
+2025-03-31 15:32:35,802 - INFO - ui - Showing splash screen...
+2025-03-31 15:32:35,822 - INFO - ui - Initializing GameState...
+2025-03-31 15:32:35,822 - INFO - game_state - Starting GameState initialization...
+2025-03-31 15:32:35,822 - INFO - game_state - Attempting to open camera at index 0 with backend 700
+2025-03-31 15:32:36,518 - INFO - game_state - Setting camera resolution...
+2025-03-31 15:32:37,950 - INFO - game_state - Camera resolution: 1280x720
+2025-03-31 15:32:37,950 - INFO - game_state - Initializing game variables...
+2025-03-31 15:32:37,951 - INFO - game_state - Initializing detection and tracking...
+2025-03-31 15:32:37,977 - WARNING - detection - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+2025-03-31 15:32:37,978 - INFO - game_state - Loading initial state...
+2025-03-31 15:32:37,978 - INFO - menu - Scoring zones loaded from scoring_zones.json
+2025-03-31 15:32:37,978 - INFO - game_state - Notify: Zones Loaded
+2025-03-31 15:32:37,978 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-03-31 15:32:37,979 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-03-31 15:32:37,979 - INFO - game_state - Loaded high score for mode 'classic': 358
+2025-03-31 15:32:37,979 - INFO - game_state - Initializing sounds...
+2025-03-31 15:32:38,066 - INFO - game_state_utils - Loaded score sound: sounds/ding.wav
+2025-03-31 15:32:38,230 - INFO - game_state_utils - Loaded background music: sounds/background_music.mp3
+2025-03-31 15:32:38,230 - INFO - game_state - Sounds initialized (score, background).
+2025-03-31 15:32:38,231 - INFO - game_state - Initializing achievements...
+2025-03-31 15:32:38,231 - INFO - game_state - Loading achievements...
+2025-03-31 15:32:38,231 - INFO - game_state_utils - Loaded unlock status for 2 achievements from achievements_status.json.
+2025-03-31 15:32:38,231 - INFO - game_state - Loading HSV ranges...
+2025-03-31 15:32:38,232 - WARNING - game_state_utils - Missing/invalid format for 'white' in hsv_ranges.json. Using default.
+2025-03-31 15:32:38,232 - WARNING - game_state_utils - Missing/invalid format for 'red1' in hsv_ranges.json. Using default.
+2025-03-31 15:32:38,232 - WARNING - game_state_utils - Missing/invalid format for 'red2' in hsv_ranges.json. Using default.
+2025-03-31 15:32:38,232 - INFO - game_state_utils - Loaded custom HSV ranges from hsv_ranges.json
+2025-03-31 15:32:38,232 - INFO - game_state - Starting background music...
+2025-03-31 15:32:38,232 - INFO - game_state - GameState initialized successfully.
+2025-03-31 15:32:38,232 - INFO - ui - GameState initialized successfully.
+2025-03-31 15:32:38,234 - INFO - ui - Captured first frame.
+2025-03-31 15:32:38,234 - INFO - ui - Starting splash display loop.
+2025-03-31 15:32:41,236 - INFO - ui - Splash finished.
+Press 'q' to quit, 's' to start drawing a scoring zone, 'd' to toggle debug mode
+2025-03-31 15:32:41,340 - INFO - game_loop - Game window initialized.
+
+0: 416x736 (no detections), 48.7ms
+Speed: 3.4ms preprocess, 48.7ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 47.7ms
+Speed: 3.2ms preprocess, 47.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 44.1ms
+Speed: 2.0ms preprocess, 44.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-31 15:32:42,636 - INFO - game_loop - General Debug toggled ON
+
+0: 416x736 (no detections), 57.6ms
+Speed: 3.2ms preprocess, 57.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 51.3ms
+Speed: 2.8ms preprocess, 51.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 51.1ms
+Speed: 1.6ms preprocess, 51.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 47.1ms
+Speed: 1.4ms preprocess, 47.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 51.8ms
+Speed: 3.1ms preprocess, 51.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 52.0ms
+Speed: 3.7ms preprocess, 52.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 52.0ms
+Speed: 3.0ms preprocess, 52.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 49.7ms
+Speed: 2.1ms preprocess, 49.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 51.2ms
+Speed: 3.3ms preprocess, 51.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 52.5ms
+Speed: 3.2ms preprocess, 52.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 36.6ms
+Speed: 1.2ms preprocess, 36.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 41.1ms
+Speed: 1.3ms preprocess, 41.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 49.5ms
+Speed: 3.0ms preprocess, 49.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 48.2ms
+Speed: 3.8ms preprocess, 48.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 48.1ms
+Speed: 2.8ms preprocess, 48.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 50.3ms
+Speed: 3.2ms preprocess, 50.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 48.3ms
+Speed: 3.5ms preprocess, 48.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 46.6ms
+Speed: 2.6ms preprocess, 46.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 33.9ms
+Speed: 1.2ms preprocess, 33.9ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 47.0ms
+Speed: 1.1ms preprocess, 47.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 42.9ms
+Speed: 1.7ms preprocess, 42.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 43.6ms
+Speed: 1.6ms preprocess, 43.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 54.2ms
+Speed: 2.1ms preprocess, 54.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 48.0ms
+Speed: 2.6ms preprocess, 48.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 46.6ms
+Speed: 2.1ms preprocess, 46.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 50.0ms
+Speed: 2.5ms preprocess, 50.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 51.8ms
+Speed: 2.6ms preprocess, 51.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 60.4ms
+Speed: 3.6ms preprocess, 60.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 51.7ms
+Speed: 3.7ms preprocess, 51.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 50.2ms
+Speed: 3.7ms preprocess, 50.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 54.6ms
+Speed: 3.2ms preprocess, 54.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 37.0ms
+Speed: 1.3ms preprocess, 37.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 51.0ms
+Speed: 3.2ms preprocess, 51.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 51.3ms
+Speed: 3.3ms preprocess, 51.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 52.8ms
+Speed: 2.8ms preprocess, 52.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 48.8ms
+Speed: 1.9ms preprocess, 48.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 54.3ms
+Speed: 3.6ms preprocess, 54.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 55.7ms
+Speed: 3.2ms preprocess, 55.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 49.8ms
+Speed: 4.6ms preprocess, 49.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 53.3ms
+Speed: 3.9ms preprocess, 53.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 33.7ms
+Speed: 1.2ms preprocess, 33.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 45.8ms
+Speed: 2.1ms preprocess, 45.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 49.7ms
+Speed: 4.4ms preprocess, 49.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+Traceback (most recent call last):
+  File "C:\Users\bweibling\Documents\GitHub\Whiffle\10.8 (almostgreat)\game.py", line 99, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\bweibling\Documents\GitHub\Whiffle\10.8 (almostgreat)\game.py", line 70, in main
+    run_game_loop(game_state)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\bweibling\Documents\GitHub\Whiffle\10.8 (almostgreat)\game_loop.py", line 472, in run_game_loop
+    frame = _capture_frame(game_state)
+  File "C:\Users\bweibling\Documents\GitHub\Whiffle\10.8 (almostgreat)\game_loop.py", line 36, in _capture_frame
+    ret, frame = game_state.cap.read()
+                 ~~~~~~~~~~~~~~~~~~~^^
+KeyboardInterrupt
+^C
+C:\Users\bweibling\Documents\GitHub\Whiffle\10.8 (almostgreat)>
