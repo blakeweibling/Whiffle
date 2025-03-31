@@ -19,91 +19,140 @@ def _assert_non_negative(value, name):
     assert value >= 0, f"{name} must be non-negative"
     return value
 
+# Validation function for range [0.0, 1.0]
+def _assert_fractional(value, name):
+     assert 0.0 <= value <= 1.0, f"{name} must be between 0.0 and 1.0"
+     return value
+
 class UIConstants:
     """Constants for user interface and display settings."""
     # Colors in BGR format for OpenCV (Blue, Green, Red)
-    GREEN: Tuple[int, int, int] = (0, 255, 0)  # Bright green for scoring zones
-    RED: Tuple[int, int, int] = (0, 0, 255)    # Red for white balls and errors
-    YELLOW: Tuple[int, int, int] = (0, 255, 255)  # Yellow for temporary zones and timer (corrected from RGB to BGR)
-    WHITE: Tuple[int, int, int] = (255, 255, 255)  # White for text
-    CV2_BLUE: Tuple[int, int, int] = (255, 0, 0)   # Blue in BGR for red balls (not RGB!)
+    GREEN: Tuple[int, int, int] = (0, 255, 0)
+    RED: Tuple[int, int, int] = (0, 0, 255)
+    YELLOW: Tuple[int, int, int] = (0, 255, 255)
+    WHITE: Tuple[int, int, int] = (255, 255, 255)
+    CV2_BLUE: Tuple[int, int, int] = (255, 0, 0)
+    BLACK: Tuple[int, int, int] = (0, 0, 0)
+    # <<< Added semi-transparent grey for text background >>>
+    GREY_BG: Tuple[int, int, int] = (100, 100, 100)
 
-    # Window settings (configurable via env vars)
-    WINDOW_WIDTH: int = _assert_positive(int(os.getenv("WHIFFLE_WINDOW_WIDTH", 1280)), "WINDOW_WIDTH")  # Default 1280px
-    WINDOW_HEIGHT: int = _assert_positive(int(os.getenv("WHIFFLE_WINDOW_HEIGHT", 720)), "WINDOW_HEIGHT")  # Default 720px
-    WINDOW_NAME: str = "Whiffle"  # Name of the OpenCV window
+    # Window and Display
+    WINDOW_NAME: str = "Whiffle Tracker"
+    WINDOW_WIDTH: int = _assert_positive(1280, "WINDOW_WIDTH")
+    WINDOW_HEIGHT: int = _assert_positive(720, "WINDOW_HEIGHT")
 
-    # Menu settings
-    MENU_WIDTH: int = 750  # Increased from 680 to 750 to accommodate more menu items
-    MENU_HEIGHT: int = 600  # Height of the menu overlay in pixels
-    MENU_BUTTON_X: int = WINDOW_WIDTH - 150  # Moved to top-right (1280 - 140 - 10 padding)
-    MENU_BUTTON_Y: int = 10  # Top padding of 10 pixels
-    MENU_BUTTON_WIDTH: int = 140  # Width of the "Click for Menu" button
-    MENU_BUTTON_HEIGHT: int = 30  # Height of the "Click for Menu" button
+    # Font Sizes
+    FONT_SCALE_SMALL: float = _assert_positive(0.5, "FONT_SCALE_SMALL")
+    FONT_SCALE_MEDIUM: float = _assert_positive(0.7, "FONT_SCALE_MEDIUM")
+    FONT_SCALE_LARGE: float = _assert_positive(1.0, "FONT_SCALE_LARGE")
+    FONT_SCALE_XLARGE: float = _assert_positive(2.0, "FONT_SCALE_XLARGE") # For Game Over etc.
+    FONT_THICKNESS: int = _assert_positive(1, "FONT_THICKNESS")
 
-    # Submenu settings
-    SUBMENU_WIDTH: int = _assert_positive(730, "SUBMENU_WIDTH")  # Increased from 580 to 730 to match MENU_WIDTH
-    SUBMENU_HEIGHT: int = _assert_positive(30, "SUBMENU_HEIGHT")  # Height of submenu items
-    SUBMENU_Y_OFFSET: int = _assert_positive(50, "SUBMENU_Y_OFFSET")  # Vertical spacing between submenu items
+    # Text Positioning
+    TEXT_OFFSET_X: int = _assert_non_negative(5, "TEXT_OFFSET_X")
+    TEXT_OFFSET_Y: int = _assert_non_negative(15, "TEXT_OFFSET_Y")
+    TEXT_SAFE_DISTANCE: int = _assert_non_negative(10, "TEXT_SAFE_DISTANCE")
 
-    # Font settings
-    FONT_SCALE_SMALL: float = 0.5  # Small font scale for ball IDs
-    FONT_SCALE_MEDIUM: float = 0.6  # Medium font scale for menu text
-    FONT_SCALE_LARGE: float = 1.0  # Large font scale for score/timer
-    FONT_THICKNESS: int = 2  # Thickness of font lines
+    # Menu Button (<<< MOVED TO TOP LEFT >>>)
+    MENU_BUTTON_WIDTH: int = _assert_positive(100, "MENU_BUTTON_WIDTH")
+    MENU_BUTTON_HEIGHT: int = _assert_positive(40, "MENU_BUTTON_HEIGHT")
+    MENU_BUTTON_X: int = 10 # Moved to left
+    MENU_BUTTON_Y: int = 80 # Moved below Mode text (previously 10)
 
-    # Scoring UI settings
-    TEXT_OFFSET_X: int = 10  # X-offset for text labels next to zones
-    TEXT_OFFSET_Y: int = 20  # Y-offset for text labels below zones
-    TEXT_SAFE_DISTANCE: int = int(WINDOW_WIDTH * 0.1)  # Min distance from edge to keep text visible
-
-    # File and asset settings
-    SCORING_ZONES_FILE: str = "scoring_zones.json"  # File to store scoring zones
-    LOGO_SIZE: Tuple[int, int] = (50, 50)  # Size of the logo in the About menu
 
 class GameConstants:
-    """Constants for game logic and timing."""
-    DEFAULT_TIME_LIMIT: int = _assert_positive(90, "DEFAULT_TIME_LIMIT")  # Changed from 120 to 90 seconds (1.5 minutes)
-    DEFAULT_MUSIC_VOLUME: float = _assert_non_negative(0.5, "DEFAULT_MUSIC_VOLUME")  # Volume for background music (0.0-1.0)
-    FRAME_RATE: float = _assert_positive(30.0, "FRAME_RATE")  # Reduced from 30.0 to 15.0 (Change 3)
-    SPLASH_DURATION: float = _assert_positive(10.0, "SPLASH_DURATION")  # Duration of splash screen in seconds
-    FADE_DURATION: float = _assert_positive(1.0, "FADE_DURATION")  # Duration of splash fade in seconds
-    WAIT_KEY_DELAY: int = _assert_positive(int(1000 / FRAME_RATE), "WAIT_KEY_DELAY")  # Milliseconds, tuned for FRAME_RATE
+    """Constants for general game configuration and timing."""
+    # Performance
+    FRAME_RATE: int = _assert_positive(30, "FRAME_RATE") # Target FPS (Increased from 15)
+    WAIT_KEY_DELAY: int = max(1, int(1000 / FRAME_RATE) // 3) # Delay for cv2.waitKey() based on FRAME_RATE
+    DETECTION_FRAME_INTERVAL: int = _assert_positive(2, "DETECTION_FRAME_INTERVAL") # Run detection every N frames (1 = every frame)
+
+    # File Paths
+    ZONES_FILE: str = "scoring_zones.json"
+    ACHIEVEMENTS_FILE: str = "achievements_status.json"
+    HSV_RANGES_FILE: str = "hsv_ranges.json"
+    HIGH_SCORE_FILE: str = "high_scores.json"
+    SPLASH_SCREEN_FILE: str = "splash.png"
+    GAME_OVER_SPLASH_FILE: str = "game_over.png"
+    STATIC_FRAME_FILE: str = "static_frame.png" # Fallback if camera fails
+    SOUND_EFFECTS_PATH: str = "sounds/" # Path to sound effects directory
+
+    # Splash Screen
+    SPLASH_DURATION: float = _assert_non_negative(2.0, "SPLASH_DURATION") # Seconds to show splash
+    FADE_DURATION: float = _assert_non_negative(1.0, "FADE_DURATION") # Seconds to fade splash
+
+    # Game Modes
+    TIMED_MODE_DURATION: float = _assert_positive(60.0, "TIMED_MODE_DURATION") # Seconds for timed mode
+    TIMED_MODE_WIN_SCORE: int = _assert_positive(500, "TIMED_MODE_WIN_SCORE") # Score needed to win timed mode
+
+    # Scoring Logic
+    POSITION_HISTORY_LENGTH: int = _assert_positive(5, "POSITION_HISTORY_LENGTH") # Frames for position stability check
+    REST_THRESHOLD_DISTANCE: float = _assert_non_negative(5.0, "REST_THRESHOLD_DISTANCE") # Max distance moved to be considered at rest
+    ZONE_STABILITY_FRAMES: int = _assert_positive(10, "ZONE_STABILITY_FRAMES") # Frames needed in same zone for stability
+    SCORE_COOLDOWN_DURATION: float = _assert_non_negative(1.0, "SCORE_COOLDOWN_DURATION") # Seconds before a ball can score again
+
+    # Ball Tracking / Trail
+    BALL_TRAIL_LENGTH: int = _assert_non_negative(15, "BALL_TRAIL_LENGTH") # Max points in ball trail
+
+    # Camera
+    CAMERA_INDEX: int = _assert_non_negative(0, "CAMERA_INDEX") # Default camera index
+
+    # --- Audio ---
+    DEFAULT_SOUND_VOLUME: float = _assert_fractional(0.7, "DEFAULT_SOUND_VOLUME") # Default volume for sound effects
+    DEFAULT_MUSIC_VOLUME: float = _assert_fractional(0.5, "DEFAULT_MUSIC_VOLUME") # Default volume for background music
+
+
+class MenuConstants:
+    """Constants defining menu structures."""
+    MAIN_MENU_ITEMS: List[Tuple[str, str]] = [
+        ("Resume", "resume"),
+        ("Settings", "settings"),
+        ("Game Mode", "game_mode"),
+        ("Manage Zones", "manage_zones"),
+        ("Players", "players"),
+        ("Leaderboard", "leaderboard"),
+        ("Achievements", "achievements"),
+        ("Help", "help"),
+        ("FAQ", "faq"),
+        ("About", "about"),
+        ("Quit Game", "quit")
+    ]
+    ZONE_SUBMENU_ITEMS: List[Tuple[str, str]] = [
+        ("Add Zone (Start 's')", "add_zone_info"),
+        ("Clear All Zones", "clear_zones"),
+        ("Edit Zones", "edit_zones"),
+        ("Save Zones", "save_zones"),
+        ("Load Zones", "load_zones"),
+        ("Back", "back_to_main")
+    ]
+
+class GameSpecificConstants:
+    """Constants specific to the Whiffle ball game physics or rules."""
+    EXCLUDED_POSITIONS: List[Tuple[int, int, int]] = []
 
 class DetectionConstants:
     """Constants for ball detection parameters."""
-    MIN_CONTOUR_AREA: int = _assert_positive(15, "MIN_CONTOUR_AREA")  # Reduced from 20 to 15 to detect smaller blobs
-    STANDARD_BALL_AREA: int = _assert_positive(50, "STANDARD_BALL_AREA")  # Reduced from 60 to 50
-    MIN_CIRCULARITY: float = _assert_positive(0.2, "MIN_CIRCULARITY")  # Reduced from 0.5 to 0.4 to allow more distorted shapes
-    MIN_SMALL_CIRCULARITY: float = _assert_positive(0.1, "MIN_SMALL_CIRCULARITY")  # Reduced from 0.4 to 0.3
-    MIN_RADIUS: int = _assert_positive(2, "MIN_RADIUS")  # Reduced from 4 to 3
-    MIN_SMALL_RADIUS: int = _assert_positive(1, "MIN_SMALL_RADIUS")
-    EXCLUSION_DISTANCE: int = _assert_positive(100, "EXCLUSION_DISTANCE")  # Kept for compatibility, but not used
-    ASPECT_RATIO_MIN: float = _assert_positive(1.5, "ASPECT_RATIO_MIN")  # Min aspect ratio for merged contours
-    ASPECT_RATIO_MAX: float = _assert_positive(3.0, "ASPECT_RATIO_MAX")  # Max aspect ratio for merged contours
-    MERGED_CONTOUR_AREA: int = _assert_positive(200, "MERGED_CONTOUR_AREA")  # Min area for merged contour splitting
-    SMALL_BALL_FRAME_THRESHOLD: int = _assert_positive(5, "SMALL_BALL_FRAME_THRESHOLD")  # Frames to confirm small balls
-    SMALL_BALL_COUNT_THRESHOLD: int = _assert_positive(3, "SMALL_BALL_COUNT_THRESHOLD")  # Detections to confirm small balls
-    KERNEL_SIZE: Tuple[int, int] = (5, 5)  # Kernel size for morphological operations
-    ERODE_ITERATIONS: int = _assert_positive(1, "ERODE_ITERATIONS")  # Reduced from 2 to 1 to prevent over-smoothing
-    DILATE_ITERATIONS: int = _assert_positive(2, "DILATE_ITERATIONS")  # Reduced from 3 to 2 to prevent over-smoothing
+    YOLO_CONFIDENCE_THRESHOLD: float = _assert_non_negative(0.5, "YOLO_CONFIDENCE_THRESHOLD")
+    SMALL_BALL_CONFIRM_THRESHOLD: int = _assert_positive(3, "SMALL_BALL_CONFIRM_THRESHOLD")
+    KERNEL_SIZE: Tuple[int, int] = (5, 5)
+    ERODE_ITERATIONS: int = _assert_positive(1, "ERODE_ITERATIONS")
+    DILATE_ITERATIONS: int = _assert_positive(2, "DILATE_ITERATIONS")
 
 class TrackingConstants:
     """Constants for ball tracking parameters."""
-    TRACKING_DISTANCE_THRESHOLD: float = _assert_positive(100.0, "TRACKING_DISTANCE_THRESHOLD")  # Increased to 100.0 to improve matching
-    SCORED_DISTANCE_THRESHOLD: float = _assert_positive(20.0, "SCORED_DISTANCE_THRESHOLD")  # Distance to consider scored
-    MAX_AGE_FRAMES: int = _assert_positive(30, "MAX_AGE_FRAMES")  # Reduced to 30 to drop lost balls faster
+    TRACKING_DISTANCE_THRESHOLD: float = _assert_positive(100.0, "TRACKING_DISTANCE_THRESHOLD")
+    SCORED_DISTANCE_THRESHOLD: float = _assert_positive(20.0, "SCORED_DISTANCE_THRESHOLD")
+    MAX_AGE_FRAMES: int = _assert_positive(30, "MAX_AGE_FRAMES")
 
 class ScoringConstants:
     """Constants for scoring logic."""
-    DEFAULT_POINTS: int = _assert_positive(100, "DEFAULT_POINTS")  # Default points for a scoring zone
-    MAX_POINTS: int = _assert_positive(300, "MAX_POINTS")  # Maximum points allowed for a zone
+    DEFAULT_POINTS: int = _assert_positive(100, "DEFAULT_POINTS")
+    MAX_POINTS: int = _assert_positive(999, "MAX_POINTS") # Updated from 300
+    MIN_ZONE_SIZE: int = _assert_positive(10, "MIN_ZONE_SIZE")
 
 class LeaderboardConstants:
     """Constants for leaderboard management."""
-    LEADERBOARD_FILE: str = "whiffle_leaderboard.json"  # Local file for leaderboard scores
-    TABLE_NAME: str = "whifflescores"  # Supabase table name for online scores
-
-class GameSpecificConstants:
-    """Constants specific to game mechanics."""
-    EXCLUDED_POSITIONS: List[Tuple[int, int]] = []  # Removed all exclusion positions
+    LEADERBOARD_FILE: str = "whiffle_leaderboard.json"
+    TABLE_NAME: str = "leaderboard"
+    BATCH_SIZE: int = _assert_positive(10, "BATCH_SIZE")
+    FLUSH_INTERVAL: float = _assert_positive(60.0, "FLUSH_INTERVAL")

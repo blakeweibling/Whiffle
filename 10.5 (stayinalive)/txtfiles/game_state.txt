@@ -1,0 +1,326 @@
+"""
+Game state management for the Whiffle Tracker project.
+Defines the GameState class to manage game variables and state transitions.
+"""
+
+import cv2
+import logging
+import pygame
+import time
+import numpy as np
+import os
+import json
+from typing import Optional, List, Tuple, Dict, Any, Callable
+from enum import Enum, auto
+
+# Use constants consistently
+from constants import UIConstants, GameConstants, ScoringConstants # [source: 1]
+from detection import BallDetector # [source: 1]
+from tracking import BallTracker # [source: 1]
+from leaderboard import Leaderboard # [source: 1]
+from player import Player # [source: 1]
+from scoring import is_in_scoring_zone # [source: 1]
+# Import reconciled utils functions
+from game_state_utils import ( # [source: 1]
+    set_special_hole, # [source: 1]
+    initialize_sounds, # [source: 1] # Returns (score_sound, background_music)
+    initialize_achievements, # [source: 2]
+    load_achievements, # [source: 2] # Takes game_state, filename
+    save_achievements, # [source: 2] # Takes game_state, filename
+    load_hsv_ranges, # [source: 2] # Takes filename, returns dict
+    save_hsv_ranges, # [source: 2] # Takes dict, filename
+    is_ball_at_rest, # [source: 2]
+    is_ball_zone_stable # [source: 2]
+)
+
+logger = logging.getLogger(__name__) # [source: 2]
+
+class CurrentGameState(Enum): # [source: 2]
+    PLAYING = auto() # [source: 2]
+    MENU = auto() # [source: 2]
+    GAME_OVER = auto() # [source: 2]
+    PAUSED = auto() # [source: 3]
+
+class GameState: # [source: 3]
+    def __init__(self, supabase_url: str, supabase_key: str) -> None: # [source: 3]
+        self.cap: Optional[cv2.VideoCapture] = cv2.VideoCapture(GameConstants.CAMERA_INDEX) # [source: 3]
+        self.camera_available: bool = True # [source: 3]
+        self.static_frame: Optional[np.ndarray] = None # [source: 3]
+
+        if self.cap.isOpened(): # [source: 3]
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, UIConstants.WINDOW_WIDTH) # [source: 3]
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, UIConstants.WINDOW_HEIGHT) # [source: 3]
+            w = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH); h = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT) # [source: 4]
+            if w != UIConstants.WINDOW_WIDTH or h != UIConstants.WINDOW_HEIGHT: logger.warning(f"Cam res mismatch: Got {int(w)}x{int(h)}, expected {UIConstants.WINDOW_WIDTH}x{UIConstants.WINDOW_HEIGHT}") # [source: 4]
+            else: logger.info(f"Camera resolution: {int(w)}x{int(h)}") # [source: 5]
+        else: # [source: 5]
+            self.camera_available = False; logger.warning(f"Cam {GameConstants.CAMERA_INDEX} fail. Using static: {GameConstants.STATIC_FRAME_FILE}") # [source: 6]
+            try: # [source: 6]
+                self.static_frame = cv2.imread(GameConstants.STATIC_FRAME_FILE) # [source: 6]
+                if self.static_frame is None: raise FileNotFoundError(f"{GameConstants.STATIC_FRAME_FILE} not found or invalid.") # [source: 6]
+                if self.static_frame.shape[0] == 0 or self.static_frame.shape[1] == 0: raise ValueError("Static image has invalid dimensions.") # [source: 407]
+                if len(self.static_frame.shape) != 3 or self.static_frame.shape[2] != 3: raise ValueError("Static image not 3-channel BGR.") # [source: 407]
+                self.static_frame = cv2.resize(self.static_frame, (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT)); logger.info(f"Using {GameConstants.STATIC_FRAME_FILE}.") # [source: 6]
+            except Exception as e: logger.exception(f"Static frame load/validate fail: {e}"); raise # [source: 6]
+
+        # Game Variables
+        self.score: int = 0 # Current game score display # [source: 7]
+        self.high_score: int = 0 # Loaded per mode later # [source: 7]
+        self.scoring_zones: List[Tuple[int, int, int, int, int]] = [] # [source: 7]
+        self.drawing: bool = False # Use this instead of drawing_mode # [source: 7]
+        self.start_x: int = 0; self.start_y: int = 0 # [source: 8]
+        self.temp_zone: Optional[Tuple[int, int, int, int]] = None # Use 4-tuple # [source: 8]
+        self.special_hole: Optional[Tuple[int, int, int, int, int]] = None # [source: 8]
+
+        # Detection & Tracking
+        self.detector = BallDetector(); self.tracker = BallTracker() # [source: 8]
+        self.tracked_balls: List[Tuple[int, int, float, int, int, str]] = [] # Includes age # [source: 8]
+        self.next_ball_id: int = 0; self.ball_trails: Dict[int, List[Tuple[int, int]]] = {} # Use simpler trails # [source: 9]
+        self.frame_count: int = 0 # Initialize frame count here # [source: 411]
+
+        # Scoring State
+        self.scored_balls: List[int] = [] # Use list for order? Or set for uniqueness? Using list per code. # [source: 9]
+        self.scored_positions: Dict[Tuple[int, int], int] = {} # Map pos -> points? Or ID? User had ID. # [source: 9] # Kept user's format pos -> ID
+        self.balls_in_zone: Dict[int, Tuple[int, int, int, int, int]] = {} # [source: 10]
+        self.ball_scored_zones: Dict[int, int] = {} # [source: 10]
+        self.ball_states: Dict[int, Dict[str, Any]] = {} # [source: 10] # Using dict for more state
+        self.previous_ball_states: Dict[int, Dict[str, Any]] = {} # [source: 10]
+        self.ball_positions_history: Dict[int, List[Tuple[int, int]]] = {} # [source: 10]
+        self.ball_zone_history: Dict[int, List[Optional[int]]] = {} # [source: 10]
+        self.scored_cooldown: Dict[int, float] = {} # Using float for time # [source: 11]
+
+        # Menu State
+        self.submenu_active: Optional[str] = None; self.submenu_items: List[Tuple[Tuple[int, int, int, int], Any, str]] = [] # [source: 11]
+        self.menu_pos: Tuple[int, int] = (0, 0); self.menu_width: int = 400; self.menu_height: int = 450 # Updated defaults # [source: 11] # Adjusted defaults
+        self.menu_cache: Optional[np.ndarray] = None; self.menu_cache_key: Optional[Any] = None # [source: 11]
+
+        # Zone Editing
+        self.editing_zone_index: Optional[int] = None; self.editing_zone_mode: Optional[str] = None; self.editing_zone_points: Optional[int] = None # [source: 12]
+
+        # Sounds
+        self.game_sounds_on: bool = True; self.background_music_on: bool = True # [source: 12]
+        self.score_sound: Optional[pygame.mixer.Sound] = None # [source: 12]
+        self.background_music: Optional[pygame.mixer.Sound] = None # [source: 12]
+        self.achievement_sound: Optional[pygame.mixer.Sound] = None # Will be None # [source: 12]
+
+        # Game Mode / State
+        self.game_mode: str = "classic"; self.game_timer: Optional[float] = None # [source: 12]
+        self.current_state: CurrentGameState = CurrentGameState.PLAYING # [source: 12]
+        self.win_score: int = GameConstants.TIMED_MODE_WIN_SCORE; self.win_condition_met: bool = False # [source: 13]
+
+        # Achievements
+        self.achievements: List[Any] = []; self.achievement_notification: Optional[str] = None; self.achievement_notification_timer: float = 0.0 # [source: 13]
+
+        # Debug
+        self.debug_mode: bool = False; self.fps: float = 0.0; self.show_debug_overlay: bool = False # [source: 14]
+
+        # Players
+        self.players: List[Player] = [Player("Player 1")]; self.current_player_index: int = 0 # [source: 14]
+
+        # Leaderboard
+        self.leaderboard = Leaderboard(supabase_url, supabase_key) # [source: 14]
+
+        # HSV - Now a dictionary
+        self.hsv_ranges: Dict[str, Tuple[np.ndarray, np.ndarray]] = {} # [source: 14]
+
+        # Notifications
+        self.notification_text: Optional[str] = None; self.notification_timer: float = 0.0; self.notification_color: Tuple[int, int, int] = UIConstants.GREEN # [source: 15]
+
+        # --- Init Calls ---
+        self._load_initial_state() # [source: 15]
+
+        # --- Sound Initialization Updated ---
+        try: # [source: 15]
+            # Expects (score_sound, background_music) from reconciled util function
+            sound_results = initialize_sounds() # [source: 16]
+            if isinstance(sound_results, tuple) and len(sound_results) == 2: # [source: 16]
+                self.score_sound, self.background_music = sound_results # Unpack 2 items # [source: 16]
+                self.achievement_sound = None # Explicitly None # [source: 17]
+                logger.info("Sounds initialized (score, background).") # [source: 17]
+            else: # [source: 17]
+                logger.error(f"initialize_sounds returned unexpected format: {type(sound_results)}. Sounds disabled.") # [source: 17]
+                self.score_sound, self.achievement_sound, self.background_music = None, None, None # [source: 17]
+        except Exception as e: # [source: 17]
+            logger.exception(f"Error during sound initialization: {e}. Sounds disabled.") # [source: 17]
+            self.score_sound, self.achievement_sound, self.background_music = None, None, None # [source: 17]
+
+        self.game_sounds_on = True # TODO: Load from settings # [source: 17]
+        self.background_music_on = True # TODO: Load from settings # [source: 18]
+
+        self.achievements = initialize_achievements() # [source: 18]
+        load_achievements(self, GameConstants.ACHIEVEMENTS_FILE) # Call with self and filename # [source: 18]
+        self.hsv_ranges = load_hsv_ranges(GameConstants.HSV_RANGES_FILE) # Call with filename, assign to dict # [source: 18]
+
+        if self.background_music_on and self.background_music: self.background_music.play(-1) # [source: 18]
+        if self.game_mode == "timed": self.game_timer = GameConstants.TIMED_MODE_DURATION # [source: 18]
+
+    def _load_initial_state(self): # [source: 18]
+        """Loads persistent state like zones and high score for current mode.""" # [source: 19]
+        from menu import load_zones # Local import # [source: 19]
+        load_zones(self) # Call with self # [source: 19]
+        self.special_hole = set_special_hole(self.scoring_zones) # [source: 19]
+        try: # Load High Score for current mode # [source: 19]
+             if os.path.exists(GameConstants.HIGH_SCORE_FILE): # [source: 19]
+                 # Check for empty file before loading JSON
+                 if os.path.getsize(GameConstants.HIGH_SCORE_FILE) > 0:
+                     with open(GameConstants.HIGH_SCORE_FILE, 'r') as f: data = json.load(f); self.high_score = data.get(self.game_mode, {}).get('high_score', 0) # [source: 20]
+                     logger.info(f"Loaded high score for mode '{self.game_mode}': {self.high_score}") # [source: 20]
+                 else:
+                     self.high_score = 0; logger.warning(f"High score file exists but is empty.")
+             else: self.high_score = 0; logger.info(f"High score file not found.") # [source: 21]
+        except (IOError, json.JSONDecodeError) as e: logger.error(f"Failed load high score: {e}"); self.high_score = 0 # [source: 22] # Specific exceptions
+        except Exception as e: logger.exception(f"Unexpected error loading high score: {e}"); self.high_score = 0 # Catch other errors
+
+    # --- Corrected Syntax in _save_high_score ---
+    def _save_high_score(self): # [source: 22]
+         """Saves high score data for all modes.""" # [source: 22]
+         data = {} # [source: 22]
+         try: # [source: 22] # Moved try block start
+             if os.path.exists(GameConstants.HIGH_SCORE_FILE): # [source: 22]
+                 # Check for empty file before loading JSON
+                 if os.path.getsize(GameConstants.HIGH_SCORE_FILE) > 0:
+                    with open(GameConstants.HIGH_SCORE_FILE, 'r') as f: data = json.load(f) # [source: 22]
+                 else:
+                     logger.warning(f"High score file exists but is empty: {GameConstants.HIGH_SCORE_FILE}")
+                     data = {} # Treat empty file as no data
+         except (IOError, json.JSONDecodeError) as e: # Be more specific # [source: 23]
+             logger.error(f"Could not read/parse high score file ({GameConstants.HIGH_SCORE_FILE}): {e}. Will overwrite.") # [source: 23]
+             data = {} # Reset data if reading fails # [source: 23]
+         except Exception as e: # Catch other potential errors # [source: 23]
+            logger.exception(f"Unexpected error reading high score file: {e}") # [source: 23]
+            data = {} # Reset data # [source: 23]
+
+         # --- Rest of the method ---
+         if self.game_mode not in data: data[self.game_mode] = {} # [source: 23]
+         current_high = data[self.game_mode].get('high_score', 0) # [source: 23]
+         # Only save if current game's score *is* the high score for this mode
+         if self.score > current_high: # Check current game score against loaded high score
+              data[self.game_mode]['high_score'] = self.score # Save current score as high score
+              data[self.game_mode]['player'] = self.get_current_player().name # [source: 23]
+              data[self.game_mode]['date'] = time.strftime("%Y-%m-%d"); logger.info(f"Updating high score mode '{self.game_mode}' to {self.score}") # [source: 24] # Use self.score
+         # else: # No need to save if current score isn't higher
+         #    logger.debug(f"Current score ({self.score}) not higher than saved high score ({current_high}) for mode '{self.game_mode}'.") # Log is noisy
+
+         try: # [source: 24]
+             with open(GameConstants.HIGH_SCORE_FILE, 'w') as f: json.dump(data, f, indent=4) # [source: 24]
+             logger.debug(f"Saved high scores file.") # [source: 24]
+         except IOError as e: logger.error(f"Save high score fail: {e}") # [source: 24]
+
+    def get_current_player(self) -> Player: # [source: 24]
+        """Returns the current player object.""" # [source: 25]
+        if 0 <= self.current_player_index < len(self.players): return self.players[self.current_player_index] # [source: 25]
+        logger.warning("Player index OOB."); return self.players[0] if self.players else Player("Default") # [source: 26]
+
+    def save_score(self, player_name: str, mode: Optional[str] = None) -> None: # [source: 26]
+        """Save score to leaderboard and check high score.""" # [source: 26]
+        score = self.score; current_mode = mode or self.game_mode # [source: 27]
+        if score > 0: # [source: 27]
+            self.leaderboard.add_score(player_name, score, current_mode) # [source: 27]
+            if current_mode == self.game_mode and score > self.high_score: self.high_score = score # [source: 27]
+            # Call _save_high_score AFTER potentially updating self.high_score
+            self._save_high_score()
+
+
+    def toggle_background_music(self) -> None: # [source: 27]
+        """Toggle background music.""" # [source: 27]
+        if self.background_music: # [source: 28]
+            if self.background_music_on: self.background_music.play(-1); logger.info("BG music started.") # [source: 28]
+            else: self.background_music.stop(); logger.info("BG music stopped.") # [source: 29]
+        else: logger.warning("BG music not loaded.") # [source: 29]
+
+    def play_sound(self, sound: Optional[pygame.mixer.Sound]) -> None: # [source: 29]
+        """Play sound effect if enabled.""" # [source: 29]
+        if self.game_sounds_on and sound: # [source: 29]
+            try: sound.play() # [source: 29]
+            except pygame.error as e: logger.error(f"Sound play error: {e}") # [source: 29]
+
+    def check_achievements(self) -> None: # [source: 29]
+        """Check achievements and notify.""" # [source: 30]
+        for ach in self.achievements: # [source: 30]
+            if ach.check(self): # check() returns True only on *newly* unlocked # [source: 30]
+                logger.info(f"Achieved: {ach.name}"); self.show_notification(f"Unlocked: {ach.name}", duration=5.0) # [source: 30]
+                # Cannot play achievement sound as it wasn't loaded
+                save_achievements(self, GameConstants.ACHIEVEMENTS_FILE) # Call with self and filename # [source: 31]
+
+    def update_achievement_notification(self, dt: float) -> None: # [source: 31]
+        if self.achievement_notification_timer > 0: # [source: 31]
+            self.achievement_notification_timer -= dt # [source: 31]
+            if self.achievement_notification_timer <= 0: self.achievement_notification = None # [source: 31]
+
+    def show_notification(self, text: str, duration: float = 2.0, is_error: bool = False) -> None: # [source: 31]
+        self.notification_text=text; self.notification_timer=duration; self.notification_color=UIConstants.RED if is_error else UIConstants.GREEN # [source: 32]
+        logger.info(f"Notify: {text}"+(" (Err)" if is_error else "")) # [source: 32]
+
+    def update_notifications(self, dt: float) -> None: # [source: 32]
+        if self.notification_timer > 0: # [source: 32]
+            self.notification_timer -= dt # [source: 32]
+            if self.notification_timer <= 0: self.notification_text = None # [source: 33]
+
+    # Reconciled scoring logic
+    def update_scoring(self) -> None: # [source: 33]
+        """Processes tracked balls to determine scores.""" # [source: 435]
+        newly_scored = 0
+        current_time = time.time() # Get time once per update
+
+        for ball in self.tracked_balls: # Use self.tracked_balls # [source: 33]
+            try: # Add try block for safety
+                x,y,r,ball_id,age,b_type = ball; center=(int(x),int(y)) # [source: 34]
+            except ValueError: logger.warning(f"Skipping scoring malformed ball: {ball}"); continue
+
+            # Update position history
+            if ball_id not in self.ball_positions_history: self.ball_positions_history[ball_id] = [] # [source: 34]
+            self.ball_positions_history[ball_id].append(center) # [source: 34]
+            if len(self.ball_positions_history[ball_id]) > GameConstants.POSITION_HISTORY_LENGTH: self.ball_positions_history[ball_id].pop(0) # [source: 34]
+
+            # Find current zone
+            zone,zone_idx = None,-1 # [source: 34]
+            for i, z in enumerate(self.scoring_zones): # [source: 34]
+                if is_in_scoring_zone((x,y,r,ball_id), z): zone,zone_idx = z, i; break # [source: 35]
+
+            # Check stability conditions
+            rest = is_ball_at_rest(ball_id, self.ball_positions_history, self.debug_mode) # Pass history dict # [source: 35]
+            stable = is_ball_zone_stable(ball_id, zone, self.ball_zone_history, self.debug_mode) # Pass history dict # [source: 35]
+
+            # Update ball state dictionary
+            self.previous_ball_states[ball_id] = self.ball_states.get(ball_id, {}).copy() # [source: 36]
+            self.ball_states[ball_id] = {'at_rest': rest,'stable': stable,'zone': zone,'idx': zone_idx,'time': current_time} # [source: 36]
+
+            # Check scoring conditions
+            if zone and stable and ball_id not in self.ball_scored_zones and current_time >= self.scored_cooldown.get(ball_id, 0): # [source: 36] # Check cooldown using time
+                _,_,_,_,pts = zone; is_sp=(zone==self.special_hole) # [source: 37]
+                score_multiplier = 1.0; # [source: 440]
+                if b_type == "red": score_multiplier = 2.0 # [source: 440-441]
+                elif b_type == "half": score_multiplier = 1.5 # [source: 441-442]
+                points_to_add = int(pts * score_multiplier) # [source: 440]
+
+                self.score += points_to_add; newly_scored += points_to_add # Update game score # [source: 38]
+                self.get_current_player().add_score(points_to_add) # Update player score # [source: 40]
+
+                self.scored_balls.append(ball_id); # [source: 39]
+                # Removed scored_positions as it wasn't used consistently
+                # self.scored_positions[center]=ball_id
+                self.balls_in_zone[ball_id]=zone; self.ball_scored_zones[ball_id]=zone_idx # [source: 40]
+                self.scored_cooldown[ball_id] = current_time + GameConstants.SCORE_COOLDOWN_DURATION # Update cooldown time # [source: 40]
+
+                logger.info(f"Ball {ball_id}({b_type}) scored {points_to_add}pts Zone:{zone_idx}{'(S)' if is_sp else ''}. Score:{self.score}") # [source: 40]
+                if self.game_mode=="timed" and self.score>=self.win_score and self.current_state!=CurrentGameState.GAME_OVER: # [source: 40]
+                    self.win_condition_met=True; self.current_state=CurrentGameState.GAME_OVER; logger.info(f"Win! Score {self.score}>={self.win_score}") # [source: 41-42]
+                    self.save_score(self.get_current_player().name) # [source: 42]
+                if self.score > self.high_score: self.high_score=self.score # [source: 42]
+
+            # Clear scored status if ball leaves zone or becomes unstable
+            elif ball_id in self.ball_scored_zones and (not stable or self.ball_scored_zones.get(ball_id)!=zone_idx): # [source: 42]
+                 logger.debug(f"Ball {ball_id} left/unstable zone {self.ball_scored_zones.get(ball_id)}. Clearing."); self.ball_scored_zones.pop(ball_id,None) # [source: 43]
+                 if ball_id in self.scored_balls: # [source: 43]
+                     try: self.scored_balls.remove(ball_id) # [source: 44]
+                     except ValueError: pass # [source: 44]
+                 # Removed scored_positions clearing
+
+        # Removed cooldown decrement loop, handled by time comparison now
+        # Play sound if needed
+        if newly_scored > 0: self.play_sound(self.score_sound) # [source: 45]
+
+        # Cleanup dictionaries for untracked balls
+        tracked_ids = {b[3] for b in self.tracked_balls}; keys_to_remove = set(self.ball_states.keys()) - tracked_ids # [source: 46]
+        for ball_id in keys_to_remove: # [source: 46]
+            for d in [self.ball_states, self.previous_ball_states, self.ball_positions_history, self.ball_zone_history, self.balls_in_zone, self.ball_scored_zones, self.scored_cooldown, self.ball_trails]: d.pop(ball_id,None) # [source: 46]

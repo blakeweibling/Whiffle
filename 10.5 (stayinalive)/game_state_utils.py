@@ -8,360 +8,250 @@ import pygame
 import json
 import os
 import numpy as np
-from typing import Optional, List, Tuple, Dict
+from typing import Optional, List, Tuple, Dict, Any # Added Any
 
-from constants import UIConstants, GameConstants
-from detection import BallDetector
-from tracking import BallTracker
-from scoring import is_in_scoring_zone  # Added missing import
-from achievement import Achievement
+# Import constants and classes
+# Added ScoringConstants, removed unused BallDetector, BallTracker
+from constants import UIConstants, GameConstants, ScoringConstants # [source: 47]
+from scoring import is_in_scoring_zone # [source: 47]
+from achievement import Achievement # [source: 47]
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__) # [source: 47]
 
-def set_special_hole(scoring_zones: List[Tuple[int, int, int, int, int]]) -> Optional[Tuple[int, int, int, int, int]]:
+def set_special_hole(scoring_zones: List[Tuple[int, int, int, int, int]]) -> Optional[Tuple[int, int, int, int, int]]: # [source: 47]
     """
     Identify the leftmost scoring zone as the special hole.
+    """ # [source: 48]
+    if not scoring_zones: # [source: 48]
+        logger.info("No scoring zones available, special hole not set") # [source: 48]
+        return None # [source: 48]
+    special_hole = min(scoring_zones, key=lambda zone: zone[0]) # [source: 48]
+    logger.info(f"Special hole set to leftmost zone: {special_hole}") # [source: 48]
+    return special_hole # [source: 48]
 
-    Args:
-        scoring_zones: List of scoring zones, each as (x, y, width, height, points).
-
+# --- Reconciled Function ---
+def initialize_sounds() -> Tuple[Optional[pygame.mixer.Sound], Optional[pygame.mixer.Sound]]: # [source: 114]
+    """
+    Initialize sound effects and background music using filenames from user's code.
     Returns:
-        The special hole as (x, y, width, height, points), or None if no zones are available.
-    """
-    if not scoring_zones:
-        logger.info("No scoring zones available, special hole not set")
-        return None
+        Tuple of (score_sound, background_music).
+    """ # [source: 115]
+    # [source: 116]
+    pygame.mixer.init() # [source: 116]
+    score_sound = None # [source: 116]
+    background_music = None # [source: 116]
+    # Removed boolean flags, handled in game_state now
 
-    # Find the leftmost zone (lowest x-coordinate)
-    special_hole = min(scoring_zones, key=lambda zone: zone[0])
-    logger.info(f"Special hole set to leftmost zone: {special_hole}")
-    return special_hole
+    try: # [source: 116]
+        # Use original filenames and constant path
+        score_sound_path = os.path.join(GameConstants.SOUND_EFFECTS_PATH, "ding.wav") # [source: 116] # Uses user's filename
+        background_music_path = os.path.join(GameConstants.SOUND_EFFECTS_PATH, "background_music.mp3") # [source: 117] # Uses user's filename and type
 
-def initialize_sounds() -> Tuple[Optional[pygame.mixer.Sound], Optional[pygame.mixer.Sound], bool, bool]:
-    """
-    Initialize sound effects and background music.
+        if os.path.exists(score_sound_path): # [source: 116]
+            score_sound = pygame.mixer.Sound(score_sound_path) # [source: 116]
+            score_sound.set_volume(GameConstants.DEFAULT_SOUND_VOLUME) # Use constant # [source: 116]
+            logger.info(f"Loaded score sound: {score_sound_path}") # [source: 117]
+        else: # [source: 117]
+            logger.warning(f"Score sound file not found: {score_sound_path}") # [source: 117]
 
-    Returns:
-        Tuple of (score_sound, background_music, game_sounds_on, background_music_on).
-    """
-    pygame.mixer.init()
-    score_sound = None
-    background_music = None
-    game_sounds_on = True
-    background_music_on = True
+        # Removed achievement sound loading logic
 
-    try:
-        score_sound = pygame.mixer.Sound("ding.wav")
-    except pygame.error as e:
-        logger.error(f"Failed to load score sound (ding.wav): {e}")
-        game_sounds_on = False
+        if os.path.exists(background_music_path): # [source: 117]
+            background_music = pygame.mixer.Sound(background_music_path) # [source: 117]
+            background_music.set_volume(GameConstants.DEFAULT_MUSIC_VOLUME) # Use constant # [source: 117]
+            logger.info(f"Loaded background music: {background_music_path}") # [source: 117]
+        else: # [source: 117]
+            logger.warning(f"Background music file not found: {background_music_path}") # [source: 117]
 
-    try:
-        background_music = pygame.mixer.Sound("background_music.mp3")
-        background_music.set_volume(GameConstants.DEFAULT_MUSIC_VOLUME)
-    except pygame.error as e:
-        logger.error(f"Failed to load background music (background_music.mp3): {e}")
-        background_music_on = False
+    except pygame.error as e: # [source: 117]
+        logger.error(f"Pygame mixer initialization or sound loading failed: {e}") # [source: 117]
+    except FileNotFoundError as e: # [source: 53]
+         logger.error(f"Sound file not found during initialization: {e}") # [source: 53]
+    except Exception as e: # [source: 53]
+         logger.exception(f"Unexpected error during sound initialization: {e}") # [source: 53]
 
-    return score_sound, background_music, game_sounds_on, background_music_on
+    # Return only the two expected sound objects
+    return score_sound, background_music # [source: 117]
 
-def initialize_balls_in_zone(
-    camera_available: bool,
-    cap: Optional[cv2.VideoCapture],
-    static_frame: Optional[np.ndarray],
-    frame_count: int,
-    scoring_zones: List[Tuple[int, int, int, int, int]],
-    ball_tracking_on: bool,
-    tracked_balls: List[Tuple[int, int, float, int, int, str]],
-    next_ball_id: int,
-    scored_positions: Dict[Tuple[int, int], int],
-    debug_mode: bool,
-    balls_in_zone: Dict[int, Optional[Tuple[int, int, int, int, int]]],
-    ball_states: Dict[int, str],
-    previous_ball_states: Dict[int, str]
-) -> Tuple[List[Tuple[int, int, float, int, int, str]], int]:
-    """
-    Initialize the balls_in_zone dictionary by detecting balls in the initial frame.
 
-    Args:
-        camera_available: Whether the camera is available.
-        cap: The video capture object.
-        static_frame: The static frame to use if the camera is unavailable.
-        frame_count: Current frame number.
-        scoring_zones: List of scoring zones.
-        ball_tracking_on: Whether ball tracking is enabled.
-        tracked_balls: List of currently tracked balls.
-        next_ball_id: Next available ball ID.
-        scored_positions: Dictionary of scored positions.
-        debug_mode: Whether to enable debug logging.
-        balls_in_zone: Dictionary to store balls in zones.
-        ball_states: Dictionary to store ball states.
-        previous_ball_states: Dictionary to store previous ball states.
+# --- Removed initialize_balls_in_zone as it's complex and likely redundant ---
+# def initialize_balls_in_zone(...) -> ...: ...
 
-    Returns:
-        Tuple of (updated tracked_balls, updated next_ball_id).
-    """
-    if not ball_tracking_on:
-        logger.info("Ball tracking is disabled, skipping initial ball detection")
-        return tracked_balls, next_ball_id
 
-    if camera_available:
-        ret, frame = cap.read()
-        if not ret:
-            logger.error("Failed to read initial frame for ball initialization")
-            return tracked_balls, next_ball_id
-    else:
-        frame = static_frame
-        logger.info("Using static frame for ball initialization")
-
-    detector = BallDetector()
-    white_balls, red_balls, half_balls = detector.detect_all_balls(
-        frame, frame_count, None, scoring_zones=scoring_zones, debug_mode=debug_mode
-    )
-    tracker = BallTracker()
-    tracked_detected_balls, next_ball_id = tracker.track_balls(
-        white_balls, red_balls, half_balls, tracked_balls, next_ball_id,
-        frame_count, scored_positions, debug_mode
-    )
-    tracked_balls = [(x, y, radius, ball_id, frame_count, ball_type)
-                     for x, y, radius, ball_id, ball_type in tracked_detected_balls]
-    for x, y, radius, ball_id, _, ball_type in tracked_balls:
-        ball = (x, y, radius, ball_id)
-        for zone in scoring_zones:
-            if is_in_scoring_zone(ball, zone):
-                balls_in_zone[ball_id] = zone
-                ball_states[ball_id] = "in_hole"
-                previous_ball_states[ball_id] = "on_playfield"  # Allow scoring on transition
-                if debug_mode:
-                    logger.info(f"Ball ID {ball_id} at ({x}, {y}) already in zone {zone} at startup")
-                break
-        if ball_id not in balls_in_zone:
-            balls_in_zone[ball_id] = None
-            ball_states[ball_id] = "on_playfield"
-            previous_ball_states[ball_id] = "on_playfield"
-    if debug_mode:
-        logger.debug(f"Initialized balls in zones: {balls_in_zone}")
-
-    return tracked_balls, next_ball_id
-
-def initialize_achievements() -> List[Achievement]:
+def initialize_achievements() -> List[Achievement]: # [source: 129]
     """
     Initialize the list of achievements.
+    """ # [source: 130]
+    # [source: 131] - Keeping user's definitions
+    return [ # [source: 131]
+        Achievement("First Score", "Score your first points", lambda gs: gs.get_current_player().score >= 100), # [source: 131]
+        Achievement("High Roller", "Score 1000 points in one game", lambda gs: gs.get_current_player().score >= 1000), # [source: 131]
+        Achievement("Zone Master", "Create 5 scoring zones", lambda gs: len(gs.scoring_zones) >= 5), # [source: 131]
+        Achievement("Marathon", "Play 10 games", lambda gs: gs.get_current_player().games_played >= 10) # [source: 131]
+    ] # [source: 131]
 
-    Returns:
-        List of Achievement objects.
+# --- Corrected Function Signature and Implementation ---
+def load_achievements(game_state: Any, filename: str) -> None: # [source: 131] # Changed signature
     """
-    return [
-        Achievement("First Score", "Score your first points", lambda gs: gs.get_current_player().score >= 100),
-        Achievement("High Roller", "Score 1000 points in one game", lambda gs: gs.get_current_player().score >= 1000),
-        Achievement("Zone Master", "Create 5 scoring zones", lambda gs: len(gs.scoring_zones) >= 5),
-        Achievement("Marathon", "Play 10 games", lambda gs: gs.get_current_player().games_played >= 10)
-    ]
-
-def load_achievements(achievements: List[Achievement]) -> None:
-    """
-    Load achievements from a JSON file.
-
+    Load achievements status from a JSON file.
     Args:
-        achievements: List of Achievement objects to update.
-    """
-    try:
-        if os.path.exists("achievements.json"):
-            with open("achievements.json", "r", encoding='utf-8') as f:
-                data = json.load(f)
-                for achievement in achievements:
-                    if achievement.name in data and data[achievement.name]["unlocked"]:
-                        achievement.unlocked = True
-    except (json.JSONDecodeError, IOError) as e:
-        logger.error(f"Failed to load achievements: {e}")
+        game_state: The game state object to update achievements in.
+        filename: The path to the achievements status file.
+    """ # [source: 132]
+    # [source: 133]
+    if not hasattr(game_state, 'achievements') or not game_state.achievements: # [source: 56]
+         logger.warning("Attempted to load achievements, but game_state.achievements is empty or missing.") # [source: 57]
+         return # [source: 57]
 
-def save_achievements(achievements: List[Achievement]) -> None:
-    """
-    Save achievements to a JSON file.
+    achievements_file = filename # Use argument # [source: 57]
+    try: # [source: 57]
+        if os.path.exists(achievements_file): # [source: 57]
+            with open(achievements_file, "r", encoding='utf-8') as f: # [source: 57]
+                data = json.load(f) # [source: 57]
+            if not isinstance(data, dict): # [source: 58]
+                logger.error(f"Invalid format in {achievements_file}. Expected dict.") # [source: 59]
+                return # [source: 59]
+            loaded_count = 0 # [source: 59]
+            # Update the unlocked status in the game_state's list
+            for achievement in game_state.achievements: # [source: 59]
+                # Check using .get() for safety
+                if achievement.name in data and data.get(achievement.name, {}).get("unlocked"): # [source: 60]
+                    achievement.unlocked = True # [source: 60]
+                    loaded_count += 1 # [source: 60]
+            logger.info(f"Loaded unlock status for {loaded_count} achievements from {achievements_file}.") # [source: 60]
+        else: # [source: 60]
+            logger.info(f"Achievement status file '{achievements_file}' not found. Starting fresh.") # [source: 61]
+    except (json.JSONDecodeError, IOError) as e: # [source: 61]
+        logger.error(f"Failed to load achievements from {achievements_file}: {e}") # [source: 61]
+    except Exception as e: # [source: 61]
+        logger.exception(f"Unexpected error loading achievements: {e}") # [source: 61]
 
+
+# --- Corrected Function Signature and Implementation ---
+def save_achievements(game_state: Any, filename: str) -> None: # [source: 134] # Changed signature
+    """
+    Save achievements status to a JSON file.
     Args:
-        achievements: List of Achievement objects to save.
+        game_state: The game state object containing the achievements list.
+        filename: The path to save the achievements status file.
+    """ # [source: 135]
+    # [source: 136]
+    if not hasattr(game_state, 'achievements'): # [source: 62]
+         logger.warning("Attempted to save achievements, but game_state.achievements is missing.") # [source: 62]
+         return # [source: 62]
+
+    achievements_file = filename # Use argument # [source: 62]
+    try: # [source: 63]
+        # Get status from the game_state's achievements list
+        data = {a.name: {"unlocked": a.unlocked} for a in game_state.achievements} # [source: 63]
+        with open(achievements_file, "w", encoding='utf-8') as f: # [source: 64]
+            json.dump(data, f, indent=4) # [source: 64]
+        logger.debug(f"Saved achievement status to {achievements_file}.") # [source: 64]
+    except (IOError, PermissionError) as e: # [source: 64]
+        logger.error(f"Failed to save achievements to {achievements_file}: {e}") # [source: 64]
+    except Exception as e: # [source: 64]
+        logger.exception(f"Unexpected error saving achievements: {e}") # [source: 64]
+
+
+def load_hsv_ranges(filename: str = "hsv_ranges.json") -> Dict[str, Tuple[np.ndarray, np.ndarray]]: # [source: 136]
     """
-    try:
-        data = {a.name: {"unlocked": a.unlocked} for a in achievements}
-        with open("achievements.json", "w", encoding='utf-8') as f:
-            json.dump(data, f, indent=4)
-    except (IOError, PermissionError) as e:
-        logger.error(f"Failed to save achievements: {e}")
+    Load HSV ranges from a JSON file. Returns defaults if file not found/invalid.
+    """ # [source: 137]
+    # [source: 138] - Keeping user's version, adding filename arg usage
+    hsv_ranges = { # [source: 138] # Defaults
+        "white": (np.array([0, 0, 180], dtype=np.uint8), np.array([179, 30, 255], dtype=np.uint8)), # [source: 67]
+        "red1": (np.array([0, 100, 100], dtype=np.uint8), np.array([10, 255, 255], dtype=np.uint8)), # [source: 67]
+        "red2": (np.array([160, 100, 100], dtype=np.uint8), np.array([179, 255, 255], dtype=np.uint8)) # [source: 67]
+    } # [source: 67]
+    hsv_file = filename # Use argument # [source: 138]
 
-def load_hsv_ranges() -> Tuple[Tuple[int, int, int], Tuple[int, int, int], Tuple[int, int, int], Tuple[int, int, int], Tuple[int, int, int], Tuple[int, int, int], bool]:
-    """
-    Load HSV ranges from a JSON file.
+    if os.path.exists(hsv_file): # [source: 138]
+        try: # [source: 139]
+            with open(hsv_file, "r", encoding='utf-8') as f: loaded_data = json.load(f) # [source: 139]
+            for key in hsv_ranges.keys(): # Iterate through expected keys # [source: 139]
+                if key in loaded_data and isinstance(loaded_data[key], list) and len(loaded_data[key]) == 2: # [source: 69]
+                    lower = np.array(loaded_data[key][0], dtype=np.uint8) # [source: 69]
+                    upper = np.array(loaded_data[key][1], dtype=np.uint8) # [source: 69]
+                    if lower.shape == (3,) and upper.shape == (3,): hsv_ranges[key] = (lower, upper) # [source: 70]
+                    else: logger.warning(f"Invalid HSV shape for '{key}' in {hsv_file}. Using default.") # [source: 70]
+                else: logger.warning(f"Missing/invalid format for '{key}' in {hsv_file}. Using default.") # [source: 71]
+            logger.info(f"Loaded custom HSV ranges from {hsv_file}") # [source: 71]
+        except Exception as e: logger.error(f"Failed load/parse HSV ranges from {hsv_file}: {e}. Using defaults.") # [source: 72]
+    else: logger.info(f"{hsv_file} not found, using defaults.") # [source: 72]
+    return hsv_ranges # [source: 72]
 
-    Returns:
-        Tuple of (white_hsv_min, white_hsv_max, red_hsv_min, red_hsv_max, red_hsv_min2, red_hsv_max2, red_hsv_calibrated).
-    """
-    white_hsv_min = (0, 0, 100)
-    white_hsv_max = (179, 100, 255)
-    red_hsv_min = (0, 100, 100)
-    red_hsv_max = (10, 255, 255)
-    red_hsv_min2 = (170, 100, 100)
-    red_hsv_max2 = (179, 255, 255)
-    red_hsv_calibrated = False
 
-    hsv_file = "hsv_ranges.json"
-    if os.path.exists(hsv_file):
-        try:
-            with open(hsv_file, "r", encoding='utf-8') as f:
-                data = json.load(f)
-                if "white_hsv_min" in data and "white_hsv_max" in data:
-                    white_hsv_min = tuple(data["white_hsv_min"])
-                    white_hsv_max = tuple(data["white_hsv_max"])
-                    logger.info(f"Loaded white ball HSV ranges: min={white_hsv_min}, max={white_hsv_max}")
-                if all(k in data for k in ["red_hsv_min", "red_hsv_max", "red_hsv_min2", "red_hsv_max2"]):
-                    red_hsv_min = tuple(data["red_hsv_min"])
-                    red_hsv_max = tuple(data["red_hsv_max"])
-                    red_hsv_min2 = tuple(data["red_hsv_min2"])
-                    red_hsv_max2 = tuple(data["red_hsv_max2"])
-                    red_hsv_calibrated = True
-                    logger.info(f"Loaded red ball HSV ranges: min={red_hsv_min}, max={red_hsv_max}, "
-                                f"min2={red_hsv_min2}, max2={red_hsv_max2}")
-        except (json.JSONDecodeError, IOError, KeyError) as e:
-            logger.error(f"Failed to load HSV ranges from {hsv_file}: {e}")
-    else:
-        logger.info(f"{hsv_file} does not exist, using default HSV ranges")
-
-    return white_hsv_min, white_hsv_max, red_hsv_min, red_hsv_max, red_hsv_min2, red_hsv_max2, red_hsv_calibrated
-
-def save_hsv_ranges(
-    white_hsv_min: Tuple[int, int, int],
-    white_hsv_max: Tuple[int, int, int],
-    red_hsv_min: Tuple[int, int, int],
-    red_hsv_max: Tuple[int, int, int],
-    red_hsv_min2: Tuple[int, int, int],
-    red_hsv_max2: Tuple[int, int, int]
-) -> bool:
+def save_hsv_ranges(hsv_ranges: Dict[str, Tuple[np.ndarray, np.ndarray]], filename: str = "hsv_ranges.json") -> None: # [source: 142]
     """
     Save HSV ranges to a JSON file.
+    """ # [source: 143]
+    # [source: 144-148] - Keeping user's version, adding filename arg usage
+    hsv_file = filename # Use argument # [source: 148]
+    serializable_data = {} # [source: 148]
+    for key, (lower, upper) in hsv_ranges.items(): # [source: 148]
+        if isinstance(lower, np.ndarray) and isinstance(upper, np.ndarray): serializable_data[key] = (lower.tolist(), upper.tolist()) # [source: 148]
+        else: logger.warning(f"Cannot serialize non-numpy HSV for '{key}'. Skipping."); return # [source: 75]
+    try: # [source: 75]
+        with open(hsv_file, "w", encoding='utf-8') as f: json.dump(serializable_data, f, indent=4) # [source: 75]
+        logger.info(f"Saved HSV ranges to {hsv_file}") # [source: 75]
+    except Exception as e: logger.exception(f"Error saving HSV ranges: {e}") # [source: 75]
 
-    Args:
-        white_hsv_min: Minimum HSV values for white balls.
-        white_hsv_max: Maximum HSV values for white balls.
-        red_hsv_min: Minimum HSV values for red balls (first range).
-        red_hsv_max: Maximum HSV values for red balls (first range).
-        red_hsv_min2: Minimum HSV values for red balls (second range).
-        red_hsv_max2: Maximum HSV values for red balls (second range).
 
-    Returns:
-        bool: True if saved successfully, False otherwise.
-    """
-    hsv_file = "hsv_ranges.json"
-    data = {
-        "white_hsv_min": [int(val) for val in white_hsv_min],
-        "white_hsv_max": [int(val) for val in white_hsv_max],
-        "red_hsv_min": [int(val) for val in red_hsv_min],
-        "red_hsv_max": [int(val) for val in red_hsv_max],
-        "red_hsv_min2": [int(val) for val in red_hsv_min2],
-        "red_hsv_max2": [int(val) for val in red_hsv_max2]
-    }
-    try:
-        with open(hsv_file, "w", encoding='utf-8') as f:
-            json.dump(data, f, indent=4)
-        logger.info(f"Saved HSV ranges to {hsv_file}")
-        return True
-    except (IOError, PermissionError) as e:
-        logger.error(f"Failed to save HSV ranges to {hsv_file}: {e}")
-        return False
+# --- Ball State Checking Utilities ---
+# Using GameConstants here instead of hardcoded values
 
-def is_ball_at_rest(
-    ball_id: int,
-    x: int,
-    y: int,
-    ball_positions_history: Dict[int, List[Tuple[int, int]]],
-    debug_mode: bool = False
-) -> bool:
-    """
-    Determine if a ball has come to rest by checking its movement over recent frames.
+def is_ball_at_rest(ball_id: int, ball_positions_history: Dict[int, List[Tuple[int, int]]], debug_mode: bool = False) -> bool: # [source: 150]
+    """Check if a ball has remained relatively still.""" # [source: 151]
+    # [source: 152-154]
+    history = ball_positions_history.get(ball_id, []) # [source: 76]
+    history_len_needed = GameConstants.POSITION_HISTORY_LENGTH # Use Constant # [source: 76]
 
-    Args:
-        ball_id: The ID of the ball to check.
-        x: Current x-coordinate of the ball.
-        y: Current y-coordinate of the ball.
-        ball_positions_history: Dictionary tracking ball positions over recent frames.
-        debug_mode: Whether to enable debug logging.
+    if len(history) < history_len_needed: # [source: 76]
+        # [source: 155] - Combined debug log
+        if debug_mode: logger.debug(f"Ball {ball_id} hist too short ({len(history)}/{history_len_needed}) for rest") # [source: 76]
+        return False # [source: 76]
 
-    Returns:
-        bool: True if the ball is at rest, False otherwise.
-    """
-    # Constants for movement tracking
-    HISTORY_LENGTH = 5  # Number of frames to track
-    MOVEMENT_THRESHOLD = 5.0  # Maximum distance (in pixels) to consider the ball at rest
+    # Check movement within the relevant history window
+    relevant_history = history[-history_len_needed:] # [source: 76]
+    start_pos = np.array(relevant_history[0]) # [source: 77]
+    max_dist_sq = GameConstants.REST_THRESHOLD_DISTANCE ** 2 # Use Constant # [source: 77]
 
-    # Update the position history for this ball
-    if ball_id not in ball_positions_history:
-        ball_positions_history[ball_id] = []
-    ball_positions_history[ball_id].append((x, y))
+    for pos in relevant_history[1:]: # [source: 77]
+        dist_sq = np.sum((np.array(pos) - start_pos)**2) # [source: 77]
+        if dist_sq > max_dist_sq: # [source: 77]
+            if debug_mode: logger.debug(f"Ball {ball_id} moved > {GameConstants.REST_THRESHOLD_DISTANCE}px, not at rest.") # [source: 77]
+            return False # [source: 77]
 
-    # Keep only the last HISTORY_LENGTH positions
-    if len(ball_positions_history[ball_id]) > HISTORY_LENGTH:
-        ball_positions_history[ball_id] = ball_positions_history[ball_id][-HISTORY_LENGTH:]
+    if debug_mode: logger.debug(f"Ball {ball_id} is at rest.") # [source: 77]
+    return True # [source: 77]
 
-    # If we don't have enough history to determine movement, assume the ball is not at rest
-    if len(ball_positions_history[ball_id]) < HISTORY_LENGTH:
-        if debug_mode:
-            logger.debug(f"Ball ID {ball_id} at ({x}, {y}) does not have enough history ({len(ball_positions_history[ball_id])}/{HISTORY_LENGTH}) to determine if at rest")
-        return False
 
-    # Calculate the total movement over the history
-    positions = ball_positions_history[ball_id]
-    first_x, first_y = positions[0]
-    last_x, last_y = positions[-1]
-    distance = np.sqrt((last_x - first_x) ** 2 + (last_y - first_y) ** 2)
+def is_ball_zone_stable(ball_id: int, current_zone: Optional[Tuple], ball_zone_history: Dict[int, List[Optional[int]]], debug_mode: bool = False) -> bool: # [source: 156]
+    """Check if a ball has been consistently in the same zone.""" # [source: 157]
+    # [source: 158-161]
+    if ball_id not in ball_zone_history: ball_zone_history[ball_id] = [] # [source: 78]
 
-    if debug_mode:
-        logger.debug(f"Ball ID {ball_id} movement over {HISTORY_LENGTH} frames: {distance:.2f} pixels (threshold: {MOVEMENT_THRESHOLD})")
+    current_zone_id = id(current_zone) if current_zone else None # [source: 78]
+    # Only append if different from last entry to avoid filling history unnecessarily
+    if not ball_zone_history[ball_id] or ball_zone_history[ball_id][-1] != current_zone_id: # [source: 78]
+         ball_zone_history[ball_id].append(current_zone_id) # [source: 78]
 
-    return distance < MOVEMENT_THRESHOLD
+    stability_frames_needed = GameConstants.ZONE_STABILITY_FRAMES # Use Constant # [source: 78]
+    # Keep history length constrained efficiently
+    if len(ball_zone_history[ball_id]) > stability_frames_needed: ball_zone_history[ball_id].pop(0) # [source: 79]
 
-def is_ball_zone_stable(
-    ball_id: int,
-    current_zone: Optional[Tuple[int, int, int, int, int]],
-    ball_zone_history: Dict[int, List[Optional[int]]],
-    debug_mode: bool = False
-) -> bool:
-    """
-    Determine if a ball has been in the same zone for a sufficient number of frames to be considered stable.
+    if len(ball_zone_history[ball_id]) < stability_frames_needed: # [source: 79]
+        if debug_mode: logger.debug(f"Ball {ball_id} zone hist too short ({len(ball_zone_history[ball_id])}/{stability_frames_needed})") # [source: 79]
+        return False # [source: 79]
 
-    Args:
-        ball_id: The ID of the ball to check.
-        current_zone: The current zone the ball is in (or None if not in a zone).
-        ball_zone_history: Dictionary tracking the zones a ball has been in over recent frames.
-        debug_mode: Whether to enable debug logging.
-
-    Returns:
-        bool: True if the ball has been in the same zone for enough frames, False otherwise.
-    """
-    # Constants for zone stability tracking
-    ZONE_STABILITY_FRAMES = 10  # Number of consecutive frames the ball must be in the same zone
-
-    # Update the zone history for this ball
-    if ball_id not in ball_zone_history:
-        ball_zone_history[ball_id] = []
-    current_zone_id = id(current_zone) if current_zone else None
-    ball_zone_history[ball_id].append(current_zone_id)
-
-    # Keep only the last ZONE_STABILITY_FRAMES entries
-    if len(ball_zone_history[ball_id]) > ZONE_STABILITY_FRAMES:
-        ball_zone_history[ball_id] = ball_zone_history[ball_id][-ZONE_STABILITY_FRAMES:]
-
-    # If we don't have enough history, the ball is not stable yet
-    if len(ball_zone_history[ball_id]) < ZONE_STABILITY_FRAMES:
-        if debug_mode:
-            logger.debug(f"Ball ID {ball_id} zone history too short ({len(ball_zone_history[ball_id])}/{ZONE_STABILITY_FRAMES}) to determine stability")
-        return False
-
-    # Check if the ball has been in the same zone for the last ZONE_STABILITY_FRAMES
-    zone_history = ball_zone_history[ball_id]
-    if all(zone_id == current_zone_id for zone_id in zone_history):
-        if debug_mode:
-            logger.debug(f"Ball ID {ball_id} has been stable in zone {current_zone_id} for {ZONE_STABILITY_FRAMES} frames")
-        return True
-    else:
-        if debug_mode:
-            logger.debug(f"Ball ID {ball_id} zone history: {zone_history}, not stable in current zone {current_zone_id}")
-        return False
+    # Check if all entries in history match the *current* zone ID
+    if all(zone_id == current_zone_id for zone_id in ball_zone_history[ball_id]): # [source: 79]
+        if current_zone_id is not None: # Stable *and* in a zone # [source: 79]
+            if debug_mode: logger.debug(f"Ball {ball_id} stable in zone {current_zone_id}.") # [source: 80]
+            return True # [source: 80]
+        else: # Stable outside any zone # [source: 80]
+             if debug_mode: logger.debug(f"Ball {ball_id} stable outside zones.") # [source: 80]
+             return False # [source: 80]
+    else: # [source: 80]
+        if debug_mode: logger.debug(f"Ball {ball_id} not stable in current zone {current_zone_id}.") # [source: 80]
+        return False # [source: 81]

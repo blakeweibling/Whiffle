@@ -1,211 +1,331 @@
 """
 UI rendering functions for the Whiffle Tracker project.
-Manages drawing of UI elements, balls, and splash screen.
+Manages drawing of UI elements, balls, splash screen, game over screen, and debug overlay.
 """
 
 import cv2
 import numpy as np
 import logging
 import time
+import os # Added for checking game_over.png path
 from typing import List, Tuple, Any, Optional
 
-from constants import UIConstants, GameConstants
+# <<< Added numpy import >>>
+import numpy as np
+from constants import UIConstants, GameConstants # Added GameConstants
 from scoring import draw_scoring_zones
-from menu import draw_menu, draw_menu_window
-from menu_utils import show_splash_on_click
+from menu import draw_menu, draw_menu_window # draw_menu_window is used
+from menu_utils import _draw_button, show_splash_on_click # Import _draw_button
 from utils import clean_exit
-from game_state import GameState
+# Import both GameState and CurrentGameState
+from game_state import GameState, CurrentGameState # Added GameState import
 
 logger = logging.getLogger(__name__)
 
-# Constants for ball visualization
+# Constants for ball visualization (Updated for Feature 1)
 BALL_COLORS = {
-    "white": (255, 255, 255),  # White in BGR
-    "red": (0, 0, 255),        # Red in BGR
-    "half": (255, 0, 255)      # Magenta for half red/half white
+    "white": UIConstants.WHITE, # Use constants
+    "red": UIConstants.RED,     # Use constants
+    "half": (255, 0, 255)       # Magenta for half red/half white (Keep or add to UIConstants)
 }
-TRAIL_LENGTH = 10  # Number of past positions to draw in the trail
-TRAIL_THICKNESS = 2  # Thickness of the trail lines
-TRAIL_FADE_STEP = 0.1  # Alpha decrease per trail segment (for fading effect)
+BALL_RADIUS_FACTOR = 1.0 # Adjust if detected radius needs scaling for visualization
+TRAIL_LENGTH = GameConstants.BALL_TRAIL_LENGTH # Use constant
+TRAIL_THICKNESS = 2 # Thickness of the trail lines
+TRAIL_BASE_COLOR = (100, 100, 100) # Base color for trails (Gray)
+TRAIL_FADE = True # Whether to fade the trail
 
-def draw_ui(frame: np.ndarray, game_state: Any) -> None:
-    """
-    Draw the user interface elements on the frame.
+# Cache for game over splash image
+game_over_splash_cache = None
 
-    Args:
-        frame (np.ndarray): The frame to draw on.
-        game_state (Any): The current game state.
-    """
-    logger.debug("Drawing UI")
-    # Display current player's name and score
-    current_player = game_state.get_current_player()
-    cv2.putText(frame, f"Player: {current_player.name}", (10, 30),
-                cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.WHITE, UIConstants.FONT_THICKNESS)
-    # Display score and high score
-    score_text = f"Score: {current_player.score}  High: {game_state.high_score}"
-    cv2.putText(frame, score_text, (10, 90),
-                cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_LARGE, UIConstants.GREEN, UIConstants.FONT_THICKNESS)
 
-    # Display timer in timed mode, positioned below the score
-    if game_state.game_mode == "timed" and game_state.game_timer is not None:
-        timer_display = int(max(0, game_state.game_timer))
-        color = UIConstants.YELLOW if game_state.game_timer > 10 else UIConstants.RED
-        cv2.putText(frame, f"Time: {timer_display}", (10, 120),
-                    cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_LARGE, color, UIConstants.FONT_THICKNESS)
+# <<< Helper Function: Draw text with background >>>
+def _draw_text_with_background(
+    frame: np.ndarray,
+    text: str,
+    pos: Tuple[int, int],
+    font_scale: float,
+    text_color: Tuple[int, int, int],
+    bg_color: Tuple[int, int, int],
+    thickness: int = 1,
+    padding: int = 3,
+    font: int = cv2.FONT_HERSHEY_SIMPLEX,
+    alpha: float = 0.6 # Opacity for background
+    ) -> None:
+    """Draws text with a semi-transparent background rectangle."""
+    (text_width, text_height), baseline = cv2.getTextSize(text, font, font_scale, thickness)
+    x, y = pos
+    # Rectangle coordinates (top-left and bottom-right)
+    rect_x1 = x - padding
+    rect_y1 = y - text_height - padding - baseline // 2 # Adjust y based on baseline
+    rect_x2 = x + text_width + padding
+    rect_y2 = y + padding - baseline // 2
 
-    # Display achievement notification
-    if game_state.achievement_notification:
-        cv2.putText(frame, game_state.achievement_notification, (UIConstants.WINDOW_WIDTH // 2 - 200, 50),
-                    cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.GREEN, UIConstants.FONT_THICKNESS)
+    # Ensure coordinates are within frame bounds
+    rect_x1 = max(0, rect_x1)
+    rect_y1 = max(0, rect_y1)
+    rect_x2 = min(frame.shape[1], rect_x2)
+    rect_y2 = min(frame.shape[0], rect_y2)
 
-    # Display a warning if running with static image
-    if not game_state.camera_available:
-        cv2.putText(frame, "Camera unavailable - Using static image", (10, UIConstants.WINDOW_HEIGHT - 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.RED, UIConstants.FONT_THICKNESS)
+    # Extract ROI and create overlay
+    if rect_x1 < rect_x2 and rect_y1 < rect_y2: # Check if rectangle has valid size
+        sub_img = frame[rect_y1:rect_y2, rect_x1:rect_x2]
+        bg_rect = np.zeros(sub_img.shape, dtype=np.uint8)
+        bg_rect[:] = bg_color
 
-    # Only draw scoring zones if the toggle is enabled
-    if game_state.show_scoring_zones:
-        draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole)
+        # Blend background
+        res = cv2.addWeighted(sub_img, 1.0 - alpha, bg_rect, alpha, 0)
+        frame[rect_y1:rect_y2, rect_x1:rect_x2] = res
 
-    if game_state.temp_zone and game_state.drawing:
-        x, y, w, h = game_state.temp_zone
-        cv2.putText(frame, "Drawing zone...", (10, UIConstants.WINDOW_HEIGHT - 60),
-                    cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.YELLOW, UIConstants.FONT_THICKNESS)
-        cv2.rectangle(frame, (x, y), (x + w, y + h), UIConstants.YELLOW, UIConstants.FONT_THICKNESS)
+        # Draw text on top
+        text_y_pos = y - baseline // 2 # Adjust text Y position based on baseline
+        cv2.putText(frame, text, (x, text_y_pos), font, font_scale, text_color, thickness, cv2.LINE_AA)
 
-    draw_menu(frame, game_state)
-    draw_menu_window(frame, game_state)
 
-def draw_balls(frame: np.ndarray, game_state: Any, tracked_detected_balls: List[Tuple[int, int, float, int, str]]) -> None:
-    """
-    Draw tracked balls and their trails on the frame.
+def draw_balls(frame: np.ndarray, game_state: GameState) -> None: # Use GameState type hint
+     """
+     Draw tracked balls and their trails on the frame.
+     Args:
+         frame (np.ndarray): The frame to draw on.
+         game_state (GameState): The current game state containing tracked balls and trails.
+     """
+     # Draw Trails first (so balls appear on top)
+     if hasattr(game_state, 'ball_trails') and game_state.ball_trails:
+         for ball_id, trail in list(game_state.ball_trails.items()):
+             if not any(b[3] == ball_id for b in game_state.tracked_balls):
+                 if ball_id in game_state.ball_trails:
+                     del game_state.ball_trails[ball_id]
+                 continue
+             if len(trail) > 1:
+                 for i in range(len(trail) - 1):
+                     pt1 = tuple(map(int, trail[i]))
+                     pt2 = tuple(map(int, trail[i+1]))
+                     alpha = 1.0 - (len(trail) - 1 - i) / TRAIL_LENGTH if TRAIL_FADE and TRAIL_LENGTH > 0 else 1.0
+                     alpha = max(0.1, alpha)
+                     color = tuple(int(c * alpha) for c in TRAIL_BASE_COLOR)
+                     thickness = max(1, int(TRAIL_THICKNESS * alpha))
+                     try: cv2.line(frame, pt1, pt2, color, thickness)
+                     except OverflowError: logger.warning(f"OverflowError drawing trail segment: {pt1} to {pt2}")
 
-    Args:
-        frame (np.ndarray): The frame to draw on.
-        game_state (Any): The current game state.
-        tracked_detected_balls (List[Tuple[int, int, float, int, str]]): List of tracked balls as (x, y, radius, ball_id, ball_type).
-    """
-    logger.debug(f"Drawing {len(tracked_detected_balls)} balls")
-    start_time = time.time()
+     # Draw Balls
+     if hasattr(game_state, 'tracked_balls') and game_state.tracked_balls:
+         for ball in game_state.tracked_balls:
+             try:
+                 x, y, radius, ball_id, _, ball_type = ball
+                 center = (int(x), int(y))
+                 vis_radius = int(radius * BALL_RADIUS_FACTOR)
+                 color = BALL_COLORS.get(ball_type, UIConstants.YELLOW)
+                 cv2.circle(frame, center, vis_radius, color, -1)
+                 cv2.circle(frame, center, vis_radius, UIConstants.WHITE, 1)
+             except IndexError: logger.warning(f"Malformed ball data encountered: {ball}")
+             except Exception as e: logger.error(f"Error drawing ball {ball}: {e}")
 
-    try:
-        # Get the camera frame resolution
-        if game_state.camera_available:
-            camera_width = int(game_state.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-            camera_height = int(game_state.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-            if camera_width == 0 or camera_height == 0:
-                logger.warning("Camera resolution could not be retrieved, assuming frame dimensions")
-                camera_width, camera_height = frame.shape[1], frame.shape[0]
+
+# Feature 3 (Revised): Draw Game Over Screen with Image
+def _draw_game_over_screen(frame: np.ndarray, game_state: GameState) -> None: # Use GameState type hint
+    """Draws the Game Over screen using game_over.png and adds buttons."""
+    global game_over_splash_cache
+    if game_over_splash_cache is None:
+        splash_path = GameConstants.GAME_OVER_SPLASH_FILE
+        if os.path.exists(splash_path):
+            try:
+                splash = cv2.imread(splash_path)
+                if splash is not None:
+                    splash_resized = cv2.resize(splash, (frame.shape[1], frame.shape[0]))
+                    game_over_splash_cache = splash_resized
+                    logger.info(f"Loaded and cached '{splash_path}'")
+                else:
+                    logger.error(f"Failed to load '{splash_path}'. Using fallback.")
+                    game_over_splash_cache = "fallback"
+            except Exception as e:
+                logger.error(f"Error loading or resizing '{splash_path}': {e}. Using fallback.")
+                game_over_splash_cache = "fallback"
         else:
-            camera_width, camera_height = frame.shape[1], frame.shape[0]  # Use static frame dimensions if camera unavailable
+            logger.warning(f"'{splash_path}' not found. Using fallback.")
+            game_over_splash_cache = "fallback"
 
-        logger.debug(f"Camera resolution: {camera_width}x{camera_height}, Display resolution: {UIConstants.WINDOW_WIDTH}x{UIConstants.WINDOW_HEIGHT}")
+    if game_over_splash_cache is not None and game_over_splash_cache != "fallback":
+        frame[:, :] = game_over_splash_cache
+    else: # Fallback drawing
+        cv2.rectangle(frame, (0, 0), (frame.shape[1], frame.shape[0]), (0, 0, 0), -1)
+        title_text = "You Win!" if game_state.win_condition_met else "Game Over!"
+        title_color = UIConstants.GREEN if game_state.win_condition_met else UIConstants.RED
+        (text_width, text_height), _ = cv2.getTextSize(title_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_XLARGE, UIConstants.FONT_THICKNESS + 1)
+        title_x = (frame.shape[1] - text_width) // 2; title_y = frame.shape[0] // 3
+        cv2.putText(frame, title_text, (title_x, title_y), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_XLARGE, title_color, UIConstants.FONT_THICKNESS + 1)
+        score_text = f"Final Score: {game_state.score}"
+        (score_width, score_height), _ = cv2.getTextSize(score_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_LARGE, UIConstants.FONT_THICKNESS)
+        score_x = (frame.shape[1] - score_width) // 2; score_y = title_y + text_height + 30
+        cv2.putText(frame, score_text, (score_x, score_y), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_LARGE, UIConstants.WHITE, UIConstants.FONT_THICKNESS)
 
-        # Calculate scaling factors to map camera coordinates to display window coordinates
-        scale_x = UIConstants.WINDOW_WIDTH / camera_width
-        scale_y = UIConstants.WINDOW_HEIGHT / camera_height
-        logger.debug(f"Scaling factors: scale_x={scale_x}, scale_y={scale_y}")
+    # Draw Buttons (Common)
+    button_width, button_height, button_y, button_spacing = 200, 50, frame.shape[0] - 90, 60
+    total_button_width = button_width * 2 + button_spacing
+    start_x = (frame.shape[1] - total_button_width) // 2
+    new_game_x = start_x
+    new_game_rect = (new_game_x, button_y, button_width, button_height)
+    _draw_button(frame, new_game_x, button_y, button_width, button_height, "New Game", UIConstants.GREEN, font_scale=UIConstants.FONT_SCALE_MEDIUM)
+    action_new_game = "new_game_from_gameover"
+    leaderboard_x = new_game_x + button_width + button_spacing
+    leaderboard_rect = (leaderboard_x, button_y, button_width, button_height)
+    _draw_button(frame, leaderboard_x, button_y, button_width, button_height, "Leaderboard", UIConstants.YELLOW, font_scale=UIConstants.FONT_SCALE_MEDIUM)
+    action_leaderboard = "show_leaderboard_from_gameover"
+    game_state.submenu_items = [(new_game_rect, action_new_game, "New Game"), (leaderboard_rect, action_leaderboard, "Leaderboard")]
+    game_state.menu_pos, game_state.menu_width, game_state.menu_height = (0, 0), frame.shape[1], frame.shape[0]
 
-        # Update ball trails and draw balls
-        for x, y, radius, ball_id, ball_type in tracked_detected_balls:
-            # Scale coordinates and radius to display resolution
-            scaled_x = int(x * scale_x)
-            scaled_y = int(y * scale_y)
-            scaled_radius = int(radius * (scale_x + scale_y) / 2)  # Average scaling for radius
 
-            # Update ball trails
-            if ball_id not in game_state.ball_trails:
-                game_state.ball_trails[ball_id] = []
-            # Add current position with frame count
-            game_state.ball_trails[ball_id].append((scaled_x, scaled_y, game_state.frame_count))
-            # Keep only the last TRAIL_LENGTH positions and remove old entries
-            game_state.ball_trails[ball_id] = [
-                pos for pos in game_state.ball_trails[ball_id]
-                if game_state.frame_count - pos[2] < TRAIL_LENGTH * GameConstants.FRAME_RATE  # Adjust for frame rate
-            ][-TRAIL_LENGTH:]
+# Feature 5: Draw Visual Debug Overlay
+def _draw_debug_overlay(frame: np.ndarray, game_state: GameState) -> None: # Use GameState type hint
+    """Draws debugging information directly onto the frame."""
+    if hasattr(game_state, 'tracked_balls'):
+        for ball in game_state.tracked_balls:
+            try:
+                x, y, radius, ball_id, age, ball_type = ball
+                center_x, center_y, int_radius = int(x), int(y), int(radius)
+                pt1 = (center_x - int_radius, center_y - int_radius)
+                pt2 = (center_x + int_radius, center_y + int_radius)
+                cv2.rectangle(frame, pt1, pt2, UIConstants.YELLOW, 1) # Bounding box
+                label = f"ID:{ball_id} T:{ball_type}"
+                (w, h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_SMALL, 1)
+                text_x, text_y = pt1[0], pt1[1] - 5 # Position text above box
+                cv2.rectangle(frame, (text_x, text_y - h - 2), (text_x + w, text_y + 2), (0,0,0), -1) # Text bg
+                cv2.putText(frame, label, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_SMALL, UIConstants.YELLOW, 1)
+            except IndexError: logger.warning(f"Malformed ball data for debug overlay: {ball}")
+            except Exception as e: logger.error(f"Error drawing debug overlay for ball {ball}: {e}")
 
-            # Draw the trail with fading effect
-            trail = game_state.ball_trails[ball_id]
-            if len(trail) > 1:
-                for i in range(len(trail) - 1):
-                    alpha = 1.0 - (TRAIL_FADE_STEP * (len(trail) - 1 - i))  # Fade older segments
-                    if alpha <= 0:
-                        continue
-                    # Create a temporary overlay for the trail to apply transparency
-                    overlay = frame.copy()
-                    start_pos = (trail[i][0], trail[i][1])
-                    end_pos = (trail[i + 1][0], trail[i + 1][1])
-                    cv2.line(overlay, start_pos, end_pos, BALL_COLORS[ball_type], TRAIL_THICKNESS)
-                    cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
+def draw_ui(frame: np.ndarray, game_state: GameState) -> None: # Use GameState type hint
+    """
+    Draw the user interface elements on the frame, handling different game states.
+    """
+    # --- Draw elements common to PLAYING and MENU states ---
+    if game_state.current_state != CurrentGameState.GAME_OVER:
+        # <<< Modified: Use helper function for text with background >>>
+        player_name = game_state.get_current_player().name
+        score_text = f"Player: {player_name} Score: {game_state.score}"
+        _draw_text_with_background(frame, score_text, (10, 30), UIConstants.FONT_SCALE_MEDIUM, UIConstants.WHITE, UIConstants.GREY_BG, thickness=UIConstants.FONT_THICKNESS)
 
-            # Draw the ball
-            color = BALL_COLORS.get(ball_type, (128, 128, 128))  # Default to gray if type unknown
-            cv2.circle(frame, (scaled_x, scaled_y), scaled_radius, color, 2)
+        high_score_text = f"High Score: {game_state.high_score}"
+        # Calculate X position for High Score to align right (approx)
+        (tw, th), _ = cv2.getTextSize(high_score_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.FONT_THICKNESS)
+        high_score_x = UIConstants.WINDOW_WIDTH - tw - 10 # Adjust 10 for padding
+        _draw_text_with_background(frame, high_score_text, (high_score_x, 30), UIConstants.FONT_SCALE_MEDIUM, UIConstants.WHITE, UIConstants.GREY_BG, thickness=UIConstants.FONT_THICKNESS)
 
-            # Optionally draw the ball ID (for debugging)
-            if game_state.debug_mode:
-                cv2.putText(frame, str(ball_id), (scaled_x + 15, scaled_y),
-                            cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_SMALL, color, 1)
+        mode_text = f"Mode: {game_state.game_mode.capitalize()}"
+        _draw_text_with_background(frame, mode_text, (10, 60), UIConstants.FONT_SCALE_MEDIUM, UIConstants.WHITE, UIConstants.GREY_BG, thickness=UIConstants.FONT_THICKNESS)
+        # <<< End Modifications for Text Backgrounds >>>
 
-        # Clean up trails for balls that are no longer tracked
-        current_ball_ids = {ball[3] for ball in tracked_detected_balls}
-        game_state.ball_trails = {
-            ball_id: trail for ball_id, trail in game_state.ball_trails.items()
-            if ball_id in current_ball_ids
-        }
+        # Timer text (no background needed, usually stands out)
+        if game_state.game_mode == "timed" and game_state.game_timer is not None and game_state.current_state == CurrentGameState.PLAYING:
+            timer_text = f"Time Left: {int(game_state.game_timer)}"
+            time_color = UIConstants.RED if game_state.game_timer < 10 else UIConstants.YELLOW
+            # You could add background here too if needed, using the helper
+            cv2.putText(frame, timer_text, (UIConstants.WINDOW_WIDTH // 2 - 50, 30), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, time_color, UIConstants.FONT_THICKNESS)
 
-    except Exception as e:
-        logger.error(f"Error drawing balls: {e}")
-        raise
-    finally:
-        render_time = (time.time() - start_time) * 1000  # Convert to milliseconds
-        logger.debug(f"Ball rendering took {render_time:.2f} ms")
+        if game_state.current_state == CurrentGameState.PLAYING:
+             draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole)
+             if game_state.drawing and game_state.temp_zone:
+                 x1, y1, w, h = game_state.temp_zone
+                 cv2.rectangle(frame, (x1, y1), (x1 + w, y1 + h), UIConstants.YELLOW, 2)
+             # Draw menu button using its constants (position updated in constants.txt)
+             draw_menu(frame, game_state)
 
+             if game_state.achievement_notification:
+                 notif_text = game_state.achievement_notification
+                 (tw, th), _ = cv2.getTextSize(notif_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_LARGE, UIConstants.FONT_THICKNESS)
+                 nx, ny = (UIConstants.WINDOW_WIDTH - tw) // 2, UIConstants.WINDOW_HEIGHT - 50
+                 cv2.putText(frame, notif_text, (nx, ny), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_LARGE, UIConstants.GREEN, UIConstants.FONT_THICKNESS)
+
+        if game_state.current_state == CurrentGameState.MENU:
+             mx, my = (frame.shape[1] - game_state.menu_width) // 2, (frame.shape[0] - game_state.menu_height) // 2
+             game_state.menu_pos = (mx, my)
+             draw_menu_window(frame, game_state)
+
+        if game_state.notification_text and game_state.notification_timer > 0:
+             color = game_state.notification_color
+             (tw, th), _ = cv2.getTextSize(game_state.notification_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.FONT_THICKNESS)
+             nx, ny = (UIConstants.WINDOW_WIDTH - tw) // 2, UIConstants.WINDOW_HEIGHT - 20
+             # Use helper for notification background too
+             _draw_text_with_background(frame, game_state.notification_text, (nx, ny), UIConstants.FONT_SCALE_MEDIUM, color, UIConstants.BLACK, thickness=UIConstants.FONT_THICKNESS, alpha=0.7)
+
+
+    # --- Draw elements specific to GAME_OVER state ---
+    elif game_state.current_state == CurrentGameState.GAME_OVER:
+         _draw_game_over_screen(frame, game_state)
+
+    # --- Feature 5: Draw Visual Debug Overlay (if enabled) ---
+    if hasattr(game_state, 'show_debug_overlay') and game_state.show_debug_overlay:
+        _draw_debug_overlay(frame, game_state)
+
+    # --- Draw elements always on top ---
+    if game_state.debug_mode:
+        fps = game_state.fps if hasattr(game_state, 'fps') else 0
+        state_text = str(game_state.current_state).split('.')[-1]
+        overlay_status = "ON" if getattr(game_state, 'show_debug_overlay', False) else "OFF"
+        debug_text = f"FPS:{fps:.1f}|State:{state_text}|Overlay(b):{overlay_status}|Tracked:{len(game_state.tracked_balls)}"
+        # Use helper for debug text background
+        _draw_text_with_background(frame, debug_text, (10, UIConstants.WINDOW_HEIGHT - 10), UIConstants.FONT_SCALE_SMALL, UIConstants.YELLOW, UIConstants.BLACK, alpha=0.7)
+
+
+# Use GameState type hint for return value
 def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional[GameState]:
-    """
-    Display the splash screen with a fade effect.
-
-    Args:
-        supabase_url (str): The Supabase URL.
-        supabase_key (str): The Supabase API key.
-
-    Returns:
-        Optional[GameState]: The initialized game state, or None if the splash screen is skipped.
-    """
-    splash = cv2.imread("splash.png")
+    """Displays the splash screen and handles initial setup."""
+    logger.info("Showing splash screen...")
+    splash_path = GameConstants.SPLASH_SCREEN_FILE
+    splash = cv2.imread(splash_path)
     if splash is None:
-        logger.error("Failed to load splash.png, skipping splash screen")
+        logger.error(f"Failed to load {splash_path}. Exiting.")
+        splash = np.zeros((UIConstants.WINDOW_HEIGHT, UIConstants.WINDOW_WIDTH, 3), dtype=np.uint8)
+        cv2.putText(splash, f"Error: {splash_path} not found!", (50, UIConstants.WINDOW_HEIGHT // 2), cv2.FONT_HERSHEY_SIMPLEX, 1, UIConstants.RED, 2)
+        try: cv2.imshow(UIConstants.WINDOW_NAME, splash); cv2.waitKey(3000)
+        except cv2.error as e: logger.error(f"OpenCV error: {e}")
         return None
 
     splash = cv2.resize(splash, (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT))
-    cv2.namedWindow(UIConstants.WINDOW_NAME, cv2.WINDOW_NORMAL)
+    try: cv2.namedWindow(UIConstants.WINDOW_NAME, cv2.WINDOW_NORMAL)
+    except cv2.error as e: logger.error(f"Failed window create: {e}"); return None
+
+    cv2.putText(splash, "Loading...", (50, UIConstants.WINDOW_HEIGHT - 50), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.YELLOW, UIConstants.FONT_THICKNESS)
+    cv2.imshow(UIConstants.WINDOW_NAME, splash); cv2.waitKey(1)
+
+    try: # Initialize GameState
+        logger.info("Initializing GameState...")
+        game_state = GameState(supabase_url, supabase_key)
+        logger.info("GameState initialized successfully.")
+        if not game_state.camera_available:
+             if game_state.static_frame is None: logger.error("Static frame None. Exiting."); return None
+             first_frame = game_state.static_frame.copy(); logger.info("Using static frame.")
+        else:
+            ret, first_frame = game_state.cap.read()
+            if not ret or first_frame is None: logger.error("Failed capture first frame."); clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state); return None
+            first_frame = cv2.resize(first_frame, (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT)); logger.info("Captured first frame.")
+    except Exception as e: # Catch initialization errors
+        logger.exception(f"Critical init error: {e}")
+        cv2.putText(splash, f"Init Error", (50, UIConstants.WINDOW_HEIGHT // 2), cv2.FONT_HERSHEY_SIMPLEX, 0.8, UIConstants.RED, 1)
+        cv2.imshow(UIConstants.WINDOW_NAME, splash); cv2.waitKey(5000); return None
 
     start_time = time.time()
-    game_state = GameState(supabase_url, supabase_key)
-
-    # Attempt to read the first frame, or use static frame if camera is unavailable
-    if game_state.camera_available:
-        ret, first_frame = game_state.cap.read()
-        if not ret:
-            logger.error("Camera failed during splash screen, exiting...")
-            clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on)
-            return None
-    else:
-        first_frame = game_state.static_frame
-        logger.info("Camera unavailable, using static frame for splash screen transition")
-
+    logger.info("Starting splash display loop.")
     while time.time() - start_time < GameConstants.SPLASH_DURATION + GameConstants.FADE_DURATION:
         elapsed = time.time() - start_time
-        if elapsed < GameConstants.SPLASH_DURATION:
-            cv2.imshow(UIConstants.WINDOW_NAME, splash)
-        else:
-            alpha = 1 - (elapsed - GameConstants.SPLASH_DURATION) / GameConstants.FADE_DURATION
-            beta = 1 - alpha
-            blended = cv2.addWeighted(splash, alpha, first_frame, beta, 0)
-            cv2.imshow(UIConstants.WINDOW_NAME, blended)
+        display_frame = np.zeros_like(first_frame) if first_frame is not None else splash.copy()
+        try: # Fade logic
+            if elapsed < GameConstants.SPLASH_DURATION:
+                 display_frame = splash
+                 if game_state.camera_available or game_state.static_frame is not None: cv2.putText(display_frame, "Ready...", (50, UIConstants.WINDOW_HEIGHT - 50), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.YELLOW, UIConstants.FONT_THICKNESS)
+            elif elapsed < GameConstants.SPLASH_DURATION + GameConstants.FADE_DURATION and first_frame is not None:
+                 alpha = max(0.0, 1.0 - (elapsed - GameConstants.SPLASH_DURATION) / GameConstants.FADE_DURATION) if GameConstants.FADE_DURATION > 0 else 0.0
+                 if splash.shape == first_frame.shape: display_frame = cv2.addWeighted(splash, alpha, first_frame, 1.0 - alpha, 0)
+                 else: logger.warning("Splash/frame mismatch."); display_frame = first_frame
+            else: display_frame = first_frame if first_frame is not None else splash
+            cv2.imshow(UIConstants.WINDOW_NAME, display_frame)
+        except Exception as e: logger.exception(f"Splash loop error: {e}"); cv2.putText(display_frame, "Display Error", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, UIConstants.RED, 2); cv2.imshow(UIConstants.WINDOW_NAME, display_frame)
 
-        if cv2.waitKey(GameConstants.WAIT_KEY_DELAY) & 0xFF == ord('q'):
-            clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on)
-            return None
+        key = cv2.waitKey(GameConstants.WAIT_KEY_DELAY) & 0xFF
+        if key == ord('q') or key == 27: logger.info("Splash skipped."); clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state); return None
+        try: # Check window close
+            if cv2.getWindowProperty(UIConstants.WINDOW_NAME, 0) != -1:
+                 if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1: logger.info("Splash window closed."); clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state); return None
+            else: logger.info("Splash window destroyed."); return None
+        except cv2.error: logger.info("Window check failed."); clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state); return None
 
+    logger.info("Splash finished.")
     return game_state

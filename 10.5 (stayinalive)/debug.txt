@@ -1,0 +1,3435 @@
+
+F:\Whiffle\10.6 (littlefix)>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.10.9)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2025-03-30 09:03:36,199 - INFO - Showing splash screen...
+2025-03-30 09:03:36,306 - INFO - Initializing GameState...
+2025-03-30 09:03:38,863 - INFO - Camera resolution: 1280x720
+2025-03-30 09:03:38,882 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+2025-03-30 09:03:38,884 - INFO - Scoring zones loaded from scoring_zones.json
+2025-03-30 09:03:38,884 - INFO - Notify: Zones Loaded
+2025-03-30 09:03:38,885 - INFO - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-03-30 09:03:38,885 - INFO - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-03-30 09:03:38,886 - INFO - Loaded high score for mode 'classic': 0
+2025-03-30 09:03:38,923 - INFO - Loaded score sound: sounds/ding.wav
+2025-03-30 09:03:39,117 - INFO - Loaded background music: sounds/background_music.mp3
+2025-03-30 09:03:39,117 - INFO - Sounds initialized (score, background).
+2025-03-30 09:03:39,119 - INFO - Loaded unlock status for 1 achievements from achievements_status.json.
+2025-03-30 09:03:39,119 - WARNING - Missing/invalid format for 'white' in hsv_ranges.json. Using default.
+2025-03-30 09:03:39,119 - WARNING - Missing/invalid format for 'red1' in hsv_ranges.json. Using default.
+2025-03-30 09:03:39,119 - WARNING - Missing/invalid format for 'red2' in hsv_ranges.json. Using default.
+2025-03-30 09:03:39,120 - INFO - Loaded custom HSV ranges from hsv_ranges.json
+2025-03-30 09:03:39,120 - INFO - GameState initialized successfully.
+2025-03-30 09:03:39,951 - INFO - Captured first frame.
+2025-03-30 09:03:39,952 - INFO - Starting splash display loop.
+2025-03-30 09:03:42,956 - INFO - Splash finished.
+Press 'q' to quit, 's' to start drawing a scoring zone, 'd' to toggle debug mode
+2025-03-30 09:03:43,066 - INFO - Game window initialized.
+
+0: 416x736 (no detections), 29.0ms
+Speed: 3.1ms preprocess, 29.0ms inference, 19.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 7.8ms
+Speed: 2.7ms preprocess, 7.8ms inference, 0.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 6.7ms
+Speed: 2.5ms preprocess, 6.7ms inference, 0.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 8.3ms
+Speed: 3.3ms preprocess, 8.3ms inference, 0.8ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 0.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 5.5ms
+Speed: 1.5ms preprocess, 5.5ms inference, 0.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 8.5ms
+Speed: 1.9ms preprocess, 8.5ms inference, 0.7ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 0.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 7.8ms
+Speed: 3.0ms preprocess, 7.8ms inference, 0.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:03:44,883 - INFO - Menu toggled ON via button click.
+2025-03-30 09:03:50,010 - INFO - Clicked on item: 'Players' with action: players in state CurrentGameState.MENU
+2025-03-30 09:03:50,010 - INFO - Switching to submenu: players
+2025-03-30 09:03:51,118 - INFO - Clicked on item: 'Back' with action: back_to_main in state CurrentGameState.MENU
+2025-03-30 09:03:52,438 - INFO - Clicked on item: 'Resume' with action: resume in state CurrentGameState.MENU
+
+0: 416x736 (no detections), 21.1ms
+Speed: 2.2ms preprocess, 21.1ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.7ms
+Speed: 2.0ms preprocess, 18.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.6ms
+Speed: 2.8ms preprocess, 15.6ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.0ms
+Speed: 1.9ms preprocess, 19.0ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.4ms
+Speed: 2.1ms preprocess, 18.4ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.8ms
+Speed: 2.1ms preprocess, 18.8ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.0ms
+Speed: 2.1ms preprocess, 19.0ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 16.3ms
+Speed: 2.0ms preprocess, 16.3ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.2ms
+Speed: 2.1ms preprocess, 18.2ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.7ms
+Speed: 2.4ms preprocess, 15.7ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.6ms
+Speed: 2.2ms preprocess, 18.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.9ms
+Speed: 2.2ms preprocess, 17.9ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.0ms
+Speed: 2.9ms preprocess, 17.0ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.6ms
+Speed: 2.7ms preprocess, 17.6ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.5ms
+Speed: 2.0ms preprocess, 17.5ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 20.4ms
+Speed: 3.5ms preprocess, 20.4ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.7ms
+Speed: 1.9ms preprocess, 15.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.6ms
+Speed: 3.3ms preprocess, 15.6ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.4ms
+Speed: 3.1ms preprocess, 15.4ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.1ms
+Speed: 2.2ms preprocess, 15.1ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.1ms
+Speed: 2.0ms preprocess, 18.1ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.3ms
+Speed: 3.0ms preprocess, 15.3ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.8ms
+Speed: 2.8ms preprocess, 15.8ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.1ms
+Speed: 2.0ms preprocess, 18.1ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.2ms
+Speed: 2.2ms preprocess, 18.2ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.0ms
+Speed: 3.4ms preprocess, 15.0ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 16.4ms
+Speed: 2.0ms preprocess, 16.4ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.4ms
+Speed: 1.9ms preprocess, 18.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.9ms
+Speed: 2.0ms preprocess, 18.9ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.7ms
+Speed: 2.0ms preprocess, 18.7ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.1ms
+Speed: 2.0ms preprocess, 15.1ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.8ms
+Speed: 3.2ms preprocess, 17.8ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.3ms
+Speed: 3.1ms preprocess, 15.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.6ms
+Speed: 2.1ms preprocess, 18.6ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 16.7ms
+Speed: 3.4ms preprocess, 16.7ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 14.3ms
+Speed: 2.0ms preprocess, 14.3ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 16.4ms
+Speed: 2.1ms preprocess, 16.4ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.1ms
+Speed: 2.1ms preprocess, 18.1ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.7ms
+Speed: 2.1ms preprocess, 15.7ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 16.4ms
+Speed: 3.4ms preprocess, 16.4ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.4ms
+Speed: 3.1ms preprocess, 15.4ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.6ms
+Speed: 3.0ms preprocess, 19.6ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.8ms
+Speed: 2.0ms preprocess, 17.8ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.6ms
+Speed: 2.1ms preprocess, 15.6ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 14.3ms
+Speed: 2.8ms preprocess, 14.3ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 16.8ms
+Speed: 3.4ms preprocess, 16.8ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 14.2ms
+Speed: 2.1ms preprocess, 14.2ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.3ms
+Speed: 2.0ms preprocess, 19.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.6ms
+Speed: 2.7ms preprocess, 15.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.0ms
+Speed: 3.7ms preprocess, 15.0ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.0ms
+Speed: 2.4ms preprocess, 19.0ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.3ms
+Speed: 3.5ms preprocess, 17.3ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.5ms
+Speed: 2.1ms preprocess, 19.5ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.1ms
+Speed: 2.7ms preprocess, 17.1ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.0ms
+Speed: 2.9ms preprocess, 15.0ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.6ms
+Speed: 2.0ms preprocess, 18.6ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.9ms
+Speed: 3.1ms preprocess, 15.9ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.3ms
+Speed: 2.8ms preprocess, 15.3ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.4ms
+Speed: 2.0ms preprocess, 19.4ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.4ms
+Speed: 2.0ms preprocess, 19.4ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.1ms
+Speed: 2.1ms preprocess, 19.1ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 20.1ms
+Speed: 2.0ms preprocess, 20.1ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.3ms
+Speed: 2.1ms preprocess, 18.3ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.0ms
+Speed: 3.9ms preprocess, 19.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.6ms
+Speed: 7.2ms preprocess, 18.6ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.5ms
+Speed: 2.0ms preprocess, 17.5ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.2ms
+Speed: 2.0ms preprocess, 18.2ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.9ms
+Speed: 2.0ms preprocess, 17.9ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.9ms
+Speed: 2.5ms preprocess, 18.9ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.3ms
+Speed: 1.9ms preprocess, 15.3ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.2ms
+Speed: 2.1ms preprocess, 15.2ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 16.2ms
+Speed: 3.0ms preprocess, 16.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.0ms
+Speed: 2.2ms preprocess, 17.0ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.2ms
+Speed: 2.0ms preprocess, 18.2ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.3ms
+Speed: 1.9ms preprocess, 15.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.3ms
+Speed: 2.2ms preprocess, 15.3ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.8ms
+Speed: 2.1ms preprocess, 17.8ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.0ms
+Speed: 2.7ms preprocess, 17.0ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.7ms
+Speed: 2.1ms preprocess, 18.7ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.9ms
+Speed: 2.1ms preprocess, 17.9ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 14.8ms
+Speed: 2.7ms preprocess, 14.8ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 16.5ms
+Speed: 2.9ms preprocess, 16.5ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.3ms
+Speed: 2.0ms preprocess, 19.3ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 14.5ms
+Speed: 3.0ms preprocess, 14.5ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.1ms
+Speed: 2.0ms preprocess, 18.1ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 14.5ms
+Speed: 2.8ms preprocess, 14.5ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.6ms
+Speed: 1.9ms preprocess, 17.6ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.1ms
+Speed: 2.0ms preprocess, 19.1ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.1ms
+Speed: 2.0ms preprocess, 18.1ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.4ms
+Speed: 2.2ms preprocess, 18.4ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.2ms
+Speed: 2.1ms preprocess, 15.2ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.0ms
+Speed: 2.4ms preprocess, 15.0ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.6ms
+Speed: 2.4ms preprocess, 15.6ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.2ms
+Speed: 2.0ms preprocess, 18.2ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.8ms
+Speed: 2.0ms preprocess, 17.8ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.6ms
+Speed: 2.0ms preprocess, 18.6ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.6ms
+Speed: 2.0ms preprocess, 18.6ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 16.7ms
+Speed: 1.9ms preprocess, 16.7ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.1ms
+Speed: 2.0ms preprocess, 18.1ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.4ms
+Speed: 2.1ms preprocess, 18.4ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.1ms
+Speed: 2.0ms preprocess, 19.1ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.9ms
+Speed: 2.0ms preprocess, 17.9ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 16.7ms
+Speed: 2.6ms preprocess, 16.7ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.3ms
+Speed: 2.1ms preprocess, 19.3ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 17.4ms
+Speed: 2.7ms preprocess, 17.4ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 19.2ms
+Speed: 6.6ms preprocess, 19.2ms inference, 1.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 49.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:01,665 - INFO - Tracked 1 balls in frame 518
+
+0: 416x736 (no detections), 18.4ms
+Speed: 3.0ms preprocess, 18.4ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 20.0ms
+Speed: 2.1ms preprocess, 20.0ms inference, 0.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 1 white, 18.6ms
+Speed: 2.6ms preprocess, 18.6ms inference, 13.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:01,957 - INFO - Tracked 2 balls in frame 526
+
+0: 416x736 1 white, 15.9ms
+Speed: 4.1ms preprocess, 15.9ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,029 - INFO - Tracked 2 balls in frame 528
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.6ms preprocess, 15.7ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,098 - INFO - Tracked 2 balls in frame 530
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,168 - INFO - Tracked 2 balls in frame 532
+
+0: 416x736 1 white, 17.6ms
+Speed: 2.0ms preprocess, 17.6ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,235 - INFO - Tracked 2 balls in frame 534
+
+0: 416x736 1 white, 17.9ms
+Speed: 2.2ms preprocess, 17.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,302 - INFO - Tracked 2 balls in frame 536
+
+0: 416x736 1 white, 19.0ms
+Speed: 4.5ms preprocess, 19.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,383 - INFO - Tracked 2 balls in frame 538
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.5ms preprocess, 15.5ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,451 - INFO - Tracked 2 balls in frame 540
+
+0: 416x736 1 white, 20.5ms
+Speed: 2.4ms preprocess, 20.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,523 - INFO - Tracked 2 balls in frame 542
+
+0: 416x736 1 white, 18.0ms
+Speed: 4.0ms preprocess, 18.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,607 - INFO - Tracked 2 balls in frame 544
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.3ms preprocess, 18.9ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,680 - INFO - Tracked 2 balls in frame 546
+
+0: 416x736 1 white, 16.2ms
+Speed: 3.7ms preprocess, 16.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,755 - INFO - Tracked 2 balls in frame 548
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.2ms preprocess, 15.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,821 - INFO - Tracked 2 balls in frame 550
+
+0: 416x736 (no detections), 15.6ms
+Speed: 2.1ms preprocess, 15.6ms inference, 1.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:02,953 - INFO - Tracked 3 balls in frame 554
+
+0: 416x736 1 white, 17.6ms
+Speed: 2.1ms preprocess, 17.6ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,023 - INFO - Tracked 4 balls in frame 556
+
+0: 416x736 1 white, 18.0ms
+Speed: 3.1ms preprocess, 18.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,102 - INFO - Tracked 4 balls in frame 558
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.0ms preprocess, 18.7ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,172 - INFO - Tracked 4 balls in frame 560
+
+0: 416x736 1 white, 20.0ms
+Speed: 2.2ms preprocess, 20.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,245 - INFO - Tracked 4 balls in frame 562
+
+0: 416x736 1 white, 17.2ms
+Speed: 3.0ms preprocess, 17.2ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,314 - INFO - Tracked 4 balls in frame 564
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,382 - INFO - Tracked 4 balls in frame 566
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,451 - INFO - Tracked 4 balls in frame 568
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.3ms preprocess, 18.7ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,528 - INFO - Tracked 4 balls in frame 570
+
+0: 416x736 1 white, 15.8ms
+Speed: 2.0ms preprocess, 15.8ms inference, 3.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,597 - INFO - Tracked 4 balls in frame 572
+
+0: 416x736 1 white, 18.2ms
+Speed: 2.0ms preprocess, 18.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,669 - INFO - Tracked 4 balls in frame 574
+
+0: 416x736 1 white, 17.8ms
+Speed: 2.0ms preprocess, 17.8ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,740 - INFO - Tracked 4 balls in frame 576
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.1ms preprocess, 18.4ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,810 - INFO - Tracked 4 balls in frame 578
+
+0: 416x736 1 white, 17.7ms
+Speed: 2.2ms preprocess, 17.7ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,880 - INFO - Tracked 4 balls in frame 580
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:03,949 - INFO - Tracked 4 balls in frame 582
+
+0: 416x736 1 white, 17.4ms
+Speed: 2.8ms preprocess, 17.4ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,019 - INFO - Tracked 4 balls in frame 584
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,086 - INFO - Tracked 4 balls in frame 586
+
+0: 416x736 1 white, 16.1ms
+Speed: 2.1ms preprocess, 16.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,154 - INFO - Tracked 4 balls in frame 588
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,222 - INFO - Tracked 4 balls in frame 590
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,289 - INFO - Tracked 4 balls in frame 592
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.1ms preprocess, 15.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,357 - INFO - Tracked 4 balls in frame 594
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.1ms preprocess, 15.0ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,429 - INFO - Tracked 4 balls in frame 596
+
+0: 416x736 1 white, 16.8ms
+Speed: 2.1ms preprocess, 16.8ms inference, 2.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,497 - INFO - Tracked 4 balls in frame 598
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.1ms preprocess, 18.9ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,570 - INFO - Tracked 4 balls in frame 600
+
+0: 416x736 1 white, 17.8ms
+Speed: 2.2ms preprocess, 17.8ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,638 - INFO - Tracked 4 balls in frame 602
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,708 - INFO - Tracked 4 balls in frame 604
+
+0: 416x736 1 white, 17.4ms
+Speed: 2.7ms preprocess, 17.4ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,778 - INFO - Tracked 4 balls in frame 606
+
+0: 416x736 1 white, 15.6ms
+Speed: 3.1ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,847 - INFO - Tracked 4 balls in frame 608
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.7ms preprocess, 15.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:04,918 - INFO - Tracked 4 balls in frame 610
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,008 - INFO - Tracked 4 balls in frame 612
+
+0: 416x736 1 white, 17.6ms
+Speed: 2.7ms preprocess, 17.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,078 - INFO - Tracked 4 balls in frame 614
+
+0: 416x736 1 half, 16.8ms
+Speed: 2.5ms preprocess, 16.8ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,147 - INFO - Tracked 4 balls in frame 616
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.5ms preprocess, 15.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,213 - INFO - Tracked 4 balls in frame 618
+
+0: 416x736 1 white, 15.2ms
+Speed: 1.9ms preprocess, 15.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,282 - INFO - Tracked 4 balls in frame 620
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.0ms preprocess, 18.9ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,352 - INFO - Tracked 4 balls in frame 622
+
+0: 416x736 1 white, 17.7ms
+Speed: 2.0ms preprocess, 17.7ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,421 - INFO - Tracked 4 balls in frame 624
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,487 - INFO - Tracked 4 balls in frame 626
+
+0: 416x736 1 white, 15.1ms
+Speed: 2.0ms preprocess, 15.1ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,554 - INFO - Tracked 4 balls in frame 628
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,622 - INFO - Tracked 4 balls in frame 630
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,690 - INFO - Tracked 4 balls in frame 632
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,755 - INFO - Tracked 4 balls in frame 634
+
+0: 416x736 1 white, 15.8ms
+Speed: 3.1ms preprocess, 15.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,825 - INFO - Tracked 4 balls in frame 636
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.3ms preprocess, 15.0ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,894 - INFO - Tracked 4 balls in frame 638
+
+0: 416x736 1 white, 18.0ms
+Speed: 1.9ms preprocess, 18.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:05,967 - INFO - Tracked 4 balls in frame 640
+
+0: 416x736 1 white, 17.7ms
+Speed: 2.0ms preprocess, 17.7ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,036 - INFO - Tracked 4 balls in frame 642
+
+0: 416x736 1 white, 17.4ms
+Speed: 2.5ms preprocess, 17.4ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,114 - INFO - Tracked 4 balls in frame 644
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.3ms preprocess, 15.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,180 - INFO - Tracked 4 balls in frame 646
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,248 - INFO - Tracked 4 balls in frame 648
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.0ms preprocess, 18.7ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,317 - INFO - Tracked 4 balls in frame 650
+
+0: 416x736 1 white, 18.6ms
+Speed: 1.9ms preprocess, 18.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,383 - INFO - Tracked 4 balls in frame 652
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.8ms preprocess, 15.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,451 - INFO - Tracked 4 balls in frame 654
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.6ms preprocess, 15.3ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,518 - INFO - Tracked 4 balls in frame 656
+
+0: 416x736 1 white, 14.9ms
+Speed: 2.6ms preprocess, 14.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,585 - INFO - Tracked 4 balls in frame 658
+
+0: 416x736 1 white, 14.9ms
+Speed: 2.7ms preprocess, 14.9ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,650 - INFO - Tracked 4 balls in frame 660
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,717 - INFO - Tracked 4 balls in frame 662
+
+0: 416x736 1 white, 14.2ms
+Speed: 2.0ms preprocess, 14.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,782 - INFO - Tracked 4 balls in frame 664
+
+0: 416x736 1 white, 19.0ms
+Speed: 2.0ms preprocess, 19.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,852 - INFO - Tracked 4 balls in frame 666
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.5ms preprocess, 15.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,919 - INFO - Tracked 4 balls in frame 668
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:06,988 - INFO - Tracked 4 balls in frame 670
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,055 - INFO - Tracked 4 balls in frame 672
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,123 - INFO - Tracked 4 balls in frame 674
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,192 - INFO - Tracked 4 balls in frame 676
+
+0: 416x736 1 white, 15.8ms
+Speed: 2.3ms preprocess, 15.8ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,261 - INFO - Tracked 4 balls in frame 678
+
+0: 416x736 1 white, 16.6ms
+Speed: 2.0ms preprocess, 16.6ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,332 - INFO - Tracked 4 balls in frame 680
+
+0: 416x736 1 white, 17.2ms
+Speed: 2.1ms preprocess, 17.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,402 - INFO - Tracked 4 balls in frame 682
+
+0: 416x736 1 white, 17.9ms
+Speed: 2.0ms preprocess, 17.9ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,472 - INFO - Tracked 4 balls in frame 684
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,541 - INFO - Tracked 4 balls in frame 686
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.4ms preprocess, 18.7ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,612 - INFO - Tracked 4 balls in frame 688
+
+0: 416x736 1 white, 15.6ms
+Speed: 3.0ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,679 - INFO - Tracked 4 balls in frame 690
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,749 - INFO - Tracked 4 balls in frame 692
+
+0: 416x736 1 white, 16.0ms
+Speed: 2.0ms preprocess, 16.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,816 - INFO - Tracked 4 balls in frame 694
+
+0: 416x736 1 white, 18.2ms
+Speed: 2.1ms preprocess, 18.2ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,899 - INFO - Tracked 4 balls in frame 696
+
+0: 416x736 1 white, 17.8ms
+Speed: 2.1ms preprocess, 17.8ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:07,970 - INFO - Tracked 4 balls in frame 698
+
+0: 416x736 1 white, 17.8ms
+Speed: 2.0ms preprocess, 17.8ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,040 - INFO - Tracked 4 balls in frame 700
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.0ms preprocess, 18.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,111 - INFO - Tracked 4 balls in frame 702
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.0ms preprocess, 18.7ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,183 - INFO - Tracked 4 balls in frame 704
+
+0: 416x736 1 white, 18.1ms
+Speed: 1.9ms preprocess, 18.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,252 - INFO - Tracked 4 balls in frame 706
+
+0: 416x736 1 white, 15.4ms
+Speed: 3.8ms preprocess, 15.4ms inference, 3.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,329 - INFO - Tracked 4 balls in frame 708
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,401 - INFO - Tracked 4 balls in frame 710
+
+0: 416x736 1 white, 17.0ms
+Speed: 3.8ms preprocess, 17.0ms inference, 2.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,483 - INFO - Tracked 4 balls in frame 712
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,553 - INFO - Tracked 4 balls in frame 714
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.1ms preprocess, 15.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,619 - INFO - Tracked 4 balls in frame 716
+
+0: 416x736 1 white, 18.8ms
+Speed: 2.6ms preprocess, 18.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,689 - INFO - Tracked 4 balls in frame 718
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.9ms preprocess, 15.7ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,760 - INFO - Tracked 4 balls in frame 720
+
+0: 416x736 1 white, 14.8ms
+Speed: 1.9ms preprocess, 14.8ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,828 - INFO - Tracked 4 balls in frame 722
+
+0: 416x736 1 white, 15.9ms
+Speed: 2.1ms preprocess, 15.9ms inference, 3.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,895 - INFO - Tracked 4 balls in frame 724
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:08,966 - INFO - Tracked 4 balls in frame 726
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,035 - INFO - Tracked 4 balls in frame 728
+
+0: 416x736 1 white, 19.3ms
+Speed: 2.1ms preprocess, 19.3ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,107 - INFO - Tracked 4 balls in frame 730
+
+0: 416x736 1 white, 19.2ms
+Speed: 1.9ms preprocess, 19.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,178 - INFO - Tracked 4 balls in frame 732
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,248 - INFO - Tracked 4 balls in frame 734
+
+0: 416x736 1 white, 17.2ms
+Speed: 2.9ms preprocess, 17.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,337 - INFO - Tracked 4 balls in frame 736
+
+0: 416x736 1 white, 17.7ms
+Speed: 2.0ms preprocess, 17.7ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,407 - INFO - Tracked 4 balls in frame 738
+
+0: 416x736 1 white, 19.2ms
+Speed: 2.0ms preprocess, 19.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,477 - INFO - Tracked 4 balls in frame 740
+
+0: 416x736 1 white, 15.6ms
+Speed: 3.0ms preprocess, 15.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,546 - INFO - Tracked 4 balls in frame 742
+
+0: 416x736 1 white, 18.2ms
+Speed: 2.9ms preprocess, 18.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,625 - INFO - Tracked 4 balls in frame 744
+
+0: 416x736 1 white, 15.9ms
+Speed: 3.3ms preprocess, 15.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,693 - INFO - Tracked 4 balls in frame 746
+
+0: 416x736 1 white, 20.2ms
+Speed: 2.3ms preprocess, 20.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,767 - INFO - Tracked 4 balls in frame 748
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,836 - INFO - Tracked 4 balls in frame 750
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,907 - INFO - Tracked 4 balls in frame 752
+
+0: 416x736 1 white, 16.9ms
+Speed: 2.9ms preprocess, 16.9ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:09,979 - INFO - Tracked 4 balls in frame 754
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,047 - INFO - Tracked 4 balls in frame 756
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,116 - INFO - Tracked 4 balls in frame 758
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,183 - INFO - Tracked 4 balls in frame 760
+
+0: 416x736 1 white, 14.4ms
+Speed: 2.6ms preprocess, 14.4ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,251 - INFO - Tracked 4 balls in frame 762
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,320 - INFO - Tracked 4 balls in frame 764
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,389 - INFO - Tracked 4 balls in frame 766
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,457 - INFO - Tracked 4 balls in frame 768
+
+0: 416x736 1 white, 16.4ms
+Speed: 2.1ms preprocess, 16.4ms inference, 3.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,527 - INFO - Tracked 4 balls in frame 770
+
+0: 416x736 1 white, 14.8ms
+Speed: 2.0ms preprocess, 14.8ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,592 - INFO - Tracked 4 balls in frame 772
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,659 - INFO - Tracked 4 balls in frame 774
+
+0: 416x736 1 white, 14.9ms
+Speed: 2.0ms preprocess, 14.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,724 - INFO - Tracked 4 balls in frame 776
+
+0: 416x736 1 white, 14.5ms
+Speed: 2.5ms preprocess, 14.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,794 - INFO - Tracked 4 balls in frame 778
+
+0: 416x736 1 white, 14.3ms
+Speed: 2.7ms preprocess, 14.3ms inference, 3.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,860 - INFO - Tracked 4 balls in frame 780
+
+0: 416x736 1 white, 19.3ms
+Speed: 2.0ms preprocess, 19.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:10,933 - INFO - Tracked 4 balls in frame 782
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.2ms preprocess, 15.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,003 - INFO - Tracked 4 balls in frame 784
+
+0: 416x736 1 white, 17.5ms
+Speed: 2.0ms preprocess, 17.5ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,081 - INFO - Tracked 4 balls in frame 786
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,149 - INFO - Tracked 4 balls in frame 788
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 2.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,236 - INFO - Tracked 4 balls in frame 790
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,306 - INFO - Tracked 4 balls in frame 792
+
+0: 416x736 1 white, 19.1ms
+Speed: 2.0ms preprocess, 19.1ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,376 - INFO - Tracked 4 balls in frame 794
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.9ms preprocess, 15.7ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,444 - INFO - Tracked 4 balls in frame 796
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.6ms preprocess, 18.5ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,514 - INFO - Tracked 4 balls in frame 798
+
+0: 416x736 1 white, 18.8ms
+Speed: 2.0ms preprocess, 18.8ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,585 - INFO - Tracked 4 balls in frame 800
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.6ms preprocess, 15.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,653 - INFO - Tracked 4 balls in frame 802
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,721 - INFO - Tracked 4 balls in frame 804
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,787 - INFO - Tracked 4 balls in frame 806
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,850 - INFO - Tracked 4 balls in frame 808
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,917 - INFO - Tracked 4 balls in frame 810
+
+0: 416x736 1 white, 17.0ms
+Speed: 3.7ms preprocess, 17.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:11,990 - INFO - Tracked 4 balls in frame 812
+
+0: 416x736 1 white, 16.0ms
+Speed: 2.7ms preprocess, 16.0ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,060 - INFO - Tracked 4 balls in frame 814
+
+0: 416x736 1 white, 16.5ms
+Speed: 2.2ms preprocess, 16.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,128 - INFO - Tracked 4 balls in frame 816
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,201 - INFO - Tracked 4 balls in frame 818
+
+0: 416x736 1 white, 17.3ms
+Speed: 2.0ms preprocess, 17.3ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,270 - INFO - Tracked 4 balls in frame 820
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.1ms preprocess, 18.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,340 - INFO - Tracked 4 balls in frame 822
+
+0: 416x736 1 white, 19.0ms
+Speed: 2.0ms preprocess, 19.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,410 - INFO - Tracked 4 balls in frame 824
+
+0: 416x736 1 white, 17.7ms
+Speed: 2.7ms preprocess, 17.7ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,480 - INFO - Tracked 4 balls in frame 826
+
+0: 416x736 1 white, 15.2ms
+Speed: 4.1ms preprocess, 15.2ms inference, 2.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,554 - INFO - Tracked 4 balls in frame 828
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,617 - INFO - Tracked 4 balls in frame 830
+
+0: 416x736 1 white, 15.1ms
+Speed: 2.6ms preprocess, 15.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,686 - INFO - Tracked 4 balls in frame 832
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.2ms preprocess, 15.4ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,754 - INFO - Tracked 4 balls in frame 834
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,824 - INFO - Tracked 4 balls in frame 836
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 3.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,892 - INFO - Tracked 4 balls in frame 838
+
+0: 416x736 1 white, 16.0ms
+Speed: 1.9ms preprocess, 16.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:12,957 - INFO - Tracked 4 balls in frame 840
+
+0: 416x736 1 white, 16.5ms
+Speed: 2.1ms preprocess, 16.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,026 - INFO - Tracked 4 balls in frame 842
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 2.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,094 - INFO - Tracked 4 balls in frame 844
+
+0: 416x736 1 white, 16.2ms
+Speed: 2.0ms preprocess, 16.2ms inference, 2.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,162 - INFO - Tracked 4 balls in frame 846
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,233 - INFO - Tracked 4 balls in frame 848
+
+0: 416x736 1 white, 18.8ms
+Speed: 3.0ms preprocess, 18.8ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,308 - INFO - Tracked 4 balls in frame 850
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.6ms preprocess, 18.4ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,381 - INFO - Tracked 4 balls in frame 852
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.0ms preprocess, 18.7ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,451 - INFO - Tracked 4 balls in frame 854
+
+0: 416x736 1 white, 16.4ms
+Speed: 2.0ms preprocess, 16.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,519 - INFO - Tracked 4 balls in frame 856
+
+0: 416x736 1 white, 18.2ms
+Speed: 2.0ms preprocess, 18.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,602 - INFO - Tracked 4 balls in frame 858
+
+0: 416x736 1 white, 16.2ms
+Speed: 2.5ms preprocess, 16.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,681 - INFO - Tracked 4 balls in frame 860
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,747 - INFO - Tracked 4 balls in frame 862
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,815 - INFO - Tracked 4 balls in frame 864
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,883 - INFO - Tracked 4 balls in frame 866
+
+0: 416x736 1 white, 16.8ms
+Speed: 3.1ms preprocess, 16.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:13,974 - INFO - Tracked 4 balls in frame 868
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.5ms preprocess, 18.5ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,047 - INFO - Tracked 4 balls in frame 870
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,114 - INFO - Tracked 4 balls in frame 872
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,182 - INFO - Tracked 4 balls in frame 874
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,247 - INFO - Tracked 4 balls in frame 876
+
+0: 416x736 1 white, 19.1ms
+Speed: 2.5ms preprocess, 19.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,319 - INFO - Tracked 4 balls in frame 878
+
+0: 416x736 1 white, 16.1ms
+Speed: 3.2ms preprocess, 16.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,387 - INFO - Tracked 4 balls in frame 880
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.1ms preprocess, 15.3ms inference, 2.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,457 - INFO - Tracked 4 balls in frame 882
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,523 - INFO - Tracked 4 balls in frame 884
+
+0: 416x736 1 white, 14.9ms
+Speed: 2.0ms preprocess, 14.9ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,592 - INFO - Tracked 4 balls in frame 886
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,659 - INFO - Tracked 4 balls in frame 888
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,732 - INFO - Tracked 4 balls in frame 890
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.0ms preprocess, 18.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,802 - INFO - Tracked 4 balls in frame 892
+
+0: 416x736 1 white, 16.4ms
+Speed: 2.7ms preprocess, 16.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,875 - INFO - Tracked 4 balls in frame 894
+
+0: 416x736 1 white, 15.1ms
+Speed: 2.9ms preprocess, 15.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:14,945 - INFO - Tracked 4 balls in frame 896
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.2ms preprocess, 18.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,037 - INFO - Tracked 4 balls in frame 898
+
+0: 416x736 1 white, 19.1ms
+Speed: 2.1ms preprocess, 19.1ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,109 - INFO - Tracked 4 balls in frame 900
+
+0: 416x736 1 white, 17.7ms
+Speed: 3.1ms preprocess, 17.7ms inference, 2.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,179 - INFO - Tracked 4 balls in frame 902
+
+0: 416x736 1 white, 15.8ms
+Speed: 2.1ms preprocess, 15.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,246 - INFO - Tracked 4 balls in frame 904
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,316 - INFO - Tracked 4 balls in frame 906
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,385 - INFO - Tracked 4 balls in frame 908
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,451 - INFO - Tracked 4 balls in frame 910
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.1ms preprocess, 15.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,518 - INFO - Tracked 4 balls in frame 912
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,585 - INFO - Tracked 4 balls in frame 914
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.6ms preprocess, 15.3ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,654 - INFO - Tracked 4 balls in frame 916
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,716 - INFO - Tracked 4 balls in frame 918
+
+0: 416x736 1 white, 17.6ms
+Speed: 2.0ms preprocess, 17.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,785 - INFO - Tracked 4 balls in frame 920
+
+0: 416x736 1 white, 18.1ms
+Speed: 2.0ms preprocess, 18.1ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,853 - INFO - Tracked 4 balls in frame 922
+
+0: 416x736 1 white, 14.4ms
+Speed: 2.7ms preprocess, 14.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,919 - INFO - Tracked 4 balls in frame 924
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:15,983 - INFO - Tracked 4 balls in frame 926
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 3.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,057 - INFO - Tracked 4 balls in frame 928
+
+0: 416x736 1 white, 17.5ms
+Speed: 2.1ms preprocess, 17.5ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,128 - INFO - Tracked 4 balls in frame 930
+
+0: 416x736 1 white, 19.6ms
+Speed: 2.1ms preprocess, 19.6ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,200 - INFO - Tracked 4 balls in frame 932
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,268 - INFO - Tracked 4 balls in frame 934
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 2.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,337 - INFO - Tracked 4 balls in frame 936
+
+0: 416x736 1 white, 19.3ms
+Speed: 2.3ms preprocess, 19.3ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,408 - INFO - Tracked 4 balls in frame 938
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.3ms preprocess, 15.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,479 - INFO - Tracked 4 balls in frame 940
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,547 - INFO - Tracked 4 balls in frame 942
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,616 - INFO - Tracked 4 balls in frame 944
+
+0: 416x736 1 white, 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,682 - INFO - Tracked 4 balls in frame 946
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,747 - INFO - Tracked 4 balls in frame 948
+
+0: 416x736 1 white, 19.0ms
+Speed: 2.0ms preprocess, 19.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,819 - INFO - Tracked 4 balls in frame 950
+
+0: 416x736 1 white, 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,882 - INFO - Tracked 4 balls in frame 952
+
+0: 416x736 1 white, 15.0ms
+Speed: 5.9ms preprocess, 15.0ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:16,955 - INFO - Tracked 4 balls in frame 954
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,021 - INFO - Tracked 4 balls in frame 956
+
+0: 416x736 1 white, 16.4ms
+Speed: 2.0ms preprocess, 16.4ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,093 - INFO - Tracked 4 balls in frame 958
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,160 - INFO - Tracked 4 balls in frame 960
+
+0: 416x736 1 white, 15.5ms
+Speed: 1.9ms preprocess, 15.5ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,226 - INFO - Tracked 4 balls in frame 962
+
+0: 416x736 1 white, 16.2ms
+Speed: 2.7ms preprocess, 16.2ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,296 - INFO - Tracked 4 balls in frame 964
+
+0: 416x736 1 white, 20.5ms
+Speed: 2.8ms preprocess, 20.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,377 - INFO - Tracked 4 balls in frame 966
+
+0: 416x736 1 white, 15.8ms
+Speed: 2.0ms preprocess, 15.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,446 - INFO - Tracked 4 balls in frame 968
+
+0: 416x736 1 white, 16.3ms
+Speed: 2.2ms preprocess, 16.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,513 - INFO - Tracked 4 balls in frame 970
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.5ms preprocess, 15.2ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,579 - INFO - Tracked 4 balls in frame 972
+
+0: 416x736 1 white, 15.1ms
+Speed: 2.5ms preprocess, 15.1ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,645 - INFO - Tracked 4 balls in frame 974
+
+0: 416x736 1 white, 17.4ms
+Speed: 2.0ms preprocess, 17.4ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,713 - INFO - Tracked 4 balls in frame 976
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.7ms preprocess, 15.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,779 - INFO - Tracked 4 balls in frame 978
+
+0: 416x736 1 white, 17.9ms
+Speed: 2.0ms preprocess, 17.9ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,868 - INFO - Tracked 4 balls in frame 980
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:17,935 - INFO - Tracked 4 balls in frame 982
+
+0: 416x736 1 white, 17.6ms
+Speed: 2.0ms preprocess, 17.6ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,003 - INFO - Tracked 4 balls in frame 984
+
+0: 416x736 1 white, 17.9ms
+Speed: 2.0ms preprocess, 17.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,071 - INFO - Tracked 4 balls in frame 986
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,145 - INFO - Tracked 4 balls in frame 988
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.2ms preprocess, 18.9ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,217 - INFO - Tracked 4 balls in frame 990
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,283 - INFO - Tracked 4 balls in frame 992
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,349 - INFO - Tracked 4 balls in frame 994
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,416 - INFO - Tracked 4 balls in frame 996
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,483 - INFO - Tracked 4 balls in frame 998
+
+0: 416x736 1 white, 15.1ms
+Speed: 2.2ms preprocess, 15.1ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,550 - INFO - Tracked 4 balls in frame 1000
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.1ms preprocess, 15.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,617 - INFO - Tracked 4 balls in frame 1002
+
+0: 416x736 1 white, 19.0ms
+Speed: 2.0ms preprocess, 19.0ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,688 - INFO - Tracked 4 balls in frame 1004
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,758 - INFO - Tracked 4 balls in frame 1006
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.0ms preprocess, 18.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,831 - INFO - Tracked 4 balls in frame 1008
+
+0: 416x736 1 white, 18.2ms
+Speed: 2.0ms preprocess, 18.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,901 - INFO - Tracked 4 balls in frame 1010
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:18,970 - INFO - Tracked 4 balls in frame 1012
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,040 - INFO - Tracked 4 balls in frame 1014
+
+0: 416x736 1 white, 18.6ms
+Speed: 2.0ms preprocess, 18.6ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,111 - INFO - Tracked 4 balls in frame 1016
+
+0: 416x736 1 white, 19.0ms
+Speed: 2.1ms preprocess, 19.0ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,184 - INFO - Tracked 4 balls in frame 1018
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,252 - INFO - Tracked 4 balls in frame 1020
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,315 - INFO - Tracked 4 balls in frame 1022
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,382 - INFO - Tracked 4 balls in frame 1024
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,450 - INFO - Tracked 4 balls in frame 1026
+
+0: 416x736 1 white, 15.9ms
+Speed: 2.1ms preprocess, 15.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,516 - INFO - Tracked 4 balls in frame 1028
+
+0: 416x736 1 white, 19.8ms
+Speed: 2.3ms preprocess, 19.8ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,588 - INFO - Tracked 4 balls in frame 1030
+
+0: 416x736 1 white, 16.7ms
+Speed: 2.7ms preprocess, 16.7ms inference, 3.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,657 - INFO - Tracked 4 balls in frame 1032
+
+0: 416x736 1 white, 17.7ms
+Speed: 2.0ms preprocess, 17.7ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,727 - INFO - Tracked 4 balls in frame 1034
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.1ms preprocess, 18.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,798 - INFO - Tracked 4 balls in frame 1036
+
+0: 416x736 1 white, 19.4ms
+Speed: 3.4ms preprocess, 19.4ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,878 - INFO - Tracked 4 balls in frame 1038
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.4ms preprocess, 15.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:19,946 - INFO - Tracked 4 balls in frame 1040
+
+0: 416x736 1 white, 15.7ms
+Speed: 1.9ms preprocess, 15.7ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,014 - INFO - Tracked 4 balls in frame 1042
+
+0: 416x736 1 white, 19.5ms
+Speed: 2.1ms preprocess, 19.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,087 - INFO - Tracked 4 balls in frame 1044
+
+0: 416x736 1 white, 15.6ms
+Speed: 1.9ms preprocess, 15.6ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,155 - INFO - Tracked 4 balls in frame 1046
+
+0: 416x736 1 white, 18.5ms
+Speed: 1.9ms preprocess, 18.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,232 - INFO - Tracked 4 balls in frame 1048
+
+0: 416x736 1 white, 19.0ms
+Speed: 2.0ms preprocess, 19.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,303 - INFO - Tracked 4 balls in frame 1050
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.7ms preprocess, 18.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,374 - INFO - Tracked 4 balls in frame 1052
+
+0: 416x736 1 white, 15.1ms
+Speed: 2.0ms preprocess, 15.1ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,443 - INFO - Tracked 4 balls in frame 1054
+
+0: 416x736 1 white, 20.0ms
+Speed: 2.0ms preprocess, 20.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,520 - INFO - Tracked 4 balls in frame 1056
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.6ms preprocess, 18.3ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,590 - INFO - Tracked 4 balls in frame 1058
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,661 - INFO - Tracked 4 balls in frame 1060
+
+0: 416x736 1 white, 17.1ms
+Speed: 2.7ms preprocess, 17.1ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,732 - INFO - Tracked 4 balls in frame 1062
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.0ms preprocess, 18.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,803 - INFO - Tracked 4 balls in frame 1064
+
+0: 416x736 1 white, 16.8ms
+Speed: 3.5ms preprocess, 16.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,882 - INFO - Tracked 4 balls in frame 1066
+
+0: 416x736 1 white, 16.4ms
+Speed: 2.4ms preprocess, 16.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:20,953 - INFO - Tracked 4 balls in frame 1068
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.2ms preprocess, 15.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:21,017 - INFO - Tracked 4 balls in frame 1070
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.2ms preprocess, 18.9ms inference, 2.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:21,089 - INFO - Tracked 4 balls in frame 1072
+
+0: 416x736 1 white, 18.0ms
+Speed: 3.1ms preprocess, 18.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:21,482 - INFO - Tracked 4 balls in frame 1074
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.0ms preprocess, 18.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:21,550 - INFO - Tracked 4 balls in frame 1076
+
+0: 416x736 1 white, 17.9ms
+Speed: 2.0ms preprocess, 17.9ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:21,631 - INFO - Tracked 4 balls in frame 1078
+
+0: 416x736 1 white, 16.8ms
+Speed: 2.0ms preprocess, 16.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,032 - INFO - Tracked 4 balls in frame 1080
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.0ms preprocess, 18.7ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,102 - INFO - Tracked 4 balls in frame 1082
+
+0: 416x736 1 white, 19.4ms
+Speed: 2.1ms preprocess, 19.4ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,172 - INFO - Tracked 4 balls in frame 1084
+
+0: 416x736 1 white, 16.7ms
+Speed: 2.7ms preprocess, 16.7ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,241 - INFO - Tracked 4 balls in frame 1086
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,314 - INFO - Tracked 4 balls in frame 1088
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,378 - INFO - Tracked 4 balls in frame 1090
+
+0: 416x736 1 white, 16.9ms
+Speed: 2.6ms preprocess, 16.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,448 - INFO - Tracked 4 balls in frame 1092
+
+0: 416x736 1 white, 17.3ms
+Speed: 2.7ms preprocess, 17.3ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,515 - INFO - Tracked 4 balls in frame 1094
+
+0: 416x736 1 white, 17.6ms
+Speed: 4.2ms preprocess, 17.6ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,599 - INFO - Tracked 4 balls in frame 1096
+
+0: 416x736 1 white, 18.2ms
+Speed: 2.0ms preprocess, 18.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,667 - INFO - Tracked 4 balls in frame 1098
+
+0: 416x736 1 white, 15.9ms
+Speed: 2.7ms preprocess, 15.9ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,741 - INFO - Tracked 4 balls in frame 1100
+
+0: 416x736 1 white, 16.2ms
+Speed: 2.1ms preprocess, 16.2ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,809 - INFO - Tracked 4 balls in frame 1102
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,876 - INFO - Tracked 4 balls in frame 1104
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.0ms preprocess, 18.9ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:22,947 - INFO - Tracked 4 balls in frame 1106
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.6ms preprocess, 15.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,013 - INFO - Tracked 4 balls in frame 1108
+
+0: 416x736 1 white, 18.2ms
+Speed: 2.0ms preprocess, 18.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,101 - INFO - Tracked 4 balls in frame 1110
+
+0: 416x736 1 white, 18.6ms
+Speed: 4.0ms preprocess, 18.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,178 - INFO - Tracked 4 balls in frame 1112
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,243 - INFO - Tracked 4 balls in frame 1114
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,309 - INFO - Tracked 4 balls in frame 1116
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,378 - INFO - Tracked 4 balls in frame 1118
+
+0: 416x736 1 white, 19.2ms
+Speed: 2.6ms preprocess, 19.2ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,450 - INFO - Tracked 4 balls in frame 1120
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,519 - INFO - Tracked 4 balls in frame 1122
+
+0: 416x736 1 white, 18.2ms
+Speed: 3.4ms preprocess, 18.2ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,602 - INFO - Tracked 4 balls in frame 1124
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,668 - INFO - Tracked 4 balls in frame 1126
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,738 - INFO - Tracked 4 balls in frame 1128
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.6ms preprocess, 18.4ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,806 - INFO - Tracked 4 balls in frame 1130
+
+0: 416x736 1 white, 19.2ms
+Speed: 2.2ms preprocess, 19.2ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,882 - INFO - Tracked 4 balls in frame 1132
+
+0: 416x736 1 white, 17.5ms
+Speed: 2.1ms preprocess, 17.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:23,952 - INFO - Tracked 4 balls in frame 1134
+
+0: 416x736 1 white, 16.3ms
+Speed: 2.0ms preprocess, 16.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,020 - INFO - Tracked 4 balls in frame 1136
+
+0: 416x736 1 white, 16.1ms
+Speed: 2.1ms preprocess, 16.1ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,088 - INFO - Tracked 4 balls in frame 1138
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,157 - INFO - Tracked 4 balls in frame 1140
+
+0: 416x736 1 white, 18.2ms
+Speed: 2.0ms preprocess, 18.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,229 - INFO - Tracked 4 balls in frame 1142
+
+0: 416x736 1 white, 18.3ms
+Speed: 3.0ms preprocess, 18.3ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,307 - INFO - Tracked 4 balls in frame 1144
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,370 - INFO - Tracked 4 balls in frame 1146
+
+0: 416x736 1 white, 19.4ms
+Speed: 2.0ms preprocess, 19.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,470 - INFO - Tracked 4 balls in frame 1148
+
+0: 416x736 1 white, 16.8ms
+Speed: 2.6ms preprocess, 16.8ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,543 - INFO - Tracked 4 balls in frame 1150
+
+0: 416x736 1 white, 16.2ms
+Speed: 2.1ms preprocess, 16.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,609 - INFO - Tracked 4 balls in frame 1152
+
+0: 416x736 1 white, 16.0ms
+Speed: 2.2ms preprocess, 16.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,677 - INFO - Tracked 4 balls in frame 1154
+
+0: 416x736 1 white, 14.3ms
+Speed: 2.8ms preprocess, 14.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,745 - INFO - Tracked 4 balls in frame 1156
+
+0: 416x736 1 white, 14.5ms
+Speed: 2.8ms preprocess, 14.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,812 - INFO - Tracked 4 balls in frame 1158
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.0ms preprocess, 18.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,886 - INFO - Tracked 4 balls in frame 1160
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:24,953 - INFO - Tracked 4 balls in frame 1162
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,019 - INFO - Tracked 4 balls in frame 1164
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.9ms preprocess, 15.2ms inference, 3.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,089 - INFO - Tracked 4 balls in frame 1166
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.0ms preprocess, 18.7ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,162 - INFO - Tracked 4 balls in frame 1168
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.0ms preprocess, 18.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,228 - INFO - Tracked 4 balls in frame 1170
+
+0: 416x736 1 white, 15.8ms
+Speed: 2.0ms preprocess, 15.8ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,296 - INFO - Tracked 4 balls in frame 1172
+
+0: 416x736 1 white, 16.9ms
+Speed: 2.1ms preprocess, 16.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,366 - INFO - Tracked 4 balls in frame 1174
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.0ms preprocess, 18.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,436 - INFO - Tracked 4 balls in frame 1176
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.1ms preprocess, 18.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,506 - INFO - Tracked 4 balls in frame 1178
+
+0: 416x736 1 white, 16.5ms
+Speed: 2.1ms preprocess, 16.5ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,584 - INFO - Tracked 4 balls in frame 1180
+
+0: 416x736 1 white, 20.2ms
+Speed: 8.7ms preprocess, 20.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,665 - INFO - Tracked 4 balls in frame 1182
+
+0: 416x736 1 white, 15.9ms
+Speed: 2.1ms preprocess, 15.9ms inference, 2.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,733 - INFO - Tracked 4 balls in frame 1184
+
+0: 416x736 1 white, 20.1ms
+Speed: 2.1ms preprocess, 20.1ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,811 - INFO - Tracked 4 balls in frame 1186
+
+0: 416x736 1 white, 18.3ms
+Speed: 1.9ms preprocess, 18.3ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,897 - INFO - Tracked 4 balls in frame 1188
+
+0: 416x736 1 white, 19.0ms
+Speed: 2.0ms preprocess, 19.0ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:25,969 - INFO - Tracked 4 balls in frame 1190
+
+0: 416x736 1 white, 19.7ms
+Speed: 2.1ms preprocess, 19.7ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,041 - INFO - Tracked 4 balls in frame 1192
+
+0: 416x736 1 white, 17.0ms
+Speed: 2.1ms preprocess, 17.0ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,114 - INFO - Tracked 4 balls in frame 1194
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.1ms preprocess, 15.3ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,180 - INFO - Tracked 4 balls in frame 1196
+
+0: 416x736 1 white, 16.7ms
+Speed: 3.4ms preprocess, 16.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,252 - INFO - Tracked 4 balls in frame 1198
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,319 - INFO - Tracked 4 balls in frame 1200
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,385 - INFO - Tracked 4 balls in frame 1202
+
+0: 416x736 1 white, 16.9ms
+Speed: 2.0ms preprocess, 16.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,450 - INFO - Tracked 4 balls in frame 1204
+
+0: 416x736 1 white, 15.1ms
+Speed: 2.0ms preprocess, 15.1ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,520 - INFO - Tracked 4 balls in frame 1206
+
+0: 416x736 1 white, 16.4ms
+Speed: 1.9ms preprocess, 16.4ms inference, 3.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,589 - INFO - Tracked 4 balls in frame 1208
+
+0: 416x736 1 white, 15.9ms
+Speed: 2.0ms preprocess, 15.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,654 - INFO - Tracked 4 balls in frame 1210
+
+0: 416x736 1 white, 16.5ms
+Speed: 1.9ms preprocess, 16.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,723 - INFO - Tracked 4 balls in frame 1212
+
+0: 416x736 1 white, 17.0ms
+Speed: 2.1ms preprocess, 17.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,795 - INFO - Tracked 4 balls in frame 1214
+
+0: 416x736 1 white, 17.9ms
+Speed: 2.0ms preprocess, 17.9ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,867 - INFO - Tracked 4 balls in frame 1216
+
+0: 416x736 1 white, 18.1ms
+Speed: 2.0ms preprocess, 18.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:26,936 - INFO - Tracked 4 balls in frame 1218
+
+0: 416x736 1 white, 17.8ms
+Speed: 2.6ms preprocess, 17.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:27,009 - INFO - Tracked 4 balls in frame 1220
+
+0: 416x736 1 white, 19.1ms
+Speed: 2.0ms preprocess, 19.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:27,362 - INFO - Tracked 4 balls in frame 1222
+
+0: 416x736 1 white, 20.6ms
+Speed: 2.1ms preprocess, 20.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:27,432 - INFO - Tracked 4 balls in frame 1224
+
+0: 416x736 1 white, 18.1ms
+Speed: 2.0ms preprocess, 18.1ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:27,502 - INFO - Tracked 4 balls in frame 1226
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.2ms preprocess, 18.9ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:27,574 - INFO - Tracked 4 balls in frame 1228
+
+0: 416x736 1 white, 19.4ms
+Speed: 2.0ms preprocess, 19.4ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:27,646 - INFO - Tracked 4 balls in frame 1230
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.6ms preprocess, 18.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:27,716 - INFO - Tracked 4 balls in frame 1232
+
+0: 416x736 1 white, 16.1ms
+Speed: 2.1ms preprocess, 16.1ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:27,782 - INFO - Tracked 4 balls in frame 1234
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.6ms preprocess, 15.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:04:27,848 - INFO - Tracked 4 balls in frame 1236
+2025-03-30 09:04:27,859 - INFO - Menu toggled ON via button click.
+2025-03-30 09:04:29,003 - INFO - Clicked on item: 'Quit Game' with action: quit in state CurrentGameState.MENU
+2025-03-30 09:04:29,004 - INFO - Score is 0, not saving.
+2025-03-30 09:04:29,007 - INFO - Cleaning up and exiting game...
+2025-03-30 09:04:29,009 - INFO - Flushing leaderboard...
+2025-03-30 09:04:29,011 - INFO - Saving zones...
+2025-03-30 09:04:29,015 - INFO - Scoring zones saved to scoring_zones.json
+2025-03-30 09:04:29,015 - INFO - Notify: Zones Saved
+2025-03-30 09:04:29,017 - INFO - Saving achievements...
+2025-03-30 09:04:29,019 - INFO - Saving high scores...
+2025-03-30 09:04:29,086 - INFO - Resources released, exiting program.
+
+F:\Whiffle\10.6 (littlefix)>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.10.9)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2025-03-30 09:05:32,679 - INFO - Showing splash screen...
+2025-03-30 09:05:32,787 - INFO - Initializing GameState...
+2025-03-30 09:05:35,334 - INFO - Camera resolution: 1280x720
+2025-03-30 09:05:35,355 - WARNING - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+2025-03-30 09:05:35,356 - INFO - Scoring zones loaded from scoring_zones.json
+2025-03-30 09:05:35,356 - INFO - Notify: Zones Loaded
+2025-03-30 09:05:35,357 - INFO - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-03-30 09:05:35,358 - INFO - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-03-30 09:05:35,358 - INFO - Loaded high score for mode 'classic': 0
+2025-03-30 09:05:35,397 - INFO - Loaded score sound: sounds/ding.wav
+2025-03-30 09:05:35,592 - INFO - Loaded background music: sounds/background_music.mp3
+2025-03-30 09:05:35,592 - INFO - Sounds initialized (score, background).
+2025-03-30 09:05:35,593 - INFO - Loaded unlock status for 1 achievements from achievements_status.json.
+2025-03-30 09:05:35,594 - WARNING - Missing/invalid format for 'white' in hsv_ranges.json. Using default.
+2025-03-30 09:05:35,594 - WARNING - Missing/invalid format for 'red1' in hsv_ranges.json. Using default.
+2025-03-30 09:05:35,595 - WARNING - Missing/invalid format for 'red2' in hsv_ranges.json. Using default.
+2025-03-30 09:05:35,595 - INFO - Loaded custom HSV ranges from hsv_ranges.json
+2025-03-30 09:05:35,596 - INFO - GameState initialized successfully.
+2025-03-30 09:05:36,453 - INFO - Captured first frame.
+2025-03-30 09:05:36,453 - INFO - Starting splash display loop.
+2025-03-30 09:05:39,459 - INFO - Splash finished.
+Press 'q' to quit, 's' to start drawing a scoring zone, 'd' to toggle debug mode
+2025-03-30 09:05:39,569 - INFO - Game window initialized.
+
+0: 416x736 1 white, 31.9ms
+Speed: 3.2ms preprocess, 31.9ms inference, 84.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:40,909 - INFO - Tracked 1 balls in frame 2
+
+0: 416x736 1 white, 5.3ms
+Speed: 2.4ms preprocess, 5.3ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:40,969 - INFO - Tracked 1 balls in frame 4
+
+0: 416x736 1 white, 6.8ms
+Speed: 1.5ms preprocess, 6.8ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,023 - INFO - Tracked 1 balls in frame 6
+
+0: 416x736 1 white, 5.8ms
+Speed: 1.6ms preprocess, 5.8ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,078 - INFO - Tracked 1 balls in frame 8
+
+0: 416x736 1 white, 7.4ms
+Speed: 2.5ms preprocess, 7.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,146 - INFO - Tracked 1 balls in frame 10
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,198 - INFO - Tracked 1 balls in frame 12
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,251 - INFO - Tracked 1 balls in frame 14
+
+0: 416x736 1 white, 6.9ms
+Speed: 1.5ms preprocess, 6.9ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,308 - INFO - Tracked 1 balls in frame 16
+
+0: 416x736 1 white, 6.5ms
+Speed: 1.5ms preprocess, 6.5ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,375 - INFO - Tracked 1 balls in frame 18
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,432 - INFO - Tracked 1 balls in frame 20
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.6ms preprocess, 5.6ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,485 - INFO - Tracked 1 balls in frame 22
+
+0: 416x736 1 white, 5.8ms
+Speed: 2.0ms preprocess, 5.8ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,553 - INFO - Tracked 1 balls in frame 24
+
+0: 416x736 1 white, 8.1ms
+Speed: 3.0ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,625 - INFO - Tracked 1 balls in frame 26
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,682 - INFO - Tracked 1 balls in frame 28
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,737 - INFO - Tracked 1 balls in frame 30
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,798 - INFO - Tracked 1 balls in frame 32
+
+0: 416x736 1 white, 9.1ms
+Speed: 2.0ms preprocess, 9.1ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,915 - INFO - Tracked 1 balls in frame 34
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:41,969 - INFO - Tracked 1 balls in frame 36
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,026 - INFO - Tracked 1 balls in frame 38
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,079 - INFO - Tracked 1 balls in frame 40
+
+0: 416x736 1 white, 7.5ms
+Speed: 6.3ms preprocess, 7.5ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,151 - INFO - Tracked 1 balls in frame 42
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.7ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,212 - INFO - Tracked 1 balls in frame 44
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.6ms preprocess, 5.4ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,267 - INFO - Tracked 1 balls in frame 46
+
+0: 416x736 1 white, 10.7ms
+Speed: 5.1ms preprocess, 10.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,353 - INFO - Tracked 1 balls in frame 48
+
+0: 416x736 1 white, 7.5ms
+Speed: 1.6ms preprocess, 7.5ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,413 - INFO - Tracked 1 balls in frame 50
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,481 - INFO - Tracked 1 balls in frame 52
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,537 - INFO - Tracked 1 balls in frame 54
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,600 - INFO - Tracked 1 balls in frame 56
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.6ms preprocess, 5.7ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,669 - INFO - Tracked 1 balls in frame 58
+
+0: 416x736 1 white, 7.7ms
+Speed: 1.6ms preprocess, 7.7ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,742 - INFO - Tracked 1 balls in frame 60
+
+0: 416x736 1 white, 7.2ms
+Speed: 2.5ms preprocess, 7.2ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,809 - INFO - Tracked 1 balls in frame 62
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,878 - INFO - Tracked 1 balls in frame 64
+
+0: 416x736 1 white, 6.9ms
+Speed: 2.4ms preprocess, 6.9ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:42,947 - INFO - Tracked 1 balls in frame 66
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,004 - INFO - Tracked 1 balls in frame 68
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,065 - INFO - Tracked 1 balls in frame 70
+
+0: 416x736 1 white, 5.9ms
+Speed: 1.8ms preprocess, 5.9ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,167 - INFO - Tracked 1 balls in frame 72
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,221 - INFO - Tracked 1 balls in frame 74
+
+0: 416x736 1 white, 7.8ms
+Speed: 2.2ms preprocess, 7.8ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,289 - INFO - Tracked 1 balls in frame 76
+
+0: 416x736 1 white, 6.9ms
+Speed: 1.5ms preprocess, 6.9ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,354 - INFO - Tracked 1 balls in frame 78
+
+0: 416x736 1 white, 6.3ms
+Speed: 1.6ms preprocess, 6.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,414 - INFO - Tracked 1 balls in frame 80
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,466 - INFO - Tracked 1 balls in frame 82
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.6ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,534 - INFO - Tracked 1 balls in frame 84
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,600 - INFO - Tracked 1 balls in frame 86
+
+0: 416x736 1 white, 6.3ms
+Speed: 2.2ms preprocess, 6.3ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,683 - INFO - Tracked 1 balls in frame 88
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,737 - INFO - Tracked 1 balls in frame 90
+
+0: 416x736 1 white, 5.9ms
+Speed: 1.6ms preprocess, 5.9ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,812 - INFO - Tracked 1 balls in frame 92
+
+0: 416x736 1 white, 6.3ms
+Speed: 1.5ms preprocess, 6.3ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,884 - INFO - Tracked 1 balls in frame 94
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,938 - INFO - Tracked 1 balls in frame 96
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:43,997 - INFO - Tracked 1 balls in frame 98
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,066 - INFO - Tracked 1 balls in frame 100
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.6ms preprocess, 5.7ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,130 - INFO - Tracked 1 balls in frame 102
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.7ms preprocess, 5.4ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,202 - INFO - Tracked 1 balls in frame 104
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.8ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,264 - INFO - Tracked 1 balls in frame 106
+
+0: 416x736 1 white, 7.1ms
+Speed: 1.5ms preprocess, 7.1ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,355 - INFO - Tracked 1 balls in frame 108
+
+0: 416x736 1 white, 6.5ms
+Speed: 1.5ms preprocess, 6.5ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,411 - INFO - Tracked 1 balls in frame 110
+
+0: 416x736 1 white, 6.6ms
+Speed: 1.6ms preprocess, 6.6ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,472 - INFO - Tracked 1 balls in frame 112
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,530 - INFO - Tracked 1 balls in frame 114
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,597 - INFO - Tracked 1 balls in frame 116
+
+0: 416x736 1 white, 6.3ms
+Speed: 1.4ms preprocess, 6.3ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,678 - INFO - Tracked 1 balls in frame 118
+
+0: 416x736 1 white, 7.9ms
+Speed: 1.5ms preprocess, 7.9ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,751 - INFO - Tracked 1 balls in frame 120
+
+0: 416x736 1 white, 5.5ms
+Speed: 1.6ms preprocess, 5.5ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,812 - INFO - Tracked 1 balls in frame 122
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,869 - INFO - Tracked 1 balls in frame 124
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:44,932 - INFO - Tracked 1 balls in frame 126
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,000 - INFO - Tracked 1 balls in frame 128
+
+0: 416x736 1 white, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,066 - INFO - Tracked 1 balls in frame 130
+
+0: 416x736 1 white, 5.8ms
+Speed: 1.5ms preprocess, 5.8ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,132 - INFO - Tracked 1 balls in frame 132
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.4ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,200 - INFO - Tracked 1 balls in frame 134
+
+0: 416x736 1 white, 5.8ms
+Speed: 1.5ms preprocess, 5.8ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,279 - INFO - Tracked 1 balls in frame 136
+
+0: 416x736 1 white, 5.5ms
+Speed: 1.5ms preprocess, 5.5ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,345 - INFO - Tracked 1 balls in frame 138
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.6ms preprocess, 5.4ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,402 - INFO - Tracked 1 balls in frame 140
+
+0: 416x736 1 white, 8.3ms
+Speed: 7.8ms preprocess, 8.3ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,480 - INFO - Tracked 1 balls in frame 142
+
+0: 416x736 1 white, 5.9ms
+Speed: 1.5ms preprocess, 5.9ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,534 - INFO - Tracked 1 balls in frame 144
+
+0: 416x736 1 white, 5.9ms
+Speed: 1.5ms preprocess, 5.9ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,601 - INFO - Tracked 1 balls in frame 146
+
+0: 416x736 1 white, 6.0ms
+Speed: 1.5ms preprocess, 6.0ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,679 - INFO - Tracked 1 balls in frame 148
+
+0: 416x736 1 white, 5.9ms
+Speed: 1.5ms preprocess, 5.9ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,746 - INFO - Tracked 1 balls in frame 150
+
+0: 416x736 1 white, 6.4ms
+Speed: 1.6ms preprocess, 6.4ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,805 - INFO - Tracked 1 balls in frame 152
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,867 - INFO - Tracked 1 balls in frame 154
+
+0: 416x736 1 white, 5.3ms
+Speed: 1.6ms preprocess, 5.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:45,934 - INFO - Tracked 1 balls in frame 156
+
+0: 416x736 1 white, 5.3ms
+Speed: 1.5ms preprocess, 5.3ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,002 - INFO - Tracked 1 balls in frame 158
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,066 - INFO - Tracked 1 balls in frame 160
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,134 - INFO - Tracked 1 balls in frame 162
+
+0: 416x736 1 white, 5.5ms
+Speed: 1.5ms preprocess, 5.5ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,211 - INFO - Tracked 1 balls in frame 164
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,279 - INFO - Tracked 1 balls in frame 166
+
+0: 416x736 1 white, 5.4ms
+Speed: 1.4ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,336 - INFO - Tracked 1 balls in frame 168
+
+0: 416x736 1 white, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,400 - INFO - Tracked 1 balls in frame 170
+
+0: 416x736 1 white, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,469 - INFO - Tracked 1 balls in frame 172
+
+0: 416x736 1 white, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,625 - INFO - Tracked 1 balls in frame 174
+
+0: 416x736 1 white, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,681 - INFO - Tracked 1 balls in frame 176
+
+0: 416x736 1 white, 8.0ms
+Speed: 1.8ms preprocess, 8.0ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,741 - INFO - Tracked 1 balls in frame 178
+
+0: 416x736 1 white, 8.0ms
+Speed: 1.5ms preprocess, 8.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,798 - INFO - Tracked 1 balls in frame 180
+
+0: 416x736 1 white, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,855 - INFO - Tracked 1 balls in frame 182
+
+0: 416x736 1 white, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,916 - INFO - Tracked 1 balls in frame 184
+
+0: 416x736 1 white, 9.6ms
+Speed: 2.3ms preprocess, 9.6ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:46,975 - INFO - Tracked 1 balls in frame 186
+2025-03-30 09:05:46,993 - INFO - General Debug toggled ON
+
+0: 416x736 1 white, 7.9ms
+Speed: 1.8ms preprocess, 7.9ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,037 - INFO - Tracked 1 balls in frame 188
+
+0: 416x736 1 white, 10.2ms
+Speed: 3.7ms preprocess, 10.2ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,110 - INFO - Tracked 1 balls in frame 190
+
+0: 416x736 1 white, 8.0ms
+Speed: 1.6ms preprocess, 8.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,167 - INFO - Tracked 1 balls in frame 192
+
+0: 416x736 1 white, 8.3ms
+Speed: 1.6ms preprocess, 8.3ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,225 - INFO - Tracked 1 balls in frame 194
+
+0: 416x736 1 white, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,285 - INFO - Tracked 1 balls in frame 196
+
+0: 416x736 1 white, 10.0ms
+Speed: 1.5ms preprocess, 10.0ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,347 - INFO - Tracked 1 balls in frame 198
+
+0: 416x736 1 white, 9.7ms
+Speed: 1.6ms preprocess, 9.7ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,410 - INFO - Tracked 1 balls in frame 200
+
+0: 416x736 1 white, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,471 - INFO - Tracked 1 balls in frame 202
+
+0: 416x736 1 white, 8.3ms
+Speed: 1.5ms preprocess, 8.3ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,537 - INFO - Tracked 1 balls in frame 204
+
+0: 416x736 1 white, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,612 - INFO - Tracked 1 balls in frame 206
+
+0: 416x736 1 white, 8.0ms
+Speed: 1.7ms preprocess, 8.0ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,685 - INFO - Tracked 1 balls in frame 208
+
+0: 416x736 1 white, 10.0ms
+Speed: 1.6ms preprocess, 10.0ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,747 - INFO - Tracked 1 balls in frame 210
+
+0: 416x736 1 white, 9.7ms
+Speed: 1.6ms preprocess, 9.7ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,810 - INFO - Tracked 1 balls in frame 212
+
+0: 416x736 1 white, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,871 - INFO - Tracked 1 balls in frame 214
+
+0: 416x736 1 white, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:47,938 - INFO - Tracked 1 balls in frame 216
+
+0: 416x736 1 white, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,001 - INFO - Tracked 1 balls in frame 218
+
+0: 416x736 1 white, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,084 - INFO - Tracked 1 balls in frame 220
+
+0: 416x736 1 white, 8.8ms
+Speed: 1.5ms preprocess, 8.8ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,152 - INFO - Tracked 1 balls in frame 222
+
+0: 416x736 1 white, 8.6ms
+Speed: 1.8ms preprocess, 8.6ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,214 - INFO - Tracked 1 balls in frame 224
+
+0: 416x736 1 white, 8.1ms
+Speed: 1.7ms preprocess, 8.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,282 - INFO - Tracked 1 balls in frame 226
+
+0: 416x736 1 white, 13.5ms
+Speed: 3.8ms preprocess, 13.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,359 - INFO - Tracked 1 balls in frame 228
+
+0: 416x736 1 white, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,418 - INFO - Tracked 1 balls in frame 230
+
+0: 416x736 1 white, 9.6ms
+Speed: 1.6ms preprocess, 9.6ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,480 - INFO - Tracked 1 balls in frame 232
+
+0: 416x736 1 white, 9.4ms
+Speed: 1.6ms preprocess, 9.4ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,542 - INFO - Tracked 1 balls in frame 234
+
+0: 416x736 1 white, 17.5ms
+Speed: 7.1ms preprocess, 17.5ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,638 - INFO - Tracked 1 balls in frame 236
+
+0: 416x736 1 white, 7.8ms
+Speed: 1.6ms preprocess, 7.8ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,696 - INFO - Tracked 1 balls in frame 238
+
+0: 416x736 1 white, 7.7ms
+Speed: 1.6ms preprocess, 7.7ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,755 - INFO - Tracked 1 balls in frame 240
+
+0: 416x736 1 white, 8.0ms
+Speed: 1.6ms preprocess, 8.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,818 - INFO - Tracked 1 balls in frame 242
+
+0: 416x736 1 white, 9.4ms
+Speed: 1.7ms preprocess, 9.4ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,879 - INFO - Tracked 1 balls in frame 244
+
+0: 416x736 1 white, 8.8ms
+Speed: 1.8ms preprocess, 8.8ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:48,941 - INFO - Tracked 1 balls in frame 246
+
+0: 416x736 1 white, 8.4ms
+Speed: 1.9ms preprocess, 8.4ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:49,004 - INFO - Tracked 1 balls in frame 248
+
+0: 416x736 1 white, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:49,082 - INFO - Tracked 1 balls in frame 250
+
+0: 416x736 1 white, 19.3ms
+Speed: 2.0ms preprocess, 19.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:49,155 - INFO - Tracked 1 balls in frame 252
+
+0: 416x736 1 white, 15.9ms
+Speed: 2.8ms preprocess, 15.9ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:49,229 - INFO - Tracked 1 balls in frame 254
+
+0: 416x736 1 white, 14.9ms
+Speed: 2.0ms preprocess, 14.9ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:49,295 - INFO - Tracked 1 balls in frame 256
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:49,363 - INFO - Tracked 1 balls in frame 258
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.0ms preprocess, 15.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:49,429 - INFO - Tracked 1 balls in frame 260
+
+0: 416x736 1 white, 17.6ms
+Speed: 2.8ms preprocess, 17.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:49,500 - INFO - Tracked 1 balls in frame 262
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:49,572 - INFO - Tracked 1 balls in frame 264
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:49,640 - INFO - Tracked 1 balls in frame 266
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.2ms preprocess, 18.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:50,111 - INFO - Tracked 1 balls in frame 268
+
+0: 416x736 1 white, 18.1ms
+Speed: 2.0ms preprocess, 18.1ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:50,180 - INFO - Tracked 1 balls in frame 270
+
+0: 416x736 1 white, 17.9ms
+Speed: 2.0ms preprocess, 17.9ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:50,245 - INFO - Tracked 1 balls in frame 272
+
+0: 416x736 1 white, 20.0ms
+Speed: 8.8ms preprocess, 20.0ms inference, 3.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:50,331 - INFO - Tracked 1 balls in frame 274
+
+0: 416x736 1 white, 14.9ms
+Speed: 2.0ms preprocess, 14.9ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:50,399 - INFO - Tracked 1 balls in frame 276
+
+0: 416x736 1 white, 15.1ms
+Speed: 2.0ms preprocess, 15.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:50,470 - INFO - Tracked 1 balls in frame 278
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.8ms preprocess, 15.7ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:50,540 - INFO - Tracked 1 balls in frame 280
+
+0: 416x736 1 white, 18.6ms
+Speed: 2.3ms preprocess, 18.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:50,617 - INFO - Tracked 1 balls in frame 282
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.1ms preprocess, 18.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:50,685 - INFO - Tracked 1 balls in frame 284
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.7ms preprocess, 15.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:50,763 - INFO - Tracked 1 balls in frame 286
+
+0: 416x736 1 white, 14.4ms
+Speed: 2.7ms preprocess, 14.4ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:50,830 - INFO - Tracked 1 balls in frame 288
+
+0: 416x736 1 white, 19.1ms
+Speed: 2.9ms preprocess, 19.1ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:50,904 - INFO - Tracked 1 balls in frame 290
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.3ms preprocess, 15.4ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,064 - INFO - Tracked 1 balls in frame 292
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,129 - INFO - Tracked 1 balls in frame 294
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,196 - INFO - Tracked 1 balls in frame 296
+
+0: 416x736 1 white, 15.1ms
+Speed: 2.7ms preprocess, 15.1ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,265 - INFO - Tracked 1 balls in frame 298
+
+0: 416x736 1 white, 15.1ms
+Speed: 2.0ms preprocess, 15.1ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,332 - INFO - Tracked 1 balls in frame 300
+
+0: 416x736 1 white, 17.6ms
+Speed: 2.6ms preprocess, 17.6ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,400 - INFO - Tracked 1 balls in frame 302
+
+0: 416x736 1 white, 17.8ms
+Speed: 2.6ms preprocess, 17.8ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,471 - INFO - Tracked 1 balls in frame 304
+
+0: 416x736 1 white, 17.9ms
+Speed: 2.0ms preprocess, 17.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,580 - INFO - Tracked 1 balls in frame 306
+
+0: 416x736 1 white, 19.0ms
+Speed: 2.3ms preprocess, 19.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,654 - INFO - Tracked 1 balls in frame 308
+
+0: 416x736 1 white, 18.1ms
+Speed: 2.5ms preprocess, 18.1ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,727 - INFO - Tracked 1 balls in frame 310
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.9ms preprocess, 15.7ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,795 - INFO - Tracked 1 balls in frame 312
+
+0: 416x736 1 white, 18.8ms
+Speed: 2.0ms preprocess, 18.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,865 - INFO - Tracked 1 balls in frame 314
+
+0: 416x736 1 white, 17.4ms
+Speed: 2.7ms preprocess, 17.4ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:51,939 - INFO - Tracked 1 balls in frame 316
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.0ms preprocess, 18.9ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,011 - INFO - Tracked 1 balls in frame 318
+
+0: 416x736 1 white, 19.5ms
+Speed: 2.1ms preprocess, 19.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,082 - INFO - Tracked 1 balls in frame 320
+
+0: 416x736 1 white, 19.7ms
+Speed: 2.0ms preprocess, 19.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,157 - INFO - Tracked 1 balls in frame 322
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,228 - INFO - Tracked 1 balls in frame 324
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,295 - INFO - Tracked 1 balls in frame 326
+
+0: 416x736 1 white, 14.5ms
+Speed: 2.7ms preprocess, 14.5ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,364 - INFO - Tracked 1 balls in frame 328
+
+0: 416x736 1 white, 16.4ms
+Speed: 2.8ms preprocess, 16.4ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,435 - INFO - Tracked 1 balls in frame 330
+
+0: 416x736 1 white, 19.7ms
+Speed: 8.9ms preprocess, 19.7ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,526 - INFO - Tracked 1 balls in frame 332
+
+0: 416x736 1 white, 16.6ms
+Speed: 2.0ms preprocess, 16.6ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,595 - INFO - Tracked 1 balls in frame 334
+
+0: 416x736 1 white, 17.3ms
+Speed: 2.0ms preprocess, 17.3ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,679 - INFO - Tracked 1 balls in frame 336
+
+0: 416x736 1 white, 19.5ms
+Speed: 2.0ms preprocess, 19.5ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,750 - INFO - Tracked 1 balls in frame 338
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.2ms preprocess, 18.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,821 - INFO - Tracked 1 balls in frame 340
+
+0: 416x736 1 white, 19.3ms
+Speed: 2.0ms preprocess, 19.3ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,895 - INFO - Tracked 1 balls in frame 342
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.1ms preprocess, 15.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:52,961 - INFO - Tracked 1 balls in frame 344
+
+0: 416x736 1 white, 14.8ms
+Speed: 2.0ms preprocess, 14.8ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,030 - INFO - Tracked 1 balls in frame 346
+
+0: 416x736 1 white, 14.5ms
+Speed: 2.7ms preprocess, 14.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,097 - INFO - Tracked 1 balls in frame 348
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,164 - INFO - Tracked 1 balls in frame 350
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,230 - INFO - Tracked 1 balls in frame 352
+
+0: 416x736 1 white, 17.9ms
+Speed: 2.9ms preprocess, 17.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,303 - INFO - Tracked 1 balls in frame 354
+
+0: 416x736 1 white, 14.4ms
+Speed: 2.7ms preprocess, 14.4ms inference, 3.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,374 - INFO - Tracked 1 balls in frame 356
+
+0: 416x736 1 white, 19.1ms
+Speed: 1.9ms preprocess, 19.1ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,448 - INFO - Tracked 1 balls in frame 358
+
+0: 416x736 1 white, 19.4ms
+Speed: 2.0ms preprocess, 19.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,521 - INFO - Tracked 1 balls in frame 360
+
+0: 416x736 1 white, 15.2ms
+Speed: 3.0ms preprocess, 15.2ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,590 - INFO - Tracked 1 balls in frame 362
+
+0: 416x736 1 white, 15.5ms
+Speed: 3.1ms preprocess, 15.5ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,658 - INFO - Tracked 1 balls in frame 364
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,729 - INFO - Tracked 1 balls in frame 366
+
+0: 416x736 1 white, 20.0ms
+Speed: 2.0ms preprocess, 20.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,802 - INFO - Tracked 1 balls in frame 368
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,870 - INFO - Tracked 1 balls in frame 370
+
+0: 416x736 1 white, 15.4ms
+Speed: 2.0ms preprocess, 15.4ms inference, 3.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:53,940 - INFO - Tracked 1 balls in frame 372
+
+0: 416x736 1 white, 19.3ms
+Speed: 2.4ms preprocess, 19.3ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,052 - INFO - Tracked 1 balls in frame 374
+
+0: 416x736 1 white, 16.0ms
+Speed: 2.1ms preprocess, 16.0ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,130 - INFO - Tracked 1 balls in frame 376
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,199 - INFO - Tracked 1 balls in frame 378
+
+0: 416x736 1 white, 15.4ms
+Speed: 1.9ms preprocess, 15.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,269 - INFO - Tracked 1 balls in frame 380
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.0ms preprocess, 15.7ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,336 - INFO - Tracked 1 balls in frame 382
+
+0: 416x736 1 white, 18.6ms
+Speed: 2.5ms preprocess, 18.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,419 - INFO - Tracked 1 balls in frame 384
+
+0: 416x736 1 white, 14.3ms
+Speed: 3.1ms preprocess, 14.3ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,488 - INFO - Tracked 1 balls in frame 386
+
+0: 416x736 1 white, 15.7ms
+Speed: 3.7ms preprocess, 15.7ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,557 - INFO - Tracked 1 balls in frame 388
+
+0: 416x736 1 white, 15.8ms
+Speed: 2.0ms preprocess, 15.8ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,627 - INFO - Tracked 1 balls in frame 390
+
+0: 416x736 1 white, 16.4ms
+Speed: 2.1ms preprocess, 16.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,696 - INFO - Tracked 1 balls in frame 392
+
+0: 416x736 1 white, 19.0ms
+Speed: 2.0ms preprocess, 19.0ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,767 - INFO - Tracked 1 balls in frame 394
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,836 - INFO - Tracked 1 balls in frame 396
+
+0: 416x736 1 white, 16.1ms
+Speed: 2.0ms preprocess, 16.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,902 - INFO - Tracked 1 balls in frame 398
+
+0: 416x736 1 white, 17.3ms
+Speed: 2.0ms preprocess, 17.3ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:54,973 - INFO - Tracked 1 balls in frame 400
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.1ms preprocess, 18.4ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,046 - INFO - Tracked 1 balls in frame 402
+
+0: 416x736 1 white, 19.6ms
+Speed: 2.0ms preprocess, 19.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,147 - INFO - Tracked 1 balls in frame 404
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,226 - INFO - Tracked 1 balls in frame 406
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,295 - INFO - Tracked 1 balls in frame 408
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,361 - INFO - Tracked 1 balls in frame 410
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,430 - INFO - Tracked 1 balls in frame 412
+
+0: 416x736 1 white, 16.4ms
+Speed: 2.0ms preprocess, 16.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,496 - INFO - Tracked 1 balls in frame 414
+
+0: 416x736 1 white, 16.6ms
+Speed: 2.1ms preprocess, 16.6ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,564 - INFO - Tracked 1 balls in frame 416
+
+0: 416x736 1 white, 17.0ms
+Speed: 2.3ms preprocess, 17.0ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,635 - INFO - Tracked 1 balls in frame 418
+
+0: 416x736 1 white, 16.0ms
+Speed: 2.0ms preprocess, 16.0ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,704 - INFO - Tracked 1 balls in frame 420
+
+0: 416x736 1 white, 17.1ms
+Speed: 2.0ms preprocess, 17.1ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,774 - INFO - Tracked 1 balls in frame 422
+
+0: 416x736 1 white, 19.2ms
+Speed: 2.0ms preprocess, 19.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,845 - INFO - Tracked 1 balls in frame 424
+
+0: 416x736 1 white, 18.6ms
+Speed: 2.0ms preprocess, 18.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,917 - INFO - Tracked 1 balls in frame 426
+
+0: 416x736 1 white, 18.6ms
+Speed: 2.1ms preprocess, 18.6ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:55,987 - INFO - Tracked 1 balls in frame 428
+
+0: 416x736 1 white, 15.0ms
+Speed: 1.9ms preprocess, 15.0ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,055 - INFO - Tracked 1 balls in frame 430
+
+0: 416x736 1 white, 18.2ms
+Speed: 2.0ms preprocess, 18.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,128 - INFO - Tracked 1 balls in frame 432
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,199 - INFO - Tracked 1 balls in frame 434
+
+0: 416x736 1 white, 20.5ms
+Speed: 2.7ms preprocess, 20.5ms inference, 3.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,277 - INFO - Tracked 1 balls in frame 436
+
+0: 416x736 1 white, 20.5ms
+Speed: 2.2ms preprocess, 20.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,354 - INFO - Tracked 1 balls in frame 438
+
+0: 416x736 1 white, 17.4ms
+Speed: 2.5ms preprocess, 17.4ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,424 - INFO - Tracked 1 balls in frame 440
+
+0: 416x736 1 white, 16.7ms
+Speed: 2.0ms preprocess, 16.7ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,496 - INFO - Tracked 1 balls in frame 442
+
+0: 416x736 1 white, 16.6ms
+Speed: 2.0ms preprocess, 16.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,563 - INFO - Tracked 1 balls in frame 444
+
+0: 416x736 1 white, 16.7ms
+Speed: 2.0ms preprocess, 16.7ms inference, 3.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,632 - INFO - Tracked 1 balls in frame 446
+
+0: 416x736 1 white, 16.8ms
+Speed: 5.9ms preprocess, 16.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,721 - INFO - Tracked 1 balls in frame 448
+
+0: 416x736 1 white, 17.1ms
+Speed: 4.0ms preprocess, 17.1ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,796 - INFO - Tracked 1 balls in frame 450
+
+0: 416x736 1 white, 18.1ms
+Speed: 3.2ms preprocess, 18.1ms inference, 3.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,872 - INFO - Tracked 1 balls in frame 452
+
+0: 416x736 1 white, 19.6ms
+Speed: 2.2ms preprocess, 19.6ms inference, 2.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:56,949 - INFO - Tracked 1 balls in frame 454
+
+0: 416x736 1 white, 17.4ms
+Speed: 2.5ms preprocess, 17.4ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,026 - INFO - Tracked 1 balls in frame 456
+
+0: 416x736 1 white, 18.8ms
+Speed: 3.9ms preprocess, 18.8ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,106 - INFO - Tracked 1 balls in frame 458
+
+0: 416x736 1 white, 20.8ms
+Speed: 2.1ms preprocess, 20.8ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,185 - INFO - Tracked 1 balls in frame 460
+
+0: 416x736 1 white, 16.8ms
+Speed: 2.5ms preprocess, 16.8ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,257 - INFO - Tracked 1 balls in frame 462
+
+0: 416x736 1 white, 18.3ms
+Speed: 3.1ms preprocess, 18.3ms inference, 3.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,334 - INFO - Tracked 1 balls in frame 464
+
+0: 416x736 1 white, 19.1ms
+Speed: 2.0ms preprocess, 19.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,421 - INFO - Tracked 1 balls in frame 466
+
+0: 416x736 1 white, 14.4ms
+Speed: 2.0ms preprocess, 14.4ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,488 - INFO - Tracked 1 balls in frame 468
+
+0: 416x736 1 white, 19.0ms
+Speed: 2.8ms preprocess, 19.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,567 - INFO - Tracked 1 balls in frame 470
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,637 - INFO - Tracked 1 balls in frame 472
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.1ms preprocess, 18.4ms inference, 2.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,712 - INFO - Tracked 1 balls in frame 474
+
+0: 416x736 1 white, 18.4ms
+Speed: 2.1ms preprocess, 18.4ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,785 - INFO - Tracked 1 balls in frame 476
+
+0: 416x736 1 white, 14.8ms
+Speed: 2.0ms preprocess, 14.8ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,856 - INFO - Tracked 1 balls in frame 478
+
+0: 416x736 1 white, 15.0ms
+Speed: 1.9ms preprocess, 15.0ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,924 - INFO - Tracked 1 balls in frame 480
+
+0: 416x736 1 white, 19.0ms
+Speed: 2.0ms preprocess, 19.0ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:57,997 - INFO - Tracked 1 balls in frame 482
+
+0: 416x736 1 white, 17.3ms
+Speed: 2.6ms preprocess, 17.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,067 - INFO - Tracked 1 balls in frame 484
+
+0: 416x736 1 white, 17.4ms
+Speed: 2.5ms preprocess, 17.4ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,139 - INFO - Tracked 1 balls in frame 486
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.1ms preprocess, 18.5ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,213 - INFO - Tracked 1 balls in frame 488
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.4ms preprocess, 18.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,286 - INFO - Tracked 1 balls in frame 490
+
+0: 416x736 1 white, 14.4ms
+Speed: 2.6ms preprocess, 14.4ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,357 - INFO - Tracked 1 balls in frame 492
+
+0: 416x736 1 white, 15.0ms
+Speed: 2.3ms preprocess, 15.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,424 - INFO - Tracked 1 balls in frame 494
+
+0: 416x736 1 white, 14.7ms
+Speed: 2.1ms preprocess, 14.7ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,492 - INFO - Tracked 1 balls in frame 496
+
+0: 416x736 1 white, 20.7ms
+Speed: 2.1ms preprocess, 20.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,564 - INFO - Tracked 1 balls in frame 498
+
+0: 416x736 1 white, 16.0ms
+Speed: 2.1ms preprocess, 16.0ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,635 - INFO - Tracked 1 balls in frame 500
+
+0: 416x736 1 white, 23.1ms
+Speed: 3.9ms preprocess, 23.1ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,725 - INFO - Tracked 1 balls in frame 502
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.0ms preprocess, 18.9ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,800 - INFO - Tracked 1 balls in frame 504
+
+0: 416x736 1 white, 24.6ms
+Speed: 1.9ms preprocess, 24.6ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,880 - INFO - Tracked 1 balls in frame 506
+
+0: 416x736 1 white, 23.0ms
+Speed: 2.0ms preprocess, 23.0ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:58,953 - INFO - Tracked 1 balls in frame 508
+
+0: 416x736 1 white, 26.3ms
+Speed: 3.6ms preprocess, 26.3ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,038 - INFO - Tracked 1 balls in frame 510
+
+0: 416x736 1 white, 18.5ms
+Speed: 2.0ms preprocess, 18.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,113 - INFO - Tracked 1 balls in frame 512
+
+0: 416x736 1 white, 19.2ms
+Speed: 2.3ms preprocess, 19.2ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,187 - INFO - Tracked 1 balls in frame 514
+
+0: 416x736 1 white, 16.2ms
+Speed: 2.8ms preprocess, 16.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,258 - INFO - Tracked 1 balls in frame 516
+
+0: 416x736 1 white, 15.1ms
+Speed: 2.1ms preprocess, 15.1ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,327 - INFO - Tracked 1 balls in frame 518
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,395 - INFO - Tracked 1 balls in frame 520
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,463 - INFO - Tracked 1 balls in frame 522
+
+0: 416x736 1 white, 16.7ms
+Speed: 2.0ms preprocess, 16.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,542 - INFO - Tracked 1 balls in frame 524
+
+0: 416x736 1 white, 17.5ms
+Speed: 2.0ms preprocess, 17.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,613 - INFO - Tracked 1 balls in frame 526
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.2ms preprocess, 18.3ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,686 - INFO - Tracked 1 balls in frame 528
+
+0: 416x736 1 white, 14.8ms
+Speed: 3.0ms preprocess, 14.8ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,757 - INFO - Tracked 1 balls in frame 530
+
+0: 416x736 1 white, 14.6ms
+Speed: 2.0ms preprocess, 14.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,823 - INFO - Tracked 1 balls in frame 532
+
+0: 416x736 1 white, 15.8ms
+Speed: 2.0ms preprocess, 15.8ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,892 - INFO - Tracked 1 balls in frame 534
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.1ms preprocess, 18.3ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:05:59,963 - INFO - Tracked 1 balls in frame 536
+
+0: 416x736 1 white, 17.5ms
+Speed: 2.0ms preprocess, 17.5ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,042 - INFO - Tracked 1 balls in frame 538
+
+0: 416x736 1 white, 17.5ms
+Speed: 2.4ms preprocess, 17.5ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,109 - INFO - Tracked 1 balls in frame 540
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.0ms preprocess, 18.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,182 - INFO - Tracked 1 balls in frame 542
+
+0: 416x736 1 white, 16.5ms
+Speed: 2.9ms preprocess, 16.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,256 - INFO - Tracked 1 balls in frame 544
+
+0: 416x736 1 white, 15.7ms
+Speed: 2.4ms preprocess, 15.7ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,331 - INFO - Tracked 1 balls in frame 546
+
+0: 416x736 1 white, 16.7ms
+Speed: 2.2ms preprocess, 16.7ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,406 - INFO - Tracked 1 balls in frame 548
+
+0: 416x736 1 white, 16.7ms
+Speed: 2.1ms preprocess, 16.7ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,477 - INFO - Tracked 1 balls in frame 550
+
+0: 416x736 1 white, 22.5ms
+Speed: 2.1ms preprocess, 22.5ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,587 - INFO - Tracked 1 balls in frame 552
+
+0: 416x736 1 white, 20.3ms
+Speed: 2.1ms preprocess, 20.3ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,665 - INFO - Tracked 1 balls in frame 554
+
+0: 416x736 1 white, 22.3ms
+Speed: 2.7ms preprocess, 22.3ms inference, 3.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,741 - INFO - Tracked 1 balls in frame 556
+
+0: 416x736 1 white, 23.8ms
+Speed: 2.2ms preprocess, 23.8ms inference, 3.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,824 - INFO - Tracked 1 balls in frame 558
+
+0: 416x736 1 white, 15.9ms
+Speed: 2.1ms preprocess, 15.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,897 - INFO - Tracked 1 balls in frame 560
+
+0: 416x736 1 white, 22.3ms
+Speed: 2.2ms preprocess, 22.3ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:00,980 - INFO - Tracked 1 balls in frame 562
+
+0: 416x736 1 white, 16.6ms
+Speed: 3.3ms preprocess, 16.6ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,055 - INFO - Tracked 1 balls in frame 564
+
+0: 416x736 1 white, 18.1ms
+Speed: 2.1ms preprocess, 18.1ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,127 - INFO - Tracked 1 balls in frame 566
+
+0: 416x736 1 white, 24.0ms
+Speed: 2.2ms preprocess, 24.0ms inference, 2.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,210 - INFO - Tracked 1 balls in frame 568
+
+0: 416x736 1 white, 23.7ms
+Speed: 7.4ms preprocess, 23.7ms inference, 3.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,298 - INFO - Tracked 1 balls in frame 570
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.5ms preprocess, 15.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,365 - INFO - Tracked 1 balls in frame 572
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.7ms preprocess, 15.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,436 - INFO - Tracked 1 balls in frame 574
+
+0: 416x736 1 white, 19.1ms
+Speed: 2.0ms preprocess, 19.1ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,507 - INFO - Tracked 1 balls in frame 576
+
+0: 416x736 1 white, 21.7ms
+Speed: 7.9ms preprocess, 21.7ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,589 - INFO - Tracked 1 balls in frame 578
+
+0: 416x736 1 white, 15.8ms
+Speed: 2.0ms preprocess, 15.8ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,660 - INFO - Tracked 1 balls in frame 580
+
+0: 416x736 1 white, 16.1ms
+Speed: 2.1ms preprocess, 16.1ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,727 - INFO - Tracked 1 balls in frame 582
+
+0: 416x736 1 white, 19.9ms
+Speed: 3.5ms preprocess, 19.9ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,804 - INFO - Tracked 1 balls in frame 584
+
+0: 416x736 1 white, 16.5ms
+Speed: 2.0ms preprocess, 16.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,871 - INFO - Tracked 1 balls in frame 586
+
+0: 416x736 1 white, 19.1ms
+Speed: 2.0ms preprocess, 19.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:01,941 - INFO - Tracked 1 balls in frame 588
+
+0: 416x736 1 white, 17.8ms
+Speed: 2.1ms preprocess, 17.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,012 - INFO - Tracked 1 balls in frame 590
+
+0: 416x736 1 white, 15.6ms
+Speed: 3.3ms preprocess, 15.6ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,096 - INFO - Tracked 1 balls in frame 592
+
+0: 416x736 1 white, 20.3ms
+Speed: 3.7ms preprocess, 20.3ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,175 - INFO - Tracked 1 balls in frame 594
+
+0: 416x736 1 white, 19.2ms
+Speed: 2.1ms preprocess, 19.2ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,250 - INFO - Tracked 1 balls in frame 596
+
+0: 416x736 1 white, 18.8ms
+Speed: 2.0ms preprocess, 18.8ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,324 - INFO - Tracked 1 balls in frame 598
+
+0: 416x736 1 white, 19.5ms
+Speed: 2.2ms preprocess, 19.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,400 - INFO - Tracked 1 balls in frame 600
+
+0: 416x736 1 white, 14.4ms
+Speed: 2.5ms preprocess, 14.4ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,466 - INFO - Tracked 1 balls in frame 602
+
+0: 416x736 1 white, 16.1ms
+Speed: 2.1ms preprocess, 16.1ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,536 - INFO - Tracked 1 balls in frame 604
+
+0: 416x736 1 white, 18.6ms
+Speed: 2.0ms preprocess, 18.6ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,609 - INFO - Tracked 1 balls in frame 606
+
+0: 416x736 1 white, 20.2ms
+Speed: 2.1ms preprocess, 20.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,683 - INFO - Tracked 1 balls in frame 608
+
+0: 416x736 1 white, 19.8ms
+Speed: 2.0ms preprocess, 19.8ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,755 - INFO - Tracked 1 balls in frame 610
+
+0: 416x736 1 white, 19.0ms
+Speed: 2.5ms preprocess, 19.0ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,832 - INFO - Tracked 1 balls in frame 612
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.1ms preprocess, 15.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,902 - INFO - Tracked 1 balls in frame 614
+
+0: 416x736 1 white, 18.6ms
+Speed: 2.1ms preprocess, 18.6ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:02,974 - INFO - Tracked 1 balls in frame 616
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.1ms preprocess, 18.7ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,046 - INFO - Tracked 1 balls in frame 618
+
+0: 416x736 1 white, 19.1ms
+Speed: 2.1ms preprocess, 19.1ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,118 - INFO - Tracked 1 balls in frame 620
+
+0: 416x736 1 white, 16.0ms
+Speed: 2.3ms preprocess, 16.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,187 - INFO - Tracked 1 balls in frame 622
+
+0: 416x736 1 white, 17.3ms
+Speed: 3.1ms preprocess, 17.3ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,266 - INFO - Tracked 1 balls in frame 624
+
+0: 416x736 1 white, 14.9ms
+Speed: 2.9ms preprocess, 14.9ms inference, 3.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,336 - INFO - Tracked 1 balls in frame 626
+
+0: 416x736 1 white, 18.6ms
+Speed: 2.4ms preprocess, 18.6ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,413 - INFO - Tracked 1 balls in frame 628
+
+0: 416x736 1 white, 16.7ms
+Speed: 2.2ms preprocess, 16.7ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,491 - INFO - Tracked 1 balls in frame 630
+
+0: 416x736 1 white, 14.3ms
+Speed: 2.0ms preprocess, 14.3ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,556 - INFO - Tracked 1 balls in frame 632
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,623 - INFO - Tracked 1 balls in frame 634
+
+0: 416x736 1 white, 15.9ms
+Speed: 3.2ms preprocess, 15.9ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,694 - INFO - Tracked 1 balls in frame 636
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.8ms preprocess, 18.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,766 - INFO - Tracked 1 balls in frame 638
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,839 - INFO - Tracked 1 balls in frame 640
+
+0: 416x736 1 white, 18.2ms
+Speed: 2.4ms preprocess, 18.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,911 - INFO - Tracked 1 balls in frame 642
+
+0: 416x736 1 white, 18.6ms
+Speed: 2.0ms preprocess, 18.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:03,982 - INFO - Tracked 1 balls in frame 644
+
+0: 416x736 1 white, 17.1ms
+Speed: 2.8ms preprocess, 17.1ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,053 - INFO - Tracked 1 balls in frame 646
+
+0: 416x736 1 white, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,123 - INFO - Tracked 1 balls in frame 648
+
+0: 416x736 1 white, 17.6ms
+Speed: 2.0ms preprocess, 17.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,193 - INFO - Tracked 1 balls in frame 650
+
+0: 416x736 1 white, 17.8ms
+Speed: 2.6ms preprocess, 17.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,262 - INFO - Tracked 1 balls in frame 652
+
+0: 416x736 1 white, 17.5ms
+Speed: 2.0ms preprocess, 17.5ms inference, 3.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,335 - INFO - Tracked 1 balls in frame 654
+
+0: 416x736 1 white, 16.4ms
+Speed: 2.2ms preprocess, 16.4ms inference, 3.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,404 - INFO - Tracked 1 balls in frame 656
+
+0: 416x736 1 white, 18.6ms
+Speed: 2.0ms preprocess, 18.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,475 - INFO - Tracked 1 balls in frame 658
+
+0: 416x736 1 white, 17.9ms
+Speed: 2.1ms preprocess, 17.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,547 - INFO - Tracked 1 balls in frame 660
+
+0: 416x736 1 white, 17.7ms
+Speed: 2.0ms preprocess, 17.7ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,616 - INFO - Tracked 1 balls in frame 662
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.9ms preprocess, 15.5ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,685 - INFO - Tracked 1 balls in frame 664
+
+0: 416x736 1 white, 19.5ms
+Speed: 2.1ms preprocess, 19.5ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,757 - INFO - Tracked 1 balls in frame 666
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.3ms preprocess, 18.9ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,847 - INFO - Tracked 1 balls in frame 668
+
+0: 416x736 1 white, 19.2ms
+Speed: 2.1ms preprocess, 19.2ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,919 - INFO - Tracked 1 balls in frame 670
+
+0: 416x736 1 white, 16.9ms
+Speed: 2.0ms preprocess, 16.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:04,989 - INFO - Tracked 1 balls in frame 672
+
+0: 416x736 1 white, 14.8ms
+Speed: 2.0ms preprocess, 14.8ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:05,058 - INFO - Tracked 1 balls in frame 674
+
+0: 416x736 1 white, 15.8ms
+Speed: 2.0ms preprocess, 15.8ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:05,130 - INFO - Tracked 1 balls in frame 676
+
+0: 416x736 1 white, 16.3ms
+Speed: 4.0ms preprocess, 16.3ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:05,205 - INFO - Tracked 1 balls in frame 678
+
+0: 416x736 1 white, 19.4ms
+Speed: 2.7ms preprocess, 19.4ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:05,280 - INFO - Tracked 1 balls in frame 680
+
+0: 416x736 1 white, 21.1ms
+Speed: 3.7ms preprocess, 21.1ms inference, 3.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:05,360 - INFO - Tracked 1 balls in frame 682
+
+0: 416x736 1 white, 21.2ms
+Speed: 2.8ms preprocess, 21.2ms inference, 3.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:05,438 - INFO - Tracked 1 balls in frame 684
+
+0: 416x736 1 white, 24.2ms
+Speed: 2.6ms preprocess, 24.2ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:05,518 - INFO - Tracked 1 balls in frame 686
+
+0: 416x736 1 white, 31.3ms
+Speed: 8.9ms preprocess, 31.3ms inference, 6.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:05,623 - INFO - Tracked 1 balls in frame 688
+
+0: 416x736 1 white, 25.7ms
+Speed: 8.9ms preprocess, 25.7ms inference, 3.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:05,737 - INFO - Tracked 1 balls in frame 690
+
+0: 416x736 1 white, 18.7ms
+Speed: 2.5ms preprocess, 18.7ms inference, 3.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:05,811 - INFO - Tracked 1 balls in frame 692
+
+0: 416x736 1 white, 23.9ms
+Speed: 2.0ms preprocess, 23.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:05,890 - INFO - Tracked 1 balls in frame 694
+
+0: 416x736 1 white, 20.8ms
+Speed: 2.6ms preprocess, 20.8ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:05,976 - INFO - Tracked 1 balls in frame 696
+
+0: 416x736 1 white, 20.6ms
+Speed: 2.2ms preprocess, 20.6ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,050 - INFO - Tracked 1 balls in frame 698
+
+0: 416x736 1 white, 19.1ms
+Speed: 2.0ms preprocess, 19.1ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,125 - INFO - Tracked 1 balls in frame 700
+
+0: 416x736 1 white, 17.2ms
+Speed: 2.2ms preprocess, 17.2ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,197 - INFO - Tracked 1 balls in frame 702
+
+0: 416x736 1 white, 17.0ms
+Speed: 2.1ms preprocess, 17.0ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,267 - INFO - Tracked 1 balls in frame 704
+
+0: 416x736 1 white, 17.1ms
+Speed: 3.3ms preprocess, 17.1ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,337 - INFO - Tracked 1 balls in frame 706
+
+0: 416x736 1 white, 18.1ms
+Speed: 2.0ms preprocess, 18.1ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,408 - INFO - Tracked 1 balls in frame 708
+
+0: 416x736 1 white, 18.3ms
+Speed: 2.4ms preprocess, 18.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,481 - INFO - Tracked 1 balls in frame 710
+
+0: 416x736 1 white, 19.1ms
+Speed: 2.0ms preprocess, 19.1ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,553 - INFO - Tracked 1 balls in frame 712
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,623 - INFO - Tracked 1 balls in frame 714
+
+0: 416x736 1 white, 15.1ms
+Speed: 2.0ms preprocess, 15.1ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,689 - INFO - Tracked 1 balls in frame 716
+
+0: 416x736 1 white, 16.9ms
+Speed: 1.9ms preprocess, 16.9ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,758 - INFO - Tracked 1 balls in frame 718
+
+0: 416x736 1 white, 15.2ms
+Speed: 2.0ms preprocess, 15.2ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,828 - INFO - Tracked 1 balls in frame 720
+
+0: 416x736 1 white, 16.3ms
+Speed: 2.1ms preprocess, 16.3ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,898 - INFO - Tracked 1 balls in frame 722
+
+0: 416x736 1 white, 18.9ms
+Speed: 2.0ms preprocess, 18.9ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:06,973 - INFO - Tracked 1 balls in frame 724
+
+0: 416x736 1 white, 15.8ms
+Speed: 2.4ms preprocess, 15.8ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:07,112 - INFO - Tracked 1 balls in frame 726
+
+0: 416x736 1 white, 20.3ms
+Speed: 2.0ms preprocess, 20.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:07,185 - INFO - Tracked 1 balls in frame 728
+
+0: 416x736 1 white, 16.2ms
+Speed: 2.0ms preprocess, 16.2ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:07,257 - INFO - Tracked 1 balls in frame 730
+
+0: 416x736 1 white, 15.5ms
+Speed: 2.0ms preprocess, 15.5ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:07,325 - INFO - Tracked 1 balls in frame 732
+
+0: 416x736 1 white, 16.0ms
+Speed: 2.1ms preprocess, 16.0ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:07,396 - INFO - Tracked 1 balls in frame 734
+
+0: 416x736 1 white, 15.3ms
+Speed: 2.0ms preprocess, 15.3ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:07,466 - INFO - Tracked 1 balls in frame 736
+
+0: 416x736 1 white, 16.3ms
+Speed: 2.1ms preprocess, 16.3ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:07,535 - INFO - Tracked 1 balls in frame 738
+
+0: 416x736 1 white, 18.0ms
+Speed: 2.0ms preprocess, 18.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-03-30 09:06:07,606 - INFO - Tracked 1 balls in frame 740
+2025-03-30 09:06:07,618 - INFO - Menu toggled ON via button click.
+2025-03-30 09:06:08,452 - INFO - Clicked on item: 'Quit Game' with action: quit in state CurrentGameState.MENU
+2025-03-30 09:06:08,453 - INFO - Score is 0, not saving.
+2025-03-30 09:06:08,454 - INFO - Cleaning up and exiting game...
+2025-03-30 09:06:08,454 - INFO - Flushing leaderboard...
+2025-03-30 09:06:08,455 - INFO - Saving zones...
+2025-03-30 09:06:08,456 - INFO - Scoring zones saved to scoring_zones.json
+2025-03-30 09:06:08,456 - INFO - Notify: Zones Saved
+2025-03-30 09:06:08,456 - INFO - Saving achievements...
+2025-03-30 09:06:08,457 - INFO - Saving high scores...
+2025-03-30 09:06:08,530 - INFO - Resources released, exiting program.
+
+F:\Whiffle\10.6 (littlefix)>
