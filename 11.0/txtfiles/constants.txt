@@ -311,7 +311,7 @@ class TrackingConstants:
         100.0, "TRACKING_DISTANCE_THRESHOLD"
     )
     SCORED_DISTANCE_THRESHOLD: float = _assert_positive(
-        20.0, "SCORED_DISTANCE_THRESHOLD"
+        100.0, "SCORED_DISTANCE_THRESHOLD"
     )
     MAX_AGE_FRAMES: int = _assert_positive(30, "MAX_AGE_FRAMES")
 

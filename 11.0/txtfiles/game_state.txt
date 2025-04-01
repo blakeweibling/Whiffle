@@ -14,6 +14,7 @@ from typing import Optional, List, Tuple, Dict, Any, Callable
 from enum import Enum, auto
 
 # Use constants consistently
+# Added GameConstants to import list for SCORE_COOLDOWN_DURATION
 from constants import UIConstants, GameConstants, ScoringConstants
 from detection import BallDetector
 from tracking import BallTracker
@@ -84,19 +85,24 @@ class GameState:
             else:
                 logger.info(f"Camera resolution: {int(w)}x{int(h)}")
         else:
+            # Corrected Indentation Block Starts Here
             logger.warning(
                 f"Using static frame: {GameConstants.STATIC_FRAME_FILE}")
             logger.info("Loading static frame...")
             try:
                 self.static_frame = cv2.imread(GameConstants.STATIC_FRAME_FILE)
+                # Check if frame loaded successfully
                 if self.static_frame is None:
                     raise FileNotFoundError(
                         f"{GameConstants.STATIC_FRAME_FILE} not found or invalid."
                     )
+                # Check dimensions
                 if self.static_frame.shape[0] == 0 or self.static_frame.shape[1] == 0:
                     raise ValueError("Static image has invalid dimensions.")
+                # Check channels
                 if len(self.static_frame.shape) != 3 or self.static_frame.shape[2] != 3:
                     raise ValueError("Static image not 3-channel BGR.")
+                # Resize if valid
                 self.static_frame = cv2.resize(
                     self.static_frame,
                     (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT),
@@ -105,6 +111,7 @@ class GameState:
             except Exception as e:
                 logger.exception(f"Static frame load/validate fail: {e}")
                 raise
+            # Corrected Indentation Block Ends Here
 
         # Game Variables
         logger.info("Initializing game variables...")
@@ -135,13 +142,16 @@ class GameState:
         self.previous_ball_states: Dict[int, Dict[str, Any]] = {}
         self.ball_positions_history: Dict[int, List[Tuple[int, int]]] = {}
         self.ball_zone_history: Dict[int, List[Optional[int]]] = {}
-        self.scored_cooldown: Dict[int, float] = {}
+        # self.scored_cooldown: Dict[int, float] = {} # <<< REMOVED >>> Replaced by zone_cooldown
         self.special_hole_hit_this_session: bool = False
+
+        # <<< NEW >>> Zone Cooldown State
+        # Stores the time until a zone can score again (key: zone_idx)
+        self.zone_cooldown: Dict[int, float] = {}
 
         # Menu State
         self.submenu_active: Optional[str] = None
-        self.submenu_items: List[Tuple[Tuple[int,
-                                             int, int, int], Any, str]] = []
+        self.submenu_items: List[Tuple[Tuple[int, int, int, int], Any, str]] = []
         self.menu_pos: Tuple[int, int] = (0, 0)
         self.menu_width: int = 400
         self.menu_height: int = 450
@@ -418,7 +428,7 @@ class GameState:
                 self.notification_text = None
 
     def update_scoring(self) -> None:
-        """Processes tracked balls to determine scores and handle special hole bonus."""
+        """Processes tracked balls to determine scores using ZONE-BASED cooldown."""
         newly_scored_pts_this_frame = (
             0  # Track points added in this frame for sound trigger
         )
@@ -451,7 +461,7 @@ class GameState:
             # Find current zone
             zone, zone_idx = None, -1
             for i, z in enumerate(self.scoring_zones):
-                if is_in_scoring_zone((x, y, r, ball_id), z):
+                if is_in_scoring_zone((x, y, r, ball_id), z): # Original uses (x,y,r,ball_id) - Keep this signature
                     zone, zone_idx = z, i
                     break
 
@@ -475,13 +485,24 @@ class GameState:
                 "time": current_time,
             }
 
-            # Check scoring conditions
-            if (
-                zone
-                and stable
-                and ball_id not in self.ball_scored_zones
-                and current_time >= self.scored_cooldown.get(ball_id, 0)
-            ):
+            # <<< MODIFIED SCORING LOGIC >>>
+            if zone and stable:
+                # Check 1: Is this specific ZONE on cooldown?
+                if current_time < self.zone_cooldown.get(zone_idx, 0):
+                    if self.debug_mode:
+                       logger.debug(f"Zone {zone_idx} is on cooldown. Skipping score check for ball {ball_id}.")
+                    continue # Skip scoring checks for this ball if the zone is on cooldown
+
+                # Check 2: Has this specific ball ALREADY scored in this specific zone *session*?
+                if self.ball_scored_zones.get(ball_id) == zone_idx:
+                     if self.debug_mode:
+                       logger.debug(f"Ball {ball_id} already scored in zone {zone_idx}. Skipping.")
+                     continue # Skip scoring if this ball ID already scored in this zone
+
+                # --- If passed checks, proceed with scoring ---
+                # Original conditions merged into the new checks above:
+                # ball_id not in self.ball_scored_zones and current_time >= self.scored_cooldown.get(ball_id, 0)
+
                 _, _, _, _, pts = zone  # Original points assigned to the zone
                 is_sp = zone == self.special_hole
 
@@ -516,13 +537,14 @@ class GameState:
                 self.scored_balls.append(ball_id)
                 self.balls_in_zone[ball_id] = zone
                 self.ball_scored_zones[ball_id] = zone_idx
-                self.scored_cooldown[ball_id] = (
-                    current_time + GameConstants.SCORE_COOLDOWN_DURATION
-                )
+
+                # <<< NEW >>> Set ZONE cooldown using GameConstants.SCORE_COOLDOWN_DURATION
+                cooldown_duration = GameConstants.SCORE_COOLDOWN_DURATION
+                self.zone_cooldown[zone_idx] = current_time + cooldown_duration
 
                 logger.info(
-                    f"Ball {ball_id}({b_type}) scored {points_to_add}pts Zone:{zone_idx}{' (Special Hole)' if is_sp else ''}. Score:{self.score}"
-                )
+                    f"Ball {ball_id}({b_type}) scored {points_to_add}pts Zone:{zone_idx}{' (Special Hole)' if is_sp else ''}. Score:{self.score}. Zone {zone_idx} cooldown set until {self.zone_cooldown[zone_idx]:.2f}."
+                ) # Combined original log info
 
                 # Check win conditions (using potentially modified self.score)
                 if (
@@ -546,15 +568,16 @@ class GameState:
             elif ball_id in self.ball_scored_zones and (
                 not stable or self.ball_scored_zones.get(ball_id) != zone_idx
             ):
-                logger.debug(
-                    f"Ball {ball_id} left/unstable zone {self.ball_scored_zones.get(ball_id)}. Clearing."
-                )
-                self.ball_scored_zones.pop(ball_id, None)
-                if ball_id in self.scored_balls:
-                    try:
-                        self.scored_balls.remove(ball_id)
-                    except ValueError:
-                        pass
+                last_scored_zone = self.ball_scored_zones.pop(ball_id, None) # Remove from dict and get the zone
+                if last_scored_zone is not None:
+                    logger.debug(
+                        f"Ball {ball_id} left/unstable zone {last_scored_zone}. Clearing its scored status for this zone."
+                    ) # Adapted log message
+                    if ball_id in self.scored_balls: # Original logic
+                        try:
+                            self.scored_balls.remove(ball_id)
+                        except ValueError: # Original logic
+                            pass
 
         # Play sound only if points were actually added in this frame
         if newly_scored_pts_this_frame > 0:
@@ -564,6 +587,7 @@ class GameState:
         tracked_ids = {b[3] for b in self.tracked_balls}
         keys_to_remove = set(self.ball_states.keys()) - tracked_ids
         for ball_id in keys_to_remove:
+            # <<< MODIFIED >>> Removed self.scored_cooldown from this list
             for d in [
                 self.ball_states,
                 self.previous_ball_states,
@@ -571,7 +595,7 @@ class GameState:
                 self.ball_zone_history,
                 self.balls_in_zone,
                 self.ball_scored_zones,
-                self.scored_cooldown,
+                # self.scored_cooldown, # REMOVED
                 self.ball_trails,
             ]:
                 d.pop(ball_id, None)

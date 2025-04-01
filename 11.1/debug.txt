@@ -1,0 +1,58 @@
+F:\Whiffle\11.1>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.10.9)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2025-03-31 19:53:45,996 - INFO - constants - Trying camera index 0 with backend dshow (700)...
+2025-03-31 19:53:46,286 - INFO - constants - Successfully opened camera at index 0 with backend dshow
+2025-03-31 19:53:46,872 - INFO - constants - Camera at index 0 with backend dshow is functional
+2025-03-31 19:53:49,690 - INFO - ui_screens - Showing splash screen...
+2025-03-31 19:53:49,785 - INFO - ui_screens - Initializing GameState...
+2025-03-31 19:53:49,786 - INFO - game_state - Starting GameState initialization...
+2025-03-31 19:53:49,786 - INFO - game_state - Attempting to open camera at index 0 with backend 700
+2025-03-31 19:53:50,056 - INFO - game_state - Setting camera resolution...
+2025-03-31 19:53:50,861 - INFO - game_state - Camera resolution: 1280x720
+2025-03-31 19:53:50,862 - INFO - game_state - Initializing game variables...
+2025-03-31 19:53:50,862 - INFO - game_state - Initializing detection and tracking...
+2025-03-31 19:53:50,888 - WARNING - detection - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+2025-03-31 19:53:50,888 - INFO - game_state - Loading initial state...
+2025-03-31 19:53:50,889 - INFO - menu - Scoring zones loaded from scoring_zones.json
+2025-03-31 19:53:50,889 - INFO - game_state - Notify: Zones Loaded
+2025-03-31 19:53:50,890 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-03-31 19:53:50,890 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-03-31 19:53:50,890 - INFO - game_state - Loaded high score for mode 'classic': 4483
+2025-03-31 19:53:50,890 - INFO - game_state - Initializing sounds...
+2025-03-31 19:53:50,925 - INFO - game_state_utils - Loaded score sound: sounds/ding.wav
+2025-03-31 19:53:51,120 - INFO - game_state_utils - Loaded background music: sounds/background_music.mp3
+2025-03-31 19:53:51,120 - INFO - game_state - Sounds initialized (score, background).
+2025-03-31 19:53:51,121 - INFO - game_state - Initializing achievements...
+2025-03-31 19:53:51,121 - INFO - game_state - Loading achievements...
+2025-03-31 19:53:51,122 - INFO - game_state_utils - Loaded unlock status for 3 achievements from achievements_status.json.
+2025-03-31 19:53:51,122 - INFO - game_state - Loading HSV ranges...
+2025-03-31 19:53:51,123 - WARNING - game_state_utils - Missing/invalid format for 'white' in hsv_ranges.json. Using default.
+2025-03-31 19:53:51,123 - WARNING - game_state_utils - Missing/invalid format for 'red1' in hsv_ranges.json. Using default.
+2025-03-31 19:53:51,124 - WARNING - game_state_utils - Missing/invalid format for 'red2' in hsv_ranges.json. Using default.
+2025-03-31 19:53:51,124 - INFO - game_state_utils - Loaded custom HSV ranges from hsv_ranges.json
+2025-03-31 19:53:51,124 - INFO - game_state - Starting background music...
+2025-03-31 19:53:51,125 - INFO - game_state - GameState initialized successfully.
+2025-03-31 19:53:51,125 - INFO - ui_screens - GameState initialized successfully.
+2025-03-31 19:53:51,832 - INFO - ui_screens - Captured first frame for splash fade.
+2025-03-31 19:53:51,832 - INFO - ui_screens - Starting splash display loop.
+2025-03-31 19:53:54,842 - INFO - ui_screens - Splash screen finished.
+Press 'q' to quit, 's' to start drawing a scoring zone, 'd' to toggle debug mode
+2025-03-31 19:53:54,944 - INFO - game_loop - Game window initialized.
+2025-03-31 19:53:56,364 - INFO - game_input - General Debug toggled ON
+2025-03-31 19:53:56,969 - INFO - game_input - General Debug toggled OFF
+2025-03-31 19:53:57,372 - INFO - game_input - General Debug toggled ON
+2025-03-31 19:53:57,975 - INFO - game_input - General Debug toggled OFF
+2025-03-31 19:53:58,686 - INFO - game_input - General Debug toggled ON
+2025-03-31 19:53:59,486 - INFO - game_input - General Debug toggled OFF
+2025-03-31 19:54:03,112 - INFO - game_input - Quit key ('q') pressed.
+2025-03-31 19:54:03,112 - INFO - utils - Initiating clean exit...
+2025-03-31 19:54:03,113 - INFO - utils - Flushing leaderboard...
+2025-03-31 19:54:03,114 - INFO - utils - Saving zones...
+2025-03-31 19:54:03,114 - INFO - menu - Scoring zones saved to scoring_zones.json
+2025-03-31 19:54:03,115 - INFO - game_state - Notify: Zones Saved
+2025-03-31 19:54:03,115 - INFO - utils - Saving achievements...
+2025-03-31 19:54:03,192 - INFO - utils - Clean exit sequence complete. Terminating process.
+2025-03-31 19:54:03,192 - INFO - __main__ - Program exited via clean_exit
+
+F:\Whiffle\11.1>

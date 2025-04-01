@@ -10,7 +10,9 @@ import cv2
 
 from game_state import GameState
 from game_loop import run_game_loop
-from ui import show_splash_screen
+from ui_screens import (
+    show_splash_screen,
+)  # Import show_splash_screen from its new location
 
 # Updated imports: clean_exit from utils, mouse_callback from input_handler
 from utils import clean_exit
