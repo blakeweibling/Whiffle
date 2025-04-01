@@ -231,7 +231,7 @@ class GameConstants:
     FADE_DURATION: float = _assert_non_negative(1.0, "FADE_DURATION")
 
     # Game Modes
-    TIMED_MODE_DURATION: float = _assert_positive(60.0, "TIMED_MODE_DURATION")
+    TIMED_MODE_DURATION: float = _assert_positive(90.0, "TIMED_MODE_DURATION")
     TIMED_MODE_WIN_SCORE: int = _assert_positive(500, "TIMED_MODE_WIN_SCORE")
 
     # Scoring Logic
@@ -240,9 +240,9 @@ class GameConstants:
     REST_THRESHOLD_DISTANCE: float = _assert_non_negative(
         5.0, "REST_THRESHOLD_DISTANCE"
     )
-    ZONE_STABILITY_FRAMES: int = _assert_positive(5, "ZONE_STABILITY_FRAMES")
+    ZONE_STABILITY_FRAMES: int = _assert_positive(10, "ZONE_STABILITY_FRAMES")
     SCORE_COOLDOWN_DURATION: float = _assert_non_negative(
-        1.0, "SCORE_COOLDOWN_DURATION"
+        3000.0, "SCORE_COOLDOWN_DURATION"
     )
 
     # Ball Tracking / Trail
