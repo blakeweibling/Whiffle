@@ -1,0 +1,15 @@
+/__pycache__
+/captured_frames
+/dataset
+/runs
+/game.build
+/game.dist
+/game.onefile-build
+/upx
+/venv
+/build
+/dist
+/installer
+/include for dist
+/legacytrainingdata
+/packagedforinstall

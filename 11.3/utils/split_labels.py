@@ -1,6 +1,7 @@
 import os
 import json
 
+
 def split_labels(input_dir, output_dir, state_output_file):
     """
     Split YOLO label files with 6 columns into 5-column files for training and save state info separately.
@@ -19,14 +20,14 @@ def split_labels(input_dir, output_dir, state_output_file):
 
     # Process each label file in the input directory
     for filename in os.listdir(input_dir):
-        if not filename.endswith('.txt'):
+        if not filename.endswith(".txt"):
             continue
 
         input_path = os.path.join(input_dir, filename)
         output_path = os.path.join(output_dir, filename)
 
         # Read the original label file
-        with open(input_path, 'r') as f:
+        with open(input_path, "r") as f:
             lines = f.readlines()
 
         # Process each line and extract the first 5 columns
@@ -39,7 +40,7 @@ def split_labels(input_dir, output_dir, state_output_file):
                 continue
 
             # Extract the first 5 columns (class_id, x_center, y_center, width, height)
-            new_line = ' '.join(parts[:5]) + '\n'
+            new_line = " ".join(parts[:5]) + "\n"
             new_lines.append(new_line)
 
             # Extract the state (6th column)
@@ -47,7 +48,7 @@ def split_labels(input_dir, output_dir, state_output_file):
             states.append(state)
 
         # Write the new label file with 5 columns
-        with open(output_path, 'w') as f:
+        with open(output_path, "w") as f:
             f.writelines(new_lines)
 
         # Store the state information
@@ -56,11 +57,14 @@ def split_labels(input_dir, output_dir, state_output_file):
         print(f"Processed {filename}")
 
     # Save the state information to a JSON file
-    with open(state_output_file, 'w') as f:
+    with open(state_output_file, "w") as f:
         json.dump(state_info, f, indent=4)
 
     print(f"Saved state information to {state_output_file}")
 
+
 # Run the script for both training and validation sets
-split_labels('dataset/labels/train', 'dataset/labels/train_yolo', 'dataset/states_train.json')
-split_labels('dataset/labels/val', 'dataset/labels/val_yolo', 'dataset/states_val.json')
+split_labels(
+    "dataset/labels/train", "dataset/labels/train_yolo", "dataset/states_train.json"
+)
+split_labels("dataset/labels/val", "dataset/labels/val_yolo", "dataset/states_val.json")

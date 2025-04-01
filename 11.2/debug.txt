@@ -2,45 +2,45 @@
 C:\Users\bweibling\Documents\GitHub\Whiffle\11.2>py game.py
 pygame 2.6.1 (SDL 2.28.4, Python 3.13.2)
 Hello from the pygame community. https://www.pygame.org/contribute.html
-2025-04-01 07:25:30,686 - INFO - constants - Trying camera index 0 with backend dshow (700)...
-2025-04-01 07:25:31,469 - INFO - constants - Successfully opened camera at index 0 with backend dshow
-2025-04-01 07:25:31,570 - INFO - constants - Camera at index 0 with backend dshow is functional
-2025-04-01 07:25:34,292 - INFO - ui_screens - Showing splash screen...
-2025-04-01 07:25:34,319 - INFO - ui_screens - Initializing GameState...
-2025-04-01 07:25:34,319 - INFO - game_state - Starting GameState initialization...
-2025-04-01 07:25:34,319 - INFO - game_state - Attempting to open camera at index 0 with backend 700
-2025-04-01 07:25:35,025 - INFO - game_state - Setting camera resolution...
-2025-04-01 07:25:36,434 - INFO - game_state - Camera resolution: 1280x720
-2025-04-01 07:25:36,434 - INFO - game_state - Initializing game variables...
-2025-04-01 07:25:36,435 - INFO - game_state - Initializing detection and tracking...
-2025-04-01 07:25:36,461 - WARNING - detection - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
-2025-04-01 07:25:36,462 - INFO - game_state - Loading initial state...
-2025-04-01 07:25:36,462 - INFO - menu - Scoring zones loaded from scoring_zones.json
-2025-04-01 07:25:36,462 - INFO - game_state - Notify: Zones Loaded
-2025-04-01 07:25:36,462 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
-2025-04-01 07:25:36,463 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
-2025-04-01 07:25:36,463 - INFO - game_state - Loaded high score for mode 'classic': 4483
-2025-04-01 07:25:36,463 - INFO - game_state - Initializing sounds...
-2025-04-01 07:25:37,650 - INFO - game_state_utils - Loaded score sound: sounds/ding.wav
-2025-04-01 07:25:37,821 - INFO - game_state_utils - Loaded background music: sounds/background_music.mp3
-2025-04-01 07:25:37,829 - INFO - game_state_utils - Loaded low time warning sound: sounds/10_sec_timer.mp3
-2025-04-01 07:25:37,829 - INFO - game_state - Sounds initialized (score, background, low_time).
-2025-04-01 07:25:37,829 - INFO - game_state - Initializing achievements...
-2025-04-01 07:25:37,830 - INFO - game_state - Loading achievements...
-2025-04-01 07:25:37,830 - INFO - game_state_utils - Loaded unlock status for 3 achievements from achievements_status.json.
-2025-04-01 07:25:37,831 - INFO - game_state - Loading HSV ranges...
-2025-04-01 07:25:37,831 - WARNING - game_state_utils - Missing/invalid format for 'white' in hsv_ranges.json. Using default.
-2025-04-01 07:25:37,831 - WARNING - game_state_utils - Missing/invalid format for 'red1' in hsv_ranges.json. Using default.
-2025-04-01 07:25:37,831 - WARNING - game_state_utils - Missing/invalid format for 'red2' in hsv_ranges.json. Using default.
-2025-04-01 07:25:37,831 - INFO - game_state_utils - Loaded custom HSV ranges from hsv_ranges.json
-2025-04-01 07:25:37,831 - INFO - game_state - Starting background music...
-2025-04-01 07:25:37,832 - INFO - game_state - GameState initialized successfully.
-2025-04-01 07:25:37,832 - INFO - ui_screens - GameState initialized successfully.
-2025-04-01 07:25:37,833 - INFO - ui_screens - Captured first frame for splash fade.
-2025-04-01 07:25:37,833 - INFO - ui_screens - Starting splash display loop.
-2025-04-01 07:25:40,847 - INFO - ui_screens - Splash screen finished.
+2025-04-01 09:19:20,051 - INFO - constants - Trying camera index 0 with backend dshow (700)...
+2025-04-01 09:19:20,839 - INFO - constants - Successfully opened camera at index 0 with backend dshow
+2025-04-01 09:19:20,940 - INFO - constants - Camera at index 0 with backend dshow is functional
+2025-04-01 09:19:23,672 - INFO - ui_screens - Showing splash screen...
+2025-04-01 09:19:23,697 - INFO - ui_screens - Initializing GameState...
+2025-04-01 09:19:23,697 - INFO - game_state - Starting GameState initialization...
+2025-04-01 09:19:23,697 - INFO - game_state - Attempting to open camera at index 0 with backend 700
+2025-04-01 09:19:24,418 - INFO - game_state - Setting camera resolution...
+2025-04-01 09:19:25,849 - INFO - game_state - Camera resolution: 1280x720
+2025-04-01 09:19:25,850 - INFO - game_state - Initializing game variables...
+2025-04-01 09:19:25,851 - INFO - game_state - Initializing detection and tracking...
+2025-04-01 09:19:25,878 - WARNING - detection - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+2025-04-01 09:19:25,879 - INFO - game_state - Loading initial state...
+2025-04-01 09:19:25,879 - INFO - menu - Scoring zones loaded from scoring_zones.json
+2025-04-01 09:19:25,879 - INFO - game_state - Notify: Zones Loaded
+2025-04-01 09:19:25,880 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-04-01 09:19:25,880 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-04-01 09:19:25,880 - INFO - game_state - Loaded high score for mode 'classic': 4483
+2025-04-01 09:19:25,881 - INFO - game_state - Initializing sounds...
+2025-04-01 09:19:26,719 - INFO - game_state_utils - Loaded score sound: sounds/ding.wav
+2025-04-01 09:19:26,876 - INFO - game_state_utils - Loaded background music: sounds/background_music.mp3
+2025-04-01 09:19:26,883 - INFO - game_state_utils - Loaded low time warning sound: sounds/10_sec_timer.mp3
+2025-04-01 09:19:26,884 - INFO - game_state - Sounds initialized (score, background, low_time).
+2025-04-01 09:19:26,884 - INFO - game_state - Initializing achievements...
+2025-04-01 09:19:26,884 - INFO - game_state - Loading achievements...
+2025-04-01 09:19:26,884 - INFO - game_state_utils - Loaded unlock status for 3 achievements from achievements_status.json.
+2025-04-01 09:19:26,885 - INFO - game_state - Loading HSV ranges...
+2025-04-01 09:19:26,886 - WARNING - game_state_utils - Missing/invalid format for 'white' in hsv_ranges.json. Using default.
+2025-04-01 09:19:26,886 - WARNING - game_state_utils - Missing/invalid format for 'red1' in hsv_ranges.json. Using default.
+2025-04-01 09:19:26,886 - WARNING - game_state_utils - Missing/invalid format for 'red2' in hsv_ranges.json. Using default.
+2025-04-01 09:19:26,886 - INFO - game_state_utils - Loaded custom HSV ranges from hsv_ranges.json
+2025-04-01 09:19:26,886 - INFO - game_state - Starting background music...
+2025-04-01 09:19:26,886 - INFO - game_state - GameState initialized successfully.
+2025-04-01 09:19:26,886 - INFO - ui_screens - GameState initialized successfully.
+2025-04-01 09:19:26,888 - INFO - ui_screens - Captured first frame for splash fade.
+2025-04-01 09:19:26,888 - INFO - ui_screens - Starting splash display loop.
+2025-04-01 09:19:29,894 - INFO - ui_screens - Splash screen finished.
 Press 'q' to quit, 's' to start drawing a scoring zone, 'd' to toggle debug mode
-2025-04-01 07:25:40,951 - INFO - game_loop - Game window initialized (OpenCV only).
+2025-04-01 09:19:29,997 - INFO - game_loop - Game window initialized (OpenCV only).
 RAW waitKey returned: 66, Masked (key): 66
 RAW waitKey returned: 108, Masked (key): 108
 RAW waitKey returned: 97, Masked (key): 97
@@ -49,1236 +49,93 @@ RAW waitKey returned: 101, Masked (key): 101
 RAW waitKey returned: 32, Masked (key): 32
 RAW waitKey returned: 87, Masked (key): 87
 RAW waitKey returned: 13, Masked (key): 13
-2025-04-01 07:25:44,437 - INFO - game_input - Player 1 name set: 'Blake W'
-2025-04-01 07:25:44,438 - INFO - game_state - Notify: Welcome, Blake W!
-2025-04-01 07:25:44,438 - INFO - game_input - BG music started.
-
-0: 416x736 (no detections), 48.3ms
-Speed: 3.5ms preprocess, 48.3ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.6ms
-Speed: 5.2ms preprocess, 54.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.1ms
-Speed: 2.8ms preprocess, 54.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.1ms
-Speed: 2.2ms preprocess, 49.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.3ms
-Speed: 1.7ms preprocess, 44.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.5ms
-Speed: 4.6ms preprocess, 53.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.7ms
-Speed: 3.8ms preprocess, 50.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.2ms
-Speed: 3.8ms preprocess, 51.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.1ms
-Speed: 3.0ms preprocess, 53.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 39.0ms
-Speed: 1.2ms preprocess, 39.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.7ms
-Speed: 4.1ms preprocess, 49.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 57.3ms
-Speed: 4.8ms preprocess, 57.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.7ms
-Speed: 3.4ms preprocess, 51.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.3ms
-Speed: 3.4ms preprocess, 49.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.6ms
-Speed: 3.3ms preprocess, 48.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.9ms
-Speed: 3.2ms preprocess, 55.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 47.8ms
-Speed: 3.0ms preprocess, 47.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.0ms
-Speed: 3.7ms preprocess, 48.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 58.7ms
-Speed: 2.7ms preprocess, 58.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-2025-04-01 07:25:49,679 - INFO - utils - Menu toggled ON via button click.
-2025-04-01 07:25:53,793 - INFO - utils - Clicked on item: 'Game Mode' with action: game_mode in state CurrentGameState.MENU
-2025-04-01 07:25:53,794 - INFO - utils - Switching to submenu: game_mode
-2025-04-01 07:25:54,917 - INFO - utils - Clicked on item: 'Timed' with action: set_mode_timed in state CurrentGameState.MENU
-2025-04-01 07:25:54,917 - INFO - utils - Game mode changing to: timed
-2025-04-01 07:25:54,918 - INFO - game_state - Score is 0, not saving.
-2025-04-01 07:25:54,918 - INFO - menu - Timed mode selected. Timer set to 90.0 seconds.
-2025-04-01 07:25:54,919 - INFO - menu - Scoring zones loaded from scoring_zones.json
-2025-04-01 07:25:54,919 - INFO - game_state - Notify: Zones Loaded
-2025-04-01 07:25:54,920 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
-2025-04-01 07:25:54,920 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
-2025-04-01 07:25:54,921 - INFO - game_state - Loaded high score for mode 'timed': 0
-2025-04-01 07:25:54,921 - INFO - menu - Game state reset for player: Blake W
-2025-04-01 07:25:58,158 - INFO - utils - Clicked on item: 'Resume' with action: resume in state CurrentGameState.MENU
-
-0: 416x736 (no detections), 51.6ms
-Speed: 4.3ms preprocess, 51.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.1ms
-Speed: 3.6ms preprocess, 54.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.1ms
-Speed: 2.4ms preprocess, 54.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.1ms
-Speed: 2.9ms preprocess, 55.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.9ms
-Speed: 3.1ms preprocess, 50.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.6ms
-Speed: 4.2ms preprocess, 51.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.7ms
-Speed: 3.7ms preprocess, 51.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 38.6ms
-Speed: 2.3ms preprocess, 38.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.6ms
-Speed: 3.9ms preprocess, 49.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 57.7ms
-Speed: 4.3ms preprocess, 57.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.9ms
-Speed: 3.5ms preprocess, 48.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 41.5ms
-Speed: 2.0ms preprocess, 41.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.2ms
-Speed: 3.3ms preprocess, 51.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 45.7ms
-Speed: 2.1ms preprocess, 45.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 45.0ms
-Speed: 1.2ms preprocess, 45.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.7ms
-Speed: 3.0ms preprocess, 56.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 38.3ms
-Speed: 1.3ms preprocess, 38.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.2ms
-Speed: 3.0ms preprocess, 49.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 43.1ms
-Speed: 1.2ms preprocess, 43.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.3ms
-Speed: 2.1ms preprocess, 53.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.0ms
-Speed: 5.6ms preprocess, 50.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.9ms
-Speed: 1.7ms preprocess, 51.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.0ms
-Speed: 4.0ms preprocess, 54.0ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 36.9ms
-Speed: 1.2ms preprocess, 36.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.7ms
-Speed: 1.6ms preprocess, 54.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.4ms
-Speed: 2.4ms preprocess, 53.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.1ms
-Speed: 2.3ms preprocess, 50.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 47.6ms
-Speed: 2.5ms preprocess, 47.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.9ms
-Speed: 2.1ms preprocess, 51.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.5ms
-Speed: 2.3ms preprocess, 53.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.4ms
-Speed: 2.9ms preprocess, 52.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.2ms
-Speed: 1.7ms preprocess, 49.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 33.5ms
-Speed: 1.1ms preprocess, 33.5ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.7ms
-Speed: 3.7ms preprocess, 50.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 45.8ms
-Speed: 2.1ms preprocess, 45.8ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 43.6ms
-Speed: 1.4ms preprocess, 43.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.2ms
-Speed: 2.6ms preprocess, 49.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.4ms
-Speed: 2.9ms preprocess, 54.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.9ms
-Speed: 2.9ms preprocess, 52.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 45.7ms
-Speed: 1.4ms preprocess, 45.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 57.8ms
-Speed: 4.9ms preprocess, 57.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.1ms
-Speed: 4.1ms preprocess, 56.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 38.3ms
-Speed: 1.4ms preprocess, 38.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 37.4ms
-Speed: 1.2ms preprocess, 37.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.2ms
-Speed: 1.2ms preprocess, 53.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 33.6ms
-Speed: 1.4ms preprocess, 33.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 38.2ms
-Speed: 1.2ms preprocess, 38.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.7ms
-Speed: 2.4ms preprocess, 55.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.4ms
-Speed: 2.6ms preprocess, 55.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 59.3ms
-Speed: 2.1ms preprocess, 59.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 40.4ms
-Speed: 1.2ms preprocess, 40.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.5ms
-Speed: 3.5ms preprocess, 48.5ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 58.9ms
-Speed: 3.1ms preprocess, 58.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.0ms
-Speed: 2.1ms preprocess, 51.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 46.8ms
-Speed: 1.4ms preprocess, 46.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.1ms
-Speed: 3.2ms preprocess, 53.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.3ms
-Speed: 4.4ms preprocess, 52.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.4ms
-Speed: 2.1ms preprocess, 48.4ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.2ms
-Speed: 4.1ms preprocess, 50.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.7ms
-Speed: 3.7ms preprocess, 53.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.1ms
-Speed: 3.5ms preprocess, 54.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.9ms
-Speed: 2.8ms preprocess, 52.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.9ms
-Speed: 2.3ms preprocess, 50.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.5ms
-Speed: 2.1ms preprocess, 54.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.4ms
-Speed: 2.6ms preprocess, 49.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.3ms
-Speed: 3.1ms preprocess, 48.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.2ms
-Speed: 2.6ms preprocess, 51.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 57.5ms
-Speed: 3.2ms preprocess, 57.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.6ms
-Speed: 2.7ms preprocess, 49.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.7ms
-Speed: 4.1ms preprocess, 54.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.4ms
-Speed: 2.1ms preprocess, 56.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.8ms
-Speed: 1.9ms preprocess, 49.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.2ms
-Speed: 1.4ms preprocess, 49.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.3ms
-Speed: 2.9ms preprocess, 55.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.3ms
-Speed: 2.5ms preprocess, 53.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.5ms
-Speed: 3.5ms preprocess, 54.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 41.7ms
-Speed: 1.7ms preprocess, 41.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.1ms
-Speed: 3.2ms preprocess, 55.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.9ms
-Speed: 3.9ms preprocess, 49.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.1ms
-Speed: 2.3ms preprocess, 52.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.9ms
-Speed: 3.7ms preprocess, 51.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.4ms
-Speed: 3.2ms preprocess, 49.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 57.4ms
-Speed: 2.9ms preprocess, 57.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.5ms
-Speed: 2.8ms preprocess, 49.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.2ms
-Speed: 2.8ms preprocess, 56.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.7ms
-Speed: 2.1ms preprocess, 49.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.1ms
-Speed: 2.7ms preprocess, 54.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.1ms
-Speed: 2.3ms preprocess, 48.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.9ms
-Speed: 4.5ms preprocess, 53.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.8ms
-Speed: 3.0ms preprocess, 48.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.1ms
-Speed: 4.7ms preprocess, 54.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 39.9ms
-Speed: 1.2ms preprocess, 39.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.5ms
-Speed: 3.6ms preprocess, 55.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.3ms
-Speed: 2.2ms preprocess, 53.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 45.8ms
-Speed: 2.3ms preprocess, 45.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.6ms
-Speed: 2.5ms preprocess, 51.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.3ms
-Speed: 4.3ms preprocess, 50.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.1ms
-Speed: 2.5ms preprocess, 55.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.7ms
-Speed: 3.0ms preprocess, 48.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 57.2ms
-Speed: 3.7ms preprocess, 57.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.4ms
-Speed: 3.2ms preprocess, 48.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.8ms
-Speed: 2.1ms preprocess, 52.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.0ms
-Speed: 2.2ms preprocess, 50.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.1ms
-Speed: 2.7ms preprocess, 55.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.4ms
-Speed: 4.3ms preprocess, 56.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.6ms
-Speed: 2.8ms preprocess, 54.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 36.7ms
-Speed: 1.3ms preprocess, 36.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.9ms
-Speed: 2.7ms preprocess, 55.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.6ms
-Speed: 3.1ms preprocess, 56.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.3ms
-Speed: 3.7ms preprocess, 56.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.3ms
-Speed: 3.1ms preprocess, 55.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 38.5ms
-Speed: 1.6ms preprocess, 38.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.6ms
-Speed: 3.1ms preprocess, 55.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 58.1ms
-Speed: 2.5ms preprocess, 58.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.9ms
-Speed: 2.4ms preprocess, 52.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.0ms
-Speed: 2.2ms preprocess, 49.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 46.9ms
-Speed: 2.1ms preprocess, 46.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.1ms
-Speed: 3.5ms preprocess, 50.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.9ms
-Speed: 3.6ms preprocess, 51.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.6ms
-Speed: 3.7ms preprocess, 51.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.1ms
-Speed: 3.8ms preprocess, 53.1ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.8ms
-Speed: 1.5ms preprocess, 51.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.9ms
-Speed: 1.4ms preprocess, 44.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.1ms
-Speed: 1.1ms preprocess, 44.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.7ms
-Speed: 1.3ms preprocess, 44.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.3ms
-Speed: 2.1ms preprocess, 44.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.6ms
-Speed: 1.5ms preprocess, 44.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.7ms
-Speed: 1.5ms preprocess, 53.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 46.5ms
-Speed: 1.3ms preprocess, 46.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 45.8ms
-Speed: 1.5ms preprocess, 45.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.7ms
-Speed: 1.6ms preprocess, 44.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 46.7ms
-Speed: 1.4ms preprocess, 46.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.4ms
-Speed: 1.4ms preprocess, 50.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 46.3ms
-Speed: 1.5ms preprocess, 46.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 36.9ms
-Speed: 1.2ms preprocess, 36.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.2ms
-Speed: 2.7ms preprocess, 56.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.9ms
-Speed: 4.6ms preprocess, 52.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.8ms
-Speed: 4.1ms preprocess, 49.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.9ms
-Speed: 2.2ms preprocess, 54.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.1ms
-Speed: 2.2ms preprocess, 50.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.9ms
-Speed: 3.2ms preprocess, 50.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.1ms
-Speed: 3.2ms preprocess, 49.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 45.7ms
-Speed: 2.2ms preprocess, 45.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.8ms
-Speed: 4.0ms preprocess, 49.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 57.5ms
-Speed: 4.3ms preprocess, 57.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.6ms
-Speed: 2.2ms preprocess, 55.6ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.0ms
-Speed: 2.9ms preprocess, 48.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.2ms
-Speed: 2.4ms preprocess, 55.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 45.6ms
-Speed: 1.7ms preprocess, 45.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.8ms
-Speed: 2.4ms preprocess, 53.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 61.9ms
-Speed: 2.2ms preprocess, 61.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 39.1ms
-Speed: 1.1ms preprocess, 39.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.6ms
-Speed: 2.6ms preprocess, 51.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.5ms
-Speed: 3.4ms preprocess, 52.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.1ms
-Speed: 3.9ms preprocess, 56.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 09:19:32,234 - INFO - game_input - Player 1 name set to: 'Blake W'
+2025-04-01 09:19:32,235 - INFO - game_state - Notify: Welcome, Blake W!
+2025-04-01 09:19:32,235 - INFO - game_input - Background music started.
+
+0: 416x736 1 half, 55.3ms
+Speed: 2.7ms preprocess, 55.3ms inference, 0.7ms postprocess per image at shape (1, 3, 416, 736)
 
 0: 416x736 (no detections), 50.6ms
-Speed: 2.9ms preprocess, 50.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 47.5ms
-Speed: 3.9ms preprocess, 47.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.6ms
-Speed: 2.1ms preprocess, 50.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.2ms
-Speed: 2.7ms preprocess, 52.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 46.8ms
-Speed: 3.6ms preprocess, 46.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.8ms
-Speed: 2.2ms preprocess, 53.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.0ms
-Speed: 2.4ms preprocess, 51.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.8ms
-Speed: 4.3ms preprocess, 55.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.7ms
-Speed: 2.4ms preprocess, 49.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.0ms
-Speed: 2.4ms preprocess, 54.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.8ms
-Speed: 3.0ms preprocess, 52.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.7ms
-Speed: 3.1ms preprocess, 55.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.1ms
-Speed: 5.2ms preprocess, 51.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.9ms
-Speed: 2.9ms preprocess, 53.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.4ms
-Speed: 2.5ms preprocess, 51.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 43.5ms
-Speed: 1.6ms preprocess, 43.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.4ms
-Speed: 4.2ms preprocess, 49.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 42.3ms
-Speed: 2.2ms preprocess, 42.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.1ms
-Speed: 3.7ms preprocess, 51.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.1ms
-Speed: 2.4ms preprocess, 51.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 57.8ms
-Speed: 3.6ms preprocess, 57.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.8ms
-Speed: 2.9ms preprocess, 48.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.2ms
-Speed: 3.7ms preprocess, 55.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.7ms
-Speed: 2.2ms preprocess, 49.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.7ms
-Speed: 4.1ms preprocess, 54.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.6ms
-Speed: 3.6ms preprocess, 56.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.8ms
-Speed: 4.4ms preprocess, 54.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.9ms
-Speed: 2.5ms preprocess, 53.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.0ms
-Speed: 2.8ms preprocess, 56.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.5ms
-Speed: 4.0ms preprocess, 51.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.5ms
-Speed: 4.0ms preprocess, 52.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.6ms
-Speed: 2.8ms preprocess, 53.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.7ms
-Speed: 3.7ms preprocess, 49.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.4ms
-Speed: 3.8ms preprocess, 50.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 46.6ms
-Speed: 2.3ms preprocess, 46.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 39.0ms
-Speed: 1.3ms preprocess, 39.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.4ms
-Speed: 4.9ms preprocess, 50.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.5ms
-Speed: 4.6ms preprocess, 48.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.2ms
-Speed: 4.4ms preprocess, 49.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.0ms
-Speed: 3.2ms preprocess, 49.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.3ms
-Speed: 5.1ms preprocess, 50.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.2ms
-Speed: 3.0ms preprocess, 50.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.1ms
-Speed: 3.5ms preprocess, 56.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.9ms
-Speed: 2.5ms preprocess, 48.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.3ms
-Speed: 3.3ms preprocess, 56.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.5ms
-Speed: 4.1ms preprocess, 54.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.5ms
-Speed: 2.7ms preprocess, 50.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.9ms
-Speed: 2.1ms preprocess, 49.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.6ms
-Speed: 3.4ms preprocess, 54.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.2ms
-Speed: 1.5ms preprocess, 51.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.1ms
-Speed: 3.5ms preprocess, 49.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.5ms
-Speed: 3.1ms preprocess, 53.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.2ms
-Speed: 3.6ms preprocess, 54.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.3ms
-Speed: 3.8ms preprocess, 54.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.1ms
-Speed: 3.6ms preprocess, 52.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 39.1ms
-Speed: 1.7ms preprocess, 39.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.0ms
-Speed: 3.1ms preprocess, 54.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.8ms
-Speed: 4.0ms preprocess, 50.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.0ms
-Speed: 2.6ms preprocess, 52.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.7ms
-Speed: 2.2ms preprocess, 48.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.7ms
-Speed: 3.0ms preprocess, 53.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 38.8ms
-Speed: 1.2ms preprocess, 38.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.9ms
-Speed: 4.4ms preprocess, 48.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.3ms
-Speed: 2.1ms preprocess, 48.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.8ms
-Speed: 4.0ms preprocess, 48.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 45.8ms
-Speed: 1.2ms preprocess, 45.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.0ms
-Speed: 3.3ms preprocess, 50.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 42.1ms
-Speed: 1.1ms preprocess, 42.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.8ms
-Speed: 1.2ms preprocess, 44.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.7ms
-Speed: 3.1ms preprocess, 55.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.3ms
-Speed: 4.3ms preprocess, 55.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.3ms
-Speed: 2.1ms preprocess, 50.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.4ms
-Speed: 2.3ms preprocess, 48.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.3ms
-Speed: 3.3ms preprocess, 54.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.0ms
-Speed: 3.1ms preprocess, 49.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.1ms
-Speed: 1.2ms preprocess, 44.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.5ms
-Speed: 3.9ms preprocess, 52.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.0ms
-Speed: 2.3ms preprocess, 49.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.8ms
-Speed: 3.9ms preprocess, 54.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.8ms
-Speed: 2.1ms preprocess, 48.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.6ms
-Speed: 3.5ms preprocess, 54.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.0ms
-Speed: 3.4ms preprocess, 51.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.5ms
-Speed: 3.4ms preprocess, 52.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+Speed: 5.9ms preprocess, 50.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
 
 0: 416x736 (no detections), 51.6ms
-Speed: 2.7ms preprocess, 51.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.5ms
-Speed: 3.2ms preprocess, 49.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.9ms
-Speed: 4.1ms preprocess, 56.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.1ms
-Speed: 3.9ms preprocess, 48.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.0ms
-Speed: 3.5ms preprocess, 50.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.1ms
-Speed: 2.8ms preprocess, 50.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.9ms
-Speed: 2.8ms preprocess, 55.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.9ms
-Speed: 4.3ms preprocess, 56.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.8ms
-Speed: 4.0ms preprocess, 56.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.3ms
-Speed: 3.8ms preprocess, 54.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.4ms
-Speed: 4.2ms preprocess, 55.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.3ms
-Speed: 3.5ms preprocess, 53.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.5ms
-Speed: 4.3ms preprocess, 53.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.7ms
-Speed: 4.2ms preprocess, 52.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.9ms
-Speed: 3.1ms preprocess, 53.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.9ms
-Speed: 5.3ms preprocess, 49.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 59.6ms
-Speed: 3.2ms preprocess, 59.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.7ms
-Speed: 3.2ms preprocess, 52.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.9ms
-Speed: 4.3ms preprocess, 48.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.2ms
-Speed: 3.5ms preprocess, 51.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.0ms
-Speed: 2.6ms preprocess, 48.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.5ms
-Speed: 3.9ms preprocess, 50.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 45.6ms
-Speed: 1.2ms preprocess, 45.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.2ms
-Speed: 3.3ms preprocess, 49.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.2ms
-Speed: 2.1ms preprocess, 51.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 46.1ms
-Speed: 3.2ms preprocess, 46.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.1ms
-Speed: 3.1ms preprocess, 54.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.6ms
-Speed: 3.2ms preprocess, 49.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 47.2ms
-Speed: 1.3ms preprocess, 47.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+Speed: 3.5ms preprocess, 51.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
 
 0: 416x736 (no detections), 55.7ms
-Speed: 2.4ms preprocess, 55.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+Speed: 3.3ms preprocess, 55.7ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
 
-0: 416x736 (no detections), 51.2ms
-Speed: 4.7ms preprocess, 51.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+0: 416x736 (no detections), 45.4ms
+Speed: 2.3ms preprocess, 45.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
 
-0: 416x736 (no detections), 40.4ms
-Speed: 1.3ms preprocess, 40.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.3ms
-Speed: 3.9ms preprocess, 53.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 40.1ms
-Speed: 2.1ms preprocess, 40.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 40.2ms
-Speed: 1.6ms preprocess, 40.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 47.5ms
-Speed: 2.2ms preprocess, 47.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+0: 416x736 1 half, 49.1ms
+Speed: 3.0ms preprocess, 49.1ms inference, 0.4ms postprocess per image at shape (1, 3, 416, 736)
 
 0: 416x736 (no detections), 51.3ms
-Speed: 3.0ms preprocess, 51.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.1ms
-Speed: 3.1ms preprocess, 49.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.9ms
-Speed: 3.0ms preprocess, 48.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.4ms
-Speed: 3.0ms preprocess, 49.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 47.8ms
-Speed: 3.3ms preprocess, 47.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.8ms
-Speed: 3.3ms preprocess, 56.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.1ms
-Speed: 3.3ms preprocess, 48.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.8ms
-Speed: 2.1ms preprocess, 48.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.2ms
-Speed: 2.7ms preprocess, 54.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.4ms
-Speed: 2.7ms preprocess, 56.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.7ms
-Speed: 2.1ms preprocess, 48.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.0ms
-Speed: 3.0ms preprocess, 54.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.9ms
-Speed: 3.6ms preprocess, 52.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.0ms
-Speed: 2.9ms preprocess, 56.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.6ms
-Speed: 3.2ms preprocess, 48.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.9ms
-Speed: 2.2ms preprocess, 53.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.0ms
-Speed: 3.4ms preprocess, 54.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.0ms
-Speed: 3.5ms preprocess, 54.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.4ms
-Speed: 2.1ms preprocess, 51.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.1ms
-Speed: 3.3ms preprocess, 50.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.3ms
-Speed: 3.6ms preprocess, 51.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 46.4ms
-Speed: 1.7ms preprocess, 46.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.4ms
-Speed: 3.7ms preprocess, 48.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.9ms
-Speed: 3.3ms preprocess, 50.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.4ms
-Speed: 3.3ms preprocess, 51.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.2ms
-Speed: 2.3ms preprocess, 51.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.6ms
-Speed: 3.3ms preprocess, 48.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.4ms
-Speed: 2.6ms preprocess, 50.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 43.7ms
-Speed: 1.4ms preprocess, 43.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.1ms
-Speed: 2.2ms preprocess, 51.1ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.6ms
-Speed: 2.9ms preprocess, 55.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.9ms
-Speed: 3.7ms preprocess, 54.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.0ms
-Speed: 2.3ms preprocess, 51.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.2ms
-Speed: 4.3ms preprocess, 53.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+Speed: 2.6ms preprocess, 51.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
 
 0: 416x736 (no detections), 54.8ms
-Speed: 3.1ms preprocess, 54.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+Speed: 3.4ms preprocess, 54.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
 
-0: 416x736 (no detections), 49.4ms
-Speed: 2.0ms preprocess, 49.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.1ms
-Speed: 3.5ms preprocess, 55.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.3ms
-Speed: 2.1ms preprocess, 54.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.2ms
-Speed: 3.7ms preprocess, 52.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.8ms
-Speed: 4.2ms preprocess, 53.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.5ms
-Speed: 2.3ms preprocess, 55.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.3ms
-Speed: 2.5ms preprocess, 52.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.7ms
-Speed: 3.0ms preprocess, 54.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.5ms
-Speed: 3.1ms preprocess, 54.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.9ms
-Speed: 3.2ms preprocess, 50.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-2025-04-01 07:27:18,299 - INFO - game_loop - Timer below 10 seconds, playing warning sound.
-
-0: 416x736 (no detections), 54.0ms
-Speed: 2.8ms preprocess, 54.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.9ms
-Speed: 4.5ms preprocess, 51.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.8ms
-Speed: 2.3ms preprocess, 49.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.8ms
-Speed: 4.5ms preprocess, 50.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.4ms
-Speed: 3.9ms preprocess, 50.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.9ms
-Speed: 2.6ms preprocess, 49.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.5ms
-Speed: 3.9ms preprocess, 48.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 57.1ms
-Speed: 3.9ms preprocess, 57.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.2ms
-Speed: 3.2ms preprocess, 49.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.3ms
-Speed: 4.4ms preprocess, 51.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.3ms
-Speed: 2.2ms preprocess, 49.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.9ms
-Speed: 3.0ms preprocess, 54.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 47.6ms
-Speed: 2.4ms preprocess, 47.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 57.4ms
-Speed: 4.7ms preprocess, 57.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.1ms
-Speed: 4.0ms preprocess, 54.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.5ms
-Speed: 4.6ms preprocess, 56.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.2ms
-Speed: 4.3ms preprocess, 55.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.2ms
-Speed: 4.2ms preprocess, 52.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.5ms
-Speed: 3.4ms preprocess, 53.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 54.0ms
-Speed: 2.0ms preprocess, 54.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.1ms
-Speed: 2.7ms preprocess, 53.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 52.0ms
-Speed: 3.6ms preprocess, 52.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 47.4ms
-Speed: 2.1ms preprocess, 47.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.7ms
-Speed: 4.2ms preprocess, 53.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 46.9ms
-Speed: 2.5ms preprocess, 46.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 47.5ms
-Speed: 1.2ms preprocess, 47.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.0ms
-Speed: 1.3ms preprocess, 44.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.2ms
-Speed: 3.5ms preprocess, 50.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 49.8ms
-Speed: 2.5ms preprocess, 49.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.6ms
-Speed: 3.3ms preprocess, 51.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 55.1ms
-Speed: 3.1ms preprocess, 55.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 45.7ms
-Speed: 1.4ms preprocess, 45.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.5ms
-Speed: 4.0ms preprocess, 56.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 56.5ms
-Speed: 3.5ms preprocess, 56.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.6ms
-Speed: 3.7ms preprocess, 48.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.4ms
-Speed: 4.4ms preprocess, 51.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 57.2ms
-Speed: 3.1ms preprocess, 57.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 48.5ms
-Speed: 2.3ms preprocess, 48.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 47.9ms
-Speed: 3.2ms preprocess, 47.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.1ms
-Speed: 3.3ms preprocess, 53.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-2025-04-01 07:27:28,285 - INFO - game_loop - Timer expired! Game Over.
-2025-04-01 07:27:28,285 - INFO - game_state - Score is 0, not saving.
-2025-04-01 07:27:28,298 - INFO - ui_screens - Loaded and cached 'game_over.png'
-2025-04-01 07:27:33,223 - INFO - utils - Clicked on item: 'New Game' with action: new_game_from_gameover in state CurrentGameState.GAME_OVER
-2025-04-01 07:27:33,223 - INFO - utils - Starting new game from game over screen.
-2025-04-01 07:27:33,225 - INFO - menu - Timed mode selected. Timer set to 90.0 seconds.
-2025-04-01 07:27:33,226 - INFO - menu - Scoring zones loaded from scoring_zones.json
-2025-04-01 07:27:33,227 - INFO - game_state - Notify: Zones Loaded
-2025-04-01 07:27:33,227 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
-2025-04-01 07:27:33,227 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
-2025-04-01 07:27:33,228 - INFO - game_state - Loaded high score for mode 'timed': 0
-2025-04-01 07:27:33,229 - INFO - menu - Game state reset for player: Blake W
-2025-04-01 07:27:38,998 - INFO - utils - Clicked on item: 'New Game' with action: new_game_from_gameover in state CurrentGameState.GAME_OVER
-2025-04-01 07:27:38,998 - INFO - utils - Starting new game from game over screen.
-2025-04-01 07:27:38,999 - INFO - menu - Timed mode selected. Timer set to 90.0 seconds.
-2025-04-01 07:27:39,000 - INFO - menu - Scoring zones loaded from scoring_zones.json
-2025-04-01 07:27:39,000 - INFO - game_state - Notify: Zones Loaded
-2025-04-01 07:27:39,000 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
-2025-04-01 07:27:39,001 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
-2025-04-01 07:27:39,001 - INFO - game_state - Loaded high score for mode 'timed': 0
-2025-04-01 07:27:39,002 - INFO - menu - Game state reset for player: Blake W
-2025-04-01 07:27:48,008 - INFO - utils - Clicked on item: 'Leaderboard' with action: show_leaderboard_from_gameover in state CurrentGameState.GAME_OVER
-2025-04-01 07:27:48,008 - INFO - utils - Showing leaderboard from game over screen.
-2025-04-01 07:27:48,195 - ERROR - leaderboard - Supabase GET failed on attempt 1: HTTPSConnectionPool(host='jtkbujumrobglftzokcs.supabase.co', port=443): Max retries exceeded with url: /rest/v1/whifflescores?mode=eq.timed&order=score.desc&limit=10&select=player_name%2Cscore%2Ccreated_at (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)'))), status: N/A
-2025-04-01 07:27:49,214 - ERROR - leaderboard - Supabase GET failed on attempt 2: HTTPSConnectionPool(host='jtkbujumrobglftzokcs.supabase.co', port=443): Max retries exceeded with url: /rest/v1/whifflescores?mode=eq.timed&order=score.desc&limit=10&select=player_name%2Cscore%2Ccreated_at (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)'))), status: N/A
-2025-04-01 07:27:50,231 - ERROR - leaderboard - Supabase GET failed on attempt 3: HTTPSConnectionPool(host='jtkbujumrobglftzokcs.supabase.co', port=443): Max retries exceeded with url: /rest/v1/whifflescores?mode=eq.timed&order=score.desc&limit=10&select=player_name%2Cscore%2Ccreated_at (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)'))), status: N/A
-2025-04-01 07:27:50,231 - WARNING - leaderboard - Failed to retrieve top scores from online leaderboard, using local scores
-2025-04-01 07:27:50,233 - INFO - leaderboard - Using local leaderboard with 0 scores for mode: timed
-2025-04-01 07:27:50,264 - ERROR - leaderboard - Supabase GET failed on attempt 1: HTTPSConnectionPool(host='jtkbujumrobglftzokcs.supabase.co', port=443): Max retries exceeded with url: /rest/v1/whifflescores?mode=eq.timed&order=score.desc&limit=10&select=player_name%2Cscore%2Ccreated_at (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)'))), status: N/A
-2025-04-01 07:27:51,280 - ERROR - leaderboard - Supabase GET failed on attempt 2: HTTPSConnectionPool(host='jtkbujumrobglftzokcs.supabase.co', port=443): Max retries exceeded with url: /rest/v1/whifflescores?mode=eq.timed&order=score.desc&limit=10&select=player_name%2Cscore%2Ccreated_at (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)'))), status: N/A
-2025-04-01 07:27:52,297 - ERROR - leaderboard - Supabase GET failed on attempt 3: HTTPSConnectionPool(host='jtkbujumrobglftzokcs.supabase.co', port=443): Max retries exceeded with url: /rest/v1/whifflescores?mode=eq.timed&order=score.desc&limit=10&select=player_name%2Cscore%2Ccreated_at (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)'))), status: N/A
-2025-04-01 07:27:52,297 - WARNING - leaderboard - Failed to retrieve top scores from online leaderboard, using local scores
-2025-04-01 07:27:52,298 - INFO - leaderboard - Using local leaderboard with 0 scores for mode: timed
-2025-04-01 07:27:53,619 - INFO - utils - Clicked on item: 'Back' with action: back_to_main in state CurrentGameState.MENU
-2025-04-01 07:27:55,367 - INFO - utils - Clicked on item: 'Resume' with action: resume in state CurrentGameState.MENU
-
-0: 416x736 (no detections), 55.2ms
-Speed: 2.7ms preprocess, 55.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.9ms
-Speed: 3.2ms preprocess, 51.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 36.2ms
-Speed: 1.4ms preprocess, 36.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 53.8ms
-Speed: 3.2ms preprocess, 53.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.1ms
-Speed: 3.6ms preprocess, 50.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 51.3ms
-Speed: 4.5ms preprocess, 51.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.7ms
-Speed: 2.1ms preprocess, 44.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 50.1ms
-Speed: 2.8ms preprocess, 50.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.7ms
-Speed: 2.1ms preprocess, 44.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 47.9ms
-Speed: 3.2ms preprocess, 47.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-
-0: 416x736 (no detections), 44.6ms
-Speed: 2.1ms preprocess, 44.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
-2025-04-01 07:27:58,159 - INFO - utils - Menu toggled ON via button click.
-2025-04-01 07:27:59,106 - INFO - utils - Clicked on item: 'Quit Game' with action: quit in state CurrentGameState.MENU
-2025-04-01 07:27:59,106 - INFO - game_state - Score is 0, not saving.
-2025-04-01 07:27:59,107 - INFO - utils - Initiating clean exit...
-2025-04-01 07:27:59,108 - INFO - utils - Flushing leaderboard...
-2025-04-01 07:27:59,108 - INFO - utils - Saving zones...
-2025-04-01 07:27:59,109 - INFO - menu - Scoring zones saved to scoring_zones.json
-2025-04-01 07:27:59,110 - INFO - game_state - Notify: Zones Saved
-2025-04-01 07:27:59,110 - INFO - utils - Saving achievements...
-2025-04-01 07:27:59,697 - INFO - utils - Clean exit sequence complete. Terminating process.
+0: 416x736 (no detections), 48.2ms
+Speed: 3.5ms preprocess, 48.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 09:19:34,911 - INFO - utils - Menu toggled ON via button click.
+2025-04-01 09:19:36,602 - INFO - utils - Clicked on item: 'Players' with action: players in state CurrentGameState.MENU
+2025-04-01 09:19:36,602 - INFO - utils - Switching to submenu: players
+2025-04-01 09:19:37,851 - INFO - utils - Clicked on item: 'Add Player' with action: add_player in state CurrentGameState.MENU
+2025-04-01 09:19:37,852 - INFO - utils - Added Player 2
+2025-04-01 09:19:37,852 - INFO - game_state - Notify: Player 2 Added
+2025-04-01 09:19:38,971 - INFO - utils - Clicked on item: 'Edit P2 Name' with action: edit_player_name_1 in state CurrentGameState.MENU
+2025-04-01 09:19:38,971 - INFO - utils - Selected player 2 for editing name. Initial value: 'Player 2'
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 66, Masked (key): 66
+RAW waitKey returned: 108, Masked (key): 108
+RAW waitKey returned: 97, Masked (key): 97
+RAW waitKey returned: 107, Masked (key): 107
+RAW waitKey returned: 101, Masked (key): 101
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 82, Masked (key): 82
+RAW waitKey returned: 101, Masked (key): 101
+RAW waitKey returned: 105, Masked (key): 105
+RAW waitKey returned: 100, Masked (key): 100
+2025-04-01 09:19:45,942 - INFO - game_input - General Debug Mode toggled ON
+RAW waitKey returned: 100, Masked (key): 100
+2025-04-01 09:19:48,438 - INFO - game_input - General Debug Mode toggled OFF
+RAW waitKey returned: 8, Masked (key): 8
+RAW waitKey returned: 105, Masked (key): 105
+RAW waitKey returned: 100, Masked (key): 100
+2025-04-01 09:19:54,553 - INFO - game_input - General Debug Mode toggled ON
+RAW waitKey returned: 100, Masked (key): 100
+2025-04-01 09:19:56,299 - INFO - game_input - General Debug Mode toggled OFF
+RAW waitKey returned: 100, Masked (key): 100
+2025-04-01 09:19:58,172 - INFO - game_input - General Debug Mode toggled ON
+RAW waitKey returned: 100, Masked (key): 100
+2025-04-01 09:20:15,124 - INFO - game_input - General Debug Mode toggled OFF
+RAW waitKey returned: 13, Masked (key): 13
+2025-04-01 09:20:15,745 - INFO - game_input - Player 2 name changed from 'Player 2' to 'Rei'
+2025-04-01 09:20:15,746 - INFO - game_state - Notify: Player 2 name updated
+2025-04-01 09:20:17,233 - INFO - utils - Clicked on item: 'Back' with action: back_to_main in state CurrentGameState.MENU
+2025-04-01 09:20:18,248 - INFO - utils - Clicked on item: 'Quit Game' with action: quit in state CurrentGameState.MENU
+2025-04-01 09:20:18,248 - INFO - game_state - Score is 0, not saving.
+2025-04-01 09:20:18,249 - INFO - utils - Initiating clean exit...
+2025-04-01 09:20:18,250 - INFO - utils - Flushing leaderboard...
+2025-04-01 09:20:18,250 - INFO - utils - Saving zones...
+2025-04-01 09:20:18,252 - INFO - menu - Scoring zones saved to scoring_zones.json
+2025-04-01 09:20:18,252 - INFO - game_state - Notify: Zones Saved
+2025-04-01 09:20:18,252 - INFO - utils - Saving achievements...
+2025-04-01 09:20:18,788 - INFO - utils - Clean exit sequence complete. Terminating process.
 Exiting Whiffle Tracker.
 
 C:\Users\bweibling\Documents\GitHub\Whiffle\11.2>

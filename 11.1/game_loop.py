@@ -1,3 +1,4 @@
+# game_loop.py
 """
 Main game loop logic for the Whiffle Tracker project.
 Handles frame capture, processing, rendering, and user input via _handle_input.
@@ -31,9 +32,6 @@ def _initialize_display():
         cv2.namedWindow(UIConstants.WINDOW_NAME, cv2.WINDOW_NORMAL)
         logger.info("Game window initialized (OpenCV only).")
         # --- REMOVED Pygame display init ---
-        # if not pygame.display.get_init():
-        #      pygame.display.init()
-        #      logger.info("Pygame display initialized.")
     except cv2.error as e:
         logger.error(f"Failed to create OpenCV window: {e}")
         raise SystemExit("Could not create game window.")
@@ -42,7 +40,6 @@ def _initialize_display():
 
 def _capture_frame(game_state: Any) -> Optional[np.ndarray]:
     """Captures a frame from the camera or uses the static frame."""
-    # (Content remains the same)
     if game_state.camera_available and game_state.cap.isOpened():
         try:
             ret, frame = game_state.cap.read()
@@ -64,7 +61,6 @@ def _capture_frame(game_state: Any) -> Optional[np.ndarray]:
 
 def _process_frame(frame: np.ndarray, game_state: Any) -> None:
     """Detects and tracks balls in the frame."""
-    # (Content remains the same)
     try:
         white_balls, red_balls, half_balls = game_state.detector.detect_all_balls(
             frame=frame, frame_count=game_state.frame_count, game_state=game_state,
@@ -93,7 +89,6 @@ def _process_frame(frame: np.ndarray, game_state: Any) -> None:
 
 def _update_ball_trails(game_state: Any) -> None:
     """Updates ball trail history."""
-    # (Content remains the same)
     for ball in game_state.tracked_balls:
         try:
             x, y, _, ball_id, _, _ = ball
@@ -108,14 +103,25 @@ def _update_ball_trails(game_state: Any) -> None:
 
 def _update_game_state(game_state: Any, dt: float) -> None:
     """Updates game logic like scoring, timers, and achievements."""
-    # (Content remains the same)
+    # --- CHANGE: Added low time warning sound logic ---
     if ( game_state.current_state == CurrentGameState.PLAYING and game_state.game_mode == "timed" and game_state.game_timer is not None ):
+        # --- Check for low time warning BEFORE decrementing timer ---
+        if game_state.game_timer > 0 and game_state.game_timer <= 10.0 and not game_state.low_time_warning_played:
+            logger.info("Timer below 10 seconds, playing warning sound.")
+            game_state.play_sound(game_state.low_time_sound) # Assumes play_sound method exists
+            game_state.low_time_warning_played = True # Set flag to prevent re-playing
+        # --- End Sound Check ---
+
+        # Now decrement timer
         game_state.game_timer -= dt
         if game_state.game_timer <= 0:
             game_state.game_timer = 0
             if game_state.current_state != CurrentGameState.GAME_OVER:
-                logger.info("Timer expired! Game Over."); game_state.current_state = CurrentGameState.GAME_OVER
+                logger.info("Timer expired! Game Over.")
+                game_state.current_state = CurrentGameState.GAME_OVER
                 game_state.save_score(game_state.get_current_player().name)
+    # --- End Change ---
+
     if game_state.current_state == CurrentGameState.PLAYING:
         game_state.update_scoring(); game_state.check_achievements()
     game_state.update_achievement_notification(dt); game_state.update_notifications(dt)
@@ -123,25 +129,25 @@ def _update_game_state(game_state: Any, dt: float) -> None:
 
 def _render_frame(frame: np.ndarray, game_state: Any) -> None:
     """Renders the game frame with UI elements and balls."""
-    # (Content remains the same)
     if frame is None: logger.warning("Render None frame."); return
     if game_state.current_state != CurrentGameState.SHOWING_SPLASH:
         if game_state.current_state not in [CurrentGameState.SHOWING_SPLASH, CurrentGameState.GETTING_PLAYER_NAME]:
             draw_balls(frame, game_state)
     if game_state.current_state != CurrentGameState.SHOWING_SPLASH:
-        draw_ui(frame, game_state)
+        draw_ui(frame, game_state) # This will now draw the timer if applicable
     try:
         cv2.imshow(UIConstants.WINDOW_NAME, frame)
     except cv2.error as e: logger.warning(f"imshow error: {e}")
 
 
 # --- FUNCTION USING WND_PROP_AUTOSIZE CHECK ---
+# This function exists in the provided code but is not called in the main loop.
+# Keeping it here for reference as per the original file.
 def _check_window_close(game_state: Any) -> bool:
-    """ Checks if the window close button was pressed and exits cleanly if so. Returns True if closed."""
-    # (Content remains the same)
+    """ Checks if the window close button was pressed and exits cleanly if so.
+    Returns True if closed."""
     try:
         window_autosize_property = cv2.getWindowProperty( UIConstants.WINDOW_NAME, cv2.WND_PROP_AUTOSIZE )
-        # logger.debug(f"Window property check: cv2.WND_PROP_AUTOSIZE = {window_autosize_property}") # Reduce log noise
         if window_autosize_property == -1.0:
             logger.info("Window closed via red X (AUTOSIZE == -1.0).")
             clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state)
@@ -182,10 +188,19 @@ def run_game_loop(game_state: Any) -> None:
         # --- Window Close Check ---
         # Check if window was closed *after* handling input
         # This check relies on waitKey having run inside _handle_input
-        if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:
-             logger.info("Window closed via red X (WND_PROP_VISIBLE < 1).")
-             # Don't call clean_exit here, let it happen after the loop breaks naturally
+        # --- MODIFICATION START ---
+        try:
+            if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:
+                 logger.info("Window closed via red X (WND_PROP_VISIBLE < 1). Initiating clean exit.")
+                 # Call clean_exit before breaking the loop
+                 clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state)
+                 break
+        except cv2.error as e:
+             # Handle potential error if window property check fails after window closed
+             logger.warning(f"cv2.error checking WND_PROP_VISIBLE (window likely closed): {e}. Initiating clean exit.")
+             clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state)
              break
+        # --- MODIFICATION END ---
 
         # --- Frame Capture ---
         frame = _capture_frame(game_state)
@@ -196,13 +211,14 @@ def run_game_loop(game_state: Any) -> None:
         except cv2.error as e: logger.error(f"Resize fail: {e}. Shape: {frame.shape}"); continue
 
         # --- Update Game State ---
+        # Timer and sound logic moved into _update_game_state
         if game_state.current_state == CurrentGameState.PLAYING:
             run_detection_tracking = (frame_count % GameConstants.DETECTION_FRAME_INTERVAL == 0)
             if run_detection_tracking: _process_frame(frame_resized, game_state)
             _update_ball_trails(game_state)
-            _update_game_state(game_state, dt)
+            _update_game_state(game_state, dt) # Timer/sound logic happens here now
         elif game_state.current_state == CurrentGameState.PAUSED:
-             _update_ball_trails(game_state); _update_game_state(game_state, dt)
+             _update_ball_trails(game_state); _update_game_state(game_state, dt) # Still update timer etc if paused? Or only notifications?
         elif game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
              game_state.update_achievement_notification(dt); game_state.update_notifications(dt)
         elif (game_state.current_state != CurrentGameState.GAME_OVER and
@@ -216,7 +232,6 @@ def run_game_loop(game_state: Any) -> None:
 
     # --- Cleanup after loop exit ---
     logger.info("Main game loop exited.")
-    # clean_exit should be called ONLY ONCE, ideally triggered by the quit condition
-    # If loop exited due to error or window close without clean_exit being called, call it now.
-    # However, the current logic calls clean_exit within the input handler or window check, so avoid double call.
-    # We might need a flag if clean_exit was already called. For now, assume it was called if needed.
+    # clean_exit should be called ONLY ONCE, ideally triggered by the quit condition (q, menu, red X).
+    # The logic above now ensures clean_exit is called by all intended exit paths before the loop breaks.
+    # No additional call needed here unless handling unexpected loop termination without prior clean_exit.

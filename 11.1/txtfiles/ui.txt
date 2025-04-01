@@ -161,43 +161,49 @@ def draw_ui(
             thickness=UIConstants.FONT_THICKNESS,
         )
 
-        # Timer text
+        # --- CHANGE: Draw Timer Text ---
         if (
             game_state.game_mode == "timed"
             and game_state.game_timer is not None
-            and game_state.current_state == CurrentGameState.PLAYING
+            # Draw timer even if paused, but maybe not in menu? Check state:
+            and game_state.current_state in [CurrentGameState.PLAYING, CurrentGameState.PAUSED]
         ):
-            timer_text = f"Time Left: {int(game_state.game_timer)}"
+            # Format as integer seconds remaining
+            timer_text = f"Time: {int(game_state.game_timer)}"
+            # Change color if <= 10 seconds left
             time_color = (
-                UIConstants.RED if game_state.game_timer < 10 else UIConstants.YELLOW
+                UIConstants.RED if game_state.game_timer <= 10 else UIConstants.WHITE # Use white normally
             )
-            # Add background here too if needed, using the helper
+            # Calculate position (centered at top)
             (tw_t, th_t), _ = cv2.getTextSize(
                 timer_text,
                 cv2.FONT_HERSHEY_SIMPLEX,
                 UIConstants.FONT_SCALE_MEDIUM,
                 UIConstants.FONT_THICKNESS,
             )
-            timer_x = (UIConstants.WINDOW_WIDTH -
-                       tw_t) // 2  # Center timer text
+            timer_x = (UIConstants.WINDOW_WIDTH - tw_t) // 2  # Center timer text
+            timer_y = 30 # Align vertically with Score/High Score
+
             _draw_text_with_background(
                 frame,
                 timer_text,
-                (timer_x, 30),
+                (timer_x, timer_y),
                 UIConstants.FONT_SCALE_MEDIUM,
                 time_color,
-                UIConstants.BLACK,
+                UIConstants.BLACK, # Use black background for contrast
                 thickness=UIConstants.FONT_THICKNESS,
-                alpha=0.7,
+                alpha=0.7, # Semi-transparent background
             )
+        # --- End Timer Drawing Change ---
+
 
         if game_state.current_state == CurrentGameState.PLAYING:
             draw_scoring_zones(frame, game_state.scoring_zones,
-                               game_state.special_hole)
+                                game_state.special_hole)
             if game_state.drawing and game_state.temp_zone:
                 x1, y1, w, h = game_state.temp_zone
                 cv2.rectangle(frame, (x1, y1), (x1 + w, y1 + h),
-                              UIConstants.YELLOW, 2)
+                            UIConstants.YELLOW, 2)
             # Draw menu button
             # Assumes draw_menu draws the button itself
             draw_menu(frame, game_state)

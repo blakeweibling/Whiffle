@@ -2,6 +2,7 @@ import cv2
 import os
 import argparse
 
+
 def extract_frames(video_path, output_dir, frame_interval=10):
     """
     Extract frames from a video at a specified interval and save them as images.
@@ -50,12 +51,17 @@ def extract_frames(video_path, output_dir, frame_interval=10):
     cap.release()
     print(f"Extracted {saved_count} frames from {video_path}")
 
+
 if __name__ == "__main__":
     # Parse command-line arguments
-    parser = argparse.ArgumentParser(description="Extract frames from a video at a specified interval.")
+    parser = argparse.ArgumentParser(
+        description="Extract frames from a video at a specified interval."
+    )
     parser.add_argument("video_path", help="Path to the input video file")
     parser.add_argument("output_dir", help="Directory to save the extracted frames")
-    parser.add_argument("--interval", type=int, default=10, help="Extract every nth frame (default: 10)")
+    parser.add_argument(
+        "--interval", type=int, default=10, help="Extract every nth frame (default: 10)"
+    )
     args = parser.parse_args()
 
     # Extract frames

@@ -1,3 +1,4 @@
+# utils.py
 """
 Utility functions for the Whiffle Tracker project.
 
@@ -19,7 +20,9 @@ from menu import (
     load_zones, # Added load_zones (used in menu click handler)
     clear_zones # Added clear_zones (used in menu click handler)
 )
-from game_state import CurrentGameState # Kept for clean_exit and mouse_callback
+# --- CHANGE: Import CurrentGameState from game_state ---
+from game_state import CurrentGameState # Import enum
+# --- End Change ---
 from game_state_utils import set_special_hole # Added for drawing event
 from player import Player # Added for menu click handler
 
@@ -51,10 +54,13 @@ def clean_exit(
             current_state_attr = getattr(
                 game_state, "current_state", None
             )
+            # --- Check if game_state itself has the attribute ---
             if (
-                current_state_attr != CurrentGameState.GAME_OVER
-                and getattr(game_state, "score", 0) > 0
-            ):
+                 hasattr(game_state, 'current_state') and
+                 game_state.current_state != CurrentGameState.GAME_OVER and
+                 hasattr(game_state, 'score') and
+                 game_state.score > 0
+               ):
                 logger.info(f"Saving score for {player_name} on exit...")
                 if hasattr(game_state, "save_score"):
                     game_state.save_score(player_name) # save_score handles high score logic now
@@ -110,9 +116,6 @@ def clean_exit(
                     f"Error saving achievements: {e}")
 
             # Note: High score saving is now handled within game_state.save_score
-            # logger.info("Saving high scores...")
-            # if hasattr(game_state, '_save_high_score'):
-            #     game_state._save_high_score()
 
         except Exception as e:
             logger.exception(
@@ -128,7 +131,7 @@ def clean_exit(
             logger.debug("Pygame mixer quit.")
         if pygame.get_init():
             pygame.quit()
-            logger.debug("Pygame quit.")
+        logger.debug("Pygame quit.")
     except pygame.error as e:
         logger.error(f"Error quitting Pygame: {e}")
     except Exception as e:
@@ -151,17 +154,12 @@ def clean_exit(
     # Destroy all OpenCV windows (ensure this happens even if other steps fail)
     logger.debug("Attempting to destroy OpenCV windows...")
     try:
-        # Check if window exists before trying to destroy
-        # Using getWindowProperty can throw error if window never created or already destroyed
-        # A simple destroyAllWindows might be safer if unsure about window state
-        # if UIConstants.WINDOW_NAME and cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) >= 0:
-        #     cv2.destroyWindow(UIConstants.WINDOW_NAME)
-        #     logger.debug(f"Window '{UIConstants.WINDOW_NAME}' destroyed.")
+        # Using destroyAllWindows is generally safer
         cv2.destroyAllWindows()
-        cv2.waitKey(1)  # Add small waitkey needed sometimes for windows to close properly
+        cv2.waitKey(1)  # Add small waitkey needed sometimes
         logger.debug("cv2.destroyAllWindows() called.")
     except cv2.error as e:
-        # Ignore errors like "window not found" which are expected if already closed
+        # Ignore errors like "window not found"
         logger.debug(
             f"Ignoring OpenCV error destroying windows (may be already closed): {e}"
         )
@@ -233,9 +231,13 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
     menu_w, menu_h = game_state.menu_width, game_state.menu_height
 
     # Check if the click is within the general menu/game over area bounds
-    # Note: Game Over screen uses full window, so this check might always pass for it.
     if not (menu_x <= x < menu_x + menu_w and menu_y <= y < menu_y + menu_h):
-        return False  # Click outside the menu/game over area
+        # For GAME_OVER state, clicks outside buttons should be ignored, not return False
+        if game_state.current_state == CurrentGameState.GAME_OVER:
+             logger.debug("Click outside buttons on GAME_OVER screen.")
+             return False # Don't handle clicks outside buttons on this screen
+        else:
+             return False  # Click outside the menu area in MENU state
 
     # Calculate click position relative to the menu/screen origin
     relative_x = x - menu_x
@@ -347,8 +349,7 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
                     elif action == "save_zones":
                         logger.debug("Action matched: 'save_zones'")
                         save_zones(game_state)
-                        # No need to reset editing state here usually
-                        game_state.menu_cache = None  # Maybe redraw confirmation?
+                        game_state.menu_cache = None # Redraw confirmation/menu
                     elif action == "load_zones":
                         logger.debug("Action matched: 'load_zones'")
                         load_zones(game_state)
@@ -532,9 +533,10 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
                         logger.debug("Action matched: 'new_game_from_gameover'")
                         logger.info("Starting new game from game over screen.")
                         reset_game(game_state)
-                        # After reset, game state should be GETTING_PLAYER_NAME
-                        # reset_game should handle setting the correct initial state now
-                        # game_state.current_state = CurrentGameState.PLAYING <- remove this
+                        # --- CHANGE: Explicitly set state after reset ---
+                        game_state.current_state = CurrentGameState.GETTING_PLAYER_NAME
+                        logger.info(f"Game state set to: {game_state.current_state}")
+                        # --- End Change ---
                         game_state.win_condition_met = False  # Reset win flag
                         # No need to reset editing states here as we left GAME_OVER
                     elif action == "show_leaderboard_from_gameover":
@@ -550,15 +552,14 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
                 # If we reached here, the click was on a known item and action was processed
                 return True  # Click handled
 
-    # If the loop finishes without finding a matching item, the click was inside the menu area
+    # If the loop finishes without finding a matching item, the click was inside the menu/game over area
     # but not on any specific registered button/item.
     logger.debug(
         f"Click in {game_state.current_state} area but not on a specific registered item."
     )
-    # We might want to consume the click anyway to prevent it falling through,
-    # unless specific behavior is desired (e.g., clicking background closes menu).
-    # For now, let's consider it handled as it was within the menu boundary.
-    return True
+    # For GAME_OVER, we only want button clicks handled, so return False if click was not on a button.
+    # For MENU, consume the click anyway unless specific background click behavior is desired.
+    return game_state.current_state == CurrentGameState.MENU
 
 
 def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
@@ -578,7 +579,6 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
     # --- ADDED: Ignore mouse clicks during initial name input ---
     if game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
         logger.debug("Ignoring mouse click during initial player name input.")
-        # Optionally allow clicks outside the input box to cancel/default? (Not implemented here)
         return # Explicitly do nothing with mouse clicks in this state
 
     # 1. Handle click during SHOWING_SPLASH state (overrides everything else)
@@ -590,7 +590,7 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
         if game_state.previous_state:
             game_state.current_state = game_state.previous_state
         else:
-            # Fallback if previous_state wasn't set (shouldn't happen often)
+            # Fallback if previous_state wasn't set
             game_state.current_state = CurrentGameState.MENU
             logger.warning("Previous state was None when exiting splash, returning to MENU.")
         game_state.previous_state = None  # Clear previous state marker
@@ -636,7 +636,6 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
         click_handled = _process_menu_or_gameover_click(x, y, game_state)
 
     # 4. Handle mouse events related to drawing zones (only when PLAYING and drawing active)
-    # Process LBUTTONDOWN, MOUSEMOVE, LBUTTONUP for drawing logic
     elif (
         not click_handled
         and game_state.current_state == CurrentGameState.PLAYING
@@ -644,7 +643,6 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
     ):
         if event in [cv2.EVENT_LBUTTONDOWN, cv2.EVENT_LBUTTONUP, cv2.EVENT_MOUSEMOVE]:
             _process_drawing_event(event, x, y, game_state)
-            # Assume drawing events are always handled if conditions met
             click_handled = True  # Prevent further processing
 
     # 5. Log unhandled clicks (optional)

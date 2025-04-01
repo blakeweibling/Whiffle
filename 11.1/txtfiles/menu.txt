@@ -1,3 +1,4 @@
+# menu.py
 """
 Menu rendering and utility functions for the Whiffle Tracker project.
 
@@ -29,7 +30,7 @@ logger = logging.getLogger(__name__)
 # --- Menu Item Definitions Moved to constants.MenuConstants ---
 
 
-# <<< Modified: Added reset for special_hole_hit_this_session >>>
+# <<< Modified: Added reset for special_hole_hit_this_session and low_time_warning_played, fixed cooldown >>>
 def reset_game(game_state: GameState) -> None:  # Added GameState type hint
     """
     Reset the game state fully.
@@ -42,7 +43,7 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
     game_state.next_ball_id = 0
     game_state.submenu_active = None
     game_state.submenu_items = []
-    game_state.game_timer = None
+    game_state.game_timer = None # Reset timer initially
     game_state.ball_trails.clear()
     game_state.ball_states.clear()
     game_state.previous_ball_states.clear()
@@ -52,7 +53,8 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
     game_state.ball_scored_zones.clear()
     game_state.ball_positions_history.clear()
     game_state.ball_zone_history.clear()
-    game_state.scored_cooldown.clear()
+    # --- CHANGE: Fix AttributeError ---
+    game_state.zone_cooldown.clear() # Was: game_state.scored_cooldown.clear() 
     game_state.win_condition_met = False
     # Reset editing states
     game_state.editing_zone_index = None
@@ -63,6 +65,8 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
     game_state.editing_player_name_input = None
     # Reset special hole hit flag for the new session
     game_state.special_hole_hit_this_session = False
+    # --- CHANGE: Reset low time warning flag ---
+    game_state.low_time_warning_played = False
 
     if game_state.players and 0 <= game_state.current_player_index < len(
         game_state.players
@@ -74,8 +78,13 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
         logger.warning(
             "Player index out of bounds or no players during reset.")
 
+    # --- CHANGE: Ensure timer is set AFTER mode is confirmed ---
     if game_state.game_mode == "timed":
         game_state.game_timer = GameConstants.TIMED_MODE_DURATION
+        logger.info(f"Timed mode selected. Timer set to {game_state.game_timer} seconds.")
+    else:
+        game_state.game_timer = None # Ensure timer is None for other modes
+
 
     # Reload initial state (zones and high score for current mode)
     if hasattr(game_state, "_load_initial_state") and callable(

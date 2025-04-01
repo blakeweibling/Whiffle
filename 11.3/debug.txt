@@ -1,0 +1,431 @@
+Microsoft Windows [Version 10.0.19045.5608]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\bweibling>cd Documents\GitHub\Whiffle\11.3
+
+C:\Users\bweibling\Documents\GitHub\Whiffle\11.3>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.13.2)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2025-04-01 10:30:17,228 - INFO - constants - Trying camera index 0 with backend dshow (700)...
+2025-04-01 10:30:18,043 - INFO - constants - Successfully opened camera at index 0 with backend dshow
+2025-04-01 10:30:18,144 - INFO - constants - Camera at index 0 with backend dshow is functional
+2025-04-01 10:30:20,868 - INFO - ui_screens - Showing splash screen...
+2025-04-01 10:30:20,912 - INFO - ui_screens - Initializing GameState...
+2025-04-01 10:30:20,912 - INFO - game_state - Starting GameState initialization...
+2025-04-01 10:30:20,912 - INFO - game_state - Attempting to open camera at index 0 with backend 700
+2025-04-01 10:30:21,626 - INFO - game_state - Setting camera resolution...
+2025-04-01 10:30:23,035 - INFO - game_state - Camera resolution: 1280x720
+2025-04-01 10:30:23,035 - INFO - game_state - Initializing game variables...
+2025-04-01 10:30:23,036 - INFO - game_state - Initializing detection and tracking...
+2025-04-01 10:30:23,063 - WARNING - detection - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+2025-04-01 10:30:23,063 - INFO - game_state - Loading initial state...
+2025-04-01 10:30:23,064 - INFO - menu - Scoring zones loaded from scoring_zones.json
+2025-04-01 10:30:23,064 - INFO - game_state - Notify: Zones Loaded
+2025-04-01 10:30:23,064 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-04-01 10:30:23,064 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-04-01 10:30:23,065 - INFO - game_state - Loaded high score for mode 'classic': 4483
+2025-04-01 10:30:23,065 - INFO - game_state - Initializing sounds...
+2025-04-01 10:30:23,901 - INFO - game_state_utils - Loaded score sound: sounds/ding.wav
+2025-04-01 10:30:24,058 - INFO - game_state_utils - Loaded background music: sounds/background_music.mp3
+2025-04-01 10:30:24,066 - INFO - game_state_utils - Loaded low time warning sound: sounds/10_sec_timer.mp3
+2025-04-01 10:30:24,066 - INFO - game_state - Sounds initialized (score, background, low_time).
+2025-04-01 10:30:24,066 - INFO - game_state - Initializing achievements...
+2025-04-01 10:30:24,067 - INFO - game_state - Loading achievements...
+2025-04-01 10:30:24,067 - INFO - game_state_utils - Loaded unlock status for 3 achievements from achievements_status.json.
+2025-04-01 10:30:24,067 - INFO - game_state - Loading HSV ranges...
+2025-04-01 10:30:24,068 - WARNING - game_state_utils - Missing/invalid format for 'white' in hsv_ranges.json. Using default.
+2025-04-01 10:30:24,068 - WARNING - game_state_utils - Missing/invalid format for 'red1' in hsv_ranges.json. Using default.
+2025-04-01 10:30:24,068 - WARNING - game_state_utils - Missing/invalid format for 'red2' in hsv_ranges.json. Using default.
+2025-04-01 10:30:24,068 - INFO - game_state_utils - Loaded custom HSV ranges from hsv_ranges.json
+2025-04-01 10:30:24,068 - INFO - game_state - Starting background music...
+2025-04-01 10:30:24,068 - INFO - game_state - GameState initialized successfully.
+2025-04-01 10:30:24,068 - INFO - ui_screens - GameState initialized successfully.
+2025-04-01 10:30:24,070 - INFO - ui_screens - Captured first frame for splash fade.
+2025-04-01 10:30:24,070 - INFO - ui_screens - Starting splash display loop.
+2025-04-01 10:30:27,073 - INFO - ui_screens - Splash screen finished.
+Press 'q' to quit, 's' to start drawing a scoring zone, 'd' to toggle debug mode
+2025-04-01 10:30:27,176 - INFO - game_loop - Game window initialized (OpenCV only).
+2025-04-01 10:30:31,172 - INFO - game_input - Player 1 name set to: 'Blake W'
+2025-04-01 10:30:31,172 - INFO - game_state - Notify: Welcome, Blake W!
+2025-04-01 10:30:31,175 - INFO - game_input - Background music started.
+
+0: 416x736 (no detections), 50.1ms
+Speed: 3.4ms preprocess, 50.1ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 41.6ms
+Speed: 1.7ms preprocess, 41.6ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 51.7ms
+Speed: 2.1ms preprocess, 51.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 50.5ms
+Speed: 1.4ms preprocess, 50.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 49.7ms
+Speed: 2.2ms preprocess, 49.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 53.9ms
+Speed: 2.5ms preprocess, 53.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 54.3ms
+Speed: 2.2ms preprocess, 54.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 54.8ms
+Speed: 3.0ms preprocess, 54.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 49.1ms
+Speed: 2.6ms preprocess, 49.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 54.1ms
+Speed: 2.4ms preprocess, 54.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 45.6ms
+Speed: 1.2ms preprocess, 45.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 54.0ms
+Speed: 2.8ms preprocess, 54.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 51.8ms
+Speed: 2.5ms preprocess, 51.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 55.2ms
+Speed: 2.4ms preprocess, 55.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 55.2ms
+Speed: 2.6ms preprocess, 55.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 44.2ms
+Speed: 1.3ms preprocess, 44.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 45.6ms
+Speed: 1.2ms preprocess, 45.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:30:35,917 - INFO - game_input - General Debug Mode toggled ON
+
+0: 416x736 (no detections), 51.7ms
+Speed: 2.7ms preprocess, 51.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 40.0ms
+Speed: 1.1ms preprocess, 40.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 49.9ms
+Speed: 2.4ms preprocess, 49.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 48.5ms
+Speed: 2.3ms preprocess, 48.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 52.0ms
+Speed: 2.6ms preprocess, 52.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 46.0ms
+Speed: 3.4ms preprocess, 46.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 48.3ms
+Speed: 2.1ms preprocess, 48.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 44.7ms
+Speed: 1.6ms preprocess, 44.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 48.4ms
+Speed: 2.3ms preprocess, 48.4ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 55.0ms
+Speed: 2.4ms preprocess, 55.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 (no detections), 50.3ms
+Speed: 2.2ms preprocess, 50.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:30:38,923 - INFO - utils - Menu toggled ON via button click.
+2025-04-01 10:30:40,183 - INFO - utils - Clicked on item: 'About' with action: about in state CurrentGameState.MENU
+2025-04-01 10:30:40,183 - INFO - utils - Switching to submenu: about
+2025-04-01 10:30:41,315 - INFO - utils - Clicked on item: 'Show Splash' with action: show_splash in state CurrentGameState.MENU
+2025-04-01 10:30:41,315 - INFO - utils - Action 'show_splash': Entering SHOWING_SPLASH state.
+2025-04-01 10:30:41,316 - INFO - utils - State *immediately after* setting in utils: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:30:45,429 - INFO - utils - Click detected during SHOWING_SPLASH state. Attempting to return to previous state.
+2025-04-01 10:30:45,429 - INFO - utils - Returning to previous state: CurrentGameState.MENU
+2025-04-01 10:30:46,429 - INFO - utils - Clicked on item: 'Back' with action: back_to_main in state CurrentGameState.MENU
+2025-04-01 10:30:47,563 - INFO - utils - Clicked on item: 'Quit Game' with action: quit in state CurrentGameState.MENU
+2025-04-01 10:30:47,563 - INFO - game_state - Score is 0, not saving.
+2025-04-01 10:30:47,564 - INFO - utils - Initiating clean exit...
+2025-04-01 10:30:47,564 - INFO - utils - Flushing leaderboard...
+2025-04-01 10:30:47,565 - INFO - utils - Saving zones...
+2025-04-01 10:30:47,566 - INFO - menu - Scoring zones saved to scoring_zones.json
+2025-04-01 10:30:47,566 - INFO - game_state - Notify: Zones Saved
+2025-04-01 10:30:47,567 - INFO - utils - Saving achievements...
+2025-04-01 10:30:48,118 - INFO - utils - Clean exit sequence complete. Terminating process.
+Exiting Whiffle Tracker.
+
+C:\Users\bweibling\Documents\GitHub\Whiffle\11.3>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.13.2)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2025-04-01 10:33:50,662 - INFO - constants - Trying camera index 0 with backend dshow (700)...
+2025-04-01 10:33:51,463 - INFO - constants - Successfully opened camera at index 0 with backend dshow
+2025-04-01 10:33:51,562 - INFO - constants - Camera at index 0 with backend dshow is functional
+2025-04-01 10:33:54,374 - INFO - ui_screens - Showing splash screen...
+2025-04-01 10:33:54,407 - INFO - ui_screens - Initializing GameState...
+2025-04-01 10:33:54,407 - INFO - game_state - Starting GameState initialization...
+2025-04-01 10:33:54,408 - INFO - game_state - Attempting to open camera at index 0 with backend 700
+2025-04-01 10:33:55,138 - INFO - game_state - Setting camera resolution...
+2025-04-01 10:33:56,559 - INFO - game_state - Camera resolution: 1280x720
+2025-04-01 10:33:56,560 - INFO - game_state - Initializing game variables...
+2025-04-01 10:33:56,561 - INFO - game_state - Initializing detection and tracking...
+2025-04-01 10:33:56,586 - WARNING - detection - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+2025-04-01 10:33:56,587 - INFO - game_state - Loading initial state...
+2025-04-01 10:33:56,588 - INFO - menu - Scoring zones loaded from scoring_zones.json
+2025-04-01 10:33:56,588 - INFO - game_state - Notify: Zones Loaded
+2025-04-01 10:33:56,588 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-04-01 10:33:56,588 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-04-01 10:33:56,589 - INFO - game_state - Loaded high score for mode 'classic': 4483
+2025-04-01 10:33:56,589 - INFO - game_state - Initializing sounds...
+2025-04-01 10:33:57,413 - INFO - game_state_utils - Loaded score sound: sounds/ding.wav
+2025-04-01 10:33:57,574 - INFO - game_state_utils - Loaded background music: sounds/background_music.mp3
+2025-04-01 10:33:57,583 - INFO - game_state_utils - Loaded low time warning sound: sounds/10_sec_timer.mp3
+2025-04-01 10:33:57,583 - INFO - game_state - Sounds initialized (score, background, low_time).
+2025-04-01 10:33:57,583 - INFO - game_state - Initializing achievements...
+2025-04-01 10:33:57,583 - INFO - game_state - Loading achievements...
+2025-04-01 10:33:57,584 - INFO - game_state_utils - Loaded unlock status for 3 achievements from achievements_status.json.
+2025-04-01 10:33:57,584 - INFO - game_state - Loading HSV ranges...
+2025-04-01 10:33:57,584 - WARNING - game_state_utils - Missing/invalid format for 'white' in hsv_ranges.json. Using default.
+2025-04-01 10:33:57,585 - WARNING - game_state_utils - Missing/invalid format for 'red1' in hsv_ranges.json. Using default.
+2025-04-01 10:33:57,585 - WARNING - game_state_utils - Missing/invalid format for 'red2' in hsv_ranges.json. Using default.
+2025-04-01 10:33:57,585 - INFO - game_state_utils - Loaded custom HSV ranges from hsv_ranges.json
+2025-04-01 10:33:57,585 - INFO - game_state - Starting background music...
+2025-04-01 10:33:57,585 - INFO - game_state - GameState initialized successfully.
+2025-04-01 10:33:57,585 - INFO - ui_screens - GameState initialized successfully.
+2025-04-01 10:33:57,587 - INFO - ui_screens - Captured first frame for splash fade.
+2025-04-01 10:33:57,587 - INFO - ui_screens - Starting splash display loop.
+2025-04-01 10:33:58,979 - INFO - ui_screens - Splash window closed by user (X button).
+2025-04-01 10:33:58,979 - INFO - utils - Initiating clean exit...
+2025-04-01 10:33:58,980 - INFO - utils - Flushing leaderboard...
+2025-04-01 10:33:58,981 - INFO - utils - Saving zones...
+2025-04-01 10:33:58,983 - INFO - menu - Scoring zones saved to scoring_zones.json
+2025-04-01 10:33:58,983 - INFO - game_state - Notify: Zones Saved
+2025-04-01 10:33:58,985 - INFO - utils - Saving achievements...
+2025-04-01 10:33:59,520 - INFO - utils - Clean exit sequence complete. Terminating process.
+Exiting Whiffle Tracker.
+
+C:\Users\bweibling\Documents\GitHub\Whiffle\11.3>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.13.2)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2025-04-01 10:34:04,992 - INFO - constants - Trying camera index 0 with backend dshow (700)...
+2025-04-01 10:34:05,709 - INFO - constants - Successfully opened camera at index 0 with backend dshow
+2025-04-01 10:34:05,811 - INFO - constants - Camera at index 0 with backend dshow is functional
+2025-04-01 10:34:08,664 - INFO - ui_screens - Showing splash screen...
+2025-04-01 10:34:08,696 - INFO - ui_screens - Initializing GameState...
+2025-04-01 10:34:08,696 - INFO - game_state - Starting GameState initialization...
+2025-04-01 10:34:08,697 - INFO - game_state - Attempting to open camera at index 0 with backend 700
+2025-04-01 10:34:09,414 - INFO - game_state - Setting camera resolution...
+2025-04-01 10:34:10,825 - INFO - game_state - Camera resolution: 1280x720
+2025-04-01 10:34:10,826 - INFO - game_state - Initializing game variables...
+2025-04-01 10:34:10,827 - INFO - game_state - Initializing detection and tracking...
+2025-04-01 10:34:10,841 - WARNING - detection - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+2025-04-01 10:34:10,842 - INFO - game_state - Loading initial state...
+2025-04-01 10:34:10,842 - INFO - menu - Scoring zones loaded from scoring_zones.json
+2025-04-01 10:34:10,843 - INFO - game_state - Notify: Zones Loaded
+2025-04-01 10:34:10,843 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-04-01 10:34:10,843 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-04-01 10:34:10,844 - INFO - game_state - Loaded high score for mode 'classic': 4483
+2025-04-01 10:34:10,844 - INFO - game_state - Initializing sounds...
+2025-04-01 10:34:11,633 - INFO - game_state_utils - Loaded score sound: sounds/ding.wav
+2025-04-01 10:34:11,776 - INFO - game_state_utils - Loaded background music: sounds/background_music.mp3
+2025-04-01 10:34:11,784 - INFO - game_state_utils - Loaded low time warning sound: sounds/10_sec_timer.mp3
+2025-04-01 10:34:11,785 - INFO - game_state - Sounds initialized (score, background, low_time).
+2025-04-01 10:34:11,785 - INFO - game_state - Initializing achievements...
+2025-04-01 10:34:11,785 - INFO - game_state - Loading achievements...
+2025-04-01 10:34:11,786 - INFO - game_state_utils - Loaded unlock status for 3 achievements from achievements_status.json.
+2025-04-01 10:34:11,786 - INFO - game_state - Loading HSV ranges...
+2025-04-01 10:34:11,787 - WARNING - game_state_utils - Missing/invalid format for 'white' in hsv_ranges.json. Using default.
+2025-04-01 10:34:11,787 - WARNING - game_state_utils - Missing/invalid format for 'red1' in hsv_ranges.json. Using default.
+2025-04-01 10:34:11,787 - WARNING - game_state_utils - Missing/invalid format for 'red2' in hsv_ranges.json. Using default.
+2025-04-01 10:34:11,787 - INFO - game_state_utils - Loaded custom HSV ranges from hsv_ranges.json
+2025-04-01 10:34:11,787 - INFO - game_state - Starting background music...
+2025-04-01 10:34:11,787 - INFO - game_state - GameState initialized successfully.
+2025-04-01 10:34:11,788 - INFO - ui_screens - GameState initialized successfully.
+2025-04-01 10:34:11,789 - INFO - ui_screens - Captured first frame for splash fade.
+2025-04-01 10:34:11,789 - INFO - ui_screens - Starting splash display loop.
+2025-04-01 10:34:14,792 - INFO - ui_screens - Splash screen finished.
+Press 'q' to quit, 's' to start drawing a scoring zone, 'd' to toggle debug mode
+2025-04-01 10:34:14,896 - INFO - game_loop - Game window initialized (OpenCV only).
+2025-04-01 10:34:14,912 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:14,980 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:15,096 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:15,218 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:15,351 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:15,476 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:15,606 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:15,716 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:15,847 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:15,974 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:16,100 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:16,210 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:16,339 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:16,470 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:16,598 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:16,727 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:16,836 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:16,966 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:17,088 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:17,219 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:17,348 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:17,460 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:17,591 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:17,719 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.GETTING_PLAYER_NAME, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:17,723 - INFO - game_input - Player 1 name set to: 'Blake W'
+2025-04-01 10:34:17,723 - INFO - game_state - Notify: Welcome, Blake W!
+2025-04-01 10:34:17,724 - INFO - game_input - Background music started.
+2025-04-01 10:34:17,845 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 55.7ms
+Speed: 4.2ms preprocess, 55.7ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:18,674 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:18,688 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 38.5ms
+Speed: 1.7ms preprocess, 38.5ms inference, 0.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:18,746 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:18,832 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 44.0ms
+Speed: 1.6ms preprocess, 44.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:19,009 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:19,089 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 49.6ms
+Speed: 2.1ms preprocess, 49.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:19,272 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:19,330 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 48.0ms
+Speed: 1.3ms preprocess, 48.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:19,511 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:19,589 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 54.2ms
+Speed: 2.5ms preprocess, 54.2ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:19,779 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:19,826 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 47.3ms
+Speed: 2.2ms preprocess, 47.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:20,008 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:20,085 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 47.6ms
+Speed: 2.2ms preprocess, 47.6ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:20,262 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:20,342 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 46.9ms
+Speed: 1.2ms preprocess, 46.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:20,502 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:20,583 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 53.9ms
+Speed: 2.5ms preprocess, 53.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:20,770 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:20,771 - INFO - game_input - General Debug Mode toggled ON
+2025-04-01 10:34:20,838 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 51.7ms
+Speed: 2.4ms preprocess, 51.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:21,028 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:21,072 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 46.3ms
+Speed: 1.3ms preprocess, 46.3ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:21,252 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:21,336 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 52.7ms
+Speed: 1.2ms preprocess, 52.7ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:21,518 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:21,584 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 42.9ms
+Speed: 1.1ms preprocess, 42.9ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:21,743 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:21,827 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 52.5ms
+Speed: 2.4ms preprocess, 52.5ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:22,014 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:22,085 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 47.1ms
+Speed: 2.3ms preprocess, 47.1ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:22,263 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:22,321 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 50.0ms
+Speed: 1.2ms preprocess, 50.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:22,507 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:22,579 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 45.8ms
+Speed: 1.3ms preprocess, 45.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:22,756 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:22,840 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 46.0ms
+Speed: 1.2ms preprocess, 46.0ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:22,994 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:23,079 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+
+0: 416x736 (no detections), 50.8ms
+Speed: 2.3ms preprocess, 50.8ms inference, 0.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-01 10:34:23,262 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.PLAYING, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:23,264 - INFO - utils - Menu toggled ON via button click.
+2025-04-01 10:34:23,333 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:23,461 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:23,572 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:23,704 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:23,831 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:23,953 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:24,087 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:24,197 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:24,326 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:24,452 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:24,579 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:24,598 - INFO - utils - Clicked on item: 'About' with action: about in state CurrentGameState.MENU
+2025-04-01 10:34:24,598 - INFO - utils - Switching to submenu: about
+2025-04-01 10:34:24,704 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:24,816 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:24,950 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:25,079 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:25,207 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:25,335 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:25,443 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:25,444 - INFO - utils - Clicked on item: 'Show Splash' with action: show_splash in state CurrentGameState.MENU
+2025-04-01 10:34:25,445 - INFO - utils - Action 'show_splash': Entering SHOWING_SPLASH state.
+2025-04-01 10:34:25,445 - INFO - utils - State *immediately after* setting in utils: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:28,330 - INFO - utils - Click detected during SHOWING_SPLASH state. Attempting to return to previous state.
+2025-04-01 10:34:28,330 - INFO - utils - Returning to previous state: CurrentGameState.MENU
+2025-04-01 10:34:28,435 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:28,566 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:28,692 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:28,821 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:28,951 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:29,061 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:29,188 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:29,319 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:29,447 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:29,450 - INFO - utils - Clicked on item: 'Back' with action: back_to_main in state CurrentGameState.MENU
+2025-04-01 10:34:29,575 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:29,682 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:29,813 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:29,945 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:30,069 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:30,199 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:30,307 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:30,436 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:30,566 - CRITICAL - ui - Check before if - Type: <enum 'CurrentGameState'>, Value: CurrentGameState.MENU, Comparison Target: CurrentGameState.SHOWING_SPLASH
+2025-04-01 10:34:30,569 - INFO - utils - Clicked on item: 'Quit Game' with action: quit in state CurrentGameState.MENU
+2025-04-01 10:34:30,569 - INFO - game_state - Score is 0, not saving.
+2025-04-01 10:34:30,570 - INFO - utils - Initiating clean exit...
+2025-04-01 10:34:30,570 - INFO - utils - Flushing leaderboard...
+2025-04-01 10:34:30,570 - INFO - utils - Saving zones...
+2025-04-01 10:34:30,572 - INFO - menu - Scoring zones saved to scoring_zones.json
+2025-04-01 10:34:30,573 - INFO - game_state - Notify: Zones Saved
+2025-04-01 10:34:30,574 - INFO - utils - Saving achievements...
+2025-04-01 10:34:31,138 - INFO - utils - Clean exit sequence complete. Terminating process.
+Exiting Whiffle Tracker.
+
+C:\Users\bweibling\Documents\GitHub\Whiffle\11.3>

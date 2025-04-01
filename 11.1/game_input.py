@@ -17,138 +17,301 @@ def _handle_input(game_state: Any) -> Optional[int]:
     raw_key = -1 # Store raw value before mask
     key = -1
     try:
-        if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_AUTOSIZE) != -1:
-            # Get the raw key code from waitKey
+        # Check if the window is still valid before calling waitKey
+        if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) >= 1:
             raw_key = cv2.waitKey(GameConstants.WAIT_KEY_DELAY)
             key = raw_key & 0xFF # Apply mask for standard ASCII checks
 
-            # --- VERY BASIC DEBUG PRINT ---
+            # --- DEBUG PRINT ---
             if raw_key != -1: # Print any key press detected
-                 # Use print directly to ensure it appears on console even if logging is redirected
                  print(f"RAW waitKey returned: {raw_key}, Masked (key): {key}")
             # --- END DEBUG PRINT ---
-
         else:
-            logger.debug("Skipping waitKey, window seems closed.")
-            return None
+            logger.debug("Skipping waitKey, window seems closed or closing.")
+            return key
 
     except cv2.error as e:
-        logger.warning(f"cv2.error during waitKey: {e}")
-        clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state)
-        return None
+        logger.warning(f"cv2.error during waitKey or getWindowProperty (window likely closed): {e}")
+        return key
 
-    key_handled = False
-    # Quit requested flag removed, just return None on quit
+    key_handled = False # Flag to check if input was processed in a specific context
 
-    # --- Handle Truly Global Keys First (using masked key) ---
+    # --- Handle Truly Global Quit Key First (using masked key) ---
+    # This should always work regardless of state
     if key == ord('q'):
         logger.info("Quit key ('q') pressed.")
         clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state)
         return None # Signal immediate exit
-    elif key == ord('d'):
-        if game_state.current_state != CurrentGameState.SHOWING_SPLASH:
-             game_state.debug_mode = not game_state.debug_mode
-             logger.info(f"Debug toggled {'ON' if game_state.debug_mode else 'OFF'}")
-             key_handled = True
-    elif key == ord('b'):
-        if game_state.current_state != CurrentGameState.SHOWING_SPLASH:
-            game_state.show_debug_overlay = not game_state.show_debug_overlay
-            logger.info(f"Overlay toggled {'ON' if game_state.show_debug_overlay else 'OFF'}")
-            key_handled = True
 
-    # --- State-Specific Input Handling (Only if key wasn't handled globally) ---
-    if not key_handled:
+    # --- State-Specific Input Handling ---
+    # Process input based on the current game state first.
+    # Only check for global toggles ('d', 'b') if the state-specific logic didn't handle the key.
+    if key != -1 and key != 255: # Ignore empty (-1 or 255 often) key events for state logic
+
         # --- Handle input for GETTING_PLAYER_NAME state ---
         if game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
-            # Check special keys using MASKED value (common standard codes)
-            # Check for Enter (13)
-            if key == 13:
-                logger.debug("Enter key (13) detected.")
+            if key == 13: # Enter Key
+                logger.debug("Enter key (13) detected during initial name input.")
                 entered_name = game_state.current_player_name_input.strip()
                 if not entered_name:
                     game_state.show_notification("Player name cannot be empty!", is_error=True, duration=2.0)
                 else:
                     try:
-                        if game_state.players: game_state.players[0].name = entered_name
-                        else: logger.error("No players list found"); raise ValueError("No player list")
-                        logger.info(f"Player 1 name set: '{entered_name}'"); game_state.show_notification(f"Welcome, {entered_name}!", duration=2.0)
-                        game_state.player_name_input_active = False; game_state.current_state = CurrentGameState.PLAYING
-                        if game_state.background_music_on and game_state.background_music: game_state.background_music.play(-1); logger.info("BG music started.")
-                    except Exception as e: logger.exception(f"Error setting name/state: {e}"); game_state.show_notification("Error starting!", is_error=True)
+                        if game_state.players:
+                            game_state.players[0].name = entered_name
+                            logger.info(f"Player 1 name set to: '{entered_name}'")
+                            game_state.show_notification(f"Welcome, {entered_name}!", duration=2.0)
+                            game_state.player_name_input_active = False
+                            game_state.current_state = CurrentGameState.PLAYING
+                            if game_state.background_music_on and game_state.background_music:
+                                game_state.background_music.play(-1)
+                                logger.info("Background music started.")
+                        else:
+                             logger.error("Cannot set name: players list is empty or None.")
+                             game_state.show_notification("Error: Player list missing!", is_error=True)
+                    except Exception as e:
+                        logger.exception(f"Error setting player name or changing state: {e}")
+                        game_state.show_notification("Error starting game!", is_error=True)
                 key_handled = True
-
-            # Check for Escape (27)
-            elif key == 27:
-                 logger.debug("Escape key (27) detected.")
-                 logger.info("ESC during name input. Using default 'Player 1'.")
-                 game_state.player_name_input_active = False; game_state.current_state = CurrentGameState.PLAYING
+            elif key == 27: # Escape Key
+                 logger.debug("Escape key (27) detected during initial name input.")
+                 logger.info("Using default name 'Player 1'.")
+                 game_state.players[0].name = "Player 1"
+                 game_state.player_name_input_active = False
+                 game_state.current_state = CurrentGameState.PLAYING
                  game_state.show_notification("Using default name 'Player 1'", duration=2.0)
-                 if game_state.background_music_on and game_state.background_music: game_state.background_music.play(-1); logger.info("BG music started.")
+                 if game_state.background_music_on and game_state.background_music:
+                     game_state.background_music.play(-1)
+                     logger.info("Background music started.")
                  key_handled = True
-
-            # Check for Backspace (8)
-            elif key == 8:
-                logger.debug("Backspace key (8) detected.")
+            elif key == 8: # Backspace Key
+                logger.debug("Backspace key (8) detected during initial name input.")
                 if game_state.current_player_name_input:
                     game_state.current_player_name_input = game_state.current_player_name_input[:-1]
-                    logger.debug(f"Name input after backspace: {game_state.current_player_name_input}")
+                    logger.debug(f"Name input buffer: {game_state.current_player_name_input}")
                 key_handled = True
+            elif key >= 32 and key <= 126: # Printable characters
+                 char = chr(key)
+                 if char in PlayerConstants.ALLOWED_PLAYER_NAME_CHARS:
+                     if len(game_state.current_player_name_input) < PlayerConstants.MAX_PLAYER_NAME_LENGTH:
+                         game_state.current_player_name_input += char
+                         logger.debug(f"Name input buffer: {game_state.current_player_name_input}")
+                     else:
+                         game_state.show_notification(f"Max name length ({PlayerConstants.MAX_PLAYER_NAME_LENGTH}) reached", is_error=True, duration=1.5)
+                     key_handled = True
+                 else:
+                      logger.debug(f"Character '{char}' not allowed for player name.")
+                      game_state.show_notification(f"Character '{char}' not allowed", is_error=True, duration=1.5)
+                      key_handled = True
 
-            # Check for allowed printable characters (using masked key)
-            elif key >= 32 and key <= 126: # Range for printable ASCII
-                char = chr(key)
-                if char in PlayerConstants.ALLOWED_PLAYER_NAME_CHARS:
-                    if len(game_state.current_player_name_input) < PlayerConstants.MAX_PLAYER_NAME_LENGTH:
-                        game_state.current_player_name_input += char
-                        logger.debug(f"Name input: {game_state.current_player_name_input}")
-                    else: game_state.show_notification(f"Max {PlayerConstants.MAX_PLAYER_NAME_LENGTH} chars", is_error=True, duration=1.5)
-                    key_handled = True
-                # else: logger.debug(f"Printable key '{char}' not allowed.") # Optional log
-
-        # --- Other state handling (MENU, PLAYING, etc.) using masked key ---
-        elif game_state.current_state == CurrentGameState.SHOWING_SPLASH:
-             if key != 255 and key != -1:
-                 logger.info("Key during splash, return."); game_state.current_state = game_state.previous_state or CurrentGameState.MENU
-                 game_state.previous_state = None; game_state.menu_cache = None
-
+        # --- Handle input for MENU state ---
         elif game_state.current_state == CurrentGameState.MENU:
-            menu_key_handled = False
-            # (Keeping menu logic brief for clarity - use previous full version)
-            if (game_state.submenu_active == "edit_zones" and game_state.editing_zone_mode == "edit_points") or \
-               (game_state.submenu_active == "players" and game_state.editing_player_mode == "edit_name"):
-                 # Delegate to specific editor logic (using key, backspace, enter, esc)
-                 # ... see previous versions for full menu editing logic ...
-                 # Remember to set menu_key_handled = True if processed
-                 pass # Placeholder for brevity
-            elif not menu_key_handled: # General menu nav
-                if key == ord('m'): menu_key_handled = True # resume
-                elif key == 8: menu_key_handled = True # backspace nav
-                elif key == 27: menu_key_handled = True # escape nav
-            if menu_key_handled: key_handled = True
+            menu_key_handled = False # Flag specific to menu actions
 
+            # --- Player Name Editing Logic ---
+            # This takes priority if active
+            if game_state.submenu_active == "players" and game_state.editing_player_mode == "edit_name" and game_state.editing_player_index is not None:
+                player_idx = game_state.editing_player_index
+                if key == 13: # Enter Key - Save Name
+                    logger.debug("Enter key (13) detected during menu player name edit.")
+                    new_name = game_state.editing_player_name_input.strip()
+                    if not new_name:
+                        game_state.show_notification("Player name cannot be empty!", is_error=True, duration=2.0)
+                    elif 0 <= player_idx < len(game_state.players):
+                        old_name = game_state.players[player_idx].name
+                        game_state.players[player_idx].name = new_name
+                        logger.info(f"Player {player_idx + 1} name changed from '{old_name}' to '{new_name}'")
+                        game_state.show_notification(f"Player {player_idx + 1} name updated", duration=2.0)
+                        game_state.editing_player_index = None
+                        game_state.editing_player_mode = None
+                        game_state.editing_player_name_input = None
+                        game_state.menu_cache = None
+                    else:
+                        logger.error(f"Invalid player index {player_idx} during name save.")
+                        game_state.show_notification("Error saving name!", is_error=True, duration=2.0)
+                        game_state.editing_player_index = None
+                        game_state.editing_player_mode = None
+                        game_state.editing_player_name_input = None
+                        game_state.menu_cache = None
+                    menu_key_handled = True
+                elif key == 27: # Escape Key - Cancel Edit
+                     logger.debug("Escape key (27) detected during menu player name edit.")
+                     game_state.editing_player_index = None
+                     game_state.editing_player_mode = None
+                     game_state.editing_player_name_input = None
+                     game_state.menu_cache = None
+                     game_state.show_notification("Name edit cancelled", duration=1.5)
+                     menu_key_handled = True
+                elif key == 8: # Backspace Key
+                    logger.debug("Backspace key (8) detected during menu player name edit.")
+                    if game_state.editing_player_name_input:
+                        game_state.editing_player_name_input = game_state.editing_player_name_input[:-1]
+                        game_state.menu_cache = None
+                    menu_key_handled = True
+                elif key >= 32 and key <= 126: # Printable characters
+                     char = chr(key)
+                     if char in PlayerConstants.ALLOWED_PLAYER_NAME_CHARS:
+                         if len(game_state.editing_player_name_input) < PlayerConstants.MAX_PLAYER_NAME_LENGTH:
+                             game_state.editing_player_name_input += char
+                             game_state.menu_cache = None
+                         else:
+                              game_state.show_notification(f"Max {PlayerConstants.MAX_PLAYER_NAME_LENGTH} chars", is_error=True, duration=1.5)
+                         menu_key_handled = True
+                     else:
+                          logger.debug(f"Character '{char}' not allowed for player name.")
+                          game_state.show_notification(f"Character '{char}' not allowed", is_error=True, duration=1.5)
+                          menu_key_handled = True
+                # If any key was processed by the editor, set key_handled
+                if menu_key_handled:
+                    key_handled = True
 
+            # --- Zone Points Editing Logic (Placeholder - Needs similar implementation) ---
+            elif game_state.submenu_active == "edit_zones" and game_state.editing_zone_mode == "edit_points" and game_state.editing_zone_index is not None:
+                 # Add logic here for numeric input, backspace, enter, escape
+                 # IMPORTANT: Set menu_key_handled = True if a key is processed here
+                 pass # Placeholder
+                 # If any key was processed by the editor, set key_handled
+                 # if menu_key_handled: key_handled = True # Example structure
+
+            # --- General Menu Navigation (if not editing text and key not handled yet) ---
+            if not key_handled: # Check if key was already handled by an editor above
+                if key == ord('m'): # Toggle menu OFF (Resume)
+                    logger.debug("Menu key ('m') pressed in menu, resuming game.")
+                    game_state.current_state = CurrentGameState.PLAYING
+                    game_state.editing_player_index = None
+                    game_state.editing_player_mode = None
+                    game_state.editing_player_name_input = None
+                    game_state.editing_zone_index = None
+                    game_state.editing_zone_mode = None
+                    game_state.editing_zone_points_input = None
+                    game_state.submenu_active = None
+                    key_handled = True
+                elif key == 8: # Backspace Key - Go Back
+                    logger.debug("Backspace key (8) detected for menu navigation.")
+                    if game_state.submenu_active == "edit_zones":
+                        game_state.submenu_active = "manage_zones"
+                        game_state.editing_zone_index = None
+                        game_state.editing_zone_mode = None
+                        game_state.editing_zone_points_input = None
+                        game_state.menu_cache = None
+                        key_handled = True
+                    elif game_state.submenu_active:
+                        game_state.submenu_active = None
+                        game_state.editing_player_index = None
+                        game_state.editing_player_mode = None
+                        game_state.editing_player_name_input = None
+                        game_state.menu_cache = None
+                        key_handled = True
+                    else: # Close menu if already on main menu
+                        game_state.current_state = CurrentGameState.PLAYING
+                        key_handled = True
+                elif key == 27: # Escape Key - Close Menu
+                     logger.debug("Escape key (27) detected in menu, resuming game.")
+                     game_state.current_state = CurrentGameState.PLAYING
+                     game_state.editing_player_index = None
+                     game_state.editing_player_mode = None
+                     game_state.editing_player_name_input = None
+                     game_state.editing_zone_index = None
+                     game_state.editing_zone_mode = None
+                     game_state.editing_zone_points_input = None
+                     game_state.submenu_active = None
+                     key_handled = True
+
+        # --- Handle input for PLAYING state ---
         elif game_state.current_state == CurrentGameState.PLAYING:
-            if key == ord('m'): key_handled = True # menu
-            elif key == ord('s'): key_handled = True # draw toggle
-            elif key == ord('p'): key_handled = True # pause
-            elif key == 27: # ESC quits
-                logger.info("ESC playing, exiting."); clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state); return None
+            if key == ord('m'): # Toggle menu ON
+                logger.info("Menu key ('m') pressed while playing.")
+                game_state.current_state = CurrentGameState.MENU
+                game_state.submenu_active = None
+                game_state.menu_cache = None
+                game_state.editing_zone_index = None
+                game_state.editing_zone_mode = None
+                game_state.editing_zone_points_input = None
+                game_state.editing_player_index = None
+                game_state.editing_player_mode = None
+                game_state.editing_player_name_input = None
+                key_handled = True
+            elif key == ord('s'): # Toggle drawing mode
+                game_state.drawing = not game_state.drawing
+                if game_state.drawing:
+                    logger.info("Drawing mode enabled. Click and drag to draw zone.")
+                    game_state.show_notification("Drawing Mode: ON")
+                    game_state.start_x = 0
+                    game_state.start_y = 0
+                    game_state.temp_zone = None
+                else:
+                    logger.info("Drawing mode disabled.")
+                    game_state.show_notification("Drawing Mode: OFF")
+                    game_state.temp_zone = None
+                    game_state.start_x = 0
+                    game_state.start_y = 0
+                key_handled = True
+            elif key == ord('p'): # Pause game
+                 logger.info("Pause key ('p') pressed.")
+                 game_state.current_state = CurrentGameState.PAUSED
+                 game_state.show_notification("Game Paused", duration=0)
+                 key_handled = True
+            elif key == 27: # ESC quits immediately
+                 logger.info("Escape key (27) pressed while playing, exiting.")
+                 clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state)
+                 return None
 
+        # --- Handle input for PAUSED state ---
         elif game_state.current_state == CurrentGameState.PAUSED:
-            if key == ord('p'): key_handled = True # resume
-            elif key == 27: # ESC quits
-                logger.info("ESC paused, exiting."); clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state); return None
+            if key == ord('p'): # Resume game
+                logger.info("Resume key ('p') pressed.")
+                game_state.current_state = CurrentGameState.PLAYING
+                game_state.show_notification("Resuming...", duration=1.0)
+                key_handled = True
+            elif key == 27: # ESC quits immediately
+                 logger.info("Escape key (27) pressed while paused, exiting.")
+                 clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state)
+                 return None
 
+        # --- Handle input for GAME_OVER state ---
         elif game_state.current_state == CurrentGameState.GAME_OVER:
-            if key == ord('n'): key_handled = True # new game
-            elif key == ord('l'): key_handled = True # leaderboard
-            elif key == 27: # ESC quits
-                logger.info("ESC game over, exiting."); clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state); return None
+            if key == ord('n'): # Start New Game
+                logger.info("'n' key pressed on game over screen. Starting new game.")
+                reset_game(game_state)
+                game_state.current_state = CurrentGameState.GETTING_PLAYER_NAME
+                game_state.win_condition_met = False
+                key_handled = True
+            elif key == ord('l'): # Show Leaderboard
+                 logger.info("'l' key pressed on game over screen. Showing leaderboard.")
+                 game_state.current_state = CurrentGameState.MENU
+                 game_state.submenu_active = "leaderboard"
+                 game_state.menu_cache = None
+                 game_state.win_condition_met = False
+                 key_handled = True
+            elif key == 27: # ESC quits immediately
+                logger.info("Escape key (27) pressed on game over screen, exiting.")
+                clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state)
+                return None
 
+        # --- Handle input for SHOWING_SPLASH state (from menu) ---
+        elif game_state.current_state == CurrentGameState.SHOWING_SPLASH:
+             logger.info("Key press detected during menu splash, returning to previous state.")
+             game_state.current_state = game_state.previous_state or CurrentGameState.MENU
+             game_state.previous_state = None
+             game_state.menu_cache = None
+             key_handled = True # Mark as handled
 
-    # Fallback logging
+        # --- Global Toggles (if key NOT handled by state-specific logic) ---
+        if not key_handled:
+            if key == ord('d'):
+                # Toggle general debug logging
+                game_state.debug_mode = not game_state.debug_mode
+                logger.info(f"General Debug Mode toggled {'ON' if game_state.debug_mode else 'OFF'}")
+                key_handled = True # Mark handled now
+            elif key == ord('b'):
+                # Toggle visual debug overlay
+                game_state.show_debug_overlay = not game_state.show_debug_overlay
+                logger.info(f"Visual Debug Overlay toggled {'ON' if game_state.show_debug_overlay else 'OFF'}")
+                key_handled = True # Mark handled now
+
+    # Fallback logging for unhandled keys (optional)
     # if not key_handled and key != -1 and key != 255:
-    #      logger.debug(f"Key {key} unhandled in state {game_state.current_state}")
+    #      logger.debug(f"Key {key} (raw: {raw_key}) unhandled in state {game_state.current_state}")
 
     # Return the masked key code, or None if quit was triggered
-    return key # Return the masked key, main loop handles None return from error/q
+    return key

@@ -1,3 +1,4 @@
+# game_state.py
 """
 Game state management for the Whiffle Tracker project.
 Defines the GameState class to manage game variables and state transitions.
@@ -5,7 +6,7 @@ Defines the GameState class to manage game variables and state transitions.
 
 import cv2
 import logging
-import pygame
+import pygame # --- CHANGE: Ensure pygame is imported ---
 import time
 import numpy as np
 import os
@@ -25,7 +26,7 @@ from scoring import is_in_scoring_zone
 # Import reconciled utils functions
 from game_state_utils import (
     set_special_hole,
-    initialize_sounds,  # Returns (score_sound, background_music)
+    initialize_sounds,  # --- CHANGE: Now returns 3 sounds ---
     initialize_achievements,
     load_achievements,  # Takes game_state, filename
     save_achievements,  # Takes game_state, filename
@@ -179,6 +180,11 @@ class GameState:
         self.score_sound: Optional[pygame.mixer.Sound] = None
         self.background_music: Optional[pygame.mixer.Sound] = None
         self.achievement_sound: Optional[pygame.mixer.Sound] = None
+        # --- CHANGE: Add low time sound attribute ---
+        self.low_time_sound: Optional[pygame.mixer.Sound] = None
+        # --- CHANGE: Add low time warning flag ---
+        self.low_time_warning_played: bool = False
+
 
         # Game Mode / State
         self.game_mode: str = "classic"
@@ -221,28 +227,25 @@ class GameState:
         self._load_initial_state()
         try:
             logger.info("Initializing sounds...")
+            # --- CHANGE: Unpack three sounds ---
             sound_results = initialize_sounds()
-            if isinstance(sound_results, tuple) and len(sound_results) == 2:
-                self.score_sound, self.background_music = sound_results
-                self.achievement_sound = None
-                logger.info("Sounds initialized (score, background).")
+            if isinstance(sound_results, tuple) and len(sound_results) == 3:
+                self.score_sound, self.background_music, self.low_time_sound = sound_results
+                self.achievement_sound = None # Keep achievement sound separate for now
+                logger.info("Sounds initialized (score, background, low_time).")
             else:
                 logger.error(
                     f"initialize_sounds returned unexpected format: {type(sound_results)}. Sounds disabled."
                 )
-                self.score_sound, self.achievement_sound, self.background_music = (
-                    None,
-                    None,
-                    None,
+                self.score_sound, self.background_music, self.low_time_sound, self.achievement_sound = (
+                    None, None, None, None,
                 )
         except Exception as e:
             logger.exception(
                 f"Error during sound initialization: {e}. Sounds disabled."
             )
-            self.score_sound, self.achievement_sound, self.background_music = (
-                None,
-                None,
-                None,
+            self.score_sound, self.background_music, self.low_time_sound, self.achievement_sound = (
+                None, None, None, None,
             )
         self.game_sounds_on = True
         self.background_music_on = True
@@ -256,8 +259,13 @@ class GameState:
             logger.info("Starting background music...")
             # Don't start music until name is entered
             # self.background_music.play(-1)
+
+        # --- CHANGE: Ensure timer is set here ONLY if starting in timed mode ---
         if self.game_mode == "timed":
             self.game_timer = GameConstants.TIMED_MODE_DURATION
+            logger.info(f"Initial game mode is timed. Timer set to {self.game_timer} seconds.")
+        else:
+            self.game_timer = None # Ensure timer is None otherwise
 
         logger.info("GameState initialized successfully.")
 
@@ -567,7 +575,7 @@ class GameState:
                         self.get_current_player().name
                     )  # Save score immediately on win/game over
 
-                # Update high score (using current self.score, not potentially doubled final score yet)
+            # Update high score (using current self.score, not potentially doubled final score yet)
                 if self.score > self.high_score:
                     # Don't update self.high_score with doubled value here, let save_score handle it
                     pass  # High score comparison happens in save_score
