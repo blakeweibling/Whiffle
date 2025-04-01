@@ -35,7 +35,7 @@ a = Analysis(
         'numpy',
         'cv2',
         'ultralytics',
-        'scipy.spatial',
+        'scipy',
         'requests',
         'setuptools',
         'queue',
@@ -71,7 +71,7 @@ exe = EXE( # This defines the output for onefile mode
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=False, # Keeping UPX off based on previous troubleshooting [cite: 4]
+    upx=True, # Keeping UPX off based on previous troubleshooting [cite: 4]
     upx_exclude=[],
     runtime_tmpdir=None,
     console=False, # Set True for console window, False for GUI only [cite: 4]

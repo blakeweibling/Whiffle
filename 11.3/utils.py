@@ -8,26 +8,31 @@ clean_exit function is moved to cleanup_utils.py
 
 import cv2
 import logging
+
 # Pygame, os, sys removed as they were only for clean_exit
-from typing import Any, Tuple, Optional, Callable # Added Callable, Any
+from typing import Any, Tuple, Optional, Callable  # Added Callable, Any
 
 # Imports needed for mouse_callback helpers
 from constants import UIConstants, GameConstants, ScoringConstants
 from menu import (
-    save_zones, # Keep for now, might be needed if menu actions call it directly
+    save_zones,  # Keep for now, might be needed if menu actions call it directly
     reset_game,
     load_zones,
-    clear_zones
+    clear_zones,
 )
+
 # Import CurrentGameState enum
 from game_state import CurrentGameState
+
 # Import set_special_hole (used in drawing event)
 from game_state_utils import set_special_hole
+
 # Import Player class
 from player import Player
 
 # Import the new modal splash function from ui_screens
 from ui_screens import display_modal_splash
+
 # DO NOT import clean_exit here
 
 # Use existing logger
@@ -37,6 +42,7 @@ logger = logging.getLogger(__name__)
 
 
 # --- START: Mouse Callback Functions ---
+
 
 def _process_drawing_event(event: int, x: int, y: int, game_state: Any) -> None:
     """Process mouse events for drawing scoring zones."""
@@ -100,15 +106,15 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
     # Check if the click is within the general menu/game over area bounds
     # Ensure menu_w and menu_h are valid before check
     if menu_w <= 0 or menu_h <= 0:
-         logger.debug("Menu dimensions are invalid, skipping click processing.")
-         return False
+        logger.debug("Menu dimensions are invalid, skipping click processing.")
+        return False
 
     if not (menu_x <= x < menu_x + menu_w and menu_y <= y < menu_y + menu_h):
         if game_state.current_state == CurrentGameState.GAME_OVER:
-             logger.debug("Click outside buttons on GAME_OVER screen.")
-             return False
+            logger.debug("Click outside buttons on GAME_OVER screen.")
+            return False
         else:
-             return False
+            return False
 
     # Calculate click position relative to the menu/screen origin
     relative_x = x - menu_x
@@ -119,14 +125,20 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
     )
 
     # Iterate through clickable items
-    if not hasattr(game_state, 'submenu_items') or not isinstance(game_state.submenu_items, list):
-        logger.warning(f"submenu_items not found or not a list in state {game_state.current_state}. Cannot process click.")
+    if not hasattr(game_state, "submenu_items") or not isinstance(
+        game_state.submenu_items, list
+    ):
+        logger.warning(
+            f"submenu_items not found or not a list in state {game_state.current_state}. Cannot process click."
+        )
         return False
 
     for item_rect, action, label in game_state.submenu_items:
         if not isinstance(item_rect, tuple) or len(item_rect) != 4:
-             logger.warning(f"Invalid item_rect format found: {item_rect}. Skipping item '{label}'.")
-             continue
+            logger.warning(
+                f"Invalid item_rect format found: {item_rect}. Skipping item '{label}'."
+            )
+            continue
 
         item_x, item_y, item_w, item_h = item_rect
         # Check if the relative click coordinates are within the current item's rectangle
@@ -170,6 +182,7 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
                     logger.debug("Action matched: 'quit'")
                     try:
                         from cleanup_utils import clean_exit
+
                         try:
                             if hasattr(game_state, "get_current_player") and hasattr(
                                 game_state, "save_score"
@@ -186,7 +199,9 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
                             game_state,
                         )
                     except ImportError:
-                         logger.error("Could not import clean_exit. Cannot quit properly via menu.")
+                        logger.error(
+                            "Could not import clean_exit. Cannot quit properly via menu."
+                        )
                     return True
 
                 # Menu State Actions
@@ -199,7 +214,7 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
                         # Pass the main callback function and its parameter (game_state)
                         display_modal_splash(game_state, mouse_callback, game_state)
                         game_state.menu_cache = None
-                        return True # Click handled
+                        return True  # Click handled
 
                     elif action == "resume":
                         logger.debug("Action matched: 'resume'")
@@ -263,9 +278,13 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
                             elif index == game_state.current_player_index:
                                 logger.debug("Selected current player again.")
                             else:
-                                logger.warning(f"Invalid player index selected: {index}")
+                                logger.warning(
+                                    f"Invalid player index selected: {index}"
+                                )
                         except (ValueError, IndexError) as e:
-                            logger.error(f"Error parsing player index from action: {action} - {e}")
+                            logger.error(
+                                f"Error parsing player index from action: {action} - {e}"
+                            )
                         reset_editing_states()
                     elif action == "add_player":
                         logger.debug("Action matched: 'add_player'")
@@ -276,8 +295,12 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
                             logger.info(f"Added {new_player.name}")
                             game_state.show_notification(f"{new_player.name} Added")
                         else:
-                            logger.warning("Attempted to add player when 2 players already exist.")
-                            game_state.show_notification("Maximum 2 players supported", is_error=True)
+                            logger.warning(
+                                "Attempted to add player when 2 players already exist."
+                            )
+                            game_state.show_notification(
+                                "Maximum 2 players supported", is_error=True
+                            )
                         reset_editing_states()
                     elif action == "back_to_manage_zones":
                         logger.debug("Action matched: 'back_to_manage_zones'")
@@ -292,14 +315,20 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
                                 current_points = game_state.scoring_zones[index][4]
                                 game_state.editing_zone_index = index
                                 game_state.editing_zone_mode = "edit_points"
-                                game_state.editing_zone_points_input = str(current_points)
+                                game_state.editing_zone_points_input = str(
+                                    current_points
+                                )
                                 game_state.menu_cache = None
-                                logger.info(f"Selected zone {index+1} for editing points. Initial value: {current_points}")
+                                logger.info(
+                                    f"Selected zone {index+1} for editing points. Initial value: {current_points}"
+                                )
                             else:
                                 logger.warning(f"Invalid zone index for edit: {index}")
                                 reset_editing_states()
                         except (ValueError, IndexError) as e:
-                            logger.error(f"Error parsing zone index from edit action: {action} - {e}")
+                            logger.error(
+                                f"Error parsing zone index from edit action: {action} - {e}"
+                            )
                             reset_editing_states()
                     elif action.startswith("edit_player_name_"):
                         logger.debug("Action matched: 'edit_player_name_*'")
@@ -312,12 +341,18 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
                                 game_state.editing_player_mode = "edit_name"
                                 game_state.editing_player_name_input = str(current_name)
                                 game_state.menu_cache = None
-                                logger.info(f"Selected player {index+1} for editing name. Initial value: '{current_name}'")
+                                logger.info(
+                                    f"Selected player {index+1} for editing name. Initial value: '{current_name}'"
+                                )
                             else:
-                                logger.warning(f"Invalid player index for edit name: {index}")
+                                logger.warning(
+                                    f"Invalid player index for edit name: {index}"
+                                )
                                 reset_editing_states()
                         except (ValueError, IndexError) as e:
-                            logger.error(f"Error parsing player index from edit name action: {action} - {e}")
+                            logger.error(
+                                f"Error parsing player index from edit name action: {action} - {e}"
+                            )
                             reset_editing_states()
                     elif action.startswith("delete_zone_"):
                         logger.debug("Action matched: 'delete_zone_*'")
@@ -330,25 +365,40 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
                                 ):
                                     logger.info(f"Confirmed deleting zone {index+1}.")
                                     del game_state.scoring_zones[index]
-                                    game_state.special_hole = set_special_hole(game_state.scoring_zones)
-                                    game_state.show_notification(f"Zone {index+1} Deleted")
+                                    game_state.special_hole = set_special_hole(
+                                        game_state.scoring_zones
+                                    )
+                                    game_state.show_notification(
+                                        f"Zone {index+1} Deleted"
+                                    )
                                     reset_editing_states()
                                 else:
                                     reset_editing_states()
                                     game_state.editing_zone_index = index
                                     game_state.editing_zone_mode = "confirm_delete"
                                     game_state.menu_cache = None
-                                    logger.info(f"Selected zone {index+1} for deletion. Click again to confirm.")
-                                    game_state.show_notification(f"Click Delete again for zone {index+1} to confirm", duration=4.0)
+                                    logger.info(
+                                        f"Selected zone {index+1} for deletion. Click again to confirm."
+                                    )
+                                    game_state.show_notification(
+                                        f"Click Delete again for zone {index+1} to confirm",
+                                        duration=4.0,
+                                    )
                             else:
-                                logger.warning(f"Invalid zone index for delete: {index}")
+                                logger.warning(
+                                    f"Invalid zone index for delete: {index}"
+                                )
                                 reset_editing_states()
                         except (ValueError, IndexError) as e:
-                            logger.error(f"Error parsing zone index from delete action: {action} - {e}")
+                            logger.error(
+                                f"Error parsing zone index from delete action: {action} - {e}"
+                            )
                             reset_editing_states()
                     else:
                         # Default action: Treat as submenu navigation
-                        logger.debug(f"Action '{action}' not explicitly handled, assuming submenu switch.")
+                        logger.debug(
+                            f"Action '{action}' not explicitly handled, assuming submenu switch."
+                        )
                         logger.info(f"Switching to submenu: {action}")
                         game_state.submenu_active = action
                         reset_editing_states()
@@ -371,11 +421,13 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: Any) -> bool:
                         game_state.win_condition_met = False
                         game_state.menu_cache = None
 
-                return True # Click handled
+                return True  # Click handled
 
     # Click was inside menu/game over area but not on a specific item
-    logger.debug(f"Click in {game_state.current_state} area but not on a specific registered item.")
-    return False # Don't handle clicks not on registered items
+    logger.debug(
+        f"Click in {game_state.current_state} area but not on a specific registered item."
+    )
+    return False  # Don't handle clicks not on registered items
 
 
 def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
@@ -403,8 +455,12 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
         and event == cv2.EVENT_LBUTTONDOWN
     ):
         if (
-            UIConstants.MENU_BUTTON_X <= x <= UIConstants.MENU_BUTTON_X + UIConstants.MENU_BUTTON_WIDTH
-            and UIConstants.MENU_BUTTON_Y <= y <= UIConstants.MENU_BUTTON_Y + UIConstants.MENU_BUTTON_HEIGHT
+            UIConstants.MENU_BUTTON_X
+            <= x
+            <= UIConstants.MENU_BUTTON_X + UIConstants.MENU_BUTTON_WIDTH
+            and UIConstants.MENU_BUTTON_Y
+            <= y
+            <= UIConstants.MENU_BUTTON_Y + UIConstants.MENU_BUTTON_HEIGHT
         ):
             logger.info("Menu toggled ON via button click.")
             game_state.current_state = CurrentGameState.MENU
@@ -421,7 +477,8 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
     # 2. Handle clicks within MENU or GAME_OVER states
     elif (
         not click_handled
-        and game_state.current_state in [CurrentGameState.MENU, CurrentGameState.GAME_OVER]
+        and game_state.current_state
+        in [CurrentGameState.MENU, CurrentGameState.GAME_OVER]
         and event == cv2.EVENT_LBUTTONDOWN
     ):
         click_handled = _process_menu_or_gameover_click(x, y, game_state)
@@ -430,7 +487,7 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
     elif (
         not click_handled
         and game_state.current_state == CurrentGameState.PLAYING
-        and getattr(game_state, 'drawing', False)
+        and getattr(game_state, "drawing", False)
     ):
         if event in [cv2.EVENT_LBUTTONDOWN, cv2.EVENT_LBUTTONUP, cv2.EVENT_MOUSEMOVE]:
             _process_drawing_event(event, x, y, game_state)
@@ -439,6 +496,9 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
 
     # 4. Log unhandled clicks
     if not click_handled and event == cv2.EVENT_LBUTTONDOWN:
-        logger.debug(f"Unhandled click at ({x},{y}) in state {game_state.current_state}")
+        logger.debug(
+            f"Unhandled click at ({x},{y}) in state {game_state.current_state}"
+        )
+
 
 # --- END: Mouse Callback Functions ---

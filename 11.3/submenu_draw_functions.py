@@ -572,7 +572,7 @@ def _draw_about_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
     game_state.submenu_items.clear()  # [cite: 94]
     cv2.putText(
         menu_frame,
-        "Whiffle Tracker v1.0",  # [cite: 94]
+        "Whiffle Tracker v11.3",  # [cite: 94]
         (20, y_offset),  # [cite: 94]
         cv2.FONT_HERSHEY_SIMPLEX,  # [cite: 94]
         UIConstants.FONT_SCALE_MEDIUM,  # [cite: 94]
