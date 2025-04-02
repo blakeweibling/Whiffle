@@ -18,7 +18,7 @@ BALL_COLORS = {
 TRAIL_LENGTH = GameConstants.BALL_TRAIL_LENGTH
 TRAIL_THICKNESS = 2
 TRAIL_BASE_COLOR = (180, 180, 180)
-BALL_OUTLINE_THICKNESS = 2
+BALL_OUTLINE_THICKNESS = 2 # Keep balls as outlines
 
 
 def draw_balls(frame: np.ndarray, game_state: GameState) -> None:
@@ -28,22 +28,8 @@ def draw_balls(frame: np.ndarray, game_state: GameState) -> None:
         frame (np.ndarray): The frame to draw on.
         game_state (GameState): The current game state containing tracked balls and trails.
     """
-    # --- Log Check ---
-    trail_flag_value = getattr(game_state, 'ball_trails_enabled', 'AttributeNotFound')
-    logger.debug(f"Checking ball_trails_enabled flag. Value: {trail_flag_value}")
-    # ---
-
-    # --- MODIFIED: If trails are disabled, draw NOTHING related to balls ---
-    if not game_state.ball_trails_enabled:
-        logger.debug("ball_trails_enabled is False. Skipping ALL ball/trail drawing.")
-        return # Exit the function entirely, do not draw balls or trails
-    # --- END MODIFICATION ---
-
-    # --- This code only runs if ball_trails_enabled is TRUE ---
-    logger.debug("ball_trails_enabled is True. Drawing balls and trails...")
-
-    # --- Draw Balls First (only if trails are enabled) ---
-    ball_types = {}
+    # --- Draw Balls (Current Positions) Always ---
+    ball_types = {} # Store type for potential trail coloring later
     if hasattr(game_state, "tracked_balls"):
         for ball in game_state.tracked_balls:
              try:
@@ -53,48 +39,57 @@ def draw_balls(frame: np.ndarray, game_state: GameState) -> None:
                      color = BALL_COLORS.get(ball_type, UIConstants.YELLOW)
                      # Draw the ball outline
                      cv2.circle(frame, (center_x, center_y), int_radius, color, BALL_OUTLINE_THICKNESS)
-                     ball_types[ball_id] = ball_type
+                     ball_types[ball_id] = ball_type # Store type
              except (IndexError, ValueError, TypeError) as e:
                  logger.warning(f"Error processing ball data for drawing ball: {ball}. Error: {e}")
     # --- END Draw Balls ---
 
-    # --- Draw Trails (only if trails are enabled) ---
-    drawn_trail_ids = set()
-    if hasattr(game_state, "ball_trails") and game_state.ball_trails:
-        for ball_id, trail in list(game_state.ball_trails.items()):
-            drawn_trail_ids.add(ball_id)
-            if ball_id not in ball_types: # Check if ball still exists
-                if ball_id in game_state.ball_trails:
-                    del game_state.ball_trails[ball_id]
-                continue
+    # --- Log Check (Optional but helpful) ---
+    trail_flag_value = getattr(game_state, 'ball_trails_enabled', 'AttributeNotFound')
+    logger.debug(f"Checking ball_trails_enabled flag. Value: {trail_flag_value}")
+    # ---
 
-            if len(trail) > 1:
-                points = np.array(trail, dtype=np.int32)
-                num_segments = len(trail) - 1
+    # --- Draw Trails ONLY if Enabled ---
+    if game_state.ball_trails_enabled:
+        logger.debug("ball_trails_enabled is True. Drawing trails...") # Log confirmation
+        if hasattr(game_state, "ball_trails") and game_state.ball_trails:
+            for ball_id, trail in list(game_state.ball_trails.items()):
+                # Check if ball still exists (using ball_types populated above)
+                if ball_id not in ball_types:
+                    if ball_id in game_state.ball_trails:
+                         del game_state.ball_trails[ball_id]
+                    continue
 
-                for i in range(num_segments):
-                    # Faster Fade Logic
-                    progress = (num_segments - i) / max(1, num_segments)
-                    fade_factor = progress ** 2
+                if len(trail) > 1:
+                    points = np.array(trail, dtype=np.int32)
+                    num_segments = len(trail) - 1
 
-                    thickness = max(1, int(TRAIL_THICKNESS * fade_factor))
-                    segment_color = tuple(int(c * fade_factor) for c in TRAIL_BASE_COLOR)
+                    for i in range(num_segments):
+                        # Faster Fade Logic
+                        progress = (num_segments - i) / max(1, num_segments)
+                        fade_factor = progress ** 2
 
-                    try:
-                        pt1 = tuple(points[i])
-                        pt2 = tuple(points[i+1])
-                        if thickness > 0:
-                            cv2.line(frame, pt1, pt2, segment_color, thickness, cv2.LINE_AA)
-                    except Exception as e:
-                        logger.warning(f"Error drawing trail segment for ball {ball_id}: {e}")
+                        thickness = max(1, int(TRAIL_THICKNESS * fade_factor))
+                        segment_color = tuple(int(c * fade_factor) for c in TRAIL_BASE_COLOR)
 
-    # Trail cleanup (only if trails are enabled)
-    if hasattr(game_state, "ball_trails"):
-         active_ball_ids = set(ball_types.keys())
-         for ball_id in list(game_state.ball_trails.keys()):
-              if ball_id not in active_ball_ids:
-                   logger.debug(f"Removing trail for ball ID {ball_id} no longer present.")
-                   del game_state.ball_trails[ball_id]
+                        try:
+                            pt1 = tuple(points[i])
+                            pt2 = tuple(points[i+1])
+                            if thickness > 0:
+                                cv2.line(frame, pt1, pt2, segment_color, thickness, cv2.LINE_AA)
+                        except Exception as e:
+                            logger.warning(f"Error drawing trail segment for ball {ball_id}: {e}")
+
+        # Trail cleanup (only if trails are enabled)
+        if hasattr(game_state, "ball_trails"):
+            active_ball_ids = set(ball_types.keys())
+            for ball_id in list(game_state.ball_trails.keys()):
+                 if ball_id not in active_ball_ids:
+                      logger.debug(f"Removing trail for ball ID {ball_id} no longer present.")
+                      del game_state.ball_trails[ball_id]
+    else:
+        # Log when skipping
+        logger.debug("ball_trails_enabled is False. Skipping trail drawing.")
     # --- END Draw Trails ---
 
 
