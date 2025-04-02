@@ -235,7 +235,7 @@ class GameConstants:
     # Scoring Logic
     POSITION_HISTORY_LENGTH: int = _assert_positive(5, "POSITION_HISTORY_LENGTH")
     REST_THRESHOLD_DISTANCE: float = _assert_non_negative(
-        5.0, "REST_THRESHOLD_DISTANCE"
+        10.0, "REST_THRESHOLD_DISTANCE"
     )
     ZONE_STABILITY_FRAMES: int = _assert_positive(45, "ZONE_STABILITY_FRAMES")
     SCORE_COOLDOWN_DURATION: float = _assert_non_negative(

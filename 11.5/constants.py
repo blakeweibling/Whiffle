@@ -72,6 +72,14 @@ class UIConstants:
     MENU_BUTTON_X: int = 10
     MENU_BUTTON_Y: int = 80
 
+    # Zone Editing Visuals
+    ZONE_EDIT_HANDLE_SIZE: int = 8
+    ZONE_EDIT_HANDLE_COLOR: Tuple[int, int, int] = (255, 165, 0) # Orange
+    ZONE_EDIT_LINE_COLOR: Tuple[int, int, int] = (255, 165, 0) # Orange
+    ZONE_EDIT_SELECTED_COLOR: Tuple[int, int, int] = (0, 255, 255) # Yellow highlight
+    ZONE_EDIT_MOVE_COLOR: Tuple[int, int, int] = (0, 165, 255) # Orange-Red for move
+    ZONE_EDIT_RESIZE_COLOR: Tuple[int, int, int] = (255, 0, 255) # Magenta for resize
+
 
 class CameraConfig:
     """Configuration for camera index and backend selection."""
@@ -235,7 +243,7 @@ class GameConstants:
     # Scoring Logic
     POSITION_HISTORY_LENGTH: int = _assert_positive(5, "POSITION_HISTORY_LENGTH")
     REST_THRESHOLD_DISTANCE: float = _assert_non_negative(
-        20.0, "REST_THRESHOLD_DISTANCE"
+        10.0, "REST_THRESHOLD_DISTANCE"
     )
     ZONE_STABILITY_FRAMES: int = _assert_positive(45, "ZONE_STABILITY_FRAMES")
     SCORE_COOLDOWN_DURATION: float = _assert_non_negative(
