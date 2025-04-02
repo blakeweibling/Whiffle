@@ -41,8 +41,8 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
     game_state.scored_balls.clear()
     game_state.scored_positions.clear()
     game_state.next_ball_id = 0
-    game_state.submenu_active = None
-    game_state.submenu_items = []
+    # game_state.submenu_active = None # Don't reset submenu on game reset? Maybe needed
+    # game_state.submenu_items = []  # Don't clear menu items on game reset
     game_state.game_timer = None  # Reset timer initially
     game_state.ball_trails.clear()
     game_state.ball_states.clear()
@@ -53,20 +53,29 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
     game_state.ball_scored_zones.clear()
     game_state.ball_positions_history.clear()
     game_state.ball_zone_history.clear()
-    # --- CHANGE: Fix AttributeError ---
-    game_state.zone_cooldown.clear()  # Was: game_state.scored_cooldown.clear()
+    game_state.zone_cooldown.clear()  # Fixed attribute name
     game_state.win_condition_met = False
     # Reset editing states
-    game_state.editing_zone_index = None
-    game_state.editing_zone_mode = None
-    game_state.editing_zone_points_input = None
-    game_state.editing_player_index = None
-    game_state.editing_player_mode = None
-    game_state.editing_player_name_input = None
+    # game_state.editing_zone_index = None # Keep potential menu edits?
+    # game_state.editing_zone_mode = None
+    # game_state.editing_zone_points_input = None
+    # game_state.editing_player_index = None # Keep potential menu edits?
+    # game_state.editing_player_mode = None
+    # game_state.editing_player_name_input = None
+
+    # Reset interactive zone editing states
+    # game_state.selected_zone_for_edit = None # Keep potential menu edits?
+    # game_state.zone_editing_action = None
+    # game_state.drag_start_pos = None
+    # game_state.original_zone_on_drag_start = None
+
     # Reset special hole hit flag for the new session
     game_state.special_hole_hit_this_session = False
-    # --- CHANGE: Reset low time warning flag ---
+    # Reset low time warning flag
     game_state.low_time_warning_played = False
+    # Reset edit zones page
+    game_state.edit_zones_page = 0
+
 
     if game_state.players and 0 <= game_state.current_player_index < len(
         game_state.players
@@ -77,7 +86,7 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
     else:
         logger.warning("Player index out of bounds or no players during reset.")
 
-    # --- CHANGE: Ensure timer is set AFTER mode is confirmed ---
+    # Ensure timer is set AFTER mode is confirmed
     if game_state.game_mode == "timed":
         game_state.game_timer = GameConstants.TIMED_MODE_DURATION
         logger.info(
@@ -102,20 +111,26 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
 
 def save_zones(game_state: GameState) -> None:  # Added GameState type hint
     """Save the current scoring zones to a JSON file."""
-    # ...(save_zones remains the same)...
     try:
+        # Ensure points are integers
+        serializable_zones = [
+            [int(z[0]), int(z[1]), int(z[2]), int(z[3]), int(z[4])]
+            for z in game_state.scoring_zones
+        ]
         with open(GameConstants.ZONES_FILE, "w") as f:
-            json.dump(game_state.scoring_zones, f, indent=4)
+            json.dump(serializable_zones, f, indent=4)
         logger.info(f"Scoring zones saved to {GameConstants.ZONES_FILE}")
         game_state.show_notification("Zones Saved")
     except IOError as e:
         logger.error(f"Error saving scoring zones: {e}")
         game_state.show_notification("Error Saving Zones", is_error=True)
+    except Exception as e:
+         logger.exception(f"Unexpected error saving zones: {e}")
+         game_state.show_notification("Error Saving Zones", is_error=True)
 
 
 def load_zones(game_state: GameState) -> None:  # Added GameState type hint
     """Load scoring zones from a JSON file."""
-    # ...(load_zones remains the same)...
     if os.path.exists(GameConstants.ZONES_FILE):
         try:
             if os.path.getsize(GameConstants.ZONES_FILE) == 0:
@@ -160,7 +175,6 @@ def load_zones(game_state: GameState) -> None:  # Added GameState type hint
 
 def clear_zones(game_state: GameState) -> None:  # Added GameState type hint
     """Clear all scoring zones."""
-    # ...(clear_zones remains the same)...
     game_state.scoring_zones.clear()
     game_state.special_hole = None
     if hasattr(game_state, "scoring_zones_cache"):
@@ -176,7 +190,6 @@ def clear_zones(game_state: GameState) -> None:  # Added GameState type hint
 
 def flush_scoring_zones(game_state: GameState) -> None:  # Added GameState type hint
     """Writes current scoring zones to disk (used by clean_exit)."""
-    # ...(flush_scoring_zones remains the same)...
     logger.debug("Flushing scoring zones (calling save_zones)...")
     save_zones(game_state)
 
@@ -185,7 +198,6 @@ def draw_menu(
     frame: np.ndarray, game_state: GameState
 ) -> None:  # Added GameState type hint
     """Draw the menu button on the frame."""
-    # ...(draw_menu remains the same)...
     if game_state.current_state == CurrentGameState.PLAYING:
         _draw_button(
             frame,
@@ -205,10 +217,11 @@ def _draw_menu_content(
     menu_frame: np.ndarray, game_state: GameState
 ) -> None:  # Added GameState type hint
     """Draw the actual content of the menu or submenu onto the menu_frame."""
-    # ...( _draw_menu_content remains the same)...
     if game_state.submenu_active:
+        # Let the specific submenu function handle setting its required height
         draw_submenu(menu_frame, game_state)
     else:
+        # --- Drawing Main Menu ---
         cv2.putText(
             menu_frame,
             "Main Menu",
@@ -222,7 +235,8 @@ def _draw_menu_content(
         y_offset = 80
         item_height = 35
         for label, action_key in MenuConstants.MAIN_MENU_ITEMS:
-            item_rect = (20, y_offset, game_state.menu_width - 40, item_height)
+            # Use menu_frame.shape[1] which is game_state.menu_width for button width calc
+            item_rect = (20, y_offset, menu_frame.shape[1] - 40, item_height)
             _draw_button(
                 menu_frame,
                 item_rect[0],
@@ -236,6 +250,11 @@ def _draw_menu_content(
             game_state.submenu_items.append((item_rect, action_key, label))
             y_offset += item_height + 5
 
+        # --- MODIFICATION: Calculate and set height specifically for main menu ---
+        required_height = y_offset + 20 # Add padding below last item
+        game_state.menu_height = required_height
+        # --- END MODIFICATION ---
+
 
 # --- Using Robust Caching Logic ---
 def draw_menu_window(
@@ -244,21 +263,23 @@ def draw_menu_window(
     """
     Draw the menu as an overlay within the main game window, using caching to reduce redraws.
     """
-    # ...(draw_menu_window remains the same)...
     if game_state.current_state != CurrentGameState.MENU:
         return
 
+    # Default width, might be adjusted by submenu drawing
     game_state.menu_width = 600
-    if not game_state.submenu_active:
-        game_state.menu_height = 60 + len(MenuConstants.MAIN_MENU_ITEMS) * 40 + 20
-    else:
-        if not hasattr(game_state, "menu_height") or game_state.menu_height < 100:
-            game_state.menu_height = 450
+    # Default height, will be adjusted by content drawing function if needed
+    # We set a reasonable default here, but _draw_menu_content will calculate the actual needed height
+    game_state.menu_height = 450
 
+
+    # --- Generate Cache Key ---
+    # Get current item actions to detect changes in displayed buttons
     current_item_actions_tuple = tuple(
         item[1] for item in game_state.submenu_items
-    )  # Generate tuple of actions
-    # Add editing state to cache key
+    )
+
+    # Include relevant state variables in the cache key
     cache_key_parts = [
         game_state.submenu_active,
         current_item_actions_tuple,
@@ -268,67 +289,108 @@ def draw_menu_window(
         game_state.editing_player_index,
         game_state.editing_player_mode,
         game_state.editing_player_name_input,
-        # Include current player index as it changes player highlight
         game_state.current_player_index,
+        # Include edit zones page number if relevant
+        game_state.edit_zones_page if game_state.submenu_active == "edit_zones" else None,
     ]
     cache_key = tuple(cache_key_parts)
+    # --- END MODIFICATION in Cache Key ---
 
-    menu_frame = None
+    menu_frame = None # Initialize menu_frame buffer
 
+    # --- Check Cache ---
+    # We need to know the final height *before* checking the cache effectively,
+    # because the height is part of what makes the cache valid.
+    # Let's draw the content first to determine the needed height.
+    # --- Draw Menu Content onto a Temporary Buffer ---
+    # Create a buffer with the *potential* maximum height needed or a large default
+    temp_buffer_height = UIConstants.WINDOW_HEIGHT # Use window height as max
+    temp_menu_frame = np.zeros(
+        (temp_buffer_height, game_state.menu_width, 3), dtype=np.uint8
+    )
+
+    # This call will draw the content and potentially update game_state.menu_height
+    _draw_menu_content(temp_menu_frame, game_state)
+
+    # Now game_state.menu_height holds the *actual* required height calculated by the drawing function
+    # Ensure the height is valid
+    if game_state.menu_height <= 0:
+        logger.warning("Menu height is invalid after drawing content. Using default.")
+        game_state.menu_height = 450 # Use a sensible default
+
+    # Crop the temporary buffer to the actual required height
+    # Make sure crop upper bound doesn't exceed buffer dimensions
+    actual_height = min(game_state.menu_height, temp_buffer_height)
+    final_menu_content_frame = temp_menu_frame[0:actual_height, :]
+
+    # --- Now Check Cache using the final calculated height ---
     if (
         hasattr(game_state, "menu_cache")
         and game_state.menu_cache is not None
         and game_state.menu_cache_key == cache_key
+        and game_state.menu_cache.shape[0] == final_menu_content_frame.shape[0] # Compare final heights
+        and game_state.menu_cache.shape[1] == final_menu_content_frame.shape[1] # Compare widths
     ):
-        menu_frame = game_state.menu_cache
+        menu_frame = game_state.menu_cache # Use cached frame
         if game_state.debug_mode:
             logger.debug("Using cached menu frame.")
-        if (
-            game_state.menu_height != menu_frame.shape[0]
-            or game_state.menu_width != menu_frame.shape[1]
-        ):
-            logger.warning(
-                "Menu cache dimensions mismatch with game_state. Forcing redraw."
-            )
-            menu_frame = None
-            game_state.menu_cache = None
     else:
+        # Cache is invalid or missing, use the frame we just drew
+        menu_frame = final_menu_content_frame
+        game_state.menu_cache = menu_frame.copy() # Update cache
+        game_state.menu_cache_key = cache_key
         if game_state.debug_mode:
-            logger.debug(
-                f"Cache invalid or missing. Redrawing menu content. Key: {cache_key}"
-            )
+             logger.debug("Cache invalid or missing. Updated cache with newly drawn frame.")
+    # --- End Cache Check / Update ---
 
-    if menu_frame is None:
-        menu_height_to_use = max(100, game_state.menu_height)
-        menu_frame = np.zeros(
-            (menu_height_to_use, game_state.menu_width, 3), dtype=np.uint8
-        )
-        game_state.menu_height = menu_height_to_use  # Update in case it was adjusted
 
-        _draw_menu_content(menu_frame, game_state)
+    # --- Blend Menu onto Main Frame ---
+    if menu_frame is None or menu_frame.size == 0:
+         logger.error("menu_frame is None or empty, cannot draw menu window.")
+         return
 
-        if menu_frame is not None:
-            game_state.menu_cache = menu_frame
-            game_state.menu_cache_key = cache_key
-        else:
-            logger.error("Failed to create menu_frame during redraw.")
-            return
+    # Update menu width/height based on the frame we are actually using
+    game_state.menu_height, game_state.menu_width = menu_frame.shape[0], menu_frame.shape[1]
 
     start_x = (frame.shape[1] - game_state.menu_width) // 2
     start_y = (frame.shape[0] - game_state.menu_height) // 2
-    game_state.menu_pos = (start_x, start_y)
+    game_state.menu_pos = (start_x, start_y) # Store top-left corner
 
     x1, y1 = game_state.menu_pos
     menu_h, menu_w = menu_frame.shape[0], menu_frame.shape[1]
     x2, y2 = x1 + menu_w, y1 + menu_h
 
+    # --- MODIFICATION START: Add border drawing ---
+    border_thickness = 2 # Define border thickness
+    border_color = UIConstants.WHITE # Define border color
+
+    # Calculate border coordinates slightly outside the menu area
+    bx1, by1 = x1 - border_thickness, y1 - border_thickness
+    bx2, by2 = x2 + border_thickness, y2 + border_thickness # Use x2 (x1+menu_w) for bottom-right
+
+    # Clip border coordinates to frame boundaries to prevent errors
+    bx1_c, by1_c = max(0, bx1), max(0, by1)
+    bx2_c, by2_c = min(frame.shape[1], bx2), min(frame.shape[0], by2)
+
+    # Draw the border rectangle on the main frame *before* blending
+    # Ensure coordinates are valid before drawing
+    if bx1_c < bx2_c and by1_c < by2_c:
+        cv2.rectangle(frame, (bx1_c, by1_c), (bx2_c, by2_c), border_color, border_thickness)
+    # --- MODIFICATION END ---
+
+
+    # Clip main content coordinates to ensure they are within the main frame bounds
     x1c, y1c = max(0, x1), max(0, y1)
     x2c, y2c = min(frame.shape[1], x2), min(frame.shape[0], y2)
 
+    # Calculate the region of interest (ROI) dimensions on the main frame
     roi_h, roi_w = y2c - y1c, x2c - x1c
+
+    # Calculate the corresponding slice dimensions from the menu_frame
     menu_start_y, menu_start_x = max(0, -y1), max(0, -x1)
     menu_end_y, menu_end_x = menu_start_y + roi_h, menu_start_x + roi_w
 
+    # Ensure the calculated slices are valid before attempting to blend
     if roi_h > 0 and roi_w > 0 and menu_end_y <= menu_h and menu_end_x <= menu_w:
         try:
             roi = frame[y1c:y2c, x1c:x2c]
@@ -336,16 +398,19 @@ def draw_menu_window(
                 menu_start_y:menu_end_y, menu_start_x:menu_end_x
             ]
 
+            # Ensure shapes match before blending (can happen with minor calculation issues)
             if roi.shape == menu_frame_slice.shape:
-                alpha = 0.85
+                alpha = 0.85 # Blend factor
                 cv2.addWeighted(menu_frame_slice, alpha, roi, 1.0 - alpha, 0, roi)
             else:
                 logger.warning(
-                    f"ROI shape {roi.shape} mismatch with menu slice {menu_frame_slice.shape}. Drawing fallback."
+                    f"ROI shape {roi.shape} mismatch with menu slice {menu_frame_slice.shape}. Drawing fallback rectangle."
                 )
+                # Fallback: draw a simple rectangle if shapes mismatch
                 cv2.rectangle(frame, (x1c, y1c), (x2c, y2c), (50, 50, 50), -1)
         except Exception as e:
             logger.exception(f"Error blending menu: {e}")
+            # Fallback: draw a simple rectangle on error
             cv2.rectangle(frame, (x1c, y1c), (x2c, y2c), (50, 0, 0), -1)
     elif roi_h <= 0 or roi_w <= 0:
         logger.debug("Menu overlay ROI has zero or negative size, skipping overlay.")

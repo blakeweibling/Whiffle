@@ -108,7 +108,7 @@ class GameState:
             except Exception as e:
                 logger.exception(f"Static frame load/validate fail: {e}")
                 raise
-             # Corrected Indentation Block Ends Here
+            # Corrected Indentation Block Ends Here
 
         # Game Variables
         logger.info("Initializing game variables...")
@@ -160,6 +160,11 @@ class GameState:
         self.editing_zone_index: Optional[int] = None
         self.editing_zone_mode: Optional[str] = None # e.g., 'edit_points', 'confirm_delete'
         self.editing_zone_points_input: Optional[str] = None
+
+        # --- NEW: Edit Zones Pagination State ---
+        self.edit_zones_page: int = 0 # Current page (0-indexed)
+        self.edit_zones_per_page: int = 10 # Number of zones per page
+        # --- END NEW ---
 
         # --- NEW: Interactive Zone Editing State (Move/Resize) ---
         self.selected_zone_for_edit: Optional[int] = None # Index of the zone being interactively edited
@@ -313,18 +318,18 @@ class GameState:
         if self.background_music:
             current_volume = self.background_music.get_volume()
             if self.background_music_on and current_volume == 0.0:
-                 self.background_music.set_volume(GameConstants.DEFAULT_MUSIC_VOLUME)
-                 self.background_music.play(-1) # Loop indefinitely
-                 logger.info("Background music started/resumed.")
+                self.background_music.set_volume(GameConstants.DEFAULT_MUSIC_VOLUME)
+                self.background_music.play(-1) # Loop indefinitely
+                logger.info("Background music started/resumed.")
             elif not self.background_music_on and current_volume > 0.0:
-                 self.background_music.set_volume(0.0)
-                 self.background_music.stop() # Stop playback completely
-                 logger.info("Background music stopped.")
+                self.background_music.set_volume(0.0)
+                self.background_music.stop() # Stop playback completely
+                logger.info("Background music stopped.")
             # Handle cases where flag and state are already aligned (do nothing or just log)
             elif self.background_music_on and current_volume > 0.0:
-                 logger.debug("Background music already playing.")
+                logger.debug("Background music already playing.")
             elif not self.background_music_on and current_volume == 0.0:
-                 logger.debug("Background music already stopped.")
+                logger.debug("Background music already stopped.")
         else:
             logger.warning("Cannot toggle: Background music not loaded.")
 
@@ -449,7 +454,7 @@ class GameState:
             # Use submit_score for leaderboard (queues for batch)
             if hasattr(self, 'leaderboard') and self.leaderboard:
                  self.leaderboard.submit_score(
-                     player_name, score_to_save, current_mode
+                    player_name, score_to_save, current_mode
                  )
             else:
                  logger.error("Leaderboard object not available in game_state. Cannot submit score online.")
@@ -706,7 +711,7 @@ class GameState:
                       # Also remove from balls_in_zone if needed
                       self.balls_in_zone.pop(ball_id, None)
                       logger.debug(
-                          f"Ball {ball_id} left/became unstable in zone {last_scored_zone_idx}. Cleared its scored status for this entry."
+                           f"Ball {ball_id} left/became unstable in zone {last_scored_zone_idx}. Cleared its scored status for this entry."
                       )
                       # Optional: Remove from legacy scored_balls list if using it
                       if ball_id in self.scored_balls:
@@ -750,6 +755,10 @@ class GameState:
         self.ball_zone_history.clear()
         self.zone_cooldown.clear()
         self.win_condition_met = False
+
+        # --- NEW: Reset pagination state ---
+        self.edit_zones_page = 0
+        # --- END NEW ---
 
         # Reset menu editing states
         self.editing_zone_index = None

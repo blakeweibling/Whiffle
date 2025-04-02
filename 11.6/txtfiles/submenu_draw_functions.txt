@@ -10,6 +10,7 @@ import cv2
 import numpy as np
 import logging
 from typing import Any
+import math # Import math for ceil
 
 # Import constants and utilities needed by these functions
 # Ensure ScoringConstants and CurrentGameState are imported if needed by updated functions
@@ -630,9 +631,10 @@ def _draw_about_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
     )
     game_state.menu_height = back_y + item_height + 20
 
+
 # --- REPLACED Edit Zones Submenu ---
 def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
-    """Draw the Edit Zones submenu with Move/Resize options."""
+    """Draw the Edit Zones submenu with Move/Resize options and pagination."""
     cv2.putText(
         menu_frame,
         "Edit Scoring Zones",
@@ -643,21 +645,43 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         UIConstants.FONT_THICKNESS,
     )
 
-    y_offset = 80
-    item_height = 30  # Make items smaller to fit more buttons
-    button_width = 45  # Reduced from 55 to fit all buttons
-    button_spacing = 3  # Reduced from 5
-    # Recalculate list width based on 4 buttons (Edit, Move, Resize, Delete)
-    num_buttons = 4
+    # Use a reasonable starting Y offset
+    header_offset = 80
+    y_offset = header_offset # y_offset will track the bottom of the list items
+
+    item_height = 30  # Height for each zone item row
+    button_width = 45  # Width for Pts/Move/Resize/Del buttons
+    button_spacing = 3
+    num_buttons = 4 # Pts, Move, Resize, Del
     actions_width = (button_width * num_buttons) + (button_spacing * (num_buttons - 1))
     list_width = menu_frame.shape[1] - 40 - actions_width - button_spacing
 
     game_state.submenu_items.clear()
 
+    # --- Pagination Logic ---
+    per_page = game_state.edit_zones_per_page
+    current_page = game_state.edit_zones_page
+    total_zones = len(game_state.scoring_zones)
+    # Calculate total pages, ensuring it's at least 1 even if total_zones is 0
+    total_pages = max(1, math.ceil(total_zones / per_page))
+
+    # Clamp current page to valid range (0 to total_pages - 1)
+    current_page = max(0, min(current_page, total_pages - 1))
+    game_state.edit_zones_page = current_page # Update state if clamped
+
+    start_index = current_page * per_page
+    end_index = min(start_index + per_page, total_zones) # Ensure end_index doesn't exceed total
+    zones_to_display = game_state.scoring_zones[start_index:end_index]
+    # --- End Pagination Logic ---
+
+
+    # Instruction Texts (Points Edit / Delete Confirm)
     confirm_delete_message = None
     if (
         game_state.editing_zone_mode == "confirm_delete"
         and game_state.editing_zone_index is not None
+        # Check if the index being confirmed is on the current page
+        and start_index <= game_state.editing_zone_index < end_index
     ):
         confirm_delete_message = f"Click Delete again for Zone {game_state.editing_zone_index + 1} to confirm?"
 
@@ -665,6 +689,8 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
     if (
         game_state.editing_zone_mode == "edit_points"
         and game_state.editing_zone_index is not None
+        # Check if the index being edited is on the current page
+        and start_index <= game_state.editing_zone_index < end_index
     ):
         edit_instruction_message = "Enter points (0-9), Bksp=Delete, Enter=Save"
 
@@ -674,49 +700,56 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         cv2.putText(
             menu_frame,
             top_message,
-            (20, y_offset - 5),
+            (20, header_offset - 25), # Position above list headers
             cv2.FONT_HERSHEY_SIMPLEX,
             UIConstants.FONT_SCALE_SMALL,
             UIConstants.YELLOW,
             1,
         )
-        y_offset += 15
+    # --- End Instruction Text ---
 
-    if not game_state.scoring_zones:
+    # --- Draw List Header ---
+    cv2.putText(
+        menu_frame, "Zone", (20, header_offset - 5), cv2.FONT_HERSHEY_SIMPLEX,
+        UIConstants.FONT_SCALE_SMALL, UIConstants.YELLOW, 1
+    )
+    cv2.putText(
+        menu_frame, "Actions", (20 + list_width + button_spacing, header_offset - 5),
+        cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_SMALL, UIConstants.YELLOW, 1
+    )
+    y_offset = header_offset # Start list below headers
+    # --- End List Header ---
+
+    # --- Draw Zone List for Current Page ---
+    if not zones_to_display:
+        # Handle case with no zones or empty page (shouldn't happen with total_pages >= 1)
         cv2.putText(
             menu_frame,
-            "No zones defined.",
+            "No zones defined." if total_zones == 0 else "...", # Indicate empty page if zones exist
             (20, y_offset + 20),
             cv2.FONT_HERSHEY_SIMPLEX,
             UIConstants.FONT_SCALE_MEDIUM,
             UIConstants.WHITE,
             1,
         )
-        y_offset += item_height + 5
+        y_offset += item_height + 5 # Increment y_offset even if list is empty
     else:
-        # Column Headers
-        cv2.putText(
-            menu_frame, "Zone", (20, y_offset - 5), cv2.FONT_HERSHEY_SIMPLEX,
-            UIConstants.FONT_SCALE_SMALL, UIConstants.YELLOW, 1
-        )
-        cv2.putText(
-            menu_frame, "Actions", (20 + list_width + button_spacing, y_offset - 5),
-            cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_SMALL, UIConstants.YELLOW, 1
-        )
-
-        for i, zone in enumerate(game_state.scoring_zones):
+        # Display zones for the current page
+        for idx, zone in enumerate(zones_to_display):
+            original_index = start_index + idx # Get the index in the original list
             x_z, y_z, w_z, h_z, points = zone
-            zone_label = f"{i+1}: @({x_z},{y_z}) Pts="
+            # Use original_index + 1 for display label
+            zone_label = f"{original_index+1}: @({x_z},{y_z}) Pts="
             label_color = UIConstants.WHITE
 
             # Highlight if editing points for this zone
             if (
-                game_state.editing_zone_index == i
+                game_state.editing_zone_index == original_index
                 and game_state.editing_zone_mode == "edit_points"
             ):
                 input_display = (
                     game_state.editing_zone_points_input
-                    if game_state.editing_zone_points_input
+                    if game_state.editing_zone_points_input is not None # Check for None
                     else "___"
                 )
                 zone_label += f"[ {input_display} ]"
@@ -725,77 +758,120 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
                 zone_label += str(points)
 
             # Highlight if this zone is selected for interactive edit
-            if game_state.selected_zone_for_edit == i:
+            if game_state.selected_zone_for_edit == original_index:
                 label_color = UIConstants.ZONE_EDIT_SELECTED_COLOR  # Yellow highlight
 
             # Draw Zone Label
             cv2.putText(
                 menu_frame,
                 zone_label[:45],  # Truncate if too long
-                (20, y_offset + 20),
+                (20, y_offset + 20), # Position text vertically centered in item_height
                 cv2.FONT_HERSHEY_SIMPLEX,
                 UIConstants.FONT_SCALE_SMALL,
                 label_color,
                 1,
             )
 
-            # --- Action Buttons ---
+            # --- Action Buttons (Use original_index for actions) ---
             button_x = 20 + list_width + button_spacing
 
             # Edit Points Button ("Pts")
             edit_rect = (button_x, y_offset, button_width, item_height)
             edit_color = (
                 UIConstants.GREEN
-                if game_state.editing_zone_index == i
+                if game_state.editing_zone_index == original_index
                 and game_state.editing_zone_mode == "edit_points"
                 else UIConstants.CV2_BLUE
             )
-            logger.debug(f"Drawing 'Pts' button for zone {i+1} at x={button_x}")
             _draw_button(menu_frame, button_x, y_offset, button_width, item_height, "Pts", edit_color, UIConstants.FONT_SCALE_SMALL)
-            game_state.submenu_items.append((edit_rect, f"edit_zone_{i}", f"Edit Zone {i+1} Points"))
+            # Action uses original_index
+            game_state.submenu_items.append((edit_rect, f"edit_zone_{original_index}", f"Edit Zone {original_index+1} Points"))
             button_x += button_width + button_spacing
 
             # Move Button
             move_rect = (button_x, y_offset, button_width, item_height)
             is_moving_this_zone = (
                 game_state.current_state == CurrentGameState.ZONE_EDITING and
-                game_state.selected_zone_for_edit == i and
+                game_state.selected_zone_for_edit == original_index and
                 game_state.zone_editing_action == 'move'
             )
             move_color = UIConstants.ZONE_EDIT_MOVE_COLOR if is_moving_this_zone else UIConstants.CV2_BLUE
-            logger.debug(f"Drawing 'Move' button for zone {i+1} at x={button_x}, color={move_color}")
             _draw_button(menu_frame, button_x, y_offset, button_width, item_height, "Move", move_color, UIConstants.FONT_SCALE_SMALL)
-            game_state.submenu_items.append((move_rect, f"move_zone_{i}", f"Move Zone {i+1}"))
+            # Action uses original_index
+            game_state.submenu_items.append((move_rect, f"move_zone_{original_index}", f"Move Zone {original_index+1}"))
             button_x += button_width + button_spacing
 
             # Resize Button
             resize_rect = (button_x, y_offset, button_width, item_height)
             is_resizing_this_zone = (
                 game_state.current_state == CurrentGameState.ZONE_EDITING and
-                game_state.selected_zone_for_edit == i and
+                game_state.selected_zone_for_edit == original_index and
                 game_state.zone_editing_action and game_state.zone_editing_action.startswith('resize')
             )
             resize_color = UIConstants.ZONE_EDIT_RESIZE_COLOR if is_resizing_this_zone else UIConstants.CV2_BLUE
-            logger.debug(f"Drawing 'Resize' button for zone {i+1} at x={button_x}, color={resize_color}")
             _draw_button(menu_frame, button_x, y_offset, button_width, item_height, "Resize", resize_color, UIConstants.FONT_SCALE_SMALL)
-            game_state.submenu_items.append((resize_rect, f"resize_zone_{i}", f"Resize Zone {i+1}"))
+            # Action uses original_index
+            game_state.submenu_items.append((resize_rect, f"resize_zone_{original_index}", f"Resize Zone {original_index+1}"))
             button_x += button_width + button_spacing
 
             # Delete Button ("Del")
             delete_rect = (button_x, y_offset, button_width, item_height)
             delete_color = (
                 UIConstants.RED
-                if game_state.editing_zone_index == i
+                if game_state.editing_zone_index == original_index
                 and game_state.editing_zone_mode == "confirm_delete"
                 else UIConstants.CV2_BLUE
             )
-            logger.debug(f"Drawing 'Del' button for zone {i+1} at x={button_x}")
             _draw_button(menu_frame, button_x, y_offset, button_width, item_height, "Del", delete_color, UIConstants.FONT_SCALE_SMALL)
-            game_state.submenu_items.append((delete_rect, f"delete_zone_{i}", f"Delete Zone {i+1}"))
+            # Action uses original_index
+            game_state.submenu_items.append((delete_rect, f"delete_zone_{original_index}", f"Delete Zone {original_index+1}"))
 
-            y_offset += item_height + 5
+            y_offset += item_height + 5 # Move y_offset down for the next item
+    # --- End Zone List ---
 
-    # Back Button (adjust position)
+    # --- Pagination Controls ---
+    page_y = y_offset + 5 # Position below the list items
+    page_item_height = 30
+    page_button_width = 100
+    page_text_width = 120 # Approx width for "Page X / Y"
+    controls_width = page_button_width * 2 + page_text_width + button_spacing * 2
+    # Center controls horizontally
+    controls_start_x = (menu_frame.shape[1] - controls_width) // 2
+
+    # Draw Previous Button
+    prev_x = controls_start_x
+    if current_page > 0:
+        prev_rect = (prev_x, page_y, page_button_width, page_item_height)
+        _draw_button(menu_frame, prev_x, page_y, page_button_width, page_item_height, "<< Prev", UIConstants.CV2_BLUE, UIConstants.FONT_SCALE_SMALL)
+        game_state.submenu_items.append((prev_rect, "edit_zones_prev_page", "Previous Page"))
+    else:
+         # Draw disabled button look
+        _draw_button(menu_frame, prev_x, page_y, page_button_width, page_item_height, "<< Prev", UIConstants.GREY_BG, UIConstants.FONT_SCALE_SMALL)
+
+
+    # Draw Page Info
+    page_text = f"Page {current_page + 1} / {total_pages}"
+    page_text_x = prev_x + page_button_width + button_spacing
+    page_text_y = page_y + page_item_height // 2 + 5 # Adjust for vertical centering
+    (ptw, pth), _ = cv2.getTextSize(page_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_SMALL, 1)
+    # Center text within its allocated space
+    cv2.putText(menu_frame, page_text, (page_text_x + (page_text_width - ptw)//2, page_text_y), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_SMALL, UIConstants.WHITE, 1)
+
+    # Draw Next Button
+    next_x = page_text_x + page_text_width + button_spacing
+    if current_page < total_pages - 1:
+        next_rect = (next_x, page_y, page_button_width, page_item_height)
+        _draw_button(menu_frame, next_x, page_y, page_button_width, page_item_height, "Next >>", UIConstants.CV2_BLUE, UIConstants.FONT_SCALE_SMALL)
+        game_state.submenu_items.append((next_rect, "edit_zones_next_page", "Next Page"))
+    else:
+         # Draw disabled button look
+        _draw_button(menu_frame, next_x, page_y, page_button_width, page_item_height, "Next >>", UIConstants.GREY_BG, UIConstants.FONT_SCALE_SMALL)
+
+    y_offset = page_y + page_item_height + 5 # Update y_offset below pagination controls
+    # --- End Pagination Controls ---
+
+
+    # Back Button (position below pagination)
     back_y = y_offset + 10
     item_height = 35  # Reset item height for Back button
     _draw_button(
@@ -811,8 +887,10 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
     game_state.submenu_items.append(
         (
             (20, back_y, menu_frame.shape[1] - 40, item_height),
-            "back_to_manage_zones",
+            "back_to_manage_zones", # Action to return to the parent menu
             "Back",
         )
     )
-    game_state.menu_height = back_y + item_height + 20  # Adjust height based on content
+    # --- MODIFICATION: Increased bottom padding ---
+    game_state.menu_height = back_y + item_height + 20  # Increased padding from 20 to 40
+    # --- END MODIFICATION ---
