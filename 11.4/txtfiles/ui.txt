@@ -42,7 +42,7 @@ def _draw_player_name_input(frame: np.ndarray, game_state: GameState):
     cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
 
     # Pop-up box dimensions
-    popup_width = 500
+    popup_width = 700
     popup_height = 200
     popup_x = (frame.shape[1] - popup_width) // 2
     popup_y = (frame.shape[0] - popup_height) // 2

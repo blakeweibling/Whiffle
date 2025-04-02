@@ -237,9 +237,9 @@ class GameConstants:
     REST_THRESHOLD_DISTANCE: float = _assert_non_negative(
         5.0, "REST_THRESHOLD_DISTANCE"
     )
-    ZONE_STABILITY_FRAMES: int = _assert_positive(10, "ZONE_STABILITY_FRAMES")
+    ZONE_STABILITY_FRAMES: int = _assert_positive(45, "ZONE_STABILITY_FRAMES")
     SCORE_COOLDOWN_DURATION: float = _assert_non_negative(
-        3000.0, "SCORE_COOLDOWN_DURATION"
+        9000.0, "SCORE_COOLDOWN_DURATION"
     )
 
     # Ball Tracking / Trail
@@ -320,7 +320,7 @@ class TrackingConstants:
     SCORED_DISTANCE_THRESHOLD: float = _assert_positive(
         100.0, "SCORED_DISTANCE_THRESHOLD"
     )
-    MAX_AGE_FRAMES: int = _assert_positive(30, "MAX_AGE_FRAMES")
+    MAX_AGE_FRAMES: int = _assert_positive(30000, "MAX_AGE_FRAMES")
 
 
 class ScoringConstants:

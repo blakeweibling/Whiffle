@@ -239,7 +239,7 @@ class GameConstants:
     )
     ZONE_STABILITY_FRAMES: int = _assert_positive(10, "ZONE_STABILITY_FRAMES")
     SCORE_COOLDOWN_DURATION: float = _assert_non_negative(
-        3000.0, "SCORE_COOLDOWN_DURATION"
+        9000.0, "SCORE_COOLDOWN_DURATION"
     )
 
     # Ball Tracking / Trail
