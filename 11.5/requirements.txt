@@ -1,7 +1,12 @@
-opencv-python
-ultralytics
-pygame
 numpy
-python-dotenv
+opencv-python
+pygame
+ultralytics
 requests
-# scipy # Optional: Used for KDTree-based tracking in tracking.py, uncomment if needed
+scipy
+python-dotenv
+setuptools 
+# Note: Python ver 3.10 or higher is required to play this game
+# Note: use "pip install -r requirements.txt" to satisfy the requirements of this game
+# Note: setuptools is usually included with Python/pip but explicitly listed due to setup.txt [cite: 598]
+# Note: cx_Freeze is used for building the executable [cite: 596] but not strictly required to run the script directly.

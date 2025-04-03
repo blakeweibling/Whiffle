@@ -1,14 +1,13 @@
-# utils.py
+# utils_mouse_logic.py
 
 import cv2
 import logging
-import numpy as np  # Import numpy for calculations
 from typing import Any, Tuple, Optional, Callable
 
 # Imports needed for mouse_callback helpers
 from constants import UIConstants, GameConstants, ScoringConstants
 from menu import (
-    save_zones,  # Keep for saving after edits
+    save_zones,
     reset_game,
     load_zones,
     clear_zones,
@@ -29,44 +28,23 @@ from ui_screens import display_modal_splash
 # Import overlap check function
 from scoring import _zones_overlap
 
+# Potentially import clean_exit if needed directly (or handle it in the main loop)
+try:
+    from cleanup_utils import clean_exit
+except ImportError:
+    # Define a placeholder or handle the error if cleanup_utils might be missing
+    def clean_exit(*args, **kwargs):
+        logging.error("clean_exit function not available.")
+        # Decide on fallback behavior, e.g., raise SystemExit
+        raise SystemExit("Exiting due to missing cleanup_utils.")
+
+
 logger = logging.getLogger(__name__)
-
-
-# --- Helper: Find which handle/area of a zone is clicked ---
-def _get_zone_click_location(
-    x: int, y: int, zone_rect: Tuple[int, int, int, int]
-) -> Optional[str]:
-    """Determine if a click is on a corner, edge, or inside a zone."""
-    zx, zy, zw, zh = zone_rect
-    handle_size = UIConstants.ZONE_EDIT_HANDLE_SIZE
-    half_handle = handle_size // 2
-
-    # Check corners first (priority)
-    if abs(x - zx) < half_handle and abs(y - zy) < half_handle:
-        return "resize_tl"
-    if abs(x - (zx + zw)) < half_handle and abs(y - zy) < half_handle:
-        return "resize_tr"
-    if abs(x - zx) < half_handle and abs(y - (zy + zh)) < half_handle:
-        return "resize_bl"
-    if abs(x - (zx + zw)) < half_handle and abs(y - (zy + zh)) < half_handle:
-        return "resize_br"
-
-    # Check edges (optional, could add later if needed)
-    # if abs(x - zx) < half_handle and zy < y < zy + zh: return "resize_l"
-    # if abs(x - (zx + zw)) < half_handle and zy < y < zy + zh: return "resize_r"
-    # if abs(y - zy) < half_handle and zx < x < zx + zw: return "resize_t"
-    # if abs(y - (zy + zh)) < half_handle and zx < x < zx + zw: return "resize_b"
-
-    # Check if inside
-    if zx < x < zx + zw and zy < y < zy + zh:
-        return "move"
-
-    return None
 
 
 # --- Helper: Process Interactive Zone Editing Mouse Events ---
 def _process_zone_editing_event(
-    event: int, x: int, y: int, game_state: GameState
+    event: int, x: int, y: int, game_state: GameState, get_click_loc_func: Callable
 ) -> bool:
     """Process mouse events during interactive zone move/resize."""
     handled = False
@@ -81,37 +59,31 @@ def _process_zone_editing_event(
         game_state.original_zone_on_drag_start = None
         game_state.current_state = (
             game_state.previous_state or CurrentGameState.MENU
-        )  # Revert state
+        ) # Revert state
         return False
 
     current_zone = game_state.scoring_zones[zone_idx]
-    zx, zy, zw, zh, zp = current_zone  # Unpack including points
+    zx, zy, zw, zh, zp = current_zone # Unpack including points
 
-    min_size = ScoringConstants.MIN_ZONE_SIZE  # Minimum width/height
+    min_size = ScoringConstants.MIN_ZONE_SIZE # Minimum width/height
 
     if event == cv2.EVENT_LBUTTONDOWN:
-        click_location = _get_zone_click_location(x, y, (zx, zy, zw, zh))
+        # Use the passed-in function to get click location
+        click_location = get_click_loc_func(x, y, (zx, zy, zw, zh))
         if click_location:
             game_state.zone_editing_action = click_location
             game_state.drag_start_pos = (x, y)
             game_state.original_zone_on_drag_start = (
-                current_zone  # Store original state
+                current_zone # Store original state
             )
             logger.info(
                 f"Starting zone edit action: {click_location} for zone {zone_idx} at ({x},{y})"
             )
             handled = True
         else:
-            # Click outside the selected zone while in editing mode could perhaps cancel?
-            logger.debug("Click outside selected zone during ZONE_EDITING state.")
-            # Optionally cancel here:
-            # game_state.current_state = game_state.previous_state or CurrentGameState.MENU
-            # game_state.selected_zone_for_edit = None
-            # game_state.zone_editing_action = None
-            # game_state.drag_start_pos = None
-            # game_state.original_zone_on_drag_start = None
-            # handled = True
-            pass  # Currently, clicking outside does nothing, requires ESC
+             # Click outside the selected zone while in editing mode could perhaps cancel?
+             logger.debug("Click outside selected zone during ZONE_EDITING state.")
+             pass # Currently, clicking outside does nothing, requires ESC
 
     elif event == cv2.EVENT_MOUSEMOVE:
         if game_state.drag_start_pos and game_state.zone_editing_action:
@@ -159,7 +131,7 @@ def _process_zone_editing_event(
             game_state.scoring_zones[zone_idx] = (new_x, new_y, new_w, new_h, zp)
             # Update drag start position for next move event
             game_state.drag_start_pos = (x, y)
-            handled = True  # Mouse move during drag is handled
+            handled = True # Mouse move during drag is handled
 
     elif event == cv2.EVENT_LBUTTONUP:
         if game_state.drag_start_pos and game_state.zone_editing_action:
@@ -173,7 +145,7 @@ def _process_zone_editing_event(
 
             # Check for overlap with OTHER zones
             other_zones = [
-                z for i, z in enumerate(game_state.scoring_zones) if i != zone_idx
+                 z for i, z in enumerate(game_state.scoring_zones) if i != zone_idx
             ]
             if _zones_overlap(final_zone[:4], other_zones):
                 logger.warning(
@@ -188,17 +160,14 @@ def _process_zone_editing_event(
                         game_state.original_zone_on_drag_start
                     )
                 else:
-                    # Should not happen, but maybe delete if revert fails? Risky.
-                    logger.error(
+                     # Should not happen, but maybe delete if revert fails? Risky.
+                     logger.error(
                         "Cannot revert overlapping zone, original state missing!"
                     )
             else:
                 logger.debug(f"Zone {zone_idx} updated to: {final_zone}")
                 # Update special hole if necessary
                 game_state.special_hole = set_special_hole(game_state.scoring_zones)
-                # Consider auto-saving here?
-                # save_zones(game_state)
-                # game_state.show_notification(f"Zone {zone_idx+1} Updated")
 
             # Reset editing state
             game_state.zone_editing_action = None
@@ -210,7 +179,7 @@ def _process_zone_editing_event(
     return handled
 
 
-# --- Drawing Event Processing (Unchanged but included for context) ---
+# --- Drawing Event Processing ---
 def _process_drawing_event(event: int, x: int, y: int, game_state: GameState) -> None:
     """Process mouse events for drawing scoring zones."""
     if event == cv2.EVENT_LBUTTONDOWN:
@@ -252,15 +221,15 @@ def _process_drawing_event(event: int, x: int, y: int, game_state: GameState) ->
                                 f"Points must be 1-{ScoringConstants.MAX_POINTS}. Using default.",
                                 is_error=True,
                                 duration=3.0,
-                            )
+                             )
                         else:
                             logger.info(f"Using entered points: {points}")
                     except ValueError:
-                        logger.warning(
+                         logger.warning(
                             f"Invalid points input '{points_str}'. Using default {ScoringConstants.DEFAULT_POINTS}."
                         )
-                        points = ScoringConstants.DEFAULT_POINTS
-                        if points_str:
+                         points = ScoringConstants.DEFAULT_POINTS
+                         if points_str:
                             game_state.show_notification(
                                 f"Invalid points input. Using default.",
                                 is_error=True,
@@ -298,8 +267,8 @@ def _process_drawing_event(event: int, x: int, y: int, game_state: GameState) ->
             logger.info("Drawing finished.")
 
 
-# --- Menu/Game Over Click Processing (Modified for Zone Edit Actions) ---
-def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bool:
+# --- Menu/Game Over Click Processing ---
+def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState, main_mouse_callback: Callable) -> bool:
     """Process clicks within the menu or game over screen, including zone edit actions."""
     if game_state.current_state not in [
         CurrentGameState.MENU,
@@ -363,15 +332,16 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                 game_state.editing_player_mode = None
                 game_state.editing_player_name_input = None
                 # Don't reset interactive zone edit state here, handled by specific actions/ESC key
-                # game_state.selected_zone_for_edit = None
-                # game_state.zone_editing_action = None
-                # game_state.drag_start_pos = None
                 game_state.menu_cache = None
 
             if isinstance(action, Callable):
                 logger.debug("Action is Callable.")
                 try:
-                    action()
+                    # If the action is display_modal_splash, it needs the main mouse callback
+                    if action.__name__ == 'display_modal_splash':
+                         action(game_state, main_mouse_callback, game_state) # Pass main callback
+                    else:
+                         action()
                 except Exception as e:
                     logger.error(f"Error executing callable action for '{label}': {e}")
                 if game_state.current_state == CurrentGameState.MENU:
@@ -379,55 +349,57 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                 return True
 
             elif isinstance(action, str):
-                logger.debug("Action is string. Checking specific string values...")
+                 logger.debug("Action is string. Checking specific string values...")
 
-                # Universal Quit Action
-                if action == "quit":
+                 # Universal Quit Action
+                 if action == "quit":
                     logger.debug("Action matched: 'quit'")
                     try:
-                        from cleanup_utils import clean_exit
-
-                        try:
-                            if hasattr(game_state, "get_current_player") and hasattr(
-                                game_state, "save_score"
-                            ):
-                                player = game_state.get_current_player()
-                                if player and hasattr(player, "name"):
-                                    game_state.save_score(player.name)
-                        except Exception as e:
-                            logger.error(f"Error saving score on quit action: {e}")
-                        clean_exit(
+                         # Attempt to save score before exiting
+                         try:
+                             if hasattr(game_state, "get_current_player") and hasattr(
+                                 game_state, "save_score"
+                             ):
+                                 player = game_state.get_current_player()
+                                 if player and hasattr(player, "name"):
+                                     game_state.save_score(player.name)
+                         except Exception as e:
+                             logger.error(f"Error saving score on quit action: {e}")
+                         # Call clean_exit (now imported at the top)
+                         clean_exit(
                             game_state.cap,
                             game_state.background_music,
                             game_state.background_music_on,
                             game_state,
-                        )
-                    except ImportError:
-                        logger.error(
-                            "Could not import clean_exit. Cannot quit properly via menu."
-                        )
-                    return True
+                         )
+                    except NameError: # Catch if clean_exit wasn't imported
+                         logger.error("clean_exit function not loaded. Cannot quit properly via menu.")
+                    except Exception as e:
+                         logger.error(f"Error during clean_exit call: {e}")
+                         raise SystemExit("Exiting due to error during cleanup.")
+                    return True # Indicate quit action was processed
 
-                # Menu State Actions
-                if game_state.current_state == CurrentGameState.MENU:
-                    logger.debug("Processing actions for MENU state...")
+                 # Menu State Actions (Logic remains the same as before)
+                 if game_state.current_state == CurrentGameState.MENU:
+                     logger.debug("Processing actions for MENU state...")
 
-                    if action == "show_splash":
+                     if action == "show_splash":
                         logger.debug("Action matched: 'show_splash'")
-                        display_modal_splash(game_state, mouse_callback, game_state)
+                        # Call display_modal_splash with the main mouse_callback
+                        display_modal_splash(game_state, main_mouse_callback, game_state)
                         game_state.menu_cache = None
                         return True
 
-                    elif action == "resume":
+                     elif action == "resume":
                         logger.debug("Action matched: 'resume'")
                         game_state.current_state = CurrentGameState.PLAYING
                         reset_editing_states()
                         game_state.submenu_active = None
-                    elif action == "back_to_main":
+                     elif action == "back_to_main":
                         logger.debug("Action matched: 'back_to_main'")
                         reset_editing_states()
                         game_state.submenu_active = None
-                    elif action == "add_zone_info":
+                     elif action == "add_zone_info":
                         logger.debug("Action matched: 'add_zone_info'")
                         game_state.show_notification(
                             "Press 's', then click and drag to draw zone"
@@ -435,27 +407,29 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                         game_state.current_state = CurrentGameState.PLAYING
                         reset_editing_states()
                         game_state.submenu_active = None
-                    elif action == "clear_zones":
+                     elif action == "clear_zones":
                         logger.debug("Action matched: 'clear_zones'")
                         clear_zones(game_state)
                         reset_editing_states()
-                    elif action == "save_zones":
+                     elif action == "save_zones":
                         logger.debug("Action matched: 'save_zones'")
                         save_zones(game_state)
                         game_state.menu_cache = None
-                    elif action == "load_zones":
+                     elif action == "load_zones":
                         logger.debug("Action matched: 'load_zones'")
                         load_zones(game_state)
                         reset_editing_states()
-                    elif action.startswith("set_mode_"):
+                     elif action.startswith("set_mode_"):
                         logger.debug("Action matched: 'set_mode_*'")
                         new_mode = action.split("set_mode_")[1]
                         if game_state.game_mode != new_mode:
                             logger.info(f"Game mode changing to: {new_mode}")
-                            game_state.save_score(
-                                game_state.get_current_player().name,
-                                mode=game_state.game_mode,
-                            )
+                            current_player = game_state.get_current_player()
+                            if current_player:
+                                game_state.save_score(
+                                    current_player.name,
+                                    mode=game_state.game_mode,
+                                )
                             game_state.game_mode = new_mode
                             reset_game(game_state)
                         else:
@@ -463,7 +437,7 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                         reset_editing_states()
                         game_state.submenu_active = None
                         game_state.current_state = CurrentGameState.PLAYING
-                    elif action.startswith("select_player_"):
+                     elif action.startswith("select_player_"):
                         logger.debug("Action matched: 'select_player_*'")
                         try:
                             index = int(action.split("select_player_")[1])
@@ -471,9 +445,9 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                                 0 <= index < len(game_state.players)
                                 and index != game_state.current_player_index
                             ):
-                                game_state.save_score(
-                                    game_state.get_current_player().name
-                                )
+                                current_player = game_state.get_current_player()
+                                if current_player:
+                                    game_state.save_score(current_player.name)
                                 game_state.current_player_index = index
                                 logger.info(
                                     f"Switched to player: {game_state.get_current_player().name}"
@@ -490,7 +464,7 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                                 f"Error parsing player index from action: {action} - {e}"
                             )
                         reset_editing_states()
-                    elif action == "add_player":
+                     elif action == "add_player":
                         logger.debug("Action matched: 'add_player'")
                         if len(game_state.players) < 2:
                             player_number = len(game_state.players) + 1
@@ -506,13 +480,13 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                                 "Maximum 2 players supported", is_error=True
                             )
                         reset_editing_states()
-                    elif action == "back_to_manage_zones":
+                     elif action == "back_to_manage_zones":
                         logger.debug("Action matched: 'back_to_manage_zones'")
                         game_state.submenu_active = "manage_zones"
                         reset_editing_states()
 
-                    # --- Zone Points Editing ---
-                    elif action.startswith("edit_zone_"):
+                     # Zone Points Editing
+                     elif action.startswith("edit_zone_"):
                         logger.debug("Action matched: 'edit_zone_*' (Points)")
                         try:
                             index = int(action.split("edit_zone_")[1])
@@ -541,72 +515,37 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                             )
                             reset_editing_states()
 
-                    # --- NEW: Interactive Zone Move ---
-                    elif action.startswith("move_zone_"):
-                        logger.debug("Action matched: 'move_zone_*'")
+                     # Interactive Zone Move/Resize Trigger
+                     elif action.startswith(("move_zone_", "resize_zone_")):
+                        zone_action_type = "move" if action.startswith("move_") else "resize"
+                        logger.debug(f"Action matched: '{zone_action_type}_zone_*'")
                         try:
-                            index = int(action.split("move_zone_")[1])
+                            index_str = action.split(f"{zone_action_type}_zone_")[1]
+                            index = int(index_str)
                             if 0 <= index < len(game_state.scoring_zones):
-                                reset_editing_states()  # Clear points/delete confirms
+                                reset_editing_states() # Clear points/delete confirms
                                 game_state.selected_zone_for_edit = index
-                                game_state.previous_state = (
-                                    CurrentGameState.MENU
-                                )  # Store where we came from
+                                game_state.previous_state = CurrentGameState.MENU
                                 game_state.current_state = CurrentGameState.ZONE_EDITING
-                                game_state.zone_editing_action = (
-                                    None  # Start in selecting mode within ZONE_EDITING
-                                )
+                                game_state.zone_editing_action = None
                                 game_state.drag_start_pos = None
                                 game_state.original_zone_on_drag_start = None
                                 logger.info(
-                                    f"Entering ZONE_EDITING state to move zone {index+1}."
+                                    f"Entering ZONE_EDITING state to {zone_action_type} zone {index+1}."
                                 )
                                 game_state.show_notification(
-                                    "Click inside zone to move, ESC to cancel",
+                                    "Click inside zone to move, handles to resize, ESC to cancel",
                                     duration=0,
-                                )  # Persistent until ESC
+                                ) # Persistent until ESC
                             else:
-                                logger.warning(f"Invalid zone index for move: {index}")
-                        except (ValueError, IndexError) as e:
+                                logger.warning(f"Invalid zone index for {zone_action_type}: {index}")
+                        except (ValueError, IndexError, Exception) as e:
                             logger.error(
-                                f"Error parsing zone index from move action: {action} - {e}"
+                                f"Error parsing zone index from {zone_action_type} action: {action} - {e}"
                             )
 
-                    # --- NEW: Interactive Zone Resize ---
-                    elif action.startswith("resize_zone_"):
-                        logger.debug("Action matched: 'resize_zone_*'")
-                        try:
-                            index = int(action.split("resize_zone_")[1])
-                            if 0 <= index < len(game_state.scoring_zones):
-                                reset_editing_states()  # Clear points/delete confirms
-                                game_state.selected_zone_for_edit = index
-                                game_state.previous_state = (
-                                    CurrentGameState.MENU
-                                )  # Store where we came from
-                                game_state.current_state = CurrentGameState.ZONE_EDITING
-                                game_state.zone_editing_action = (
-                                    None  # Start in selecting mode within ZONE_EDITING
-                                )
-                                game_state.drag_start_pos = None
-                                game_state.original_zone_on_drag_start = None
-                                logger.info(
-                                    f"Entering ZONE_EDITING state to resize zone {index+1}."
-                                )
-                                game_state.show_notification(
-                                    "Click corner handles to resize, ESC to cancel",
-                                    duration=0,
-                                )  # Persistent until ESC
-                            else:
-                                logger.warning(
-                                    f"Invalid zone index for resize: {index}"
-                                )
-                        except (ValueError, IndexError) as e:
-                            logger.error(
-                                f"Error parsing zone index from resize action: {action} - {e}"
-                            )
-
-                    # --- Player Name Editing ---
-                    elif action.startswith("edit_player_name_"):
+                     # Player Name Editing
+                     elif action.startswith("edit_player_name_"):
                         logger.debug("Action matched: 'edit_player_name_*'")
                         try:
                             index = int(action.split("edit_player_name_")[1])
@@ -637,8 +576,8 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                             )
                             reset_editing_states()
 
-                    # --- Zone Deletion ---
-                    elif action.startswith("delete_zone_"):
+                     # Zone Deletion
+                     elif action.startswith("delete_zone_"):
                         logger.debug("Action matched: 'delete_zone_*'")
                         try:
                             index = int(action.split("delete_zone_")[1])
@@ -656,13 +595,13 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                                     game_state.show_notification(
                                         f"Zone {index+1} Deleted"
                                     )
-                                    reset_editing_states()  # Reset state after delete
+                                    reset_editing_states() # Reset state after delete
                                 else:
                                     # First click: enter confirm mode
-                                    reset_editing_states()  # Reset any other editing modes
+                                    reset_editing_states() # Reset any other editing modes
                                     game_state.editing_zone_index = index
                                     game_state.editing_zone_mode = "confirm_delete"
-                                    game_state.menu_cache = None  # Invalidate cache
+                                    game_state.menu_cache = None # Invalidate cache
                                     logger.info(
                                         f"Selected zone {index+1} for deletion. Click again to confirm."
                                     )
@@ -680,7 +619,7 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                                 f"Error parsing zone index from delete action: {action} - {e}"
                             )
                             reset_editing_states()
-                    else:
+                     else:
                         # Default action: Submenu navigation
                         logger.debug(
                             f"Action '{action}' not explicitly handled, assuming submenu switch."
@@ -689,8 +628,8 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                         game_state.submenu_active = action
                         reset_editing_states()
 
-                # Game Over State Actions
-                elif game_state.current_state == CurrentGameState.GAME_OVER:
+                 # Game Over State Actions
+                 elif game_state.current_state == CurrentGameState.GAME_OVER:
                     logger.debug("Processing actions for GAME_OVER state...")
                     if action == "new_game_from_gameover":
                         logger.debug("Action matched: 'new_game_from_gameover'")
@@ -707,107 +646,15 @@ def _process_menu_or_gameover_click(x: int, y: int, game_state: GameState) -> bo
                         game_state.win_condition_met = False
                         game_state.menu_cache = None
 
-                return True  # Click handled by string action
+                 return True # Click handled by string action
 
             else:
                 logger.warning(
                     f"Clicked item '{label}' has unhandled action type: {type(action)}"
                 )
-                return True  # Consider it handled
+                return True # Consider it handled
 
     logger.debug(
         f"Click in {game_state.current_state} area but not on a specific registered item."
     )
     return False
-
-
-# --- RESTRUCTURED MOUSE CALLBACK ---
-def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
-    """Handle mouse events for the main application window."""
-    game_state: GameState = param  # Type hint for clarity
-    if game_state is None:
-        logger.warning("Mouse callback received None for game_state param.")
-        return
-
-    click_handled = False
-
-    # --- Priority 1: Interactive Zone Editing (if in ZONE_EDITING state) ---
-    if game_state.current_state == CurrentGameState.ZONE_EDITING and event in [
-        cv2.EVENT_LBUTTONDOWN,
-        cv2.EVENT_MOUSEMOVE,
-        cv2.EVENT_LBUTTONUP,
-    ]:
-        logger.debug(f"Mouse event {event} received during ZONE_EDITING.")
-        click_handled = _process_zone_editing_event(event, x, y, game_state)
-        # Prevent other actions if a drag/click was handled within zone editing
-        if click_handled and event != cv2.EVENT_MOUSEMOVE:
-            return  # Don't check other handlers if LBUTTONDOWN/UP was handled here
-
-    # --- Priority 2: Drawing New Zones (if PLAYING and drawing is active) ---
-    elif (
-        not click_handled  # Check if not handled above
-        and game_state.current_state == CurrentGameState.PLAYING
-        and getattr(game_state, "drawing", False)
-        and event in [cv2.EVENT_LBUTTONDOWN, cv2.EVENT_MOUSEMOVE, cv2.EVENT_LBUTTONUP]
-    ):
-        logger.debug(f"Mouse event {event} received while drawing is active.")
-        _process_drawing_event(event, x, y, game_state)
-        if event in [cv2.EVENT_LBUTTONDOWN, cv2.EVENT_LBUTTONUP]:
-            click_handled = True
-
-    # --- Priority 3: Clicks within MENU or GAME_OVER states ---
-    elif (
-        not click_handled
-        and game_state.current_state
-        in [CurrentGameState.MENU, CurrentGameState.GAME_OVER]
-        and event == cv2.EVENT_LBUTTONDOWN
-    ):
-        logger.debug(
-            f"LBUTTONDOWN in {game_state.current_state}, checking menu items..."
-        )
-        click_handled = _process_menu_or_gameover_click(x, y, game_state)
-
-    # --- Priority 4: Menu Button Click (if PLAYING and NOT drawing) ---
-    elif (
-        not click_handled
-        and game_state.current_state == CurrentGameState.PLAYING
-        and not getattr(game_state, "drawing", False)  # Ensure not drawing
-        and event == cv2.EVENT_LBUTTONDOWN
-    ):
-        if (
-            UIConstants.MENU_BUTTON_X
-            <= x
-            <= UIConstants.MENU_BUTTON_X + UIConstants.MENU_BUTTON_WIDTH
-            and UIConstants.MENU_BUTTON_Y
-            <= y
-            <= UIConstants.MENU_BUTTON_Y + UIConstants.MENU_BUTTON_HEIGHT
-        ):
-            logger.info("Menu toggled ON via button click.")
-            game_state.current_state = CurrentGameState.MENU
-            # Reset menu/editing states when opening menu
-            game_state.submenu_active = None
-            game_state.editing_zone_index = None
-            game_state.editing_zone_mode = None
-            game_state.editing_zone_points_input = None
-            game_state.editing_player_index = None
-            game_state.editing_player_mode = None
-            game_state.editing_player_name_input = None
-            # Crucially, reset interactive zone editing state if menu opened
-            game_state.selected_zone_for_edit = None
-            game_state.zone_editing_action = None
-            game_state.drag_start_pos = None
-            game_state.original_zone_on_drag_start = None
-
-            game_state.menu_cache = None  # Invalidate cache
-            click_handled = True
-
-    # --- Log Unhandled Clicks ---
-    if not click_handled and event == cv2.EVENT_LBUTTONDOWN:
-        # Ignore clicks during some states
-        if game_state.current_state not in [
-            CurrentGameState.GETTING_PLAYER_NAME,
-            CurrentGameState.ZONE_EDITING,  # Clicks outside zone already logged/ignored in helper
-        ]:
-            logger.debug(
-                f"Unhandled click at ({x},{y}) in state {game_state.current_state}"
-            )

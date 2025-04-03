@@ -16,12 +16,8 @@ from ui_screens import (
 
 # Updated imports: clean_exit from utils, mouse_callback from utils
 from cleanup_utils import clean_exit
-from utils import mouse_callback  # <-- CORRECTED IMPORT LOCATION
-
-# --- MODIFIED: Import from game_constants ---
-from game_constants import UIConstants
-# --- MODIFIED: Import save_score from game_scoring ---
-from game_scoring import save_score
+from utils import mouse_callback # Import from the main utils.py
+from constants import UIConstants
 
 # Set up logging
 logging.basicConfig(
@@ -57,16 +53,8 @@ def main() -> None:
         )
         return
 
-    # --- MODIFICATION START ---
-    # Attach the main mouse callback to the game_state object
-    # This allows utils_ui_interactions to access it without circular imports
-    game_state.main_mouse_callback = mouse_callback
-    # --- MODIFICATION END ---
-
-
     # Check for window close immediately after splash screen
     try:
-        # Use the constant for the window name
         if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:
             logger.info("Window closed after splash screen.")
             clean_exit(
@@ -103,7 +91,7 @@ def main() -> None:
     )
     if ret and frame is not None:
         cv2.imshow(UIConstants.WINDOW_NAME, frame)
-        cv2.waitKey(100) # Give window time to draw
+        cv2.waitKey(100)
     else:
         logger.error("Failed to capture initial frame for display.")
         clean_exit(
@@ -126,19 +114,15 @@ def main() -> None:
         if "game_state" in locals() and game_state is not None:
             try:
                 # Safely attempt to save score
-                # --- MODIFIED: Check for get_current_player only, call imported save_score ---
-                if hasattr(game_state, "get_current_player"):
+                if hasattr(game_state, "get_current_player") and hasattr(
+                    game_state, "save_score"
+                ):
                     player = game_state.get_current_player()
                     if player and hasattr(player, "name"):
-                        logger.info(f"Attempting to save score for {player.name} after exception...")
-                        # Call the imported save_score function
-                        save_score(game_state, player.name)
-                        logger.info("Score saving attempted.")
-                    else:
-                         logger.warning("Could not get player or player name during exception handling.")
+                        game_state.save_score(player.name)
                 else:
                     logger.warning(
-                        "game_state object does not have get_current_player method during exception handling."
+                        "game_state object does not have get_current_player or save_score method during exception handling."
                     )
                 # Perform cleanup
                 clean_exit(

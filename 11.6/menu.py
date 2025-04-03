@@ -41,8 +41,8 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
     game_state.scored_balls.clear()
     game_state.scored_positions.clear()
     game_state.next_ball_id = 0
-    # game_state.submenu_active = None # Don't reset submenu on game reset? Maybe needed
-    # game_state.submenu_items = []  # Don't clear menu items on game reset
+    game_state.submenu_active = None
+    game_state.submenu_items = []
     game_state.game_timer = None  # Reset timer initially
     game_state.ball_trails.clear()
     game_state.ball_states.clear()
@@ -53,29 +53,20 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
     game_state.ball_scored_zones.clear()
     game_state.ball_positions_history.clear()
     game_state.ball_zone_history.clear()
-    game_state.zone_cooldown.clear()  # Fixed attribute name
+    # --- CHANGE: Fix AttributeError ---
+    game_state.zone_cooldown.clear()  # Was: game_state.scored_cooldown.clear()
     game_state.win_condition_met = False
     # Reset editing states
-    # game_state.editing_zone_index = None # Keep potential menu edits?
-    # game_state.editing_zone_mode = None
-    # game_state.editing_zone_points_input = None
-    # game_state.editing_player_index = None # Keep potential menu edits?
-    # game_state.editing_player_mode = None
-    # game_state.editing_player_name_input = None
-
-    # Reset interactive zone editing states
-    # game_state.selected_zone_for_edit = None # Keep potential menu edits?
-    # game_state.zone_editing_action = None
-    # game_state.drag_start_pos = None
-    # game_state.original_zone_on_drag_start = None
-
+    game_state.editing_zone_index = None
+    game_state.editing_zone_mode = None
+    game_state.editing_zone_points_input = None
+    game_state.editing_player_index = None
+    game_state.editing_player_mode = None
+    game_state.editing_player_name_input = None
     # Reset special hole hit flag for the new session
     game_state.special_hole_hit_this_session = False
-    # Reset low time warning flag
+    # --- CHANGE: Reset low time warning flag ---
     game_state.low_time_warning_played = False
-    # Reset edit zones page
-    game_state.edit_zones_page = 0
-
 
     if game_state.players and 0 <= game_state.current_player_index < len(
         game_state.players
@@ -86,7 +77,7 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
     else:
         logger.warning("Player index out of bounds or no players during reset.")
 
-    # Ensure timer is set AFTER mode is confirmed
+    # --- CHANGE: Ensure timer is set AFTER mode is confirmed ---
     if game_state.game_mode == "timed":
         game_state.game_timer = GameConstants.TIMED_MODE_DURATION
         logger.info(
@@ -102,7 +93,7 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
         # This loads zones and high score for the current mode/player
         game_state._load_initial_state()
     else:
-         logger.warning(
+        logger.warning(
             "Cannot reload initial state during reset, _load_initial_state not found."
         )
 
@@ -111,26 +102,20 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
 
 def save_zones(game_state: GameState) -> None:  # Added GameState type hint
     """Save the current scoring zones to a JSON file."""
+    # ...(save_zones remains the same)...
     try:
-        # Ensure points are integers
-        serializable_zones = [
-            [int(z[0]), int(z[1]), int(z[2]), int(z[3]), int(z[4])]
-            for z in game_state.scoring_zones
-        ]
         with open(GameConstants.ZONES_FILE, "w") as f:
-            json.dump(serializable_zones, f, indent=4)
+            json.dump(game_state.scoring_zones, f, indent=4)
         logger.info(f"Scoring zones saved to {GameConstants.ZONES_FILE}")
         game_state.show_notification("Zones Saved")
     except IOError as e:
         logger.error(f"Error saving scoring zones: {e}")
         game_state.show_notification("Error Saving Zones", is_error=True)
-    except Exception as e:
-         logger.exception(f"Unexpected error saving zones: {e}")
-         game_state.show_notification("Error Saving Zones", is_error=True)
 
 
 def load_zones(game_state: GameState) -> None:  # Added GameState type hint
     """Load scoring zones from a JSON file."""
+    # ...(load_zones remains the same)...
     if os.path.exists(GameConstants.ZONES_FILE):
         try:
             if os.path.getsize(GameConstants.ZONES_FILE) == 0:
@@ -174,22 +159,24 @@ def load_zones(game_state: GameState) -> None:  # Added GameState type hint
 
 
 def clear_zones(game_state: GameState) -> None:  # Added GameState type hint
-    """Clear all scoring zones."""
-    game_state.scoring_zones.clear()
-    game_state.special_hole = None
-    if hasattr(game_state, "scoring_zones_cache"):
-        game_state.scoring_zones_cache = []
-    if os.path.exists(GameConstants.ZONES_FILE):
-        try:
-            os.remove(GameConstants.ZONES_FILE)
-        except OSError as e:
-            logger.error(f"Failed to remove zones file: {e}")
-    logger.info("All scoring zones cleared.")
-    game_state.show_notification("All Zones Cleared")
+     """Clear all scoring zones."""
+     # ...(clear_zones remains the same)...
+     game_state.scoring_zones.clear()
+     game_state.special_hole = None
+     if hasattr(game_state, "scoring_zones_cache"):
+         game_state.scoring_zones_cache = []
+     if os.path.exists(GameConstants.ZONES_FILE):
+         try:
+             os.remove(GameConstants.ZONES_FILE)
+         except OSError as e:
+             logger.error(f"Failed to remove zones file: {e}")
+     logger.info("All scoring zones cleared.")
+     game_state.show_notification("All Zones Cleared")
 
 
 def flush_scoring_zones(game_state: GameState) -> None:  # Added GameState type hint
     """Writes current scoring zones to disk (used by clean_exit)."""
+    # ...(flush_scoring_zones remains the same)...
     logger.debug("Flushing scoring zones (calling save_zones)...")
     save_zones(game_state)
 
@@ -198,6 +185,7 @@ def draw_menu(
     frame: np.ndarray, game_state: GameState
 ) -> None:  # Added GameState type hint
     """Draw the menu button on the frame."""
+    # ...(draw_menu remains the same)...
     if game_state.current_state == CurrentGameState.PLAYING:
         _draw_button(
             frame,
@@ -217,11 +205,10 @@ def _draw_menu_content(
     menu_frame: np.ndarray, game_state: GameState
 ) -> None:  # Added GameState type hint
     """Draw the actual content of the menu or submenu onto the menu_frame."""
+    # ...( _draw_menu_content remains the same)...
     if game_state.submenu_active:
-        # Let the specific submenu function handle setting its required height
         draw_submenu(menu_frame, game_state)
     else:
-        # --- Drawing Main Menu ---
         cv2.putText(
             menu_frame,
             "Main Menu",
@@ -235,8 +222,7 @@ def _draw_menu_content(
         y_offset = 80
         item_height = 35
         for label, action_key in MenuConstants.MAIN_MENU_ITEMS:
-            # Use menu_frame.shape[1] which is game_state.menu_width for button width calc
-            item_rect = (20, y_offset, menu_frame.shape[1] - 40, item_height)
+            item_rect = (20, y_offset, game_state.menu_width - 40, item_height)
             _draw_button(
                 menu_frame,
                 item_rect[0],
@@ -250,103 +236,105 @@ def _draw_menu_content(
             game_state.submenu_items.append((item_rect, action_key, label))
             y_offset += item_height + 5
 
-        # Calculate and set height specifically for main menu
-        required_height = y_offset + 20 # Add padding below last item
-        game_state.menu_height = required_height
 
-
-# --- Using Robust Caching Logic --- # MODIFIED TO DISABLE CACHING TEMPORARILY
+# --- Using Robust Caching Logic ---
 def draw_menu_window(
     frame: np.ndarray, game_state: GameState
 ) -> None:  # Added GameState type hint
     """
-     Draw the menu as an overlay within the main game window.
-     Caching is temporarily disabled for debugging drag.
-     The menu position is determined by game_state.menu_pos.
+    Draw the menu as an overlay within the main game window, using caching to reduce redraws.
     """
     if game_state.current_state != CurrentGameState.MENU:
         return
 
-    # Ensure menu position is initialized (should be done when entering MENU state)
-    if not hasattr(game_state, 'menu_pos') or game_state.menu_pos is None:
-         # Fallback: Center it if not initialized (though it should be)
-         logger.warning("menu_pos not initialized! Centering menu as fallback.")
-         temp_w = getattr(game_state, 'menu_width', UIConstants.MENU_WIDTH)
-         temp_h = getattr(game_state, 'menu_height', UIConstants.MENU_HEIGHT)
-         start_x = (UIConstants.WINDOW_WIDTH - temp_w) // 2
-         start_y = (UIConstants.WINDOW_HEIGHT - temp_h) // 2
-         game_state.menu_pos = (start_x, start_y)
-
-    # Default width, might be adjusted by submenu drawing
     game_state.menu_width = 600
-    # Default height, will be adjusted by content drawing function if needed
-    game_state.menu_height = 450
+    if not game_state.submenu_active:
+        game_state.menu_height = 60 + len(MenuConstants.MAIN_MENU_ITEMS) * 40 + 20
+    else:
+        if not hasattr(game_state, "menu_height") or game_state.menu_height < 100:
+            game_state.menu_height = 450
 
-    menu_frame = None # Initialize menu_frame buffer
+    current_item_actions_tuple = tuple(
+        item[1] for item in game_state.submenu_items
+    )  # Generate tuple of actions
+    # Add editing state to cache key
+    cache_key_parts = [
+        game_state.submenu_active,
+        current_item_actions_tuple,
+        game_state.editing_zone_index,
+        game_state.editing_zone_mode,
+        game_state.editing_zone_points_input,
+        game_state.editing_player_index,
+        game_state.editing_player_mode,
+        game_state.editing_player_name_input,
+        # Include current player index as it changes player highlight
+        game_state.current_player_index,
+    ]
+    cache_key = tuple(cache_key_parts)
 
-    # --- Caching Disabled ---
-    # Always redraw the menu content to determine needed height and content
-    temp_buffer_height = UIConstants.WINDOW_HEIGHT # Use window height as max
-    temp_menu_frame = np.zeros(
-        (temp_buffer_height, game_state.menu_width, 3), dtype=np.uint8
-    )
+    menu_frame = None
 
-    # This call draws content and potentially updates game_state.menu_height
-    _draw_menu_content(temp_menu_frame, game_state)
+    if (
+        hasattr(game_state, "menu_cache")
+        and game_state.menu_cache is not None
+        and game_state.menu_cache_key == cache_key
+    ):
+        menu_frame = game_state.menu_cache
+        if game_state.debug_mode:
+             logger.debug("Using cached menu frame.")
+        if (
+            game_state.menu_height != menu_frame.shape[0]
+            or game_state.menu_width != menu_frame.shape[1]
+        ):
+            logger.warning(
+                "Menu cache dimensions mismatch with game_state. Forcing redraw."
+            )
+            menu_frame = None
+            game_state.menu_cache = None
+    else:
+        if game_state.debug_mode:
+            logger.debug(
+                f"Cache invalid or missing. Redrawing menu content. Key: {cache_key}"
+            )
 
-    # Crop the buffer to the actual required height
-    actual_height = min(game_state.menu_height, temp_buffer_height)
-    if actual_height <= 0: # Ensure height is positive
-         logger.warning(f"Calculated menu height is invalid ({actual_height}). Using default 450.")
-         actual_height = 450
-    menu_frame = temp_menu_frame[0:actual_height, :] # Use the newly drawn frame
+    if menu_frame is None:
+        menu_height_to_use = max(100, game_state.menu_height)
+        menu_frame = np.zeros(
+            (menu_height_to_use, game_state.menu_width, 3), dtype=np.uint8
+        )
+        game_state.menu_height = menu_height_to_use  # Update in case it was adjusted
 
-    if game_state.debug_mode:
-        logger.debug("Menu cache disabled. Redrawing menu frame.")
-    # --- End Caching Disabled ---
+        _draw_menu_content(menu_frame, game_state)
 
+        if menu_frame is not None:
+            game_state.menu_cache = menu_frame
+            game_state.menu_cache_key = cache_key
+        else:
+            logger.error("Failed to create menu_frame during redraw.")
+            return
 
-    # --- Blend Menu onto Main Frame ---
-    if menu_frame is None or menu_frame.size == 0:
-         logger.error("menu_frame is None or empty, cannot draw menu window.")
-         return
+    start_x = (frame.shape[1] - game_state.menu_width) // 2
+    start_y = (frame.shape[0] - game_state.menu_height) // 2
+    game_state.menu_pos = (start_x, start_y)
 
-    # Update menu width/height based on the frame we are actually using
-    game_state.menu_height, game_state.menu_width = menu_frame.shape[0], menu_frame.shape[1]
-
-    # Use the position stored in game_state (set initially or by dragging)
     x1, y1 = game_state.menu_pos
-    menu_h, menu_w = menu_frame.shape[0], menu_frame.shape[1] # Use dimensions from the actual menu frame
+    menu_h, menu_w = menu_frame.shape[0], menu_frame.shape[1]
     x2, y2 = x1 + menu_w, y1 + menu_h
 
-    # --- Border drawing ---
+    # <<< START MODIFICATION >>>
+    # Draw the white bounding box AROUND the blended area
+    # Use UIConstants.WHITE and a desired thickness (e.g., 2)
     border_thickness = 2
-    border_color = UIConstants.WHITE
-    bx1, by1 = x1 - border_thickness, y1 - border_thickness
-    bx2, by2 = x2 + border_thickness, y2 + border_thickness
-    bx1_c, by1_c = max(0, bx1), max(0, by1)
-    bx2_c, by2_c = min(frame.shape[1], bx2), min(frame.shape[0], by2)
-    if bx1_c < bx2_c and by1_c < by2_c:
-        cv2.rectangle(frame, (bx1_c, by1_c), (bx2_c, by2_c), border_color, border_thickness)
-    # --- End Border drawing ---
+    cv2.rectangle(frame, (x1, y1), (x2, y2), UIConstants.WHITE, border_thickness)
+    # <<< END MODIFICATION >>>
 
-    # Clip main content coordinates
     x1c, y1c = max(0, x1), max(0, y1)
     x2c, y2c = min(frame.shape[1], x2), min(frame.shape[0], y2)
 
-    # Calculate ROI dimensions
     roi_h, roi_w = y2c - y1c, x2c - x1c
-
-    # Calculate corresponding slice dimensions from the menu_frame
     menu_start_y, menu_start_x = max(0, -y1), max(0, -x1)
     menu_end_y, menu_end_x = menu_start_y + roi_h, menu_start_x + roi_w
 
-    # --- ADDED LOGGING ---
-    logger.info(f"Drawing menu at pos (x1,y1): ({x1},{y1})")
-    logger.info(f"Calculated ROI (x1c,y1c)-(x2c,y2c): ({x1c},{y1c})-({x2c},{y2c})")
-    # --- END ADDED LOGGING ---
-
-    # Ensure slices are valid before blending
     if roi_h > 0 and roi_w > 0 and menu_end_y <= menu_h and menu_end_x <= menu_w:
         try:
             roi = frame[y1c:y2c, x1c:x2c]
@@ -356,17 +344,20 @@ def draw_menu_window(
 
             if roi.shape == menu_frame_slice.shape:
                 alpha = 0.85
+                # Blend the cached menu content onto the frame
                 cv2.addWeighted(menu_frame_slice, alpha, roi, 1.0 - alpha, 0, roi)
             else:
                 logger.warning(
-                    f"ROI shape {roi.shape} mismatch with menu slice {menu_frame_slice.shape}. Drawing fallback rectangle."
+                    f"ROI shape {roi.shape} mismatch with menu slice {menu_frame_slice.shape}. Drawing fallback."
                 )
+                # Fallback: Draw a simple rectangle if shapes mismatch
                 cv2.rectangle(frame, (x1c, y1c), (x2c, y2c), (50, 50, 50), -1)
         except Exception as e:
             logger.exception(f"Error blending menu: {e}")
+            # Error fallback
             cv2.rectangle(frame, (x1c, y1c), (x2c, y2c), (50, 0, 0), -1)
     elif roi_h <= 0 or roi_w <= 0:
-        logger.debug("Menu overlay ROI has zero or negative size, skipping overlay.")
+         logger.debug("Menu overlay ROI has zero or negative size, skipping overlay.")
     else:
         logger.warning(
             "Menu slice calculation resulted in out-of-bounds indices, skipping overlay."

@@ -27,6 +27,7 @@ from submenu_draw_functions import (
 
 logger = logging.getLogger(__name__)
 
+
 # --- Helper for Toggle Items ---
 class ToggleItem:
     """Represents a toggleable menu item with state and action."""
@@ -38,7 +39,9 @@ class ToggleItem:
         self.get_state = get_state
         self.action = action
 
+
 # --- Core Submenu Drawing Functions ---
+
 
 def _draw_settings_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
     """Draw the Settings submenu with toggle items."""
@@ -156,6 +159,7 @@ def _draw_settings_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
 
     game_state.menu_height = back_y + item_height + 20
 
+
 def _draw_game_mode_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
     """Draw the Game Mode selection submenu."""
     cv2.putText(
@@ -176,9 +180,7 @@ def _draw_game_mode_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
     for mode in modes:
         label = mode.capitalize()
         color = (
-            UIConstants.GREEN
-            if game_state.game_mode == mode
-            else UIConstants.CV2_BLUE
+            UIConstants.GREEN if game_state.game_mode == mode else UIConstants.CV2_BLUE
         )
         action_key = f"set_mode_{mode}"
 
@@ -221,6 +223,7 @@ def _draw_game_mode_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
     )
     game_state.menu_height = back_y + item_height + 20
 
+
 def _draw_zone_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
     """Draw the Manage Zones submenu."""
     cv2.putText(
@@ -259,7 +262,9 @@ def _draw_zone_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
 
     game_state.menu_height = y_offset + 20
 
+
 # --- Main Submenu Dispatcher ---
+
 
 def draw_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
     """

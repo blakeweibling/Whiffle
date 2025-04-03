@@ -1,4 +1,0 @@
-train: F:/Whiffle/11.1/dataset/images/train
-val: F:/Whiffle/11.1/dataset/images/val
-nc: 3
-names: ['white', 'red', 'half']

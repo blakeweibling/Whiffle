@@ -5,7 +5,10 @@ from cx_Freeze import setup, Executable
 # Disable SSL verification (temporary workaround)
 os.environ["CXFREEZE_SSL_VERIFY"] = "0"  # Disable SSL verification for cx_Freeze
 import ssl
-ssl._create_default_https_context = ssl._create_unverified_context  # Disable SSL verification globally
+
+ssl._create_default_https_context = (
+    ssl._create_unverified_context
+)  # Disable SSL verification globally
 
 # Increase the recursion limit to avoid RecursionError (from previous fix)
 sys.setrecursionlimit(5000)

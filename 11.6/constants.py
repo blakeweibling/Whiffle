@@ -1,4 +1,3 @@
-# constants.py
 """
 Constants for the Whiffle Tracker project.
 
@@ -52,8 +51,8 @@ class UIConstants:
 
     # Window and Display
     WINDOW_NAME: str = "Whiffle Tracker"
-    WINDOW_WIDTH: int = _assert_positive(1280, "WINDOW_WIDTH") # Or use 1024 based on game_constants?
-    WINDOW_HEIGHT: int = _assert_positive(720, "WINDOW_HEIGHT") # Or use 768 based on game_constants?
+    WINDOW_WIDTH: int = _assert_positive(1280, "WINDOW_WIDTH")
+    WINDOW_HEIGHT: int = _assert_positive(720, "WINDOW_HEIGHT")
 
     # Font Sizes
     FONT_SCALE_SMALL: float = _assert_positive(0.5, "FONT_SCALE_SMALL")
@@ -73,18 +72,13 @@ class UIConstants:
     MENU_BUTTON_X: int = 10
     MENU_BUTTON_Y: int = 80
 
-    # --- ADDED: Menu Window Dimensions ---
-    MENU_WIDTH: int = 600  # Default width used in menu.py
-    MENU_HEIGHT: int = 450 # Default height used in menu.py
-    # --- END ADDED ---
-
     # Zone Editing Visuals
     ZONE_EDIT_HANDLE_SIZE: int = 8
-    ZONE_EDIT_HANDLE_COLOR: Tuple[int, int, int] = (255, 165, 0) # Orange
-    ZONE_EDIT_LINE_COLOR: Tuple[int, int, int] = (255, 165, 0) # Orange
-    ZONE_EDIT_SELECTED_COLOR: Tuple[int, int, int] = (0, 255, 255) # Yellow highlight
-    ZONE_EDIT_MOVE_COLOR: Tuple[int, int, int] = (0, 165, 255) # Orange-Red for move
-    ZONE_EDIT_RESIZE_COLOR: Tuple[int, int, int] = (255, 0, 255) # Magenta for resize
+    ZONE_EDIT_HANDLE_COLOR: Tuple[int, int, int] = (255, 165, 0)  # Orange
+    ZONE_EDIT_LINE_COLOR: Tuple[int, int, int] = (255, 165, 0)  # Orange
+    ZONE_EDIT_SELECTED_COLOR: Tuple[int, int, int] = (0, 255, 255)  # Yellow highlight
+    ZONE_EDIT_MOVE_COLOR: Tuple[int, int, int] = (0, 165, 255)  # Orange-Red for move
+    ZONE_EDIT_RESIZE_COLOR: Tuple[int, int, int] = (255, 0, 255)  # Magenta for resize
 
 
 class CameraConfig:

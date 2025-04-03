@@ -2,7 +2,7 @@
 
 import cv2
 import logging
-import pygame # --- CHANGE: Ensure pygame is imported ---
+import pygame  # --- CHANGE: Ensure pygame is imported ---
 import time
 import numpy as np
 import os
@@ -22,12 +22,12 @@ from scoring import is_in_scoring_zone
 # Import reconciled utils functions
 from game_state_utils import (
     set_special_hole,
-    initialize_sounds, # --- CHANGE: Now returns 3 sounds ---
+    initialize_sounds,  # --- CHANGE: Now returns 3 sounds ---
     initialize_achievements,
-    load_achievements, # Takes game_state, filename
-    save_achievements, # Takes game_state, filename
-    load_hsv_ranges, # Takes filename, returns dict
-    save_hsv_ranges, # Takes dict, filename
+    load_achievements,  # Takes game_state, filename
+    save_achievements,  # Takes game_state, filename
+    load_hsv_ranges,  # Takes filename, returns dict
+    save_hsv_ranges,  # Takes dict, filename
     is_ball_at_rest,
     is_ball_zone_stable,
 )
@@ -37,10 +37,10 @@ logger = logging.getLogger(__name__)
 
 # Added SHOWING_SPLASH, GETTING_PLAYER_NAME, and ZONE_EDITING states
 class CurrentGameState(Enum):
-    GETTING_PLAYER_NAME = auto() # New state for initial name input
+    GETTING_PLAYER_NAME = auto()  # New state for initial name input
     PLAYING = auto()
     MENU = auto()
-    ZONE_EDITING = auto() # New state for interactive move/resize
+    ZONE_EDITING = auto()  # New state for interactive move/resize
     GAME_OVER = auto()
     PAUSED = auto()
 
@@ -108,7 +108,7 @@ class GameState:
             except Exception as e:
                 logger.exception(f"Static frame load/validate fail: {e}")
                 raise
-             # Corrected Indentation Block Ends Here
+            # Corrected Indentation Block Ends Here
 
         # Game Variables
         logger.info("Initializing game variables...")
@@ -116,8 +116,8 @@ class GameState:
         self.high_score: int = 0
         self.scoring_zones: List[Tuple[int, int, int, int, int]] = []
         self.drawing: bool = False
-        self.start_x: Optional[int] = None # Initialize as None
-        self.start_y: Optional[int] = None # Initialize as None
+        self.start_x: Optional[int] = None  # Initialize as None
+        self.start_y: Optional[int] = None  # Initialize as None
         self.temp_zone: Optional[Tuple[int, int, int, int]] = None
         self.special_hole: Optional[Tuple[int, int, int, int, int]] = None
         # --- NEW: Variable to store points input during drawing ---
@@ -158,14 +158,24 @@ class GameState:
 
         # Zone Menu Editing (Points)
         self.editing_zone_index: Optional[int] = None
-        self.editing_zone_mode: Optional[str] = None # e.g., 'edit_points', 'confirm_delete'
+        self.editing_zone_mode: Optional[str] = (
+            None  # e.g., 'edit_points', 'confirm_delete'
+        )
         self.editing_zone_points_input: Optional[str] = None
 
         # --- NEW: Interactive Zone Editing State (Move/Resize) ---
-        self.selected_zone_for_edit: Optional[int] = None # Index of the zone being interactively edited
-        self.zone_editing_action: Optional[str] = None # 'move', 'resize_tl', 'resize_tr', 'resize_bl', 'resize_br', None
-        self.drag_start_pos: Optional[Tuple[int, int]] = None # Mouse position when dragging started
-        self.original_zone_on_drag_start: Optional[Tuple[int, int, int, int, int]] = None # Store original zone state
+        self.selected_zone_for_edit: Optional[int] = (
+            None  # Index of the zone being interactively edited
+        )
+        self.zone_editing_action: Optional[str] = (
+            None  # 'move', 'resize_tl', 'resize_tr', 'resize_bl', 'resize_br', None
+        )
+        self.drag_start_pos: Optional[Tuple[int, int]] = (
+            None  # Mouse position when dragging started
+        )
+        self.original_zone_on_drag_start: Optional[Tuple[int, int, int, int, int]] = (
+            None  # Store original zone state
+        )
         # --- END NEW ---
 
         # Player Name Editing State (Menu) - Retain for menu editing later
@@ -175,9 +185,9 @@ class GameState:
 
         # Initial Player Name Input State
         self.player_name_input_active: bool = (
-            True # Flag to indicate if initial input is needed
+            True  # Flag to indicate if initial input is needed
         )
-        self.current_player_name_input: str = "" # Buffer for the name being typed
+        self.current_player_name_input: str = ""  # Buffer for the name being typed
 
         # Sounds
         self.game_sounds_on: bool = True
@@ -193,7 +203,9 @@ class GameState:
         self.game_timer: Optional[float] = None
         # Start in GETTING_PLAYER_NAME state
         self.current_state: CurrentGameState = CurrentGameState.GETTING_PLAYER_NAME
-        self.previous_state: Optional[CurrentGameState] = None # Store previous state for ZONE_EDITING return
+        self.previous_state: Optional[CurrentGameState] = (
+            None  # Store previous state for ZONE_EDITING return
+        )
         self.win_score: int = GameConstants.TIMED_MODE_WIN_SCORE
         self.win_condition_met: bool = False
 
@@ -235,7 +247,7 @@ class GameState:
                 self.score_sound, self.background_music, self.low_time_sound = (
                     sound_results
                 )
-                self.achievement_sound = None # Keep achievement sound separate for now
+                self.achievement_sound = None  # Keep achievement sound separate for now
                 logger.info("Sounds initialized (score, background, low_time).")
             else:
                 logger.error(
@@ -268,10 +280,14 @@ class GameState:
                 None,
             )
         # Ensure sound flags reflect reality if loading fails above
-        if self.score_sound is None and self.low_time_sound is None and self.achievement_sound is None:
-             self.game_sounds_on = False
+        if (
+            self.score_sound is None
+            and self.low_time_sound is None
+            and self.achievement_sound is None
+        ):
+            self.game_sounds_on = False
         if self.background_music is None:
-             self.background_music_on = False
+            self.background_music_on = False
 
         # Set initial volume based on flags (in case sounds loaded but flags were off)
         self.set_volume()
@@ -290,21 +306,31 @@ class GameState:
                 f"Initial game mode is timed. Timer set to {self.game_timer} seconds."
             )
         else:
-            self.game_timer = None # Ensure timer is None otherwise
+            self.game_timer = None  # Ensure timer is None otherwise
 
         logger.info("GameState initialized successfully.")
 
     def set_volume(self):
-         """Sets volume based on current flags."""
-         if self.score_sound:
-              self.score_sound.set_volume(GameConstants.DEFAULT_SOUND_VOLUME if self.game_sounds_on else 0.0)
-         if self.low_time_sound:
-              self.low_time_sound.set_volume(GameConstants.DEFAULT_SOUND_VOLUME if self.game_sounds_on else 0.0)
-         if self.achievement_sound:
-             self.achievement_sound.set_volume(GameConstants.DEFAULT_SOUND_VOLUME if self.game_sounds_on else 0.0)
-         if self.background_music:
-              self.background_music.set_volume(GameConstants.DEFAULT_MUSIC_VOLUME if self.background_music_on else 0.0)
-         logger.debug(f"Volumes set: Sounds={self.game_sounds_on}, Music={self.background_music_on}")
+        """Sets volume based on current flags."""
+        if self.score_sound:
+            self.score_sound.set_volume(
+                GameConstants.DEFAULT_SOUND_VOLUME if self.game_sounds_on else 0.0
+            )
+        if self.low_time_sound:
+            self.low_time_sound.set_volume(
+                GameConstants.DEFAULT_SOUND_VOLUME if self.game_sounds_on else 0.0
+            )
+        if self.achievement_sound:
+            self.achievement_sound.set_volume(
+                GameConstants.DEFAULT_SOUND_VOLUME if self.game_sounds_on else 0.0
+            )
+        if self.background_music:
+            self.background_music.set_volume(
+                GameConstants.DEFAULT_MUSIC_VOLUME if self.background_music_on else 0.0
+            )
+        logger.debug(
+            f"Volumes set: Sounds={self.game_sounds_on}, Music={self.background_music_on}"
+        )
 
     def toggle_background_music(self) -> None:
         """Toggle background music ON/OFF."""
@@ -313,18 +339,18 @@ class GameState:
         if self.background_music:
             current_volume = self.background_music.get_volume()
             if self.background_music_on and current_volume == 0.0:
-                 self.background_music.set_volume(GameConstants.DEFAULT_MUSIC_VOLUME)
-                 self.background_music.play(-1) # Loop indefinitely
-                 logger.info("Background music started/resumed.")
+                self.background_music.set_volume(GameConstants.DEFAULT_MUSIC_VOLUME)
+                self.background_music.play(-1)  # Loop indefinitely
+                logger.info("Background music started/resumed.")
             elif not self.background_music_on and current_volume > 0.0:
-                 self.background_music.set_volume(0.0)
-                 self.background_music.stop() # Stop playback completely
-                 logger.info("Background music stopped.")
+                self.background_music.set_volume(0.0)
+                self.background_music.stop()  # Stop playback completely
+                logger.info("Background music stopped.")
             # Handle cases where flag and state are already aligned (do nothing or just log)
             elif self.background_music_on and current_volume > 0.0:
-                 logger.debug("Background music already playing.")
+                logger.debug("Background music already playing.")
             elif not self.background_music_on and current_volume == 0.0:
-                 logger.debug("Background music already stopped.")
+                logger.debug("Background music already stopped.")
         else:
             logger.warning("Cannot toggle: Background music not loaded.")
 
@@ -372,17 +398,20 @@ class GameState:
                     logger.warning(
                         f"High score file exists but is empty: {GameConstants.HIGH_SCORE_FILE}"
                     )
-                    data = {} # Start fresh if empty
+                    data = {}  # Start fresh if empty
             else:
-                 data = {"classic": {}, "timed": {}} # Initialize structure if file doesn't exist
+                data = {
+                    "classic": {},
+                    "timed": {},
+                }  # Initialize structure if file doesn't exist
         except (IOError, json.JSONDecodeError) as e:
             logger.error(
                 f"Could not read/parse high score file ({GameConstants.HIGH_SCORE_FILE}): {e}. Will overwrite."
             )
-            data = {"classic": {}, "timed": {}} # Reset structure on error
+            data = {"classic": {}, "timed": {}}  # Reset structure on error
         except Exception as e:
             logger.exception(f"Unexpected error reading high score file: {e}")
-            data = {"classic": {}, "timed": {}} # Reset structure on error
+            data = {"classic": {}, "timed": {}}  # Reset structure on error
 
         # Ensure current game mode structure exists
         if self.game_mode not in data:
@@ -391,16 +420,20 @@ class GameState:
 
         # Compare the current game state's high_score (potentially doubled in save_score)
         # with the high score loaded from the file for the *current mode*.
-        if self.score > current_saved_high: # Use self.score which holds the final score just before saving
+        if (
+            self.score > current_saved_high
+        ):  # Use self.score which holds the final score just before saving
             data[self.game_mode][
                 "high_score"
-            ] = self.score # Save the potentially doubled high score
+            ] = self.score  # Save the potentially doubled high score
             data[self.game_mode][
                 "player"
             ] = (
                 self.get_current_player().name
-            ) # Save current player name with new high score
-            data[self.game_mode]["date"] = time.strftime("%Y-%m-%d %H:%M:%S") # Add timestamp
+            )  # Save current player name with new high score
+            data[self.game_mode]["date"] = time.strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )  # Add timestamp
             logger.info(
                 f"Updating high score file for mode '{self.game_mode}' to {self.score} by {self.get_current_player().name}"
             )
@@ -421,16 +454,20 @@ class GameState:
         if self.players and 0 <= self.current_player_index < len(self.players):
             return self.players[self.current_player_index]
         # Fallback if list is empty or index is bad
-        logger.warning(f"Player index {self.current_player_index} out of bounds for {len(self.players)} players. Returning fallback.")
+        logger.warning(
+            f"Player index {self.current_player_index} out of bounds for {len(self.players)} players. Returning fallback."
+        )
         # Create a default player if list is empty to avoid errors
         if not self.players:
             self.players.append(Player("Player 1"))
             self.current_player_index = 0
-        return self.players[0] # Return first player as fallback
+        return self.players[0]  # Return first player as fallback
 
     def save_score(self, player_name: str, mode: Optional[str] = None) -> None:
         """Checks for special hole bonus, saves score to leaderboard, and updates high score."""
-        final_score = self.score # Get score at time of call (e.g., game over, mode switch)
+        final_score = (
+            self.score
+        )  # Get score at time of call (e.g., game over, mode switch)
         doubled = False
         if self.special_hole_hit_this_session:
             logger.info(
@@ -439,33 +476,34 @@ class GameState:
             final_score *= 2
             doubled = True
 
-        score_to_save = final_score # Use potentially doubled score
-        current_mode = mode or self.game_mode # Use specified mode or current game state mode
+        score_to_save = final_score  # Use potentially doubled score
+        current_mode = (
+            mode or self.game_mode
+        )  # Use specified mode or current game state mode
 
         if score_to_save > 0:
             logger.info(
                 f"Saving score for {player_name}: {score_to_save} (Mode: {current_mode}){' (Doubled)' if doubled else ''}"
             )
             # Use submit_score for leaderboard (queues for batch)
-            if hasattr(self, 'leaderboard') and self.leaderboard:
-                 self.leaderboard.submit_score(
-                     player_name, score_to_save, current_mode
-                 )
+            if hasattr(self, "leaderboard") and self.leaderboard:
+                self.leaderboard.submit_score(player_name, score_to_save, current_mode)
             else:
-                 logger.error("Leaderboard object not available in game_state. Cannot submit score online.")
+                logger.error(
+                    "Leaderboard object not available in game_state. Cannot submit score online."
+                )
 
             # High Score Logic
             if current_mode == self.game_mode and score_to_save > self.high_score:
                 logger.info(
                     f"New high score for current mode '{current_mode}': {score_to_save}"
                 )
-                self.high_score = score_to_save # Update internal high score state
+                self.high_score = score_to_save  # Update internal high score state
 
             self._save_high_score()
 
         else:
             logger.info(f"Score is {score_to_save}, not saving.")
-
 
     def play_sound(self, sound: Optional[pygame.mixer.Sound]) -> None:
         """Play sound effect if enabled."""
@@ -477,28 +515,31 @@ class GameState:
             except pygame.error as e:
                 logger.error(f"Sound play error: {e}")
         elif not self.game_sounds_on:
-             logger.debug("Sound not played because game_sounds_on is False.")
+            logger.debug("Sound not played because game_sounds_on is False.")
         elif not sound:
-             logger.debug("Sound not played because sound object is None.")
-
+            logger.debug("Sound not played because sound object is None.")
 
     def check_achievements(self) -> None:
         """Check achievements and notify."""
-        if not hasattr(self, 'achievements'): return # Safety check
+        if not hasattr(self, "achievements"):
+            return  # Safety check
         newly_unlocked = False
         for ach in self.achievements:
-            if not ach.unlocked and ach.check(self): # Check condition only if not already unlocked
-                ach.unlocked = True # Mark as unlocked
+            if not ach.unlocked and ach.check(
+                self
+            ):  # Check condition only if not already unlocked
+                ach.unlocked = True  # Mark as unlocked
                 logger.info(f"Achieved: {ach.name} - {ach.description}")
                 self.show_notification(f"Unlocked: {ach.name}", duration=5.0)
                 # Play achievement sound
-                self.play_sound(self.achievement_sound) # Make sure achievement_sound is loaded
+                self.play_sound(
+                    self.achievement_sound
+                )  # Make sure achievement_sound is loaded
                 newly_unlocked = True
 
         if newly_unlocked:
             # Save immediately after any achievement is unlocked
             save_achievements(self, GameConstants.ACHIEVEMENTS_FILE)
-
 
     def update_achievement_notification(self, dt: float) -> None:
         """Updates timer for achievement popup."""
@@ -506,7 +547,6 @@ class GameState:
             self.achievement_notification_timer -= dt
             if self.achievement_notification_timer <= 0:
                 self.achievement_notification = None
-
 
     def show_notification(
         self, text: str, duration: float = 2.0, is_error: bool = False
@@ -516,8 +556,7 @@ class GameState:
         self.notification_timer = duration
         self.notification_color = UIConstants.RED if is_error else UIConstants.GREEN
         log_level = logging.WARNING if is_error else logging.INFO
-        logger.log(log_level, f"Notify: {text}") # Use appropriate log level
-
+        logger.log(log_level, f"Notify: {text}")  # Use appropriate log level
 
     def update_notifications(self, dt: float) -> None:
         """Update notification timer."""
@@ -529,7 +568,7 @@ class GameState:
     def update_scoring(self) -> None:
         """Processes tracked balls to determine scores using ZONE-BASED cooldown."""
         newly_scored_pts_this_frame = (
-            0 # Track points added in this frame for sound trigger
+            0  # Track points added in this frame for sound trigger
         )
         current_time = time.time()
 
@@ -539,31 +578,45 @@ class GameState:
         # --- Cleanup dictionaries for balls no longer tracked ---
         keys_to_remove = set()
         keys_to_remove.update(set(self.ball_states.keys()) - tracked_ids_this_frame)
-        keys_to_remove.update(set(self.previous_ball_states.keys()) - tracked_ids_this_frame)
-        keys_to_remove.update(set(self.ball_positions_history.keys()) - tracked_ids_this_frame)
-        keys_to_remove.update(set(self.ball_zone_history.keys()) - tracked_ids_this_frame)
+        keys_to_remove.update(
+            set(self.previous_ball_states.keys()) - tracked_ids_this_frame
+        )
+        keys_to_remove.update(
+            set(self.ball_positions_history.keys()) - tracked_ids_this_frame
+        )
+        keys_to_remove.update(
+            set(self.ball_zone_history.keys()) - tracked_ids_this_frame
+        )
         keys_to_remove.update(set(self.balls_in_zone.keys()) - tracked_ids_this_frame)
-        keys_to_remove.update(set(self.ball_scored_zones.keys()) - tracked_ids_this_frame)
+        keys_to_remove.update(
+            set(self.ball_scored_zones.keys()) - tracked_ids_this_frame
+        )
         keys_to_remove.update(set(self.ball_trails.keys()) - tracked_ids_this_frame)
 
         if keys_to_remove:
-             logger.debug(f"Cleaning up state for untracked ball IDs: {keys_to_remove}")
-             dicts_to_clean = [
-                  self.ball_states, self.previous_ball_states, self.ball_positions_history,
-                  self.ball_zone_history, self.balls_in_zone, self.ball_scored_zones,
-                  self.ball_trails
-             ]
-             for ball_id in keys_to_remove:
-                  for d in dicts_to_clean:
-                       d.pop(ball_id, None)
+            logger.debug(f"Cleaning up state for untracked ball IDs: {keys_to_remove}")
+            dicts_to_clean = [
+                self.ball_states,
+                self.previous_ball_states,
+                self.ball_positions_history,
+                self.ball_zone_history,
+                self.balls_in_zone,
+                self.ball_scored_zones,
+                self.ball_trails,
+            ]
+            for ball_id in keys_to_remove:
+                for d in dicts_to_clean:
+                    d.pop(ball_id, None)
         # --- End Cleanup ---
 
         for ball in self.tracked_balls:
             try:
-                 # Ensure ball data is valid before proceeding
+                # Ensure ball data is valid before proceeding
                 if len(ball) < 6:
-                     logger.warning(f"Skipping scoring malformed ball data (length < 6): {ball}")
-                     continue
+                    logger.warning(
+                        f"Skipping scoring malformed ball data (length < 6): {ball}"
+                    )
+                    continue
                 x, y, r, ball_id, age, b_type = ball
                 center = (int(x), int(y))
             except (ValueError, TypeError, IndexError) as e:
@@ -585,14 +638,15 @@ class GameState:
             zone, zone_idx = None, -1
             for i, z in enumerate(self.scoring_zones):
                 try:
-                     # Pass only necessary ball info to is_in_scoring_zone
-                     if is_in_scoring_zone((x, y, r, ball_id), z):
-                          zone, zone_idx = z, i
-                          break
+                    # Pass only necessary ball info to is_in_scoring_zone
+                    if is_in_scoring_zone((x, y, r, ball_id), z):
+                        zone, zone_idx = z, i
+                        break
                 except Exception as e:
-                     logger.error(f"Error checking if ball {ball_id} is in zone {i}: {e}")
-                     continue # Skip this zone check if error occurs
-
+                    logger.error(
+                        f"Error checking if ball {ball_id} is in zone {i}: {e}"
+                    )
+                    continue  # Skip this zone check if error occurs
 
             # --- Ball State Calculation ---
             rest = is_ball_at_rest(
@@ -625,7 +679,7 @@ class GameState:
                         logger.debug(
                             f"Zone {zone_idx} is on cooldown ({zone_cooldown_time - current_time:.1f}s left). Skipping score check for ball {ball_id}."
                         )
-                    continue # Skip scoring checks for this ball if the zone is on cooldown
+                    continue  # Skip scoring checks for this ball if the zone is on cooldown
 
                 # Check 2: Has this specific ball ALREADY scored in this specific zone *session*?
                 # We use ball_scored_zones dict for this check
@@ -634,15 +688,15 @@ class GameState:
                         logger.debug(
                             f"Ball {ball_id} already scored in zone {zone_idx} this entry. Skipping."
                         )
-                    continue # Skip scoring if this ball ID already scored in this zone instance
+                    continue  # Skip scoring if this ball ID already scored in this zone instance
 
                 # --- If passed checks, proceed with scoring ---
-                _, _, _, _, base_pts = zone # Original points assigned to the zone
+                _, _, _, _, base_pts = zone  # Original points assigned to the zone
                 is_sp = zone == self.special_hole
 
                 # Special Hole Logic: Fixed points + sets session flag
                 if is_sp:
-                    current_score_pts = 100 # Award fixed 100 for special hole hit
+                    current_score_pts = 100  # Award fixed 100 for special hole hit
                     if not self.special_hole_hit_this_session:
                         logger.info(
                             f"*** First hit in Special Hole this session! End score will be doubled. ***"
@@ -650,30 +704,38 @@ class GameState:
                         self.show_notification(
                             "Special Hole Hit! Score will double!", duration=3.0
                         )
-                    self.special_hole_hit_this_session = True # Set flag regardless of first hit
+                    self.special_hole_hit_this_session = (
+                        True  # Set flag regardless of first hit
+                    )
                 else:
-                    current_score_pts = base_pts # Award zone's normal points
+                    current_score_pts = base_pts  # Award zone's normal points
 
                 # Apply ball type multiplier
                 score_multiplier = 1.0
                 if b_type == "red":
                     score_multiplier = 2.0
                 elif b_type == "half":
-                     score_multiplier = 1.5
+                    score_multiplier = 1.5
                 points_to_add = int(current_score_pts * score_multiplier)
 
                 # Update scores
                 self.score += points_to_add
                 self.get_current_player().add_score(points_to_add)
-                newly_scored_pts_this_frame += points_to_add # Track points added
+                newly_scored_pts_this_frame += points_to_add  # Track points added
 
                 # Update tracking states for this score event
-                self.scored_balls.append(ball_id) # Legacy list, maybe remove later?
-                self.balls_in_zone[ball_id] = zone # Record which zone ball is currently scored in
-                self.ball_scored_zones[ball_id] = zone_idx # Mark ball as having scored in this zone index
+                self.scored_balls.append(ball_id)  # Legacy list, maybe remove later?
+                self.balls_in_zone[ball_id] = (
+                    zone  # Record which zone ball is currently scored in
+                )
+                self.ball_scored_zones[ball_id] = (
+                    zone_idx  # Mark ball as having scored in this zone index
+                )
 
                 # Set ZONE cooldown using GameConstants.SCORE_COOLDOWN_DURATION
-                cooldown_duration = GameConstants.SCORE_COOLDOWN_DURATION / 1000.0 # Convert ms to seconds
+                cooldown_duration = (
+                    GameConstants.SCORE_COOLDOWN_DURATION / 1000.0
+                )  # Convert ms to seconds
                 self.zone_cooldown[zone_idx] = current_time + cooldown_duration
 
                 logger.info(
@@ -684,50 +746,50 @@ class GameState:
                 if (
                     self.game_mode == "timed"
                     and self.score >= self.win_score
-                    and self.current_state != CurrentGameState.GAME_OVER # Prevent multiple triggers
+                    and self.current_state
+                    != CurrentGameState.GAME_OVER  # Prevent multiple triggers
                 ):
                     self.win_condition_met = True
                     self.current_state = CurrentGameState.GAME_OVER
-                    logger.info(f"Win condition met! Score {self.score} >= {self.win_score}")
-                    # Save score immediately on win/game over
-                    self.save_score(
-                        self.get_current_player().name
+                    logger.info(
+                        f"Win condition met! Score {self.score} >= {self.win_score}"
                     )
+                    # Save score immediately on win/game over
+                    self.save_score(self.get_current_player().name)
 
             # --- Logic for when ball leaves a zone it previously scored in ---
             # Check if ball was previously scored in a specific zone
             elif ball_id in self.ball_scored_zones:
-                 last_scored_zone_idx = self.ball_scored_zones[ball_id]
-                 # If ball is no longer stable in that zone OR is now in a different zone (or no zone)
-                 if not stable or zone_idx != last_scored_zone_idx:
-                      # Clear the 'scored' status for this ball ID, allowing it to score again
-                      # if it re-enters a zone and becomes stable.
-                      del self.ball_scored_zones[ball_id]
-                      # Also remove from balls_in_zone if needed
-                      self.balls_in_zone.pop(ball_id, None)
-                      logger.debug(
-                          f"Ball {ball_id} left/became unstable in zone {last_scored_zone_idx}. Cleared its scored status for this entry."
-                      )
-                      # Optional: Remove from legacy scored_balls list if using it
-                      if ball_id in self.scored_balls:
-                           try:
-                                self.scored_balls.remove(ball_id)
-                           except ValueError:
-                                pass
+                last_scored_zone_idx = self.ball_scored_zones[ball_id]
+                # If ball is no longer stable in that zone OR is now in a different zone (or no zone)
+                if not stable or zone_idx != last_scored_zone_idx:
+                    # Clear the 'scored' status for this ball ID, allowing it to score again
+                    # if it re-enters a zone and becomes stable.
+                    del self.ball_scored_zones[ball_id]
+                    # Also remove from balls_in_zone if needed
+                    self.balls_in_zone.pop(ball_id, None)
+                    logger.debug(
+                        f"Ball {ball_id} left/became unstable in zone {last_scored_zone_idx}. Cleared its scored status for this entry."
+                    )
+                    # Optional: Remove from legacy scored_balls list if using it
+                    if ball_id in self.scored_balls:
+                        try:
+                            self.scored_balls.remove(ball_id)
+                        except ValueError:
+                            pass
 
             # --- End Scoring Logic ---
-
 
         # Play sound only if points were actually added in this frame
         if newly_scored_pts_this_frame > 0:
             self.play_sound(self.score_sound)
 
-# --- Reset Game Function ---
-# This should be defined within the GameState class or passed game_state
-# For simplicity, showing modification here assuming it's part of GameState or accessible
-# NOTE: Assuming reset_game is a method of GameState based on usage elsewhere
+    # --- Reset Game Function ---
+    # This should be defined within the GameState class or passed game_state
+    # For simplicity, showing modification here assuming it's part of GameState or accessible
+    # NOTE: Assuming reset_game is a method of GameState based on usage elsewhere
 
-    def reset_game(self) -> None: # Assuming it's a method
+    def reset_game(self) -> None:  # Assuming it's a method
         """
         Reset the game state fully, including new zone editing states.
         """
@@ -769,26 +831,18 @@ class GameState:
         self.special_hole_hit_this_session = False
         self.low_time_warning_played = False
 
-        if self.players and 0 <= self.current_player_index < len(
-            self.players
-        ):
-            self.players[
-                self.current_player_index
-            ].reset_score()
+        if self.players and 0 <= self.current_player_index < len(self.players):
+            self.players[self.current_player_index].reset_score()
         else:
             logger.warning("Player index out of bounds or no players during reset.")
 
         if self.game_mode == "timed":
             self.game_timer = GameConstants.TIMED_MODE_DURATION
-            logger.info(
-                f"Timed mode selected. Timer set to {self.game_timer} seconds."
-            )
+            logger.info(f"Timed mode selected. Timer set to {self.game_timer} seconds.")
         else:
             self.game_timer = None
 
-        if hasattr(self, "_load_initial_state") and callable(
-            self._load_initial_state
-        ):
+        if hasattr(self, "_load_initial_state") and callable(self._load_initial_state):
             self._load_initial_state()
         else:
             logger.warning(

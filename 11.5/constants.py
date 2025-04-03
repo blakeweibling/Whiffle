@@ -74,11 +74,11 @@ class UIConstants:
 
     # Zone Editing Visuals
     ZONE_EDIT_HANDLE_SIZE: int = 8
-    ZONE_EDIT_HANDLE_COLOR: Tuple[int, int, int] = (255, 165, 0) # Orange
-    ZONE_EDIT_LINE_COLOR: Tuple[int, int, int] = (255, 165, 0) # Orange
-    ZONE_EDIT_SELECTED_COLOR: Tuple[int, int, int] = (0, 255, 255) # Yellow highlight
-    ZONE_EDIT_MOVE_COLOR: Tuple[int, int, int] = (0, 165, 255) # Orange-Red for move
-    ZONE_EDIT_RESIZE_COLOR: Tuple[int, int, int] = (255, 0, 255) # Magenta for resize
+    ZONE_EDIT_HANDLE_COLOR: Tuple[int, int, int] = (255, 165, 0)  # Orange
+    ZONE_EDIT_LINE_COLOR: Tuple[int, int, int] = (255, 165, 0)  # Orange
+    ZONE_EDIT_SELECTED_COLOR: Tuple[int, int, int] = (0, 255, 255)  # Yellow highlight
+    ZONE_EDIT_MOVE_COLOR: Tuple[int, int, int] = (0, 165, 255)  # Orange-Red for move
+    ZONE_EDIT_RESIZE_COLOR: Tuple[int, int, int] = (255, 0, 255)  # Magenta for resize
 
 
 class CameraConfig:

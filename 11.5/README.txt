@@ -1,116 +1,68 @@
 # Whiffle Tracker
 
-A computer vision application using Python, OpenCV, and YOLOv8 to detect and track whiffle balls for scoring purposes in various game modes.
+## Description
 
-## Overview
-
-Whiffle Tracker uses a camera (or a static image fallback) to monitor a playfield. It employs a YOLOv8 model to detect different types of whiffle balls (white, red, half-red/half-white). Detected balls are tracked across frames, and scores are calculated when balls enter user-defined scoring zones. The application features multiple game modes, player management, configurable settings, an achievement system, and integrates with Supabase for online leaderboards.
+Whiffle Tracker is a computer vision-based application designed to detect, track, and score Whiffle balls using a camera feed[cite: 88, 243, 57]. It includes features for managing scoring zones, tracking player scores, managing achievements, and displaying leaderboards[cite: 52, 414, 448]. The application uses the YOLOv8 model for ball detection [cite: 57, 58] and OpenCV for video processing[cite: 3, 20, 243].
 
 ## Features
 
-* **Real-time Ball Detection:** Utilizes a custom-trained YOLOv8 model (`whiffle_new_best.pt`) to detect white, red, and half-red/half-white balls[cite: 151, 175, 176].
-* **Ball Tracking:** Assigns persistent IDs to detected balls and tracks their movement across frames[cite: 581]. Optionally uses SciPy's KDTree for efficient matching if available[cite: 587].
-* **Dynamic Scoring Zones:** Users can define rectangular scoring zones directly on the video feed using mouse clicks and drags [cite: 113, 381-386]. Zones can be saved, loaded, cleared, and edited (points value) via the menu [cite: 209, 210, 404-407, 528-536].
-* **Multiple Game Modes:** Includes 'Classic', 'Timed', and 'Practice' modes affecting gameplay rules (e.g., timers, win conditions)[cite: 207, 408, 474, 481].
-* **Scoring System:** Calculates scores based on which zone a ball enters and remains stable within[cite: 503]. Supports point multipliers for different ball types (Red x2, Half x1.5) [cite: 512, 513] and a 'Special Hole' bonus (leftmost zone) that doubles the final score if hit[cite: 116, 384, 509, 510].
-* **Player Management:** Supports up to two players, allowing adding, selecting the current player, and editing player names [cite: 223, 411-419].
-* **Online Leaderboard:** Integrates with Supabase to submit scores and retrieve top scores for different game modes[cite: 652, 679, 687]. Includes batch submission for efficiency[cite: 684].
-* **Local Leaderboard Fallback:** Saves scores locally (`whiffle_leaderboard.json`) and uses this if the online leaderboard is unavailable[cite: 656, 692].
-* **Achievement System:** Tracks and unlocks achievements based on game events (e.g., first score, creating zones)[cite: 199, 480, 500]. Status is saved locally (`achievements_status.json`)[cite: 481, 566].
-* **Configuration Menu:** Allows users to toggle game sounds, background music, and visual/general debug modes via an in-game menu [cite: 201, 202-206].
-* **Persistent Settings:** Saves/loads scoring zones, achievement status, high scores, and HSV color ranges locally using JSON files[cite: 465, 481, 482, 528, 566, 568].
-* **UI Elements:** Displays scores, high scores, game mode, timers, player names, notifications, splash screens, and game over screens using OpenCV drawing functions[cite: 327].
-* **Debug Overlays:** Optional overlays to visualize tracked balls, IDs, types, FPS, and game state for debugging[cite: 345, 366].
+* **Ball Detection:** Detects white, red, and half-red/half-white Whiffle balls using a YOLOv8 model[cite: 57, 71].
+* **Ball Tracking:** Assigns unique IDs to balls and tracks their movement across frames[cite: 713, 745].
+* **Scoring Zones:** Allows users to define rectangular scoring zones with specific point values[cite: 561, 512]. Zones can be added, cleared, saved, loaded, and edited (points, position, size)[cite: 52, 691].
+* **Scoring Logic:** Awards points when a ball comes to rest stably within a scoring zone, considering zone cooldowns and ball types (red/half give multipliers)[cite: 360, 373, 382]. Includes a 'Special Hole' mechanic (leftmost zone)[cite: 406].
+* **Game Modes:** Supports different game modes like Classic and Timed[cite: 50, 613].
+* **Player Management:** Supports multiple players, allowing name editing and selection[cite: 314, 640].
+* **Leaderboard:** Submits scores to an online Supabase leaderboard and maintains a local fallback[cite: 448, 449].
+* **Achievements:** Tracks and notifies users about unlocked achievements[cite: 1, 414, 355].
+* **Menu System:** Provides an interactive menu for settings, zone management, game modes, players, leaderboard, achievements, help, and about sections[cite: 496, 52].
+* **Configuration:** Uses environment variables (`.env` file) for Supabase credentials and optional camera configuration[cite: 88, 30].
+* **Setup Script:** Includes a `setup.py` for building an executable using `cx_Freeze`[cite: 596].
 
-## Technology Stack
+## Key Files & Modules
 
-* **Python 3:** Core programming language.
-* **OpenCV (`opencv-python`):** For camera interaction, image processing, UI drawing, and window management[cite: 178].
-* **YOLOv8 (`ultralytics`):** For object (ball) detection[cite: 151].
-* **Pygame:** For sound effect and background music playback[cite: 474, 553].
-* **NumPy:** For numerical operations, especially with coordinates and image data.
-* **Supabase:** Cloud backend for the online leaderboard (interacted with via Python `requests`).
-* **python-dotenv:** For managing environment variables (Supabase credentials)[cite: 178].
-* **Requests:** For making HTTP requests to the Supabase API[cite: 652].
-* **(Optional) SciPy:** For potentially faster ball tracking using KDTree[cite: 581].
+* `game.py`: Main entry point for the application[cite: 88].
+* `constants.txt`: Defines game constants, colors, file paths, and configurations[cite: 20].
+* `game_state.txt`: Manages the overall state of the game (scores, zones, players, modes, etc.)[cite: 291].
+* `game_loop.txt`: Contains the main game loop logic (frame capture, processing, rendering, input)[cite: 243].
+* `game_input.txt`: Handles keyboard input for different game states[cite: 104].
+* `detection.txt`: Implements ball detection using YOLOv8[cite: 57].
+* `tracking.txt`: Implements ball tracking logic[cite: 713].
+* `scoring.txt`: Handles scoring zone definition and checks[cite: 561].
+* `leaderboard.txt`: Manages online (Supabase) and local leaderboards[cite: 448].
+* `player.txt`: Defines the `Player` class[cite: 552].
+* `achievement.txt`: Defines the `Achievement` class[cite: 1].
+* `menu.txt`, `submenus.txt`, `menu_utils.txt`, `submenu_draw_functions.txt`: Handle menu rendering and logic[cite: 496, 600, 532, 629].
+* `ui.txt`, `ui_elements.txt`, `ui_screens.txt`, `ui_utils.txt`: Manage UI drawing for different game states and elements[cite: 763, 800, 817, 886].
+* `utils.txt`: Contains utility functions, including the main mouse callback[cite: 900].
+* `cleanup_utils.txt`: Provides the `clean_exit` function for resource cleanup[cite: 3].
+* `game_state_utils.txt`: Utility functions specifically for `GameState` initialization and state management[cite: 405].
+* `setup.txt`: Script to build the application into an executable using `cx_Freeze`[cite: 596].
 
-## Setup & Installation
+## Installation & Setup
 
-1.  **Clone Repository:**
+1.  **Clone the repository:**
     ```bash
     git clone <your-repository-url>
-    cd <repository-directory>
+    cd <repository-folder>
     ```
-2.  **Create Virtual Environment (Recommended):**
+2.  **Install Dependencies:** Make sure you have Python installed. Then, install the required libraries using pip:
     ```bash
-    python -m venv venv
-    # Windows
-    venv\Scripts\activate
-    # macOS/Linux
-    source venv/bin/activate
+    pip install -r requirements.txt
     ```
-3.  **Install Dependencies:**
-    * Create a `requirements.txt` file with the following contents:
-        ```txt
-        opencv-python
-        ultralytics
-        pygame
-        numpy
-        python-dotenv
-        requests
-        # scipy # Uncomment if you want to use KDTree tracking
+3.  **Configure Supabase:**
+    * Create a `.env` file in the root directory.
+    * Add your Supabase URL and Key:
+        ```env
+        SUPABASE_URL=[https://your-supabase-url.supabase.co](https://www.google.com/search?q=https://your-supabase-url.supabase.co)
+        SUPABASE_KEY=your-supabase-anon-key
         ```
-    * Install using pip:
-        ```bash
-        pip install -r requirements.txt
-        ```
-4.  **YOLOv8 Model:** Obtain the trained model file `whiffle_new_best.pt` [cite: 151] and place it in the project's root directory (or update the path in `detection.py`).
-5.  **Supabase Setup:**
-    * Create a Supabase project.
-    * Create a table (e.g., named `whifflescores` [cite: 655]) with columns like `player_name` (text), `score` (integer), `mode` (text), and `created_at` (timestamp with timezone). Ensure appropriate Row Level Security (RLS) policies are set if needed.
-    * Create a `.env` file in the project root directory.
-    * Add your Supabase URL and Anon Key to the `.env` file[cite: 178]:
-        ```dotenv
-        SUPABASE_URL=[https://your-project-ref.supabase.co](https://www.google.com/search?q=https://your-project-ref.supabase.co)
-        SUPABASE_KEY=your-anon-key
-        ```
-6.  **Assets:** Ensure the following asset files are present:
-    * `splash.png` (for the startup splash screen) [cite: 350]
-    * `game_over.png` (for the game over screen) [cite: 339]
-    * `sounds/ding.wav` (score sound) [cite: 554]
-    * `sounds/background_music.mp3` (background music) [cite: 554]
-    * (Optional) `last_frame.png` (if `USE_CAMERA` is False in `constants.py`) [cite: 465]
+    * Make sure your Supabase project has a table named `whifflescores` (or adjust `TABLE_NAME` in `constants.txt` [cite: 50]) with columns like `player_name` (text), `score` (integer), `mode` (text), and `created_at` (timestamp).
+4.  **YOLO Model:** Ensure the YOLO model file (`whiffle_new_best.pt` as mentioned in `detection.txt` [cite: 57, 58]) is present in the root directory.
+5.  **Assets:** Ensure all required asset files (images like `splash.png`[cite: 50], `game_over.png`[cite: 50], sound files in the `sounds/` directory [cite: 50, 408]) are present.
 
-## Configuration
+## How to Run
 
-* **Core Settings:** Many game parameters (frame rate, colors, file paths, thresholds, volumes) can be adjusted in `constants.py`[cite: 624].
-* **Camera:** Camera index and backend preference are automatically detected but can be overridden via environment variables (`WHIFFLE_CAMERA_INDEX`, `WHIFFLE_CAMERA_BACKEND`) or modified in `constants.py`.
-* **Saved Data:** The application saves and loads data from JSON files:
-    * `scoring_zones.json` [cite: 465]
-    * `achievements_status.json` [cite: 465]
-    * `hsv_ranges.json` [cite: 465]
-    * `high_scores.json` [cite: 465]
-    * `whiffle_leaderboard.json` (local fallback) [cite: 655]
+Execute the main game script from the root directory:
 
-## Usage
-
-1.  Activate your virtual environment (if using one).
-2.  Run the main script:
-    ```bash
-    python game.py
-    ```
-3.  **Key Controls:**
-    * `m`: Toggle the main menu.
-    * `s`: Start/Stop drawing a new scoring zone (when not in menu). Click and drag to define the rectangle, release to finish.
-    * `p`: Pause/Resume the game (when playing).
-    * `d`: Toggle general debug logging verbosity.
-    * `b`: Toggle the visual debug overlay (bounding boxes, IDs).
-    * `q` or `ESC`: Quit the application (or navigate back/cancel in menus).
-    * `BACKSPACE`: Navigate back in menus or close the main menu.
-    * `0-9`: Input points when editing scoring zones via the menu[cite: 269].
-    * `A-Z, 0-9, Space`: Input characters when editing player names via the menu[cite: 284].
-    * `ENTER`: Confirm input (zone points, player name)[cite: 273, 287].
-    * `n`: Start a New Game from the Game Over screen[cite: 313].
-    * `l`: Go to Leaderboard from the Game Over screen[cite: 315].
-
-## Project Structure (Simplified)
+```bash
+python game.py
