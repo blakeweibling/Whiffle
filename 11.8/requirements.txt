@@ -1,7 +1,0 @@
-opencv-python
-ultralytics
-pygame
-numpy
-python-dotenv
-requests
-# scipy # Optional: Used for KDTree-based tracking in tracking.py, uncomment if needed
