@@ -102,7 +102,6 @@ def reset_game(game_state: GameState) -> None:  # Added GameState type hint
 
 def save_zones(game_state: GameState) -> None:  # Added GameState type hint
     """Save the current scoring zones to a JSON file."""
-    # ...(save_zones remains the same)...
     try:
         with open(GameConstants.ZONES_FILE, "w") as f:
             json.dump(game_state.scoring_zones, f, indent=4)
@@ -115,7 +114,6 @@ def save_zones(game_state: GameState) -> None:  # Added GameState type hint
 
 def load_zones(game_state: GameState) -> None:  # Added GameState type hint
     """Load scoring zones from a JSON file."""
-    # ...(load_zones remains the same)...
     if os.path.exists(GameConstants.ZONES_FILE):
         try:
             if os.path.getsize(GameConstants.ZONES_FILE) == 0:
@@ -160,7 +158,6 @@ def load_zones(game_state: GameState) -> None:  # Added GameState type hint
 
 def clear_zones(game_state: GameState) -> None:  # Added GameState type hint
     """Clear all scoring zones."""
-    # ...(clear_zones remains the same)...
     game_state.scoring_zones.clear()
     game_state.special_hole = None
     if hasattr(game_state, "scoring_zones_cache"):
@@ -176,7 +173,6 @@ def clear_zones(game_state: GameState) -> None:  # Added GameState type hint
 
 def flush_scoring_zones(game_state: GameState) -> None:  # Added GameState type hint
     """Writes current scoring zones to disk (used by clean_exit)."""
-    # ...(flush_scoring_zones remains the same)...
     logger.debug("Flushing scoring zones (calling save_zones)...")
     save_zones(game_state)
 
@@ -185,7 +181,6 @@ def draw_menu(
     frame: np.ndarray, game_state: GameState
 ) -> None:  # Added GameState type hint
     """Draw the menu button on the frame."""
-    # ...(draw_menu remains the same)...
     if game_state.current_state == CurrentGameState.PLAYING:
         _draw_button(
             frame,
@@ -205,7 +200,6 @@ def _draw_menu_content(
     menu_frame: np.ndarray, game_state: GameState
 ) -> None:  # Added GameState type hint
     """Draw the actual content of the menu or submenu onto the menu_frame."""
-    # ...( _draw_menu_content remains the same)...
     if game_state.submenu_active:
         draw_submenu(menu_frame, game_state)
     else:
@@ -244,7 +238,6 @@ def draw_menu_window(
     """
     Draw the menu as an overlay within the main game window, using caching to reduce redraws.
     """
-    # ...(draw_menu_window remains the same)...
     if game_state.current_state != CurrentGameState.MENU:
         return
 
@@ -339,6 +332,9 @@ def draw_menu_window(
             if roi.shape == menu_frame_slice.shape:
                 alpha = 0.85
                 cv2.addWeighted(menu_frame_slice, alpha, roi, 1.0 - alpha, 0, roi)
+                # --- ADD THIS LINE ---
+                cv2.rectangle(frame, (x1c, y1c), (x2c, y2c), UIConstants.WHITE, 2) # Draw white border with thickness 2
+                # --- END ADDITION ---
             else:
                 logger.warning(
                     f"ROI shape {roi.shape} mismatch with menu slice {menu_frame_slice.shape}. Drawing fallback."
