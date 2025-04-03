@@ -237,6 +237,7 @@ def draw_menu_window(
 ) -> None:  # Added GameState type hint
     """
     Draw the menu as an overlay within the main game window, using caching to reduce redraws.
+    Also draws a close button in the top-right corner.
     """
     if game_state.current_state != CurrentGameState.MENU:
         return
@@ -307,14 +308,45 @@ def draw_menu_window(
             logger.error("Failed to create menu_frame during redraw.")
             return
 
+    # --- Draw the Close Button on the menu_frame ---
+    try:
+        pad = UIConstants.MENU_CLOSE_BUTTON_PADDING
+        size = UIConstants.MENU_CLOSE_BUTTON_SIZE
+        btn_x1 = game_state.menu_width - pad - size
+        btn_y1 = pad
+        btn_x2 = game_state.menu_width - pad
+        btn_y2 = pad + size
+
+        # Draw lines for 'X'
+        line_pad = size // 4 # Padding inside the button area for the X lines
+        cv2.line(menu_frame,
+                 (btn_x1 + line_pad, btn_y1 + line_pad),
+                 (btn_x2 - line_pad, btn_y2 - line_pad),
+                 UIConstants.MENU_CLOSE_BUTTON_COLOR,
+                 UIConstants.MENU_CLOSE_BUTTON_THICKNESS)
+        cv2.line(menu_frame,
+                 (btn_x1 + line_pad, btn_y2 - line_pad),
+                 (btn_x2 - line_pad, btn_y1 + line_pad),
+                 UIConstants.MENU_CLOSE_BUTTON_COLOR,
+                 UIConstants.MENU_CLOSE_BUTTON_THICKNESS)
+        # Optional: Draw a faint box around it for better visibility/click area hint
+        # cv2.rectangle(menu_frame, (btn_x1, btn_y1), (btn_x2, btn_y2), (50, 50, 50), 1)
+
+    except Exception as e:
+        logger.error(f"Error drawing menu close button: {e}")
+    # --- End Close Button Drawing ---
+
+    # Calculate menu position on main frame
     start_x = (frame.shape[1] - game_state.menu_width) // 2
     start_y = (frame.shape[0] - game_state.menu_height) // 2
-    game_state.menu_pos = (start_x, start_y)
+    game_state.menu_pos = (start_x, start_y) # Store absolute screen position
 
+    # Blend menu onto main frame
     x1, y1 = game_state.menu_pos
     menu_h, menu_w = menu_frame.shape[0], menu_frame.shape[1]
     x2, y2 = x1 + menu_w, y1 + menu_h
 
+    # Ensure blending happens within frame bounds
     x1c, y1c = max(0, x1), max(0, y1)
     x2c, y2c = min(frame.shape[1], x2), min(frame.shape[0], y2)
 
@@ -332,16 +364,17 @@ def draw_menu_window(
             if roi.shape == menu_frame_slice.shape:
                 alpha = 0.85
                 cv2.addWeighted(menu_frame_slice, alpha, roi, 1.0 - alpha, 0, roi)
-                # --- ADD THIS LINE ---
-                cv2.rectangle(frame, (x1c, y1c), (x2c, y2c), UIConstants.WHITE, 2) # Draw white border with thickness 2
-                # --- END ADDITION ---
+                # Draw border around the blended menu
+                cv2.rectangle(frame, (x1c, y1c), (x2c, y2c), UIConstants.WHITE, 2)
             else:
                 logger.warning(
                     f"ROI shape {roi.shape} mismatch with menu slice {menu_frame_slice.shape}. Drawing fallback."
                 )
+                # Fallback: Draw a solid rectangle if blending fails
                 cv2.rectangle(frame, (x1c, y1c), (x2c, y2c), (50, 50, 50), -1)
         except Exception as e:
             logger.exception(f"Error blending menu: {e}")
+            # Fallback: Draw a solid rectangle on error
             cv2.rectangle(frame, (x1c, y1c), (x2c, y2c), (50, 0, 0), -1)
     elif roi_h <= 0 or roi_w <= 0:
         logger.debug("Menu overlay ROI has zero or negative size, skipping overlay.")
