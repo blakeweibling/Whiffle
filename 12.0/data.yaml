@@ -1,0 +1,4 @@
+train: F:/Whiffle/12.0/dataset/images/train
+val: F:/Whiffle/12.0/dataset/images/val
+nc: 3
+names: ['white', 'red', 'half']
