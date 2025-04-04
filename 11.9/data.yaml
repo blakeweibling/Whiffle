@@ -1,4 +1,4 @@
-train: F:/Whiffle/11.1/dataset/images/train
-val: F:/Whiffle/11.1/dataset/images/val
+train: F:/Whiffle/11.9/dataset/images/train
+val: F:/Whiffle/11.9/dataset/images/val
 nc: 3
 names: ['white', 'red', 'half']
