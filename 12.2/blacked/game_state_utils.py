@@ -5,14 +5,13 @@ Utility functions for the GameState class in the Whiffle Tracker project.
 
 import cv2
 import logging
-import pygame  # --- CHANGE: Ensure pygame is imported ---
+import pygame
 import json
 import os
 import numpy as np
-from typing import Optional, List, Tuple, Dict, Any  # Added Any
+from typing import Optional, List, Tuple, Dict, Any
 
 # Import constants and classes
-# Added ScoringConstants, removed unused BallDetector, BallTracker
 from constants import UIConstants, GameConstants, ScoringConstants
 from scoring import is_in_scoring_zone
 from achievement import Achievement
@@ -34,61 +33,53 @@ def set_special_hole(
     return special_hole
 
 
-# --- CHANGE: Modified Function to load and return low_time_sound ---
+# --- UPDATED: Removed background music loading and return value ---
 def initialize_sounds() -> Tuple[
-    Optional[pygame.mixer.Sound],
-    Optional[pygame.mixer.Sound],
-    Optional[pygame.mixer.Sound],
+    Optional[pygame.mixer.Sound],  # score_sound
+    Optional[pygame.mixer.Sound],  # low_time_sound
 ]:
     """
-    Initialize sound effects and background music using filenames from user's code.
+    Initialize sound effects (score, low time) using filenames from constants.
+    Background music is handled separately by GameState.
     Returns:
-        Tuple of (score_sound, background_music, low_time_sound).
+        Tuple of (score_sound, low_time_sound).
     """
-    pygame.mixer.init()
+    pygame.mixer.init()  # Ensure mixer is initialized
     score_sound = None
-    background_music = None
-    low_time_sound = None  # --- CHANGE: Added variable for low time sound ---
+    # background_music = None # Removed
+    low_time_sound = None
 
     try:
         # Use original filenames and constant path
         score_sound_path = os.path.join(GameConstants.SOUND_EFFECTS_PATH, "ding.wav")
-        background_music_path = os.path.join(
-            GameConstants.SOUND_EFFECTS_PATH, "background_music.mp3"
-        )
-        # --- CHANGE: Path for low time sound ---
+        # background_music_path = os.path.join( # Removed
+        #     GameConstants.SOUND_EFFECTS_PATH, "background_music.mp3" # Removed
+        # ) # Removed
         low_time_sound_path = os.path.join(
             GameConstants.SOUND_EFFECTS_PATH, "10_sec_timer.mp3"
         )
 
         if os.path.exists(score_sound_path):
             score_sound = pygame.mixer.Sound(score_sound_path)
-            score_sound.set_volume(GameConstants.DEFAULT_SOUND_VOLUME)  # Use constant
+            score_sound.set_volume(
+                GameConstants.DEFAULT_SOUND_VOLUME
+            )  # Set volume here
             logger.info(f"Loaded score sound: {score_sound_path}")
         else:
             logger.warning(f"Score sound file not found: {score_sound_path}")
 
-        if os.path.exists(background_music_path):
-            background_music = pygame.mixer.Sound(background_music_path)
-            background_music.set_volume(
-                GameConstants.DEFAULT_MUSIC_VOLUME
-            )  # Use constant
-            logger.info(f"Loaded background music: {background_music_path}")
-        else:
-            logger.warning(f"Background music file not found: {background_music_path}")
+        # Removed background music loading block
 
-        # --- CHANGE: Load low time sound ---
         if os.path.exists(low_time_sound_path):
             low_time_sound = pygame.mixer.Sound(low_time_sound_path)
             low_time_sound.set_volume(
                 GameConstants.DEFAULT_SOUND_VOLUME
-            )  # Use same volume as other effects
+            )  # Set volume here
             logger.info(f"Loaded low time warning sound: {low_time_sound_path}")
         else:
             logger.warning(
                 f"Low time warning sound file not found: {low_time_sound_path}"
             )
-        # --- End Change ---
 
     except pygame.error as e:
         logger.error(f"Pygame mixer initialization or sound loading failed: {e}")
@@ -97,8 +88,11 @@ def initialize_sounds() -> Tuple[
     except Exception as e:
         logger.exception(f"Unexpected error during sound initialization: {e}")
 
-    # --- CHANGE: Return all three sound objects ---
-    return score_sound, background_music, low_time_sound
+    # Return only the effects loaded here
+    return score_sound, low_time_sound
+
+
+# --- END UPDATE ---
 
 
 def initialize_achievements() -> List[Achievement]:

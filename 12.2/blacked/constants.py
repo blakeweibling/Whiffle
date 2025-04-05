@@ -1,3 +1,5 @@
+# constants.txt
+
 """
 Constants for the Whiffle Tracker project.
 
@@ -252,6 +254,10 @@ class GameConstants:
     # Game Modes
     TIMED_MODE_DURATION: float = _assert_positive(90.0, "TIMED_MODE_DURATION")
     TIMED_MODE_WIN_SCORE: int = _assert_positive(500, "TIMED_MODE_WIN_SCORE")
+    SURVIVAL_MODE_START_TIME: float = _assert_positive(30.0, "SURVIVAL_MODE_START_TIME")
+    SURVIVAL_MODE_TIME_GAIN_PER_SCORE: float = _assert_positive(
+        5.0, "SURVIVAL_MODE_TIME_GAIN_PER_SCORE"
+    )
 
     # Scoring Logic
     POSITION_HISTORY_LENGTH: int = _assert_positive(5, "POSITION_HISTORY_LENGTH")
@@ -272,6 +278,15 @@ class GameConstants:
     # Audio
     DEFAULT_SOUND_VOLUME: float = _assert_fractional(0.7, "DEFAULT_SOUND_VOLUME")
     DEFAULT_MUSIC_VOLUME: float = _assert_fractional(0.5, "DEFAULT_MUSIC_VOLUME")
+    # --- NEW: List of Background Music Tracks ---
+    # Assumes these files exist in the SOUND_EFFECTS_PATH directory
+    BACKGROUND_MUSIC_TRACKS: List[str] = [
+        "background_music.mp3",  # Track 1
+        "background_music2.mp3",  # Track 2
+        "background_music3.mp3",  # Track 3
+        # Add more tracks here if needed
+    ]
+    # --- END NEW ---
 
 
 class MenuConstants:

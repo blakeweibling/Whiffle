@@ -35,8 +35,8 @@ def set_special_hole(
 
 # --- UPDATED: Removed background music loading and return value ---
 def initialize_sounds() -> Tuple[
-    Optional[pygame.mixer.Sound], # score_sound
-    Optional[pygame.mixer.Sound], # low_time_sound
+    Optional[pygame.mixer.Sound],  # score_sound
+    Optional[pygame.mixer.Sound],  # low_time_sound
 ]:
     """
     Initialize sound effects (score, low time) using filenames from constants.
@@ -44,7 +44,7 @@ def initialize_sounds() -> Tuple[
     Returns:
         Tuple of (score_sound, low_time_sound).
     """
-    pygame.mixer.init() # Ensure mixer is initialized
+    pygame.mixer.init()  # Ensure mixer is initialized
     score_sound = None
     # background_music = None # Removed
     low_time_sound = None
@@ -61,7 +61,9 @@ def initialize_sounds() -> Tuple[
 
         if os.path.exists(score_sound_path):
             score_sound = pygame.mixer.Sound(score_sound_path)
-            score_sound.set_volume(GameConstants.DEFAULT_SOUND_VOLUME) # Set volume here
+            score_sound.set_volume(
+                GameConstants.DEFAULT_SOUND_VOLUME
+            )  # Set volume here
             logger.info(f"Loaded score sound: {score_sound_path}")
         else:
             logger.warning(f"Score sound file not found: {score_sound_path}")
@@ -72,7 +74,7 @@ def initialize_sounds() -> Tuple[
             low_time_sound = pygame.mixer.Sound(low_time_sound_path)
             low_time_sound.set_volume(
                 GameConstants.DEFAULT_SOUND_VOLUME
-            ) # Set volume here
+            )  # Set volume here
             logger.info(f"Loaded low time warning sound: {low_time_sound_path}")
         else:
             logger.warning(
@@ -88,6 +90,8 @@ def initialize_sounds() -> Tuple[
 
     # Return only the effects loaded here
     return score_sound, low_time_sound
+
+
 # --- END UPDATE ---
 
 

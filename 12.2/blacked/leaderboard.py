@@ -1,3 +1,4 @@
+# leaderboard.txt
 """
 Leaderboard management for the Whiffle Tracker project.
 
@@ -17,6 +18,10 @@ from constants import LeaderboardConstants
 
 # Set up logging
 logger: Logger = logging.getLogger(__name__)
+
+# --- UPDATED: List of valid modes ---
+VALID_MODES = {"classic", "timed", "fun", "practice", "survival"}
+# --- END UPDATE ---
 
 
 class Leaderboard:
@@ -53,20 +58,18 @@ class Leaderboard:
     def _load_local_scores(self) -> Dict[str, List[Dict[str, Any]]]:
         """
         Load local scores from the JSON file.
-
         Returns:
             Dictionary of scores by mode, or an empty dict if the file doesn't exist or is invalid.
-
-        Examples:
-            >>> lb = Leaderboard("url", "key")
-            >>> lb._load_local_scores()
-            {"classic": [{"player_name": "Player 1", "score": 100, "mode": "classic", "created_at": "2023-..."}]}
         """
+        # --- UPDATED: Initialize structure with all valid modes ---
+        default_scores = {mode: [] for mode in VALID_MODES}
+        # --- END UPDATE ---
+
         if not os.path.exists(self.local_file):
             logger.info(
                 f"Local leaderboard file {self.local_file} does not exist, initializing empty scores"
             )
-            return {"classic": [], "timed": []}
+            return default_scores  # Return initialized structure
         try:
             with open(self.local_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
@@ -74,22 +77,41 @@ class Leaderboard:
                     logger.warning(
                         f"{self.local_file} contains invalid data, resetting to empty scores"
                     )
-                    return {"classic": [], "timed": []}
+                    return default_scores  # Return initialized structure
+
+                # --- UPDATED: Ensure all valid modes exist in loaded data ---
+                for mode in VALID_MODES:
+                    if mode not in data:
+                        logger.warning(
+                            f"Mode '{mode}' missing in {self.local_file}, initializing empty list."
+                        )
+                        data[mode] = []
+                    elif not isinstance(data[mode], list):
+                        logger.warning(
+                            f"Data for mode '{mode}' in {self.local_file} is not a list, resetting."
+                        )
+                        data[mode] = []
                 return data
+                # --- END UPDATE ---
         except json.JSONDecodeError as e:
             logger.error(
                 f"Invalid JSON in {self.local_file}: {e}, resetting to empty scores"
             )
-            return {"classic": [], "timed": []}
+            return default_scores  # Return initialized structure
         except (IOError, PermissionError) as e:
             logger.error(
                 f"Failed to read {self.local_file}: {e}, returning empty scores"
             )
-            return {"classic": [], "timed": []}
+            return default_scores  # Return initialized structure
 
     def _save_local_scores(self) -> None:
         """Save local scores to the JSON file."""
         try:
+            # --- UPDATED: Ensure all valid modes are present before saving ---
+            for mode in VALID_MODES:
+                if mode not in self.local_scores:
+                    self.local_scores[mode] = []
+            # --- END UPDATE ---
             with open(self.local_file, "w", encoding="utf-8") as f:
                 json.dump(self.local_scores, f, indent=4)
             logger.info(f"Saved local leaderboard to {self.local_file}")
@@ -101,12 +123,10 @@ class Leaderboard:
     ) -> None:
         """
         Make a POST request to the Supabase API with retry logic.
-
         Args:
             data: List of score entries to send in the POST request.
             retries: Number of retry attempts on failure.
             delay: Delay in seconds between retries.
-
         Raises:
             requests.RequestException: If all retries fail.
         """
@@ -141,15 +161,12 @@ class Leaderboard:
     ) -> List[Dict[str, Any]]:
         """
         Make a GET request to the Supabase API with retry logic.
-
         Args:
             params: Query parameters for the GET request.
             retries: Number of retry attempts on failure.
             delay: Delay in seconds between retries.
-
         Returns:
             Response data from the API.
-
         Raises:
             requests.RequestException: If all retries fail.
         """
@@ -182,18 +199,21 @@ class Leaderboard:
     def submit_score(self, player_name: str, score: int, mode: str) -> bool:
         """
         Queue a score for batch submission to the leaderboard, both online and locally.
-
         Args:
             player_name: Player's name.
             score: Player's score.
-            mode: Game mode ("classic" or "timed").
+            mode: Game mode ("classic", "timed", "fun", "practice", "survival").
 
         Returns:
             bool: True (score is queued for submission).
         """
-        if not isinstance(mode, str) or mode not in {"classic", "timed"}:
-            logger.warning(f"Invalid mode '{mode}', defaulting to 'classic'")
+        # --- UPDATED: Include 'survival' in mode validation ---
+        if not isinstance(mode, str) or mode not in VALID_MODES:
+            logger.warning(
+                f"Invalid mode '{mode}' for score submission, defaulting to 'classic'"
+            )
             mode = "classic"
+        # --- END UPDATE ---
 
         score_entry = {
             "player_name": player_name,  # Changed from "initials" to "player_name"
@@ -202,8 +222,10 @@ class Leaderboard:
             "created_at": datetime.utcnow().isoformat(),
         }
 
+        # --- UPDATED: Ensure mode key exists before appending ---
         if mode not in self.local_scores:
-            self.local_scores[mode] = []
+            self.local_scores[mode] = []  # Initialize if somehow missing
+        # --- END UPDATE ---
         self.local_scores[mode].append(score_entry)
         self._save_local_scores()
 
@@ -217,7 +239,6 @@ class Leaderboard:
     def flush_pending_scores(self, retries: int = 3, delay: float = 1) -> None:
         """
         Submit all queued scores to Supabase in a batch.
-
         Args:
             retries: Number of retry attempts on failure.
             delay: Delay in seconds between retries.
@@ -241,18 +262,21 @@ class Leaderboard:
     ) -> Tuple[List[Dict[str, Any]], bool]:
         """
         Retrieve the top scores for a given mode.
-
         Args:
-            mode: Game mode ("classic" or "timed").
+            mode: Game mode ("classic", "timed", "fun", "practice", "survival").
             limit: Maximum number of scores to return (default: 5).
 
         Returns:
             Tuple of (scores, online), where scores is a list of score entries sorted by score descending,
             and online is True if retrieved from Supabase, False if from local storage.
         """
-        if not isinstance(mode, str) or mode not in self.local_scores:
-            logger.warning(f"Invalid or unknown mode '{mode}', defaulting to 'classic'")
+        # --- UPDATED: Include 'survival' in mode validation ---
+        if not isinstance(mode, str) or mode not in VALID_MODES:
+            logger.warning(
+                f"Invalid or unknown mode '{mode}' for get_top_scores, defaulting to 'classic'"
+            )
             mode = "classic"
+        # --- END UPDATE ---
 
         try:
             params = {
@@ -270,6 +294,7 @@ class Leaderboard:
             logger.warning(
                 f"Failed to retrieve top scores from online leaderboard, using local scores"
             )
+            # --- UPDATED: Ensure mode key exists before accessing ---
             if mode in self.local_scores:
                 sorted_scores = sorted(
                     self.local_scores[mode], key=lambda x: x["score"], reverse=True
@@ -278,5 +303,6 @@ class Leaderboard:
                     f"Using local leaderboard with {len(sorted_scores)} scores for mode: {mode}"
                 )
                 return sorted_scores, False
+            # --- END UPDATE ---
             logger.info(f"No scores found in local leaderboard for mode: {mode}")
             return [], False

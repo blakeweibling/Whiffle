@@ -1,3 +1,5 @@
+print("!!! EXECUTING submenu_draw_functions.txt !!!")  # Add this line right at the top
+
 # submenu_draw_functions.py
 """
 Specific submenu drawing functions for the Whiffle Tracker project.
@@ -9,22 +11,32 @@ achievements, help, FAQ, and about screens.
 import cv2
 import numpy as np
 import logging
-from typing import Any
-from math import ceil  # Add ceil import
+from typing import Any, Callable
+from math import ceil
 
-# Import constants and utilities needed by these functions
-# Ensure ScoringConstants and CurrentGameState are imported if needed by updated functions
-from constants import UIConstants, MenuConstants, ScoringConstants
+from constants import UIConstants, MenuConstants, ScoringConstants, GameConstants
 from menu_utils import _draw_button
-from game_state import CurrentGameState  # Import needed for state checking
+from game_state import (
+    CurrentGameState,
+)  # Assuming GameState is imported where needed or type hinted
 
 logger = logging.getLogger(__name__)
+
+
+# --- Helper for Toggle Items ---
+class ToggleItem:
+    """Represents a toggleable menu item with state and action."""
+
+    def __init__(self, label: str, get_state: Callable[[], bool], action: Any):
+        self.label = label
+        self.get_state = get_state
+        self.action = action
+
 
 # --- Specific Submenu Drawing Functions ---
 
 
-# (Keep original functions from the file for leaderboard, players, achievements, etc.)
-def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
+def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
     """Draw the Leaderboard submenu."""
     cv2.putText(
         menu_frame,
@@ -35,29 +47,26 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         UIConstants.WHITE,
         UIConstants.FONT_THICKNESS,
     )
-
     y_offset = 80
-    item_height = 25
+    item_height = 25  # Height for score entries
     game_state.submenu_items.clear()
-
+    display_mode = game_state.leaderboard_mode.capitalize()
     cv2.putText(
         menu_frame,
-        f"Mode: {game_state.game_mode.capitalize()}",
+        f"Mode: {display_mode}",
         (20, y_offset - 20),
         cv2.FONT_HERSHEY_SIMPLEX,
         UIConstants.FONT_SCALE_MEDIUM,
         UIConstants.YELLOW,
         1,
     )
-
     scores, is_online = ([], False)
     if hasattr(game_state, "leaderboard") and game_state.leaderboard:
         scores, is_online = game_state.leaderboard.get_top_scores(
-            limit=10, mode=game_state.game_mode
+            limit=10, mode=game_state.leaderboard_mode
         )
     else:
         logger.warning("game_state.leaderboard not found in _draw_leaderboard_submenu")
-
     status_text = "Online" if is_online else "Local (Offline)"
     status_color = UIConstants.GREEN if is_online else UIConstants.YELLOW
     cv2.putText(
@@ -69,7 +78,6 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         status_color,
         1,
     )
-
     if not scores:
         cv2.putText(
             menu_frame,
@@ -91,10 +99,10 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
             UIConstants.YELLOW,
             1,
         )
-        y_offset += 5
+        y_offset += 5  # Space after header
         for i, score_entry in enumerate(scores):
             rank = i + 1
-            name = score_entry.get("player_name", "N/A")[:15]
+            name = score_entry.get("player_name", "N/A")[:15]  # Limit name length
             score = score_entry.get("score", 0)
             entry_text = f"{rank:<5} {name:<15} {score:<6}"
             cv2.putText(
@@ -106,32 +114,123 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
                 UIConstants.WHITE,
                 1,
             )
-            y_offset += item_height + 2
+            y_offset += item_height + 2  # Space between score lines
 
+    # --- Button Drawing Logic for 3 Modes ---
+    mode_button_y = y_offset + 10  # Increased spacing before buttons
+    mode_button_height = 30
+    num_buttons = 3
+    button_spacing = 10
+    total_button_space = (
+        menu_frame.shape[1] - 40
+    )  # Total width available for buttons and spacing
+    total_spacing = button_spacing * (num_buttons - 1)
+    mode_button_width = (total_button_space - total_spacing) // num_buttons
+
+    # Calculate positions
+    classic_x = 20
+    timed_x = classic_x + mode_button_width + button_spacing
+    survival_x = timed_x + mode_button_width + button_spacing
+
+    # Draw Classic Button
+    classic_color = (
+        UIConstants.GREEN
+        if game_state.leaderboard_mode == "classic"
+        else UIConstants.CV2_BLUE
+    )
+    _draw_button(
+        menu_frame,
+        classic_x,
+        mode_button_y,
+        mode_button_width,
+        mode_button_height,
+        "Classic",
+        classic_color,
+        UIConstants.FONT_SCALE_SMALL,
+    )
+    game_state.submenu_items.append(
+        (
+            (classic_x, mode_button_y, mode_button_width, mode_button_height),
+            "leaderboard_classic",
+            "Classic Leaderboard",
+        )
+    )
+
+    # Draw Timed Button
+    timed_color = (
+        UIConstants.GREEN
+        if game_state.leaderboard_mode == "timed"
+        else UIConstants.CV2_BLUE
+    )
+    _draw_button(
+        menu_frame,
+        timed_x,
+        mode_button_y,
+        mode_button_width,
+        mode_button_height,
+        "Timed",
+        timed_color,
+        UIConstants.FONT_SCALE_SMALL,
+    )
+    game_state.submenu_items.append(
+        (
+            (timed_x, mode_button_y, mode_button_width, mode_button_height),
+            "leaderboard_timed",
+            "Timed Leaderboard",
+        )
+    )
+
+    # Draw Survival Button
+    survival_color = (
+        UIConstants.GREEN
+        if game_state.leaderboard_mode == "survival"
+        else UIConstants.CV2_BLUE
+    )
+    _draw_button(
+        menu_frame,
+        survival_x,
+        mode_button_y,
+        mode_button_width,
+        mode_button_height,
+        "Survival",
+        survival_color,
+        UIConstants.FONT_SCALE_SMALL,
+    )
+    game_state.submenu_items.append(
+        (
+            (survival_x, mode_button_y, mode_button_width, mode_button_height),
+            "leaderboard_survival",
+            "Survival Leaderboard",
+        )
+    )
+    # --- End Button Drawing Logic ---
+
+    y_offset = mode_button_y + mode_button_height + 5  # Update y_offset below buttons
     back_y = y_offset + 10
-    item_height = 35  # Reset item height
+    back_button_height = 35  # Reset item_height for the back button
     _draw_button(
         menu_frame,
         20,
         back_y,
         menu_frame.shape[1] - 40,
-        item_height,
+        back_button_height,
         "Back",
         UIConstants.CV2_BLUE,
         UIConstants.FONT_SCALE_MEDIUM,
     )
     game_state.submenu_items.append(
         (
-            (20, back_y, menu_frame.shape[1] - 40, item_height),
+            (20, back_y, menu_frame.shape[1] - 40, back_button_height),
             "back_to_main",
             "Back",
         )
     )
-    game_state.menu_height = back_y + item_height + 20
+    game_state.menu_height = back_y + back_button_height + 20  # Adjust dynamic height
 
 
-def _draw_players_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
+def _draw_players_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
     """Draw the Players submenu."""
+    # (Content unchanged)
     cv2.putText(
         menu_frame,
         "Manage Players",
@@ -141,17 +240,12 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         UIConstants.WHITE,
         UIConstants.FONT_THICKNESS,
     )
-
     y_offset = 80
     item_height = 35
-    button_width = 80  # Width for Edit/Select buttons
+    button_width = 80
     button_spacing = 10
-    # Calculate width available for name display
     name_width = menu_frame.shape[1] - 40 - (button_width * 2 + button_spacing * 2)
-
     game_state.submenu_items.clear()
-
-    # Instructions for editing name
     if (
         game_state.editing_player_mode == "edit_name"
         and game_state.editing_player_index is not None
@@ -167,23 +261,17 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
             1,
         )
         y_offset += 15
-
     for i, player in enumerate(game_state.players):
         name_color = UIConstants.WHITE
-        # Display current name or editing input
         if (
             game_state.editing_player_index == i
             and game_state.editing_player_mode == "edit_name"
         ):
-            # Show input with cursor placeholder
             display_name = f"Edit: [{game_state.editing_player_name_input or ''}_]"
-            # Highlight name being edited
             name_color = UIConstants.GREEN
         else:
             display_name = f"{i+1}. {player.name}"
-
-        # Draw Player Name (or input field) - ensure it fits
-        max_name_len = name_width // 8  # Approx calculation based on font size
+        max_name_len = name_width // 8  # Estimate max chars based on width
         cv2.putText(
             menu_frame,
             display_name[:max_name_len],
@@ -193,11 +281,8 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
             name_color,
             1,
         )
-
-        # Edit Name Button
         edit_x = 20 + name_width + button_spacing
         edit_rect = (edit_x, y_offset, button_width, item_height)
-        # Highlight if this player is being edited
         edit_color = (
             UIConstants.GREEN
             if game_state.editing_player_index == i
@@ -217,18 +302,16 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         game_state.submenu_items.append(
             (edit_rect, f"edit_player_name_{i}", f"Edit P{i+1} Name")
         )
-
-        # Select Button (or indicate current player)
         select_x = edit_x + button_width + button_spacing
         select_rect = (select_x, y_offset, button_width, item_height)
         is_current = i == game_state.current_player_index
         select_color = UIConstants.GREEN if is_current else UIConstants.CV2_BLUE
         select_text = "Current" if is_current else "Select"
-        # Disable select button if editing this player's name
         if (
             game_state.editing_player_index == i
             and game_state.editing_player_mode == "edit_name"
         ):
+            # Disable select button while editing name
             _draw_button(
                 menu_frame,
                 select_x,
@@ -239,7 +322,6 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
                 UIConstants.GREY_BG,
                 UIConstants.FONT_SCALE_SMALL,
             )
-            # Don't add click action if disabled
         else:
             _draw_button(
                 menu_frame,
@@ -251,19 +333,15 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
                 select_color,
                 UIConstants.FONT_SCALE_SMALL,
             )
-            # Only allow clicking select if not current
             if not is_current:
                 game_state.submenu_items.append(
                     (select_rect, f"select_player_{i}", f"Select P{i+1}")
                 )
-
         y_offset += item_height + 5
-
-    # Add Player Button (conditionally enable/disable)
     add_y = y_offset + 5
     add_color = (
         UIConstants.CV2_BLUE if len(game_state.players) < 2 else UIConstants.GREY_BG
-    )  # Disable if 2 players exist
+    )
     _draw_button(
         menu_frame,
         20,
@@ -274,7 +352,7 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         add_color,
         UIConstants.FONT_SCALE_MEDIUM,
     )
-    if len(game_state.players) < 2:  # Only add action if enabled
+    if len(game_state.players) < 2:
         game_state.submenu_items.append(
             (
                 (20, add_y, menu_frame.shape[1] - 40, item_height),
@@ -283,8 +361,6 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
             )
         )
     y_offset = add_y + item_height + 5
-
-    # Back Button
     back_y = y_offset + 10
     _draw_button(
         menu_frame,
@@ -297,17 +373,14 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         UIConstants.FONT_SCALE_MEDIUM,
     )
     game_state.submenu_items.append(
-        (
-            (20, back_y, menu_frame.shape[1] - 40, item_height),
-            "back_to_main",
-            "Back",
-        )
+        ((20, back_y, menu_frame.shape[1] - 40, item_height), "back_to_main", "Back")
     )
     game_state.menu_height = back_y + item_height + 20
 
 
-def _draw_achievements_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
+def _draw_achievements_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
     """Draw the Achievements submenu."""
+    # (Content unchanged)
     cv2.putText(
         menu_frame,
         "Achievements",
@@ -320,7 +393,6 @@ def _draw_achievements_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
     y_offset = 80
     item_height = 25
     game_state.submenu_items.clear()
-
     unlocked_count = sum(1 for ach in game_state.achievements if ach.unlocked)
     total_count = len(game_state.achievements)
     status_text = f"Unlocked: {unlocked_count} / {total_count}"
@@ -333,7 +405,6 @@ def _draw_achievements_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         UIConstants.YELLOW,
         1,
     )
-
     if not game_state.achievements:
         cv2.putText(
             menu_frame,
@@ -349,13 +420,14 @@ def _draw_achievements_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         for achievement in game_state.achievements:
             text = f"- {achievement.name}: {achievement.description}"
             color = UIConstants.GREEN if achievement.unlocked else UIConstants.WHITE
-            max_len = 55
+            max_len = 55  # Approx chars before wrap
             if len(text) > max_len:
+                # Basic word wrap
                 break_point = text.rfind(" ", 0, max_len)
                 if break_point == -1:
-                    break_point = max_len
+                    break_point = max_len  # Force break if no space
                 line1 = text[:break_point]
-                line2 = "  " + text[break_point:].strip()
+                line2 = "  " + text[break_point:].strip()  # Indent second line
                 cv2.putText(
                     menu_frame,
                     line1,
@@ -386,9 +458,8 @@ def _draw_achievements_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
                     1,
                 )
             y_offset += item_height + 2
-
     back_y = y_offset + 10
-    item_height = 35  # Reset item height
+    item_height = 35  # Reset for back button
     _draw_button(
         menu_frame,
         20,
@@ -400,17 +471,14 @@ def _draw_achievements_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         UIConstants.FONT_SCALE_MEDIUM,
     )
     game_state.submenu_items.append(
-        (
-            (20, back_y, menu_frame.shape[1] - 40, item_height),
-            "back_to_main",
-            "Back",
-        )
+        ((20, back_y, menu_frame.shape[1] - 40, item_height), "back_to_main", "Back")
     )
     game_state.menu_height = back_y + item_height + 20
 
 
-def _draw_help_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
+def _draw_help_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
     """Draw the Help submenu."""
+    # (Content unchanged)
     cv2.putText(
         menu_frame,
         "Help",
@@ -436,7 +504,7 @@ def _draw_help_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         "Gameplay:",
         "  - Define scoring zones via Menu > Manage Zones.",
         "  - Edit zones via Menu > Manage Zones > Edit Zones.",
-        "      - Use Pts/Move/Resize/Del buttons.",
+        "       - Use Pts/Move/Resize/Del buttons.",
         "      - When Move/Resize active, click zone/handle in main window.",
         "      - Press ESC to cancel Move/Resize.",
         "  - Score points by getting balls into zones.",
@@ -456,7 +524,7 @@ def _draw_help_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         )
         y_offset += item_height
     back_y = y_offset + 10
-    item_height = 35  # Reset item height
+    item_height = 35
     _draw_button(
         menu_frame,
         20,
@@ -468,17 +536,14 @@ def _draw_help_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         UIConstants.FONT_SCALE_MEDIUM,
     )
     game_state.submenu_items.append(
-        (
-            (20, back_y, menu_frame.shape[1] - 40, item_height),
-            "back_to_main",
-            "Back",
-        )
+        ((20, back_y, menu_frame.shape[1] - 40, item_height), "back_to_main", "Back")
     )
     game_state.menu_height = back_y + item_height + 20
 
 
-def _draw_faq_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
+def _draw_faq_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
     """Draw the FAQ submenu."""
+    # (Content unchanged)
     cv2.putText(
         menu_frame,
         "FAQ",
@@ -507,7 +572,7 @@ def _draw_faq_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         "   or specific achievements.",
         "",
         "Q: Why is the Edit Zones list cut off?",
-        "A: Pagination has been added. Use Prev/Next buttons.",  # ADDED
+        "A: Pagination has been added. Use Prev/Next buttons.",
     ]
     for line in faq_text:
         cv2.putText(
@@ -521,7 +586,7 @@ def _draw_faq_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         )
         y_offset += item_height
     back_y = y_offset + 10
-    item_height = 35  # Reset item height
+    item_height = 35
     _draw_button(
         menu_frame,
         20,
@@ -533,17 +598,14 @@ def _draw_faq_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         UIConstants.FONT_SCALE_MEDIUM,
     )
     game_state.submenu_items.append(
-        (
-            (20, back_y, menu_frame.shape[1] - 40, item_height),
-            "back_to_main",
-            "Back",
-        )
+        ((20, back_y, menu_frame.shape[1] - 40, item_height), "back_to_main", "Back")
     )
     game_state.menu_height = back_y + item_height + 20
 
 
-def _draw_about_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
+def _draw_about_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
     """Draw the About submenu."""
+    # (Content unchanged)
     cv2.putText(
         menu_frame,
         "About",
@@ -558,7 +620,7 @@ def _draw_about_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
     game_state.submenu_items.clear()
     cv2.putText(
         menu_frame,
-        "Whiffle Tracker v11.5",  # Updated version maybe?
+        "Whiffle Tracker v11.5",
         (20, y_offset),
         cv2.FONT_HERSHEY_SIMPLEX,
         UIConstants.FONT_SCALE_MEDIUM,
@@ -587,7 +649,6 @@ def _draw_about_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         UIConstants.CV2_BLUE,
         UIConstants.FONT_SCALE_MEDIUM,
     )
-    # Assuming show_splash_on_click handles the action or import it if needed
     game_state.submenu_items.append(
         (
             (20, splash_y, menu_frame.shape[1] - 40, item_height),
@@ -608,18 +669,173 @@ def _draw_about_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         UIConstants.FONT_SCALE_MEDIUM,
     )
     game_state.submenu_items.append(
-        (
-            (20, back_y, menu_frame.shape[1] - 40, item_height),
-            "back_to_main",
-            "Back",
-        )
+        ((20, back_y, menu_frame.shape[1] - 40, item_height), "back_to_main", "Back")
     )
     game_state.menu_height = back_y + item_height + 20
 
 
-# --- MODIFIED Edit Zones Submenu ---
-def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
+def _draw_settings_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
+    """Draw the Settings submenu with toggle items and music track selection."""
+    # (Content unchanged from previous fix - using action strings)
+    logger.info("Executing _draw_settings_submenu")
+    cv2.putText(
+        menu_frame,
+        "Settings",
+        (30, 40),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        UIConstants.FONT_SCALE_LARGE,
+        UIConstants.WHITE,
+        UIConstants.FONT_THICKNESS,
+    )
+
+    y_offset = 80
+    item_height = 35
+    label_width_approx = 200
+    button_width = 150  # Width for ON/OFF and Track buttons
+    spacing = 10
+
+    game_state.submenu_items.clear()
+
+    # Draw Toggles using correct ACTION STRINGS
+    settings_toggles = [
+        ToggleItem(
+            "Game Sounds", lambda: game_state.game_sounds_on, "toggle_game_sounds"
+        ),
+        ToggleItem(
+            "Background Music",
+            lambda: game_state.background_music_on,
+            "toggle_background_music",
+        ),
+        ToggleItem(
+            "Visual Debug Overlay",
+            lambda: game_state.show_debug_overlay,
+            "toggle_debug_overlay",
+        ),
+        ToggleItem(
+            "General Debug Mode", lambda: game_state.debug_mode, "toggle_debug_mode"
+        ),
+    ]
+
+    for item in settings_toggles:
+        logger.debug(
+            f"Processing settings item: {item.label}, Action type: {type(item.action)}, Action value: {item.action}"
+        )
+        state = item.get_state()
+        label_text = f"{item.label}:"
+        state_text = "ON" if state else "OFF"
+        state_color = UIConstants.GREEN if state else UIConstants.RED
+
+        # Draw Label Text
+        cv2.putText(
+            menu_frame,
+            label_text,
+            (20, y_offset + 25),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            UIConstants.FONT_SCALE_MEDIUM,
+            UIConstants.WHITE,
+            1,
+        )
+
+        # Draw ON/OFF Button
+        button_x = menu_frame.shape[1] - button_width - 20
+        _draw_button(
+            menu_frame,
+            button_x,
+            y_offset,
+            button_width,
+            item_height,
+            state_text,
+            state_color,
+            UIConstants.FONT_SCALE_MEDIUM,
+        )
+        # Add item action for click handling (item.action should be the string)
+        game_state.submenu_items.append(
+            ((button_x, y_offset, button_width, item_height), item.action, item.label)
+        )
+
+        y_offset += item_height + 5
+
+        # Add Music Track Selection Below Music Toggle
+        # Check action STRING
+        if item.action == "toggle_background_music":
+            logger.debug(
+                f"Drawing Music Track selector because item action is 'toggle_background_music'"
+            )
+            # Draw Label
+            track_label_text = "Music Track:"
+            cv2.putText(
+                menu_frame,
+                track_label_text,
+                (20, y_offset + 25),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                UIConstants.FONT_SCALE_MEDIUM,
+                UIConstants.WHITE,
+                1,
+            )
+
+            # Get Track Info
+            current_track_index = game_state.selected_music_track_index
+            total_tracks = len(GameConstants.BACKGROUND_MUSIC_TRACKS)
+            track_display_text = "N/A"
+            if total_tracks > 0:
+                track_display_text = f"Track {current_track_index + 1} / {total_tracks}"
+            else:
+                logger.warning("BACKGROUND_MUSIC_TRACKS list is empty in constants!")
+
+            logger.debug(f"Track display text: {track_display_text}")
+
+            # Draw Track Selection Button
+            track_button_x = menu_frame.shape[1] - button_width - 20
+            _draw_button(
+                menu_frame,
+                track_button_x,
+                y_offset,
+                button_width,
+                item_height,
+                track_display_text,
+                UIConstants.CV2_BLUE,
+                UIConstants.FONT_SCALE_SMALL,
+            )
+            # Add action to cycle tracks only if there are tracks
+            if total_tracks > 0:
+                logger.debug("Adding cycle_music_track action to submenu items.")
+                game_state.submenu_items.append(
+                    (
+                        (track_button_x, y_offset, button_width, item_height),
+                        "cycle_music_track",
+                        "Cycle Music Track",
+                    )
+                )
+            y_offset += item_height + 5  # Move past this new item
+
+    # Back Button
+    back_y = y_offset + 10
+    back_button_height = 35  # Use consistent height for back button
+    _draw_button(
+        menu_frame,
+        20,
+        back_y,
+        menu_frame.shape[1] - 40,
+        back_button_height,
+        "Back",
+        UIConstants.CV2_BLUE,
+        UIConstants.FONT_SCALE_MEDIUM,
+    )
+    game_state.submenu_items.append(
+        (
+            (20, back_y, menu_frame.shape[1] - 40, back_button_height),
+            "back_to_main",
+            "Back",
+        )
+    )
+
+    # Dynamically adjust menu height based on content
+    game_state.menu_height = back_y + back_button_height + 20
+
+
+def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
     """Draw the Edit Zones submenu with pagination and Move/Resize options."""
+    # (Content unchanged)
     cv2.putText(
         menu_frame,
         "Edit Scoring Zones",
@@ -629,51 +845,40 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         UIConstants.WHITE,
         UIConstants.FONT_THICKNESS,
     )
-
     y_offset = 80
-    item_height = 30  # Make items smaller to fit more buttons
-    button_width = 45  # Reduced from 55 to fit all buttons
-    button_spacing = 3  # Reduced from 5
-    num_buttons = 4  # Number of action buttons per zone (Pts, Move, Resize, Del)
+    item_height = 30
+    button_width = 45
+    button_spacing = 3
+    num_buttons = 4  # Pts, Move, Resize, Del
     actions_width = (button_width * num_buttons) + (button_spacing * (num_buttons - 1))
-    list_width = menu_frame.shape[1] - 40 - actions_width - button_spacing
-
+    list_width = (
+        menu_frame.shape[1] - 40 - actions_width - button_spacing
+    )  # Width for zone label
     game_state.submenu_items.clear()
-
-    # --- Pagination Calculations ---
     items_per_page = game_state.edit_zones_items_per_page
     total_zones = len(game_state.scoring_zones)
     total_pages = max(1, ceil(total_zones / items_per_page))
-    # Ensure current page is valid
     game_state.edit_zones_current_page = max(
         1, min(game_state.edit_zones_current_page, total_pages)
     )
     current_page = game_state.edit_zones_current_page
-
     start_index = (current_page - 1) * items_per_page
     end_index = start_index + items_per_page
     zones_to_display = game_state.scoring_zones[start_index:end_index]
-    # --- End Pagination Calculations ---
-
     confirm_delete_message = None
     if (
         game_state.editing_zone_mode == "confirm_delete"
         and game_state.editing_zone_index is not None
     ):
-        # Adjust index check for pagination
         if start_index <= game_state.editing_zone_index < end_index:
             confirm_delete_message = f"Click Delete again for Zone {game_state.editing_zone_index + 1} to confirm?"
-
     edit_instruction_message = None
     if (
         game_state.editing_zone_mode == "edit_points"
         and game_state.editing_zone_index is not None
     ):
-        # Adjust index check for pagination
         if start_index <= game_state.editing_zone_index < end_index:
             edit_instruction_message = "Enter points (0-9), Bksp=Delete, Enter=Save"
-
-    # Combine messages or show priority message
     top_message = confirm_delete_message or edit_instruction_message
     if top_message:
         cv2.putText(
@@ -686,7 +891,6 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
             1,
         )
         y_offset += 15
-
     if not game_state.scoring_zones:
         cv2.putText(
             menu_frame,
@@ -699,7 +903,7 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         )
         y_offset += item_height + 5
     else:
-        # Column Headers
+        # Draw headers
         cv2.putText(
             menu_frame,
             "Zone",
@@ -718,20 +922,13 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
             UIConstants.YELLOW,
             1,
         )
-
-        # --- Iterate over zones_to_display (paginated list) ---
         for i_display, zone_data in enumerate(zones_to_display):
-            # Calculate the original index
             original_index = start_index + i_display
-            x_z, y_z, w_z, h_z, points = (
-                zone_data  # Use zone_data from the paginated list
-            )
-            zone_label = f"{original_index+1}: @({x_z},{y_z}) Pts="  # Use original index for label
+            x_z, y_z, w_z, h_z, points = zone_data
+            zone_label = f"{original_index+1}: @({x_z},{y_z}) Pts="
             label_color = UIConstants.WHITE
-
-            # Highlight if editing points for this zone
             if (
-                game_state.editing_zone_index == original_index  # Check original index
+                game_state.editing_zone_index == original_index
                 and game_state.editing_zone_mode == "edit_points"
             ):
                 input_display = (
@@ -743,33 +940,25 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
                 label_color = UIConstants.GREEN
             else:
                 zone_label += str(points)
-
-            # Highlight if this zone is selected for interactive edit
-            if (
-                game_state.selected_zone_for_edit == original_index
-            ):  # Check original index
-                label_color = UIConstants.ZONE_EDIT_SELECTED_COLOR  # Yellow highlight
-
-            # Draw Zone Label
+            # Highlight if selected for move/resize
+            if game_state.selected_zone_for_edit == original_index:
+                label_color = UIConstants.ZONE_EDIT_SELECTED_COLOR
             cv2.putText(
                 menu_frame,
-                zone_label[:45],  # Truncate if too long
+                zone_label[:45],
                 (20, y_offset + 20),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 UIConstants.FONT_SCALE_SMALL,
                 label_color,
                 1,
             )
-
-            # --- Action Buttons (use original_index in action strings) ---
+            # Action Buttons
             button_x = 20 + list_width + button_spacing
-
-            # Edit Points Button ("Pts")
+            # Points Button
             edit_rect = (button_x, y_offset, button_width, item_height)
             edit_color = (
                 UIConstants.GREEN
-                if game_state.editing_zone_index
-                == original_index  # Check original index
+                if game_state.editing_zone_index == original_index
                 and game_state.editing_zone_mode == "edit_points"
                 else UIConstants.CV2_BLUE
             )
@@ -791,13 +980,11 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
                 )
             )
             button_x += button_width + button_spacing
-
             # Move Button
             move_rect = (button_x, y_offset, button_width, item_height)
             is_moving_this_zone = (
                 game_state.current_state == CurrentGameState.ZONE_EDITING
-                and game_state.selected_zone_for_edit
-                == original_index  # Check original index
+                and game_state.selected_zone_for_edit == original_index
                 and game_state.zone_editing_action == "move"
             )
             move_color = (
@@ -823,13 +1010,11 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
                 )
             )
             button_x += button_width + button_spacing
-
             # Resize Button
             resize_rect = (button_x, y_offset, button_width, item_height)
             is_resizing_this_zone = (
                 game_state.current_state == CurrentGameState.ZONE_EDITING
-                and game_state.selected_zone_for_edit
-                == original_index  # Check original index
+                and game_state.selected_zone_for_edit == original_index
                 and game_state.zone_editing_action
                 and game_state.zone_editing_action.startswith("resize")
             )
@@ -856,13 +1041,11 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
                 )
             )
             button_x += button_width + button_spacing
-
-            # Delete Button ("Del")
+            # Delete Button
             delete_rect = (button_x, y_offset, button_width, item_height)
             delete_color = (
                 UIConstants.RED
-                if game_state.editing_zone_index
-                == original_index  # Check original index
+                if game_state.editing_zone_index == original_index
                 and game_state.editing_zone_mode == "confirm_delete"
                 else UIConstants.CV2_BLUE
             )
@@ -883,15 +1066,13 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
                     f"Delete Zone {original_index+1}",
                 )
             )
-
             y_offset += item_height + 5
 
-    # --- Draw Pagination Controls ---
+    # Pagination controls
     page_y_start = y_offset + 10
     page_item_height = 35
     page_button_width = 80
-
-    # Page Number Text
+    # Page number text centered
     page_text = f"Page {current_page} / {total_pages}"
     (tw, th), _ = cv2.getTextSize(
         page_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_SMALL, 1
@@ -906,8 +1087,7 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
         UIConstants.WHITE,
         1,
     )
-
-    # Previous Button
+    # Previous button
     prev_button_x = 20
     prev_enabled = current_page > 1
     prev_color = UIConstants.CV2_BLUE if prev_enabled else UIConstants.GREY_BG
@@ -929,8 +1109,7 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
                 "Previous Page",
             )
         )
-
-    # Next Button
+    # Next button
     next_button_x = menu_frame.shape[1] - page_button_width - 20
     next_enabled = current_page < total_pages
     next_color = UIConstants.CV2_BLUE if next_enabled else UIConstants.GREY_BG
@@ -952,15 +1131,11 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
                 "Next Page",
             )
         )
+    y_offset = page_y_start + page_item_height + 5
 
-    y_offset = (
-        page_y_start + page_item_height + 5
-    )  # Update y_offset after page controls
-    # --- End Pagination Controls ---
-
-    # Back Button (adjust position)
+    # Back button
     back_y = y_offset + 10
-    back_button_height = 35  # Keep Back button height consistent
+    back_button_height = 35
     _draw_button(
         menu_frame,
         20,
@@ -978,6 +1153,4 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: Any) -> None:
             "Back",
         )
     )
-    game_state.menu_height = (
-        back_y + back_button_height + 20
-    )  # Adjust height based on content
+    game_state.menu_height = back_y + back_button_height + 20
