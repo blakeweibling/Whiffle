@@ -1,0 +1,270 @@
+
+F:\Whiffle\12.1>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.10.9)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2025-04-05 07:30:37,787 - INFO - constants - Trying camera index 0 with backend dshow (700)...
+2025-04-05 07:30:38,077 - INFO - constants - Successfully opened camera at index 0 with backend dshow
+2025-04-05 07:30:38,664 - INFO - constants - Camera at index 0 with backend dshow is functional
+2025-04-05 07:30:41,573 - INFO - ui_screens - Showing splash screen...
+2025-04-05 07:30:41,661 - INFO - ui_screens - Initializing GameState...
+2025-04-05 07:30:41,661 - INFO - game_state - Starting GameState initialization...
+2025-04-05 07:30:41,661 - INFO - game_state - Attempting to open camera at index 0 with backend 700
+2025-04-05 07:30:41,923 - INFO - game_state - Setting camera resolution...
+2025-04-05 07:30:42,706 - INFO - game_state - Camera resolution: 1280x720
+2025-04-05 07:30:42,706 - INFO - game_state - Initializing game variables...
+2025-04-05 07:30:42,707 - INFO - game_state - Initializing detection and tracking...
+2025-04-05 07:30:42,729 - WARNING - detection - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+2025-04-05 07:30:42,736 - INFO - game_state - Loading initial state...
+2025-04-05 07:30:42,737 - INFO - menu - Scoring zones loaded from scoring_zones.json
+2025-04-05 07:30:42,737 - INFO - game_state - Notify: Zones Loaded
+2025-04-05 07:30:42,737 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-04-05 07:30:42,737 - INFO - game_state_utils - Special hole set to leftmost zone: (82, 276, 38, 33, 100)
+2025-04-05 07:30:42,739 - INFO - game_state - Loaded high score for mode 'classic': 1272
+2025-04-05 07:30:42,739 - INFO - game_state - Initializing sounds (excluding background music)...
+2025-04-05 07:30:42,789 - INFO - game_state_utils - Loaded score sound: sounds/ding.wav
+2025-04-05 07:30:42,801 - INFO - game_state_utils - Loaded low time warning sound: sounds/10_sec_timer.mp3
+2025-04-05 07:30:42,801 - INFO - game_state - Sounds initialized (score, low_time). Background music loaded separately.
+2025-04-05 07:30:42,801 - INFO - game_state - Attempting to load background music: sounds/background_music.mp3
+2025-04-05 07:30:42,997 - INFO - game_state - Successfully loaded background music: background_music.mp3
+2025-04-05 07:30:42,997 - INFO - game_state - Initializing achievements...
+2025-04-05 07:30:42,997 - INFO - game_state - Loading achievements...
+2025-04-05 07:30:42,999 - INFO - game_state_utils - Loaded unlock status for 3 achievements from achievements_status.json.
+2025-04-05 07:30:42,999 - INFO - game_state - Loading HSV ranges...
+2025-04-05 07:30:42,999 - INFO - game_state_utils - Loaded custom HSV ranges from hsv_ranges.json
+2025-04-05 07:30:43,000 - INFO - game_state - GameState initialized successfully.
+2025-04-05 07:30:43,000 - INFO - ui_screens - GameState initialized successfully.
+2025-04-05 07:30:43,677 - INFO - ui_screens - Captured first frame for splash fade.
+2025-04-05 07:30:43,677 - INFO - ui_screens - Starting initial splash display loop with fade.
+2025-04-05 07:30:46,678 - INFO - ui_screens - Initial splash screen finished.
+Press 'q' to quit, 's' to start drawing a scoring zone, 'd' to toggle debug mode
+2025-04-05 07:30:46,780 - INFO - game_loop - Game window initialized.
+2025-04-05 07:30:49,723 - INFO - game_input - Player 1 name set to: 'Blake W'
+2025-04-05 07:30:49,723 - INFO - game_state - Notify: Welcome, Blake W!
+2025-04-05 07:30:49,724 - INFO - game_input - Background music started.
+
+0: 416x736 7 whites, 1 half, 28.6ms
+Speed: 3.2ms preprocess, 28.6ms inference, 71.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.4ms
+Speed: 2.4ms preprocess, 5.4ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.6ms
+Speed: 1.6ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.7ms
+Speed: 1.6ms preprocess, 5.7ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.3ms
+Speed: 1.5ms preprocess, 5.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.6ms
+Speed: 1.6ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 6.2ms
+Speed: 1.5ms preprocess, 6.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.7ms
+Speed: 1.6ms preprocess, 5.7ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.6ms
+Speed: 1.6ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.4ms
+Speed: 1.6ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.4ms
+Speed: 1.6ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.7ms
+Speed: 1.6ms preprocess, 5.7ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.6ms
+Speed: 1.9ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.7ms
+Speed: 1.7ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 7.4ms
+Speed: 1.7ms preprocess, 7.4ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 6.1ms
+Speed: 1.5ms preprocess, 6.1ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 07:30:55,462 - INFO - game_state - Ball 0(white) scored 30pts [Base:30, Mult:1.0] in Zone:11. Total Score:30. Zone 11 cooldown until T+9.0s.
+2025-04-05 07:30:55,462 - INFO - game_state - Ball 1(white) scored 1pts [Base:1, Mult:1.0] in Zone:20. Total Score:31. Zone 20 cooldown until T+9.0s.
+2025-04-05 07:30:55,464 - INFO - game_state - Ball 3(white) scored 80pts [Base:80, Mult:1.0] in Zone:19. Total Score:111. Zone 19 cooldown until T+9.0s.
+2025-04-05 07:30:55,464 - INFO - game_state - Ball 4(white) scored 50pts [Base:50, Mult:1.0] in Zone:1. Total Score:161. Zone 1 cooldown until T+9.0s.
+2025-04-05 07:30:55,465 - INFO - game_state - Ball 5(white) scored 50pts [Base:50, Mult:1.0] in Zone:6. Total Score:211. Zone 6 cooldown until T+9.0s.
+2025-04-05 07:30:55,465 - INFO - game_state - Ball 6(white) scored 100pts [Base:100, Mult:1.0] in Zone:17. Total Score:311. Zone 17 cooldown until T+9.0s.
+2025-04-05 07:30:55,465 - INFO - game_state - Ball 7(half) scored 45pts [Base:30, Mult:1.5] in Zone:3. Total Score:356. Zone 3 cooldown until T+9.0s.
+
+0: 416x736 7 whites, 1 half, 5.8ms
+Speed: 1.7ms preprocess, 5.8ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.4ms
+Speed: 1.6ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 6.9ms
+Speed: 1.5ms preprocess, 6.9ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.8ms
+Speed: 1.5ms preprocess, 5.8ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 5.6ms
+Speed: 1.4ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.0ms
+Speed: 1.6ms preprocess, 8.0ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.0ms
+Speed: 1.5ms preprocess, 8.0ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.0ms
+Speed: 1.6ms preprocess, 8.0ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.2ms
+Speed: 1.6ms preprocess, 8.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.2ms
+Speed: 1.6ms preprocess, 8.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 8.1ms
+Speed: 1.7ms preprocess, 8.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 15.0ms
+Speed: 2.1ms preprocess, 15.0ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 15.6ms
+Speed: 2.0ms preprocess, 15.6ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 16.2ms
+Speed: 2.4ms preprocess, 16.2ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 15.1ms
+Speed: 2.1ms preprocess, 15.1ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 07:31:00,102 - INFO - utils - Menu toggled ON via button click.
+2025-04-05 07:31:01,509 - INFO - utils - Clicked on item: 'Settings' with action: settings in state CurrentGameState.MENU
+2025-04-05 07:31:01,509 - INFO - utils - Switching to submenu: settings
+2025-04-05 07:31:02,827 - INFO - utils - Clicked on item: 'Background Music' with action: <function _draw_settings_submenu.<locals>.<lambda> at 0x000002CC30719090> in state CurrentGameState.MENU
+2025-04-05 07:31:02,827 - WARNING - utils - Clicked item 'Background Music' has unhandled action type: <class 'function'>
+2025-04-05 07:31:04,127 - INFO - utils - Clicked on item: 'Game Sounds' with action: <function _draw_settings_submenu.<locals>.<lambda> at 0x000002CC30718EE0> in state CurrentGameState.MENU
+2025-04-05 07:31:04,127 - WARNING - utils - Clicked item 'Game Sounds' has unhandled action type: <class 'function'>
+2025-04-05 07:31:05,436 - INFO - utils - Clicked on item: 'Visual Debug Overlay' with action: <function _draw_settings_submenu.<locals>.<lambda> at 0x000002CC30718940> in state CurrentGameState.MENU
+2025-04-05 07:31:05,437 - WARNING - utils - Clicked item 'Visual Debug Overlay' has unhandled action type: <class 'function'>
+2025-04-05 07:31:06,344 - INFO - utils - Clicked on item: 'General Debug Mode' with action: <function _draw_settings_submenu.<locals>.<lambda> at 0x000002CC30719240> in state CurrentGameState.MENU
+2025-04-05 07:31:06,344 - WARNING - utils - Clicked item 'General Debug Mode' has unhandled action type: <class 'function'>
+2025-04-05 07:31:12,490 - INFO - utils - Clicked on item: 'Back' with action: back_to_main in state CurrentGameState.MENU
+2025-04-05 07:31:13,797 - INFO - utils - Menu close button clicked. Resuming game.
+2025-04-05 07:31:13,895 - INFO - game_state - Ball 2(white) scored 1pts [Base:1, Mult:1.0] in Zone:20. Total Score:357. Zone 20 cooldown until T+9.0s.
+
+0: 416x736 7 whites, 1 half, 34.6ms
+Speed: 2.9ms preprocess, 34.6ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 34.1ms
+Speed: 2.9ms preprocess, 34.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 30.6ms
+Speed: 2.8ms preprocess, 30.6ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 32.8ms
+Speed: 2.8ms preprocess, 32.8ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 30.5ms
+Speed: 5.8ms preprocess, 30.5ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 31.3ms
+Speed: 2.9ms preprocess, 31.3ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 30.2ms
+Speed: 2.9ms preprocess, 30.2ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 30.8ms
+Speed: 3.0ms preprocess, 30.8ms inference, 3.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 32.0ms
+Speed: 3.0ms preprocess, 32.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 31.3ms
+Speed: 2.8ms preprocess, 31.3ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 34.0ms
+Speed: 3.4ms preprocess, 34.0ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 31.2ms
+Speed: 2.8ms preprocess, 31.2ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 33.1ms
+Speed: 2.8ms preprocess, 33.1ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 30.4ms
+Speed: 3.0ms preprocess, 30.4ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 30.8ms
+Speed: 2.8ms preprocess, 30.8ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 40.2ms
+Speed: 6.1ms preprocess, 40.2ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 1 half, 37.2ms
+Speed: 3.0ms preprocess, 37.2ms inference, 2.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 07:31:17,291 - INFO - game_loop - Main game window closed via red X. Breaking loop.
+2025-04-05 07:31:17,291 - INFO - game_loop - Main loop exited. Cleaning up.
+2025-04-05 07:31:17,293 - INFO - cleanup_utils - Initiating clean exit...
+2025-04-05 07:31:17,295 - INFO - cleanup_utils - Saving score for Blake W on exit...
+2025-04-05 07:31:17,296 - INFO - game_state - Saving score for Blake W: 357 (Mode: classic)
+2025-04-05 07:31:17,298 - INFO - leaderboard - Saved local leaderboard to whiffle_leaderboard.json
+2025-04-05 07:31:17,298 - INFO - leaderboard - Score queued for batch submission: Blake W - 357 (classic)
+2025-04-05 07:31:17,300 - INFO - cleanup_utils - Flushing leaderboard...
+2025-04-05 07:31:17,581 - INFO - leaderboard - Successfully submitted 1 scores to online leaderboard
+2025-04-05 07:31:17,581 - INFO - cleanup_utils - Saving zones...
+2025-04-05 07:31:17,583 - INFO - menu - Scoring zones saved to scoring_zones.json
+2025-04-05 07:31:17,583 - INFO - game_state - Notify: Zones Saved
+2025-04-05 07:31:17,583 - INFO - cleanup_utils - Saving achievements...
+2025-04-05 07:31:17,686 - INFO - cleanup_utils - Clean exit sequence complete. Terminating process.
+2025-04-05 07:31:17,686 - INFO - __main__ - Program exited via clean_exit
+
+F:\Whiffle\12.1>

@@ -59,7 +59,7 @@ class UIConstants:
     FONT_SCALE_MEDIUM: float = _assert_positive(0.7, "FONT_SCALE_MEDIUM")
     FONT_SCALE_LARGE: float = _assert_positive(1.0, "FONT_SCALE_LARGE")
     FONT_SCALE_XLARGE: float = _assert_positive(2.0, "FONT_SCALE_XLARGE")
-    FONT_THICKNESS: int = _assert_positive(1, "FONT_THICKNESS") # Base thickness
+    FONT_THICKNESS: int = _assert_positive(1, "FONT_THICKNESS")  # Base thickness
 
     # Text Positioning
     TEXT_OFFSET_X: int = _assert_non_negative(5, "TEXT_OFFSET_X")
@@ -73,10 +73,16 @@ class UIConstants:
     MENU_BUTTON_Y: int = 80
 
     # --- NEW: Menu Close Button ---
-    MENU_CLOSE_BUTTON_SIZE: int = _assert_positive(40, "MENU_CLOSE_BUTTON_SIZE") # Size of the square button
-    MENU_CLOSE_BUTTON_PADDING: int = _assert_non_negative(10, "MENU_CLOSE_BUTTON_PADDING") # Padding from menu corner
-    MENU_CLOSE_BUTTON_COLOR: Tuple[int, int, int] = RED # Color of the 'X'
-    MENU_CLOSE_BUTTON_THICKNESS: int = _assert_positive(2, "MENU_CLOSE_BUTTON_THICKNESS") # Thickness of the 'X'
+    MENU_CLOSE_BUTTON_SIZE: int = _assert_positive(
+        40, "MENU_CLOSE_BUTTON_SIZE"
+    )  # Size of the square button
+    MENU_CLOSE_BUTTON_PADDING: int = _assert_non_negative(
+        10, "MENU_CLOSE_BUTTON_PADDING"
+    )  # Padding from menu corner
+    MENU_CLOSE_BUTTON_COLOR: Tuple[int, int, int] = RED  # Color of the 'X'
+    MENU_CLOSE_BUTTON_THICKNESS: int = _assert_positive(
+        2, "MENU_CLOSE_BUTTON_THICKNESS"
+    )  # Thickness of the 'X'
     # --- END NEW ---
 
     # Zone Editing Visuals

@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import logging
 import os
-import time  # Import time for cursor blinking effect
+import time
 from typing import Tuple, Optional
 
 # Local project imports
@@ -12,14 +12,19 @@ from constants import (
     UIConstants,
     GameConstants,
     ScoringConstants,
-)  # Added ScoringConstants
+)
 from scoring import draw_scoring_zones
 from menu import draw_menu, draw_menu_window
+
+# Import GameState and Enum fully for type hints and state checking
 from game_state import GameState, CurrentGameState
 
 # Import functions from the split files
 from ui_screens import _draw_game_over_screen
-from ui_elements import _draw_debug_overlay, draw_balls
+
+# Import draw_balls here if it's not already being called elsewhere before draw_ui
+# from ui_elements import draw_balls # Keep this commented if draw_balls is handled in _render_frame
+from ui_elements import _draw_debug_overlay  # Keep this import
 from ui_utils import _draw_text_with_background
 
 logger = logging.getLogger(__name__)
@@ -28,21 +33,16 @@ logger = logging.getLogger(__name__)
 # --- Player Name Input Drawing (Unchanged) ---
 def _draw_player_name_input(frame: np.ndarray, game_state: GameState):
     """Draws the pop-up screen for initial player name input."""
-    # Draw a semi-transparent overlay first to dim background
     overlay = frame.copy()
     cv2.rectangle(
         overlay, (0, 0), (frame.shape[1], frame.shape[0]), UIConstants.BLACK, -1
     )
-    alpha = 0.7  # Dimming factor
+    alpha = 0.7
     cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
-
-    # Pop-up box dimensions
     popup_width = 700
     popup_height = 200
     popup_x = (frame.shape[1] - popup_width) // 2
     popup_y = (frame.shape[0] - popup_height) // 2
-
-    # Draw the pop-up box background
     cv2.rectangle(
         frame,
         (popup_x, popup_y),
@@ -50,7 +50,6 @@ def _draw_player_name_input(frame: np.ndarray, game_state: GameState):
         UIConstants.GREY_BG,
         -1,
     )
-    # Draw border
     cv2.rectangle(
         frame,
         (popup_x, popup_y),
@@ -58,9 +57,7 @@ def _draw_player_name_input(frame: np.ndarray, game_state: GameState):
         UIConstants.WHITE,
         1,
     )
-
-    # Prompt text
-    prompt_text = "Enter Player Name:"  # Simplified prompt
+    prompt_text = "Enter Player Name:"
     prompt_pos = (popup_x + 20, popup_y + 40)
     cv2.putText(
         frame,
@@ -70,9 +67,8 @@ def _draw_player_name_input(frame: np.ndarray, game_state: GameState):
         UIConstants.FONT_SCALE_MEDIUM,
         UIConstants.WHITE,
         UIConstants.FONT_THICKNESS,
+        cv2.LINE_AA,
     )
-
-    # Input field background (optional, subtle)
     input_bg_x = popup_x + 20
     input_bg_y = popup_y + 70
     input_bg_w = popup_width - 40
@@ -81,26 +77,23 @@ def _draw_player_name_input(frame: np.ndarray, game_state: GameState):
         frame,
         (input_bg_x, input_bg_y),
         (input_bg_x + input_bg_w, input_bg_y + input_bg_h),
-        (50, 50, 50),  # Darker grey for input field
+        (50, 50, 50),
         -1,
     )
-
-    # Display the entered name with a blinking cursor
     show_cursor = int(time.time() * 2) % 2 == 0
     cursor = "_" if show_cursor else " "
     display_name = game_state.current_player_name_input + cursor
-    name_pos = (input_bg_x + 10, input_bg_y + 30)  # Adjusted for font size
+    name_pos = (input_bg_x + 10, input_bg_y + 30)
     cv2.putText(
         frame,
         display_name,
         name_pos,
         cv2.FONT_HERSHEY_SIMPLEX,
-        UIConstants.FONT_SCALE_LARGE,  # Larger font for name
+        UIConstants.FONT_SCALE_LARGE,
         UIConstants.YELLOW,
-        UIConstants.FONT_THICKNESS + 1,  # Slightly thicker
+        UIConstants.FONT_THICKNESS + 1,
+        cv2.LINE_AA,
     )
-
-    # Instructions text
     instructions_text = "Enter=Confirm, Esc=Default ('Player 1'), Backspace=Delete"
     instr_pos = (popup_x + 20, popup_y + popup_height - 30)
     cv2.putText(
@@ -111,6 +104,7 @@ def _draw_player_name_input(frame: np.ndarray, game_state: GameState):
         UIConstants.FONT_SCALE_SMALL,
         UIConstants.WHITE,
         UIConstants.FONT_THICKNESS,
+        cv2.LINE_AA,
     )
 
 
@@ -121,29 +115,19 @@ def _draw_zone_edit_handles(frame: np.ndarray, zone_rect: Tuple[int, int, int, i
     handle_size = UIConstants.ZONE_EDIT_HANDLE_SIZE
     handle_color = UIConstants.ZONE_EDIT_HANDLE_COLOR
     half_handle = handle_size // 2
-
-    # Corner coordinates
-    corners = [
-        (zx, zy),  # Top-left
-        (zx + zw, zy),  # Top-right
-        (zx, zy + zh),  # Bottom-left
-        (zx + zw, zy + zh),  # Bottom-right
-    ]
-
+    corners = [(zx, zy), (zx + zw, zy), (zx, zy + zh), (zx + zw, zy + zh)]
     for cx, cy in corners:
         pt1 = (cx - half_handle, cy - half_handle)
         pt2 = (cx + half_handle, cy + half_handle)
-        cv2.rectangle(frame, pt1, pt2, handle_color, -1)  # Filled rectangle handles
+        cv2.rectangle(frame, pt1, pt2, handle_color, -1)
 
 
-# --- Main UI Drawing Function (Modified) ---
+# --- Main UI Drawing Function (Corrected) ---
 def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
     """Draw the user interface elements on the frame, handling different game states."""
 
-    # --- Handle GETTING_PLAYER_NAME state first ---
     if game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
         _draw_player_name_input(frame, game_state)
-        # Optionally draw debug info on top if needed
         if game_state.debug_mode:
             fps = game_state.fps if hasattr(game_state, "fps") else 0
             state_text = str(game_state.current_state).split(".")[-1]
@@ -157,12 +141,13 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
                 UIConstants.BLACK,
                 alpha=0.7,
             )
-        return  # Don't draw other game UI elements in this state
+        return
 
-    # --- Draw elements common to most states (but not GAME_OVER or GETTING_PLAYER_NAME) ---
     if game_state.current_state not in [CurrentGameState.GAME_OVER]:
-        # Draw Score, High Score, Mode Text
-        player_name = game_state.get_current_player().name
+        try:
+            player_name = game_state.get_current_player().name
+        except Exception:
+            player_name = "Error"
         score_text = f"Player: {player_name} Score: {game_state.score}"
         _draw_text_with_background(
             frame,
@@ -200,8 +185,6 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
             UIConstants.GREY_BG,
             thickness=UIConstants.FONT_THICKNESS,
         )
-
-        # Draw Timer Text (if applicable)
         if (
             game_state.game_mode == "timed"
             and game_state.game_timer is not None
@@ -210,7 +193,7 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
                 CurrentGameState.PLAYING,
                 CurrentGameState.PAUSED,
                 CurrentGameState.ZONE_EDITING,
-            ]  # Show timer during edit too
+            ]
         ):
             timer_text = f"Time: {int(max(0, game_state.game_timer))}"
             time_color = (
@@ -235,16 +218,11 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
                 alpha=0.7,
             )
 
-    # --- State Specific Drawing ---
     if game_state.current_state == CurrentGameState.PLAYING:
-        if not game_state.drawing:
-            draw_balls(frame, game_state)  # Draw balls and trails
         draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole)
-        # Draw temporary zone being drawn
         if game_state.drawing and game_state.temp_zone:
             x1, y1, w, h = game_state.temp_zone
             cv2.rectangle(frame, (x1, y1), (x1 + w, y1 + h), UIConstants.YELLOW, 2)
-            # Draw points input text
             show_cursor = int(time.time() * 2) % 2 == 0
             cursor = "_" if show_cursor else " "
             points_display_str = game_state.drawing_points_input or "..."
@@ -270,12 +248,10 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
                 thickness=1,
                 alpha=0.7,
             )
-        # Draw menu button only when not drawing
         if not game_state.drawing:
             draw_menu(frame, game_state)
 
     elif game_state.current_state == CurrentGameState.PAUSED:
-        # Draw PAUSED text
         pause_text = "PAUSED"
         (tw_p, th_p), _ = cv2.getTextSize(
             pause_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_XLARGE, 3
@@ -291,19 +267,14 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
             UIConstants.BLACK,
             thickness=3,
         )
-        # Draw zones and balls while paused
         draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole)
-        draw_balls(frame, game_state)
 
     elif game_state.current_state == CurrentGameState.MENU:
-        # Draw background elements dimmed
         overlay = frame.copy()
-        draw_scoring_zones(overlay, game_state.scoring_zones, game_state.special_hole)
-        draw_balls(overlay, game_state)
-        cv2.addWeighted(overlay, 0.3, frame, 0.7, 0, frame)
-        # Draw the menu window itself
+        cv2.rectangle(overlay, (0, 0), (frame.shape[1], frame.shape[0]), (0, 0, 0), -1)
+        cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
         if not hasattr(game_state, "menu_width") or game_state.menu_width <= 0:
-            game_state.menu_width = 400
+            game_state.menu_width = 600
         if not hasattr(game_state, "menu_height") or game_state.menu_height <= 0:
             game_state.menu_height = 450
         mx, my = (frame.shape[1] - game_state.menu_width) // 2, (
@@ -312,19 +283,14 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
         game_state.menu_pos = (mx, my)
         draw_menu_window(frame, game_state)
 
-    # --- NEW: ZONE_EDITING State Drawing ---
     elif game_state.current_state == CurrentGameState.ZONE_EDITING:
-        # Draw all zones normally first
         draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole)
-        # Highlight the selected zone and draw handles
         if (
             game_state.selected_zone_for_edit is not None
             and 0 <= game_state.selected_zone_for_edit < len(game_state.scoring_zones)
         ):
             zone_to_edit = game_state.scoring_zones[game_state.selected_zone_for_edit]
             zx, zy, zw, zh, zp = zone_to_edit
-
-            # Draw thicker highlight border
             cv2.rectangle(
                 frame,
                 (zx, zy),
@@ -332,35 +298,43 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
                 UIConstants.ZONE_EDIT_SELECTED_COLOR,
                 3,
             )
-
-            # Draw resize handles
             _draw_zone_edit_handles(frame, (zx, zy, zw, zh))
-
-            # Display persistent instruction notification from game_state
-            # (Notification text set when entering ZONE_EDITING state)
+        # --- CORRECTED SYNTAX/INDENTATION ---
         else:
-            # Should not happen, but handle gracefully
             logger.warning(
                 "In ZONE_EDITING state but selected_zone_for_edit is invalid."
             )
-            # Revert state?
-            game_state.current_state = (
-                game_state.previous_state or CurrentGameState.MENU
-            )
+            try:
+                # Attempt to revert to previous state (likely MENU)
+                game_state.current_state = (
+                    game_state.previous_state or CurrentGameState.MENU
+                )
+            except Exception:
+                # Fallback if previous_state attribute missing or invalid
+                game_state.current_state = CurrentGameState.MENU
+            # Reset editing state variables
             game_state.selected_zone_for_edit = None
             game_state.zone_editing_action = None
             game_state.drag_start_pos = None
+        # --- END CORRECTION ---
 
-    # --- Draw elements specific to GAME_OVER state ---
     elif game_state.current_state == CurrentGameState.GAME_OVER:
-        _draw_game_over_screen(frame, game_state)  # From ui_screens.py
+        _draw_game_over_screen(frame, game_state)
 
-    # --- Draw Notifications & Achievement Popups (Draw last over most things) ---
-    # (Except maybe debug overlay)
-    if (
-        game_state.current_state != CurrentGameState.GETTING_PLAYER_NAME
-    ):  # Don't show during initial name input
-        # Draw achievement notification
+    # --- Draw Explosions (Fun Mode Only) ---
+    # Re-enabled
+    if game_state.game_mode == "fun":
+        if hasattr(game_state, "active_explosions"):
+            for explosion in game_state.active_explosions:
+                try:
+                    explosion.draw(frame)
+                except Exception as e:
+                    logger.error(f"Error drawing explosion: {e}")
+        else:
+            logger.warning("game_state missing 'active_explosions' attribute.")
+
+    # --- Draw Notifications & Achievement Popups ---
+    if game_state.current_state != CurrentGameState.GETTING_PLAYER_NAME:
         if (
             game_state.achievement_notification
             and game_state.achievement_notification_timer > 0
@@ -385,8 +359,6 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
                 thickness=UIConstants.FONT_THICKNESS,
                 alpha=0.7,
             )
-
-        # Draw general notifications
         if game_state.notification_text and game_state.notification_timer > 0:
             color = game_state.notification_color
             (tw_not, th_not), _ = cv2.getTextSize(
@@ -395,16 +367,12 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
                 UIConstants.FONT_SCALE_MEDIUM,
                 UIConstants.FONT_THICKNESS,
             )
-            # Position near bottom center, maybe slightly above achievement popup if both present
             notif_y_offset = 20
             if (
                 game_state.achievement_notification
                 and game_state.achievement_notification_timer > 0
             ):
-                notif_y_offset = (
-                    80  # Move general notification up if achievement showing
-                )
-
+                notif_y_offset = 80
             nx_not, ny_not = (
                 UIConstants.WINDOW_WIDTH - tw_not
             ) // 2, UIConstants.WINDOW_HEIGHT - notif_y_offset
@@ -425,7 +393,7 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
         and hasattr(game_state, "show_debug_overlay")
         and game_state.show_debug_overlay
     ):
-        _draw_debug_overlay(frame, game_state)  # From ui_elements.py
+        _draw_debug_overlay(frame, game_state)
 
     # --- Draw General Debug Text (if debug mode on, draw absolutely last) ---
     if (
@@ -443,7 +411,6 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
         drawing_active_text = (
             "Draw:ON" if getattr(game_state, "drawing", False) else "Draw:OFF"
         )
-        # Add zone editing state to debug text
         edit_info = ""
         if game_state.current_state == CurrentGameState.ZONE_EDITING:
             edit_info = f"|EditingZone:{game_state.selected_zone_for_edit}|Action:{game_state.zone_editing_action}"
@@ -451,7 +418,7 @@ def draw_ui(frame: np.ndarray, game_state: GameState) -> None:
         _draw_text_with_background(
             frame,
             debug_text,
-            (10, UIConstants.WINDOW_HEIGHT - 10),  # Bottom left
+            (10, UIConstants.WINDOW_HEIGHT - 10),
             UIConstants.FONT_SCALE_SMALL,
             UIConstants.YELLOW,
             UIConstants.BLACK,
