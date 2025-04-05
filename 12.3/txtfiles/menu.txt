@@ -89,6 +89,11 @@ def reset_game(game_state: GameState) -> None:
         logger.info(
             f"Timed mode selected. Timer set to {game_state.game_timer} seconds."
         )
+    elif game_state.game_mode == "survival": # <-- Added this block
+        game_state.game_timer = GameConstants.SURVIVAL_MODE_START_TIME
+        logger.info(
+            f"Survival mode reset. Timer set to {game_state.game_timer} seconds."
+        )
     else:
         game_state.game_timer = None
 

@@ -118,7 +118,7 @@ def _update_game_state(game_state: GameState, dt: float) -> None:
     # ... (function unchanged) ...
     if (
         game_state.current_state == CurrentGameState.PLAYING
-        and game_state.game_mode == "timed"
+        and game_state.game_mode in ["timed", "survival"]
         and game_state.game_timer is not None
     ):
         if (
