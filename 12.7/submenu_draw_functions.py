@@ -14,13 +14,10 @@ import numpy as np
 
 # Import constants
 from constants import GameConstants, UIConstants
-
 # Keep GameState import for now, but hints will use strings
 from game_state import GameState
-
 # Import types/enums
 from game_types import CurrentGameState  # Use the new location
-
 # Import necessary base utilities
 from menu_utils import _draw_button
 

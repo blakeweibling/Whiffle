@@ -14,4 +14,4 @@ class CurrentGameState(Enum):
     GAME_OVER = auto()
     PAUSED = auto()
     FUN = auto()  # Added previously
-    CONFIRM_QUIT = auto() # <-- Added this line
+    CONFIRM_QUIT = auto()  # <-- Added this line

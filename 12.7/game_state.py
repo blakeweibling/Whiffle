@@ -10,28 +10,19 @@ import pygame
 
 # Import constants consistently
 from constants import GameConstants, UIConstants
-
 # Import necessary components
 from detection import BallDetector
-
 # Import effects for Fun Mode
 from effects import BallTrail, Explosion
-
 # Import utility functions
 # Removed: is_ball_at_rest, is_ball_zone_stable (no longer needed here)
-from game_state_utils import load_background_music  # <--- Ensure this is imported
+from game_state_utils import \
+    load_background_music  # <--- Ensure this is imported
 from game_state_utils import (  # play_sound, check_achievements, show_notification etc. are now helpers or utils called elsewhere
-    initialize_achievements,
-    initialize_sounds,
-    load_achievements,
-    load_hsv_ranges,
-    load_initial_state,
-    load_settings,
-    set_volume,
-)
-
+    initialize_achievements, initialize_sounds, load_achievements,
+    load_hsv_ranges, load_initial_state, load_settings, set_volume)
 # Import types/enums from new location
-from game_types import CurrentGameState # Enum now includes CONFIRM_QUIT
+from game_types import CurrentGameState  # Enum now includes CONFIRM_QUIT
 from leaderboard import Leaderboard
 from player import Player
 from tracking import BallTracker

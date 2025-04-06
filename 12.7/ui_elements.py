@@ -6,7 +6,6 @@ import numpy as np
 
 # Local project imports
 from constants import UIConstants
-
 # Import GameState for type hinting and accessing effects
 from game_state import GameState
 

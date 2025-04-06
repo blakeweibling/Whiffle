@@ -2,7 +2,6 @@
 import logging
 import os
 import time
-
 # Add Callable and Any for type hinting
 from typing import Any, Callable, Optional
 
@@ -11,10 +10,8 @@ import numpy as np
 
 # Import clean_exit from the new cleanup file
 from cleanup_utils import clean_exit
-
 # Local project imports
 from constants import GameConstants, UIConstants
-
 # Import GameState class and CurrentGameState enum from NEW location
 from game_state import GameState  # Keep import for GameState class
 from game_types import CurrentGameState  # Import Enum from new location

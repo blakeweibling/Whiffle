@@ -12,11 +12,9 @@ from dotenv import load_dotenv
 
 # Updated imports: clean_exit from utils, mouse_callback from utils
 from cleanup_utils import clean_exit
-
 # Import constants
 from constants import UIConstants
 from game_loop import run_game_loop
-
 # Import necessary classes and functions
 # Import the specific utility function needed
 from game_state_utils import save_score  # For exception handling

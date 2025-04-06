@@ -4,28 +4,17 @@ import cv2
 import numpy as np
 
 import submenu_draw_functions
-
 # Import constants, including MenuConstants
 from constants import MenuConstants, UIConstants
-
 # Import GameState for type hinting if needed, but avoid direct use that causes cycles
 from game_state import GameState  # Assuming GameState is the type hint
 from menu_utils import _draw_button
-
 # Import the drawing functions from the new file
 # Note: _draw_settings_submenu is now intended to be used FROM submenu_draw_functions
-from submenu_draw_functions import (
-    _draw_settings_submenu,
-)  # Ensure this is imported if not already
-from submenu_draw_functions import (
-    _draw_about_submenu,
-    _draw_achievements_submenu,
-    _draw_edit_zones_submenu,
-    _draw_faq_submenu,
-    _draw_help_submenu,
-    _draw_leaderboard_submenu,
-    _draw_players_submenu,
-)
+from submenu_draw_functions import (  # Ensure this is imported if not already
+    _draw_about_submenu, _draw_achievements_submenu, _draw_edit_zones_submenu,
+    _draw_faq_submenu, _draw_help_submenu, _draw_leaderboard_submenu,
+    _draw_players_submenu, _draw_settings_submenu)
 
 logger = logging.getLogger(__name__)
 

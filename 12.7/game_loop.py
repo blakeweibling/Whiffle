@@ -13,21 +13,16 @@ import numpy as np
 
 # Import cleanup and utility functions
 from cleanup_utils import clean_exit
-
 # Import constants and UI elements
-from constants import GameConstants, UIConstants  # Added GameConstants for pixel factor
-
+from constants import (GameConstants,  # Added GameConstants for pixel factor
+                       UIConstants)
 # Import input handling
 from game_input import _handle_input
-
 # Import GameState class and CurrentGameState enum from NEW location
 from game_state import GameState  # Keep import for GameState
-
 # Import the necessary refactored utility functions
 from game_state_utils import (  # check_achievements is called within update_timers_and_state now
-    update_scoring,
-    update_timers_and_state,
-)
+    update_scoring, update_timers_and_state)
 from game_types import CurrentGameState  # Import from new location
 from ui import draw_ui
 

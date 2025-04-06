@@ -14,12 +14,10 @@ import numpy as np
 
 # Import constants, including MenuConstants
 from constants import MenuConstants, UIConstants
-
 # Import GameState class and CurrentGameState enum from NEW location
 from game_state import GameState  # Keep import for GameState class
 from game_types import CurrentGameState  # Import Enum from new location
 from menu_utils import _draw_button
-
 # Import submenu functions here to avoid circular imports within _draw_menu_content
 from submenus import draw_submenu
 

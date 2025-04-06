@@ -16,25 +16,17 @@ import pygame
 # scoring.py might still be needed if other utils use is_in_scoring_zone
 # from scoring import is_in_scoring_zone
 from achievement import Achievement
-
 # Import constants and classes
 from constants import GameConstants
 from effects import BallTrail, Explosion  # Needed by reset_game
-
 # Import the functions moved to the new helpers file
 from game_state_helpers import set_special_hole  # Needed by load_initial_state
 from game_state_helpers import (  # save_zones, clear_zones, flush_scoring_zones not directly needed here
-    play_sound,
-    save_score,
-    show_notification,
-)
-
+    play_sound, save_score, show_notification)
 # Import types/enums
 from game_types import CurrentGameState  # Needed for update_timers_and_state
-
 # Import classes needed by functions remaining here
 from player import Player  # Needed by reset_game
-
 # Import the refactored scoring logic
 from scoring_logic import update_scoring as _update_scoring_logic
 

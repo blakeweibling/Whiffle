@@ -7,19 +7,14 @@ import pygame  # Keep for constants like K_RETURN etc. used in menu/game over lo
 
 # Import clean_exit from the correct location
 from cleanup_utils import clean_exit
-
 # Import constants, utils, and specific game states/functions
-from constants import GameConstants, PlayerConstants, ScoringConstants, UIConstants
-
+from constants import (GameConstants, PlayerConstants, ScoringConstants,
+                       UIConstants)
 # Import necessary utility functions from the CORRECT files
 from game_state_helpers import (  # Helpers that were moved; Removed reset_game from here
-    set_special_hole,
-    show_notification,
-)
-from game_state_utils import (
-    reset_game,
-)  # Utils that remained (or need to be here); Add other imports from utils if needed directly here
-
+    set_special_hole, show_notification)
+from game_state_utils import \
+    reset_game  # Utils that remained (or need to be here); Add other imports from utils if needed directly here
 # Import GameState enum from the NEW location
 from game_types import CurrentGameState  # Correct location
 
@@ -38,17 +33,20 @@ def _handle_input(game_state: Any) -> Optional[int]:
         else:
             # Window closed, return -1 or None to signal loop exit?
             # Returning -1 for now, game loop checks window property anyway.
-            return key # -1 or 255
+            return key  # -1 or 255
     except cv2.error as e:
         logger.warning(f"waitKey/getWindowProperty error: {e}")
-        return -1 # Error occurred
+        return -1  # Error occurred
 
-    key_handled_globally = False # Flag to prevent redundant processing
+    key_handled_globally = False  # Flag to prevent redundant processing
 
     # <<< MODIFIED: Handle 'q' - Go to CONFIRM_QUIT state >>>
     if key == ord("q"):
         # Only trigger confirmation if not already confirming or in name input
-        if game_state.current_state not in [CurrentGameState.CONFIRM_QUIT, CurrentGameState.GETTING_PLAYER_NAME]:
+        if game_state.current_state not in [
+            CurrentGameState.CONFIRM_QUIT,
+            CurrentGameState.GETTING_PLAYER_NAME,
+        ]:
             game_state.previous_state_before_quit_confirm = game_state.current_state
             game_state.current_state = CurrentGameState.CONFIRM_QUIT
             key_handled_globally = True
@@ -57,11 +55,13 @@ def _handle_input(game_state: Any) -> Optional[int]:
         # Or potentially handle it as 'confirm'? Decided to let it be handled as cancel below.
     # <<< END MODIFICATION >>>
 
-    if key != -1 and key != 255 and not key_handled_globally: # Process other keys if not handled globally
+    if (
+        key != -1 and key != 255 and not key_handled_globally
+    ):  # Process other keys if not handled globally
 
         # <<< ADDED: Handle input in CONFIRM_QUIT state >>>
         if game_state.current_state == CurrentGameState.CONFIRM_QUIT:
-            if key == ord('y'):
+            if key == ord("y"):
                 logger.info("Quit confirmed via 'y'.")
                 clean_exit(
                     game_state.cap,
@@ -69,12 +69,18 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     game_state.background_music_on,
                     game_state,
                 )
-                return None # Signal exit
-            elif key == ord('n') or key == 27 or key == 8 or key == ord('q'): # N, Esc, Backspace, or Q again cancels
+                return None  # Signal exit
+            elif (
+                key == ord("n") or key == 27 or key == 8 or key == ord("q")
+            ):  # N, Esc, Backspace, or Q again cancels
                 logger.debug("Quit cancelled.")
                 # Restore the previous state
-                game_state.current_state = getattr(game_state, 'previous_state_before_quit_confirm', CurrentGameState.PLAYING)
-                key_handled_globally = True # Mark handled
+                game_state.current_state = getattr(
+                    game_state,
+                    "previous_state_before_quit_confirm",
+                    CurrentGameState.PLAYING,
+                )
+                key_handled_globally = True  # Mark handled
             # Ignore other keys in this state
             # Return the key so the loop continues if quit wasn't confirmed
             return key
@@ -85,7 +91,10 @@ def _handle_input(game_state: Any) -> Optional[int]:
         # (Wrap existing state-specific logic in checks like 'if not key_handled_globally:')
         # OR rely on the fact that CONFIRM_QUIT block returns early or sets the flag
 
-        if not key_handled_globally and game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
+        if (
+            not key_handled_globally
+            and game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME
+        ):
             if key == 13:  # Enter
                 entered_name = game_state.current_player_name_input.strip()
                 if not entered_name:
@@ -115,7 +124,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 key_handled_globally = True
             elif key == 27:  # Escape
                 if game_state.players:
-                    game_state.players[0].name = "Player 1" # Use default
+                    game_state.players[0].name = "Player 1"  # Use default
                     game_state.player_name_input_active = False
                     game_state.current_state = CurrentGameState.PLAYING
                     show_notification(
@@ -156,8 +165,11 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     )
                 key_handled_globally = True
 
-        elif not key_handled_globally and game_state.current_state == CurrentGameState.MENU:
-            menu_key_handled = False # Flag for specific menu input processing
+        elif (
+            not key_handled_globally
+            and game_state.current_state == CurrentGameState.MENU
+        ):
+            menu_key_handled = False  # Flag for specific menu input processing
 
             # Player Name Editing Logic...
             if (
@@ -185,7 +197,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                         game_state.editing_player_index = None
                         game_state.editing_player_mode = None
                         game_state.editing_player_name_input = None
-                        game_state.menu_cache = None # Redraw menu
+                        game_state.menu_cache = None  # Redraw menu
                     else:
                         show_notification(
                             game_state, "Error saving name!", is_error=True
@@ -196,7 +208,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                         game_state.editing_player_name_input = None
                         game_state.menu_cache = None
                     menu_key_handled = True
-                elif key == 27: # Escape
+                elif key == 27:  # Escape
                     game_state.editing_player_index = None
                     game_state.editing_player_mode = None
                     game_state.editing_player_name_input = None
@@ -208,7 +220,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                         game_state.editing_player_name_input = (
                             game_state.editing_player_name_input[:-1]
                         )
-                        game_state.menu_cache = None # Redraw
+                        game_state.menu_cache = None  # Redraw
                     menu_key_handled = True
                 elif key >= 32 and key <= 126:  # Printable ASCII
                     char = chr(key)
@@ -218,7 +230,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                             < PlayerConstants.MAX_PLAYER_NAME_LENGTH
                         ):
                             game_state.editing_player_name_input += char
-                            game_state.menu_cache = None # Redraw
+                            game_state.menu_cache = None  # Redraw
                         else:
                             show_notification(
                                 game_state,
@@ -239,7 +251,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     key_handled_globally = True
 
             # Zone Points Editing Logic...
-            elif not key_handled_globally and ( # Check flag again
+            elif not key_handled_globally and (  # Check flag again
                 game_state.submenu_active == "edit_zones"
                 and game_state.editing_zone_mode == "edit_points"
                 and game_state.editing_zone_index is not None
@@ -281,7 +293,9 @@ def _handle_input(game_state: Any) -> Optional[int]:
                                 game_state.menu_cache = None
                             else:
                                 show_notification(
-                                    game_state, "Error saving points (invalid index?)!", is_error=True
+                                    game_state,
+                                    "Error saving points (invalid index?)!",
+                                    is_error=True,
                                 )
                                 # Reset state even on error
                                 game_state.editing_zone_index = None
@@ -305,7 +319,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                         game_state.editing_zone_points_input = None
                         game_state.menu_cache = None
                     menu_key_handled = True
-                elif key == 27: # Escape
+                elif key == 27:  # Escape
                     game_state.editing_zone_index = None
                     game_state.editing_zone_mode = None
                     game_state.editing_zone_points_input = None
@@ -317,7 +331,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                         game_state.editing_zone_points_input = (
                             game_state.editing_zone_points_input[:-1]
                         )
-                        game_state.menu_cache = None # Redraw
+                        game_state.menu_cache = None  # Redraw
                     menu_key_handled = True
                 elif ord("0") <= key <= ord("9"):  # Numeric input
                     char = chr(key)
@@ -327,26 +341,25 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     # else:
                     max_digits = len(str(ScoringConstants.MAX_POINTS))
                     if game_state.editing_zone_points_input is None:
-                        game_state.editing_zone_points_input = "" # Initialize if None
+                        game_state.editing_zone_points_input = ""  # Initialize if None
                     if len(game_state.editing_zone_points_input) < max_digits:
-                         game_state.editing_zone_points_input += char
-                         game_state.menu_cache = None # Redraw
+                        game_state.editing_zone_points_input += char
+                        game_state.menu_cache = None  # Redraw
                     else:
-                         show_notification(
-                             game_state,
-                             f"Max points {ScoringConstants.MAX_POINTS}",
-                             is_error=True,
-                             duration=1.5,
-                         )
+                        show_notification(
+                            game_state,
+                            f"Max points {ScoringConstants.MAX_POINTS}",
+                            is_error=True,
+                            duration=1.5,
+                        )
                     menu_key_handled = True
 
                 if menu_key_handled:
                     key_handled_globally = True
 
-
             # General Menu Navigation...
             if not key_handled_globally:
-                if key == ord("m"): # 'm' always resumes from menu
+                if key == ord("m"):  # 'm' always resumes from menu
                     game_state.current_state = CurrentGameState.PLAYING
                     # Reset any lingering menu/edit state
                     game_state.editing_player_index = None
@@ -359,28 +372,32 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     game_state.menu_cache = None
                     key_handled_globally = True
                 elif key == 8:  # Backspace (general menu back navigation)
-                    if game_state.editing_zone_mode: # If editing zone points/etc.
+                    if game_state.editing_zone_mode:  # If editing zone points/etc.
                         game_state.editing_zone_index = None
                         game_state.editing_zone_mode = None
                         game_state.editing_zone_points_input = None
-                        game_state.menu_cache = None # Redraw parent menu
-                    elif game_state.editing_player_mode: # If editing player name
-                         game_state.editing_player_index = None
-                         game_state.editing_player_mode = None
-                         game_state.editing_player_name_input = None
-                         game_state.menu_cache = None # Redraw parent menu
-                    elif game_state.submenu_active == "edit_zones": # If in edit list, go back to manage zones
-                         game_state.submenu_active = "manage_zones"
-                         game_state.menu_cache = None
-                    elif game_state.submenu_active: # If in any other submenu, go back to main menu
+                        game_state.menu_cache = None  # Redraw parent menu
+                    elif game_state.editing_player_mode:  # If editing player name
+                        game_state.editing_player_index = None
+                        game_state.editing_player_mode = None
+                        game_state.editing_player_name_input = None
+                        game_state.menu_cache = None  # Redraw parent menu
+                    elif (
+                        game_state.submenu_active == "edit_zones"
+                    ):  # If in edit list, go back to manage zones
+                        game_state.submenu_active = "manage_zones"
+                        game_state.menu_cache = None
+                    elif (
+                        game_state.submenu_active
+                    ):  # If in any other submenu, go back to main menu
                         game_state.submenu_active = None
                         game_state.menu_cache = None
-                    else: # If in main menu, backspace resumes game
+                    else:  # If in main menu, backspace resumes game
                         game_state.current_state = CurrentGameState.PLAYING
                         game_state.submenu_active = None
                         game_state.menu_cache = None
                     key_handled_globally = True
-                elif key == 27: # Escape always resumes from menu
+                elif key == 27:  # Escape always resumes from menu
                     game_state.current_state = CurrentGameState.PLAYING
                     # Reset any lingering menu/edit state
                     game_state.editing_player_index = None
@@ -393,7 +410,10 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     game_state.menu_cache = None
                     key_handled_globally = True
 
-        elif not key_handled_globally and game_state.current_state == CurrentGameState.PLAYING:
+        elif (
+            not key_handled_globally
+            and game_state.current_state == CurrentGameState.PLAYING
+        ):
             key_handled_in_playing = False
 
             # Zone drawing input...
@@ -416,12 +436,12 @@ def _handle_input(game_state: Any) -> Optional[int]:
 
             # Standard playing keys...
             if not key_handled_in_playing:
-                if key == ord("m"): # 'm' opens menu
+                if key == ord("m"):  # 'm' opens menu
                     game_state.current_state = CurrentGameState.MENU
                     game_state.submenu_active = None
-                    game_state.menu_cache = None # Clear menu cache
+                    game_state.menu_cache = None  # Clear menu cache
                     key_handled_in_playing = True
-                elif key == ord("s"): # 's' toggles drawing mode
+                elif key == ord("s"):  # 's' toggles drawing mode
                     game_state.drawing = not game_state.drawing
                     show_notification(
                         game_state,
@@ -433,12 +453,16 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     game_state.start_y = None
                     game_state.drawing_points_input = ""
                     key_handled_in_playing = True
-                elif key == ord("p"): # 'p' pauses game
+                elif key == ord("p"):  # 'p' pauses game
                     game_state.current_state = CurrentGameState.PAUSED
-                    show_notification(game_state, "Game Paused", duration=0) # Persistent
+                    show_notification(
+                        game_state, "Game Paused", duration=0
+                    )  # Persistent
                     key_handled_in_playing = True
-                elif key == 27: # Escape (in PLAYING state) -> Go to CONFIRM_QUIT
-                    game_state.previous_state_before_quit_confirm = CurrentGameState.PLAYING
+                elif key == 27:  # Escape (in PLAYING state) -> Go to CONFIRM_QUIT
+                    game_state.previous_state_before_quit_confirm = (
+                        CurrentGameState.PLAYING
+                    )
                     game_state.current_state = CurrentGameState.CONFIRM_QUIT
                     key_handled_in_playing = True
                     logger.debug("Escape key in PLAYING state, entering CONFIRM_QUIT.")
@@ -446,38 +470,49 @@ def _handle_input(game_state: Any) -> Optional[int]:
             if key_handled_in_playing:
                 key_handled_globally = True
 
-        elif not key_handled_globally and game_state.current_state == CurrentGameState.PAUSED:
-            if key == ord("p"): # 'p' resumes from pause
+        elif (
+            not key_handled_globally
+            and game_state.current_state == CurrentGameState.PAUSED
+        ):
+            if key == ord("p"):  # 'p' resumes from pause
                 game_state.current_state = CurrentGameState.PLAYING
                 show_notification(game_state, "Resuming...", duration=1.0)
                 key_handled_globally = True
-            elif key == 27: # Escape (in PAUSED state) -> Go to CONFIRM_QUIT
+            elif key == 27:  # Escape (in PAUSED state) -> Go to CONFIRM_QUIT
                 game_state.previous_state_before_quit_confirm = CurrentGameState.PAUSED
                 game_state.current_state = CurrentGameState.CONFIRM_QUIT
                 key_handled_globally = True
                 logger.debug("Escape key in PAUSED state, entering CONFIRM_QUIT.")
 
-
-        elif not key_handled_globally and game_state.current_state == CurrentGameState.GAME_OVER:
-            if key == ord("n"): # 'n' starts new game
-                reset_game(game_state) # Resets score, timer, etc.
-                game_state.current_state = CurrentGameState.GETTING_PLAYER_NAME # Go back to name input
-                game_state.win_condition_met = False # Reset win flag
+        elif (
+            not key_handled_globally
+            and game_state.current_state == CurrentGameState.GAME_OVER
+        ):
+            if key == ord("n"):  # 'n' starts new game
+                reset_game(game_state)  # Resets score, timer, etc.
+                game_state.current_state = (
+                    CurrentGameState.GETTING_PLAYER_NAME
+                )  # Go back to name input
+                game_state.win_condition_met = False  # Reset win flag
                 key_handled_globally = True
-            elif key == ord("l"): # 'l' goes to leaderboard menu
+            elif key == ord("l"):  # 'l' goes to leaderboard menu
                 game_state.current_state = CurrentGameState.MENU
                 game_state.submenu_active = "leaderboard"
                 game_state.menu_cache = None
-                game_state.win_condition_met = False # Reset win flag
+                game_state.win_condition_met = False  # Reset win flag
                 key_handled_globally = True
-            elif key == 27: # Escape (in GAME_OVER state) -> Go to CONFIRM_QUIT
-                game_state.previous_state_before_quit_confirm = CurrentGameState.GAME_OVER
+            elif key == 27:  # Escape (in GAME_OVER state) -> Go to CONFIRM_QUIT
+                game_state.previous_state_before_quit_confirm = (
+                    CurrentGameState.GAME_OVER
+                )
                 game_state.current_state = CurrentGameState.CONFIRM_QUIT
                 key_handled_globally = True
                 logger.debug("Escape key in GAME_OVER state, entering CONFIRM_QUIT.")
 
-
-        elif not key_handled_globally and game_state.current_state == CurrentGameState.ZONE_EDITING:
+        elif (
+            not key_handled_globally
+            and game_state.current_state == CurrentGameState.ZONE_EDITING
+        ):
             if key == 27:  # Escape cancels interactive editing
                 # Revert potentially modified zone if dragging
                 if (
@@ -495,7 +530,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     # Recalculate special hole in case the reverted zone was it
                     game_state.special_hole = set_special_hole(
                         game_state.scoring_zones
-                    ) # Use helper
+                    )  # Use helper
 
                 # Reset all editing state variables
                 game_state.zone_editing_action = None
@@ -506,21 +541,21 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 # Return to previous state (likely MENU)
                 try:
                     game_state.current_state = (
-                        game_state.previous_state # Restore state before editing started
+                        game_state.previous_state  # Restore state before editing started
                         if game_state.previous_state
-                        else CurrentGameState.MENU # Fallback to MENU
+                        else CurrentGameState.MENU  # Fallback to MENU
                     )
                 except AttributeError:
-                     game_state.current_state = CurrentGameState.MENU
+                    game_state.current_state = CurrentGameState.MENU
 
-                game_state.previous_state = None # Clear the stored previous state
-                show_notification(game_state, "Zone Edit Cancelled") # Use helper
-                game_state.menu_cache = None # Force menu redraw if returning to menu
+                game_state.previous_state = None  # Clear the stored previous state
+                show_notification(game_state, "Zone Edit Cancelled")  # Use helper
+                game_state.menu_cache = None  # Force menu redraw if returning to menu
                 key_handled_globally = True
 
         # Global Toggles (Check not handled globally already)
         if not key_handled_globally:
-            if key == ord("d"): # Toggle debug logging
+            if key == ord("d"):  # Toggle debug logging
                 game_state.debug_mode = not game_state.debug_mode
                 log_level = logging.DEBUG if game_state.debug_mode else logging.INFO
                 logging.getLogger().setLevel(log_level)
@@ -530,14 +565,14 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 show_notification(
                     game_state,
                     f"Debug Mode: {'ON' if game_state.debug_mode else 'OFF'}",
-                ) # Use helper
+                )  # Use helper
                 key_handled_globally = True
-            elif key == ord("b"): # Toggle debug overlay
+            elif key == ord("b"):  # Toggle debug overlay
                 game_state.show_debug_overlay = not game_state.show_debug_overlay
                 show_notification(
                     game_state,
                     f"Debug Overlay: {'ON' if game_state.show_debug_overlay else 'OFF'}",
-                ) # Use helper
+                )  # Use helper
                 key_handled_globally = True
 
     # Return the key code so the main loop can check for window close events etc.

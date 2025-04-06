@@ -11,15 +11,10 @@ from typing import Any
 # Import necessary constants and classes from the project
 from constants import GameConstants
 from effects import BallTrail, Explosion
-
 # Import utility functions it depends on
 from game_state_helpers import (  # Import helpers from new file;
-    is_ball_at_rest,
-    is_ball_zone_stable,
-    play_sound,
-    save_score,
-    show_notification,
-)
+    is_ball_at_rest, is_ball_zone_stable, play_sound, save_score,
+    show_notification)
 from game_types import CurrentGameState  # Import from new location
 from scoring import is_in_scoring_zone  # Assumes this is the correct location
 
