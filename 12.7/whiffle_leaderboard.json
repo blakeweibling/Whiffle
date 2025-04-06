@@ -12,10 +12,23 @@
             "score": 10,
             "mode": "classic",
             "created_at": "2025-04-06T18:15:08.068553"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:19:03.099662"
         }
     ],
     "practice": [],
-    "retro": [],
+    "retro": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T18:19:21.204571"
+        }
+    ],
     "fun": [],
     "timed": []
 }
