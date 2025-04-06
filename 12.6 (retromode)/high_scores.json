@@ -1,0 +1,32 @@
+{
+    "classic": {
+        "high_score": 1272,
+        "player": "Blake W",
+        "date": "2025-04-03 17:55:14"
+    },
+    "timed": {
+        "high_score": 465,
+        "player": "Blake W",
+        "date": "2025-04-01 19:08:45"
+    },
+    "practice": {
+        "high_score": 631,
+        "player": "Blake W",
+        "date": "2025-04-01 19:09:30"
+    },
+    "fun": {
+        "high_score": 931,
+        "player": "Blake W",
+        "date": "2025-04-04 03:56:37"
+    },
+    "survival": {
+        "high_score": 10,
+        "player": "Blake W",
+        "date": "2025-04-05 09:45:22"
+    },
+    "retro": {
+        "high_score": 10,
+        "player": "Blake W",
+        "date": "2025-04-06 10:32:02"
+    }
+}
