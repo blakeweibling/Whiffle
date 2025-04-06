@@ -1,0 +1,818 @@
+{
+    "classic": [
+        {
+            "player_name": "Blake W",
+            "score": 362,
+            "mode": "classic",
+            "created_at": "2025-04-02T03:25:27.611602"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 468,
+            "mode": "classic",
+            "created_at": "2025-04-02T03:28:03.287183"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1110,
+            "mode": "classic",
+            "created_at": "2025-04-02T11:09:42.273747"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 980,
+            "mode": "classic",
+            "created_at": "2025-04-02T11:26:41.287309"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 100,
+            "mode": "classic",
+            "created_at": "2025-04-03T23:56:18.868279"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 576,
+            "mode": "classic",
+            "created_at": "2025-04-03T23:59:18.046703"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 576,
+            "mode": "classic",
+            "created_at": "2025-04-03T23:59:18.048927"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 393,
+            "mode": "classic",
+            "created_at": "2025-04-04T00:01:03.317053"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 343,
+            "mode": "classic",
+            "created_at": "2025-04-04T00:12:33.602019"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 343,
+            "mode": "classic",
+            "created_at": "2025-04-04T00:12:33.604016"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1086,
+            "mode": "classic",
+            "created_at": "2025-04-04T00:53:22.030303"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 2544,
+            "mode": "classic",
+            "created_at": "2025-04-04T00:55:14.987186"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 2544,
+            "mode": "classic",
+            "created_at": "2025-04-04T00:55:14.989180"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1864,
+            "mode": "classic",
+            "created_at": "2025-04-04T03:06:00.686677"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1864,
+            "mode": "classic",
+            "created_at": "2025-04-04T03:06:00.688674"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1862,
+            "mode": "classic",
+            "created_at": "2025-04-04T10:56:21.459336"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1862,
+            "mode": "classic",
+            "created_at": "2025-04-04T10:56:37.971915"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1862,
+            "mode": "classic",
+            "created_at": "2025-04-04T10:56:37.975905"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1108,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:04:15.879951"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1108,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:04:15.882945"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 703,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:14:04.758327"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 623,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:17:29.026305"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 623,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:17:29.028301"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:23:54.236223"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 608,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:33:55.095854"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 355,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:34:47.271405"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 352,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:35:12.469940"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 353,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:35:58.141681"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 353,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:35:58.143675"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 355,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:37:03.042307"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 355,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:37:03.044330"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 354,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:42:06.008173"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 279,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:43:52.980030"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 123,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:44:23.196505"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 123,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:44:23.198498"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 713,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:48:33.607836"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 473,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:49:01.104855"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 473,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:49:01.106835"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 473,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:49:52.975253"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 473,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:49:52.977264"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 473,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:52:07.910698"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 473,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:52:07.912693"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 473,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:55:28.881180"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 473,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:57:52.170504"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 371,
+            "mode": "classic",
+            "created_at": "2025-04-04T11:58:02.840266"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 357,
+            "mode": "classic",
+            "created_at": "2025-04-05T14:16:02.569580"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 357,
+            "mode": "classic",
+            "created_at": "2025-04-05T14:16:02.572282"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 357,
+            "mode": "classic",
+            "created_at": "2025-04-05T14:23:14.438415"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 356,
+            "mode": "classic",
+            "created_at": "2025-04-05T14:24:51.336700"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 356,
+            "mode": "classic",
+            "created_at": "2025-04-05T14:24:51.339693"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 356,
+            "mode": "classic",
+            "created_at": "2025-04-05T14:28:35.264448"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 356,
+            "mode": "classic",
+            "created_at": "2025-04-05T14:28:35.266443"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 357,
+            "mode": "classic",
+            "created_at": "2025-04-05T14:31:17.297621"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T15:50:50.935050"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:00:09.691163"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:00:09.694157"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:02:06.859839"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:02:06.862831"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:14:24.264910"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:14:24.266905"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:17:42.089556"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:19:59.466393"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:19:59.468388"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:23:52.853065"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:23:52.855059"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:41:48.093728"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:41:48.095725"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:42:22.905541"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:42:22.908533"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:45:01.038282"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:47:14.076574"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T16:47:14.078570"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T17:33:51.987287"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T17:49:06.614391"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T17:50:11.599219"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T17:56:31.465984"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T19:00:37.535818"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T19:01:29.723570"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-05T19:01:29.725565"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T05:44:56.678754"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T05:44:57.125540"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T05:48:42.215068"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T10:50:27.283674"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T10:50:27.286693"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T11:19:46.616870"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T17:15:51.041730"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T17:16:05.682167"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T17:31:34.532907"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T17:33:01.779197"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T17:33:54.817909"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T17:35:00.226575"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T17:36:00.537822"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T17:54:51.260706"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T17:54:51.263699"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:10:45.028694"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:10:45.383647"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:11:06.850717"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:11:07.092601"
+        }
+    ],
+    "timed": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "timed",
+            "created_at": "2025-04-05T17:34:12.988944"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "timed",
+            "created_at": "2025-04-05T17:49:29.618622"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "timed",
+            "created_at": "2025-04-06T17:16:09.574676"
+        }
+    ],
+    "survival": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T16:45:22.620717"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T16:45:22.624050"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T17:34:06.116326"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T17:34:33.194611"
+        },
+        {
+            "player_name": "Katie H",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T17:35:04.458060"
+        },
+        {
+            "player_name": "Katie H",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T17:35:04.461054"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T17:49:19.976410"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T17:49:35.581650"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T17:50:16.492429"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T17:50:16.496083"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T17:53:12.252306"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T17:53:12.255272"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T17:56:42.392185"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T17:56:42.395540"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T19:01:12.568806"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-05T19:01:24.186361"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-06T11:14:52.072878"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-06T11:14:52.079750"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-06T11:19:56.445799"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "survival",
+            "created_at": "2025-04-06T11:19:56.451956"
+        }
+    ],
+    "practice": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "practice",
+            "created_at": "2025-04-06T17:15:58.518828"
+        }
+    ],
+    "fun": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "fun",
+            "created_at": "2025-04-06T17:16:19.980662"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "fun",
+            "created_at": "2025-04-06T17:16:19.983655"
+        }
+    ],
+    "retro": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T17:32:02.047951"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T17:32:02.442689"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T17:33:14.066735"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T17:33:14.069727"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T17:34:20.845210"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T17:34:20.848205"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T17:35:11.880298"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T17:35:11.883290"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T17:36:16.187750"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T17:36:16.190743"
+        }
+    ]
+}
