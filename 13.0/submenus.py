@@ -13,10 +13,13 @@ from game_types import CurrentGameState
 # <<< MODIFIED: Pass game_state to _draw_button >>>
 from menu_utils import _draw_button
 # Import the drawing functions from the new file
-from submenu_draw_functions import (
-    _draw_about_submenu, _draw_achievements_submenu, _draw_edit_zones_submenu,
-    _draw_faq_submenu, _draw_help_submenu, _draw_leaderboard_submenu,
-    _draw_players_submenu, _draw_settings_submenu)
+from submenu_draw_functions import (_draw_about_submenu,
+                                    _draw_achievements_submenu,
+                                    _draw_edit_zones_submenu,
+                                    _draw_faq_submenu, _draw_help_submenu,
+                                    _draw_leaderboard_submenu,
+                                    _draw_players_submenu,
+                                    _draw_settings_submenu)
 
 logger = logging.getLogger(__name__)
 
@@ -127,9 +130,7 @@ def _draw_zone_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
         )
         y_offset += item_height + 5
 
-    game_state.menu_height = (
-        y_offset + 20
-    )
+    game_state.menu_height = y_offset + 20
 
 
 # --- Main Submenu Dispatcher ---
@@ -155,26 +156,43 @@ def draw_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
     draw_func = submenu_draw_functions_map.get(game_state.submenu_active)
 
     if draw_func:
-        game_state.menu_height = 450 # Default height
+        game_state.menu_height = 450  # Default height
         game_state.submenu_items.clear()
         # The specific draw_func (e.g., _draw_settings_submenu) is responsible
         # for calling _draw_button with game_state. We will update those functions next.
         draw_func(menu_frame, game_state)
     else:
         if game_state.submenu_active is not None:
-            logger.warning(f"No draw function found for submenu: {game_state.submenu_active}.")
+            logger.warning(
+                f"No draw function found for submenu: {game_state.submenu_active}."
+            )
             cv2.putText(
-                menu_frame, f"Error: Unknown Submenu '{game_state.submenu_active}'",
-                (30, 40), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.RED, UIConstants.FONT_THICKNESS
+                menu_frame,
+                f"Error: Unknown Submenu '{game_state.submenu_active}'",
+                (30, 40),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                UIConstants.FONT_SCALE_MEDIUM,
+                UIConstants.RED,
+                UIConstants.FONT_THICKNESS,
             )
             # Fallback Back button
             _draw_button(
-                menu_frame, 20, 80, menu_frame.shape[1] - 40, 35, "Back", UIConstants.CV2_BLUE,
+                menu_frame,
+                20,
+                80,
+                menu_frame.shape[1] - 40,
+                35,
+                "Back",
+                UIConstants.CV2_BLUE,
                 # <<< ADDED game_state parameter >>>
                 game_state=game_state,
-                font_scale=UIConstants.FONT_SCALE_MEDIUM
+                font_scale=UIConstants.FONT_SCALE_MEDIUM,
             )
-            game_state.submenu_items = [((20, 80, menu_frame.shape[1] - 40, 35), "back_to_main", "Back")]
+            game_state.submenu_items = [
+                ((20, 80, menu_frame.shape[1] - 40, 35), "back_to_main", "Back")
+            ]
             game_state.menu_height = 135
         else:
-            logger.error("draw_submenu called with game_state.submenu_active being None.")
+            logger.error(
+                "draw_submenu called with game_state.submenu_active being None."
+            )

@@ -18,9 +18,9 @@ from effects import BallTrail, Explosion
 # Import utility functions
 from game_state_utils import \
     load_background_music  # <--- Ensure this is imported
-from game_state_utils import (
-    initialize_achievements, initialize_sounds, load_achievements,
-    load_hsv_ranges, load_initial_state, load_settings, set_volume)
+from game_state_utils import (initialize_achievements, initialize_sounds,
+                              load_achievements, load_hsv_ranges,
+                              load_initial_state, load_settings, set_volume)
 # Import types/enums from new location
 from game_types import CurrentGameState
 from leaderboard import Leaderboard
@@ -133,13 +133,17 @@ class GameState:
         self.selected_zone_for_edit: Optional[int] = None
         self.zone_editing_action: Optional[str] = None
         self.drag_start_pos: Optional[Tuple[int, int]] = None
-        self.original_zone_on_drag_start: Optional[Tuple[int, int, int, int, int]] = None
+        self.original_zone_on_drag_start: Optional[Tuple[int, int, int, int, int]] = (
+            None
+        )
         self.editing_player_index: Optional[int] = None
         self.editing_player_mode: Optional[str] = None
         self.editing_player_name_input: Optional[str] = None
         # <<< MODIFIED FOR CLICK FEEDBACK >>>
         # Stores (rectangle (x,y,w,h), click_timestamp) of the last clicked button
-        self.click_feedback_state: Optional[Tuple[Tuple[int, int, int, int], float]] = None
+        self.click_feedback_state: Optional[Tuple[Tuple[int, int, int, int], float]] = (
+            None
+        )
         # <<< END MODIFIED >>>
 
         # Initial Player Name Input State

@@ -14,15 +14,13 @@ import numpy as np
 # Import cleanup and utility functions
 from cleanup_utils import clean_exit
 # Import constants and UI elements
-from constants import (GameConstants,
-                       UIConstants)
+from constants import GameConstants, UIConstants
 # Import input handling
 from game_input import _handle_input
 # Import GameState class and CurrentGameState enum from NEW location
 from game_state import GameState
 # Import the necessary refactored utility functions
-from game_state_utils import (
-    update_scoring, update_timers_and_state)
+from game_state_utils import update_scoring, update_timers_and_state
 from game_types import CurrentGameState
 from ui import draw_ui
 
@@ -127,7 +125,7 @@ def _render_frame(draw_canvas: np.ndarray, game_state: GameState) -> None:
     if draw_canvas is None:
         logger.warning("Render received None draw_canvas.")
         return
-    draw_ui(draw_canvas, game_state) # Pass game_state here
+    draw_ui(draw_canvas, game_state)  # Pass game_state here
     try:
         if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) >= 1:
             cv2.imshow(UIConstants.WINDOW_NAME, draw_canvas)
@@ -166,7 +164,10 @@ def run_game_loop(game_state: GameState) -> None:
                 logger.info("Quit signaled from input.")
                 break
             try:
-                if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:
+                if (
+                    cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE)
+                    < 1
+                ):
                     logger.info("Window closed.")
                     break
             except Exception as e:

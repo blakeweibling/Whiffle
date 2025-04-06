@@ -17,7 +17,8 @@ import pygame
 # from scoring import is_in_scoring_zone
 from achievement import Achievement
 # Import constants and classes
-from constants import GameConstants, UIConstants # Added UIConstants for click feedback duration
+from constants import (  # Added UIConstants for click feedback duration
+    GameConstants, UIConstants)
 from effects import BallTrail, Explosion  # Needed by reset_game
 # Import the functions moved to the new helpers file
 from game_state_helpers import set_special_hole  # Needed by load_initial_state
@@ -447,7 +448,7 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
     # Needs UIConstants for click feedback duration
 
     # --- ADDED: Check and clear click feedback state ---
-    if hasattr(game_state, 'click_feedback_state') and game_state.click_feedback_state:
+    if hasattr(game_state, "click_feedback_state") and game_state.click_feedback_state:
         _rect, click_time = game_state.click_feedback_state
         if time.time() - click_time >= UIConstants.CLICK_FEEDBACK_DURATION:
             game_state.click_feedback_state = None
@@ -555,7 +556,7 @@ def reset_game(game_state: Any) -> None:
     game_state.original_zone_on_drag_start = None
     game_state.special_hole_hit_this_session = False
     game_state.low_time_warning_played = False
-    game_state.click_feedback_state = None # Also reset click feedback
+    game_state.click_feedback_state = None  # Also reset click feedback
 
     # Reset player score
     if (

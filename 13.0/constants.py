@@ -105,7 +105,7 @@ class UIConstants:
     # --- END NEW ---
 
     # --- Click Feedback ---
-    CLICK_FEEDBACK_DURATION: float = 10.2 # Duration in seconds for click highlight
+    CLICK_FEEDBACK_DURATION: float = 10.2  # Duration in seconds for click highlight
 
 
 class CameraConfig:

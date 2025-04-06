@@ -6,9 +6,9 @@ This module contains shared functions used by both menu.py and submenus.py to av
 """
 
 import logging
-import time # Added import
+import time  # Added import
 # <<< ADDED IMPORT >>>
-from typing import Any, Callable, Tuple, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Callable, Tuple
 
 import cv2
 import numpy as np
@@ -34,14 +34,14 @@ def _draw_button(
     text: str,
     color: Tuple[int, int, int],
     # <<< ADDED game_state PARAMETER >>>
-    game_state: "GameState", # Use string literal for type hint
+    game_state: "GameState",  # Use string literal for type hint
     font_scale: float = UIConstants.FONT_SCALE_MEDIUM,
     font_thickness: int = 2,
     text_color: Tuple[int, int, int] = UIConstants.WHITE,
     shadow_offset: int = 3,
     shadow_color: Tuple[int, int, int] = UIConstants.BLACK,
     # <<< ADDED click_color PARAMETER (Optional) >>>
-    click_color: Tuple[int, int, int] = UIConstants.YELLOW # Color when clicked
+    click_color: Tuple[int, int, int] = UIConstants.YELLOW,  # Color when clicked
 ) -> None:
     """
     Draws a button with centered text, specified color, and a drop shadow.
@@ -52,10 +52,16 @@ def _draw_button(
         # <<< MODIFIED LOGIC to check for click state and duration >>>
         button_rect = (x, y, w, h)
         is_clicked = False
-        if hasattr(game_state, 'click_feedback_state') and game_state.click_feedback_state:
+        if (
+            hasattr(game_state, "click_feedback_state")
+            and game_state.click_feedback_state
+        ):
             stored_rect, click_time = game_state.click_feedback_state
             # Check if the rectangle matches AND the time is within the duration
-            if stored_rect == button_rect and (time.time() - click_time) < UIConstants.CLICK_FEEDBACK_DURATION:
+            if (
+                stored_rect == button_rect
+                and (time.time() - click_time) < UIConstants.CLICK_FEEDBACK_DURATION
+            ):
                 is_clicked = True
         current_color = click_color if is_clicked else color
         # <<< END MODIFIED LOGIC >>>
@@ -73,7 +79,9 @@ def _draw_button(
             )
 
         # Draw the main button rectangle (using current_color)
-        cv2.rectangle(frame, (x, y), (x + w, y + h), current_color, -1) # <<< USE current_color >>>
+        cv2.rectangle(
+            frame, (x, y), (x + w, y + h), current_color, -1
+        )  # <<< USE current_color >>>
 
         # Center Text
         (text_width, text_height), baseline = cv2.getTextSize(
@@ -109,7 +117,10 @@ def _mouse_callback_splash(event: int, x: int, y: int, flags: int, param: dict) 
 
 
 def show_splash_on_click(
-    frame: np.ndarray, game_state: "GameState", main_callback: Callable, callback_param: Any
+    frame: np.ndarray,
+    game_state: "GameState",
+    main_callback: Callable,
+    callback_param: Any,
 ) -> None:
     """
     Display splash screen until a keypress, mouse click, or window closure.
@@ -127,7 +138,7 @@ def show_splash_on_click(
             UIConstants.FONT_THICKNESS,
         )
         cv2.imshow(UIConstants.WINDOW_NAME, frame)
-        cv2.waitKey(1000) # Show error briefly
+        cv2.waitKey(1000)  # Show error briefly
         return
     splash = cv2.resize(splash, (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT))
 
