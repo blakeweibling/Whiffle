@@ -1,0 +1,1543 @@
+
+F:\Whiffle\12.4>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.10.9)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2025-04-05 22:43:15,920 - INFO - constants - Trying camera index 0 with backend dshow (700)...
+[ WARN:0@0.171] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(DSHOW): backend is generally available but can't be used to capture by index
+2025-04-05 22:43:15,929 - WARNING - constants - Failed to open camera at index 0 with backend dshow
+2025-04-05 22:43:15,929 - INFO - constants - Trying camera index 1 with backend dshow (700)...
+[ WARN:0@0.177] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(DSHOW): backend is generally available but can't be used to capture by index
+2025-04-05 22:43:15,935 - WARNING - constants - Failed to open camera at index 1 with backend dshow
+2025-04-05 22:43:15,935 - INFO - constants - Trying camera index -1 with backend dshow (700)...
+[ WARN:0@0.183] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(DSHOW): backend is generally available but can't be used to capture by index
+2025-04-05 22:43:15,941 - WARNING - constants - Failed to open camera at index -1 with backend dshow
+2025-04-05 22:43:15,941 - INFO - constants - Trying camera index 0 with fallback backend default (0)...
+[ERROR:0@0.324] global obsensor_uvc_stream_channel.cpp:158 cv::obsensor::getStreamChannelGroup Camera index out of range
+2025-04-05 22:43:16,081 - WARNING - constants - Failed to open camera at index 0 with backend default
+2025-04-05 22:43:16,081 - INFO - constants - Trying camera index 1 with fallback backend default (0)...
+[ERROR:0@0.428] global obsensor_uvc_stream_channel.cpp:158 cv::obsensor::getStreamChannelGroup Camera index out of range
+2025-04-05 22:43:16,185 - WARNING - constants - Failed to open camera at index 1 with backend default
+2025-04-05 22:43:16,185 - INFO - constants - Trying camera index -1 with fallback backend default (0)...
+[ERROR:0@0.431] global obsensor_uvc_stream_channel.cpp:158 cv::obsensor::getStreamChannelGroup Camera index out of range
+2025-04-05 22:43:16,189 - WARNING - constants - Failed to open camera at index -1 with backend default
+2025-04-05 22:43:16,189 - INFO - constants - Trying camera index 0 with fallback backend msmf (1400)...
+[ WARN:0@0.533] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(MSMF): backend is generally available but can't be used to capture by index
+2025-04-05 22:43:16,291 - WARNING - constants - Failed to open camera at index 0 with backend msmf
+2025-04-05 22:43:16,292 - INFO - constants - Trying camera index 1 with fallback backend msmf (1400)...
+[ WARN:0@0.639] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(MSMF): backend is generally available but can't be used to capture by index
+2025-04-05 22:43:16,396 - WARNING - constants - Failed to open camera at index 1 with backend msmf
+2025-04-05 22:43:16,396 - INFO - constants - Trying camera index -1 with fallback backend msmf (1400)...
+[ WARN:0@0.643] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(MSMF): backend is generally available but can't be used to capture by index
+2025-04-05 22:43:16,401 - WARNING - constants - Failed to open camera at index -1 with backend msmf
+2025-04-05 22:43:16,401 - WARNING - constants - No working camera found. Falling back to static frame.
+2025-04-05 22:43:19,226 - INFO - ui_screens - Showing splash screen...
+2025-04-05 22:43:19,373 - INFO - ui_screens - Initializing GameState...
+2025-04-05 22:43:19,373 - INFO - game_state - Starting GameState initialization...
+2025-04-05 22:43:19,374 - WARNING - game_state - Using static frame: last_frame.png
+2025-04-05 22:43:19,448 - WARNING - detection - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+2025-04-05 22:43:19,454 - INFO - game_state - Loading initial state via utils...
+2025-04-05 22:43:19,460 - INFO - game_state_utils - Loaded settings from settings.json
+2025-04-05 22:43:19,461 - INFO - game_state_helpers - Scoring zones loaded from scoring_zones.json
+2025-04-05 22:43:19,462 - INFO - game_state_helpers - Notify: Zones Loaded
+2025-04-05 22:43:19,463 - INFO - game_state_utils - Loaded high score for mode 'classic': 1272
+2025-04-05 22:43:19,463 - INFO - game_state - Initializing sounds via utils...
+2025-04-05 22:43:19,548 - ERROR - game_state - Cannot find load_background_music function.
+2025-04-05 22:43:19,549 - INFO - game_state - Initializing achievements via utils...
+2025-04-05 22:43:19,549 - INFO - game_state - Loading achievements status via utils...
+2025-04-05 22:43:19,551 - INFO - game_state_utils - Loaded 3 achievements from achievements_status.json.
+2025-04-05 22:43:19,551 - INFO - game_state - Loading HSV ranges via utils...
+2025-04-05 22:43:19,556 - INFO - game_state_utils - Loaded custom HSV ranges from hsv_ranges.json
+2025-04-05 22:43:19,556 - INFO - game_state - GameState initialized successfully.
+2025-04-05 22:43:19,558 - INFO - ui_screens - Starting initial splash display loop with fade.
+2025-04-05 22:43:22,567 - INFO - ui_screens - Initial splash screen finished.
+--- Whiffle Tracker ---
+Press 'q' to quit at any time.
+Press 'm' during gameplay to open the menu.
+2025-04-05 22:43:22,672 - INFO - game_loop - Game window initialized.
+2025-04-05 22:43:25,484 - INFO - game_state_helpers - Notify: Welcome, Blake W!
+
+0: 416x736 2 whites, 43.7ms
+Speed: 4.6ms preprocess, 43.7ms inference, 152.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:27,807 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.0ms
+Speed: 3.4ms preprocess, 6.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:27,854 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 7.9ms
+Speed: 2.1ms preprocess, 7.9ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:27,899 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.6ms preprocess, 5.4ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:27,944 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 8.4ms
+Speed: 1.6ms preprocess, 8.4ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:27,992 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,036 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,077 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,120 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.3ms
+Speed: 1.5ms preprocess, 5.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,161 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,203 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 7.1ms
+Speed: 2.5ms preprocess, 7.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,261 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.3ms
+Speed: 1.5ms preprocess, 5.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,303 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,344 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.3ms
+Speed: 1.5ms preprocess, 5.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,387 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,428 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.6ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,472 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.8ms
+Speed: 1.5ms preprocess, 5.8ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,514 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,556 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.4ms
+Speed: 1.6ms preprocess, 6.4ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,600 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,644 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,685 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,727 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,769 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+2025-04-05 22:43:28,769 - INFO - scoring_logic - Ball 1(white) scored 10pts [Base:10, Mult:1.0] in Zone:4. Total:10. Zone 4 cooldown:9.0s.
+
+0: 416x736 2 whites, 5.8ms
+Speed: 1.5ms preprocess, 5.8ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,810 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,853 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.2ms
+Speed: 2.4ms preprocess, 6.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,909 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,953 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 7.7ms
+Speed: 1.7ms preprocess, 7.7ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:28,999 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.9ms
+Speed: 2.0ms preprocess, 5.9ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,042 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 7.6ms
+Speed: 1.5ms preprocess, 7.6ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,088 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,131 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.9ms
+Speed: 1.8ms preprocess, 5.9ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,175 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.8ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,219 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,263 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.4ms
+Speed: 1.6ms preprocess, 6.4ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,309 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 2.5ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,356 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.6ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,400 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 8.0ms
+Speed: 2.5ms preprocess, 8.0ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,448 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.8ms preprocess, 5.7ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,494 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,539 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.8ms preprocess, 5.7ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,584 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,629 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 7.8ms
+Speed: 2.4ms preprocess, 7.8ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,678 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,724 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.6ms preprocess, 5.7ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,768 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.4ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,809 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,852 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.3ms
+Speed: 1.5ms preprocess, 5.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,894 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,937 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:29,978 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.3ms
+Speed: 1.4ms preprocess, 5.3ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,022 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,062 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.8ms
+Speed: 1.6ms preprocess, 5.8ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,106 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.4ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,148 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.5ms
+Speed: 1.4ms preprocess, 5.5ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,188 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.8ms
+Speed: 1.5ms preprocess, 5.8ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,231 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,273 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,314 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,356 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.6ms
+Speed: 2.7ms preprocess, 6.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,415 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,468 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,510 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,554 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.1ms
+Speed: 2.3ms preprocess, 6.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,612 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.6ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,654 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.4ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,698 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.9ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,750 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.2ms
+Speed: 2.3ms preprocess, 6.2ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,799 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,841 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,883 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,925 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.0ms
+Speed: 2.1ms preprocess, 6.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:30,979 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,021 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,062 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,103 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,156 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,198 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 8.0ms
+Speed: 1.6ms preprocess, 8.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,245 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,287 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.3ms
+Speed: 1.5ms preprocess, 5.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,327 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,371 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.9ms
+Speed: 2.2ms preprocess, 5.9ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,428 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,473 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,513 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.7ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,556 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 7.6ms
+Speed: 1.5ms preprocess, 7.6ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,601 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,645 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.9ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,702 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,744 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,788 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,829 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.3ms
+Speed: 1.5ms preprocess, 5.3ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,872 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.9ms
+Speed: 2.9ms preprocess, 6.9ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,932 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:31,975 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+2025-04-05 22:43:40,412 - INFO - game_state_utils - Changing music track to index 1...
+2025-04-05 22:43:40,412 - INFO - game_state_utils - Loading background music: sounds/background_music2.mp3
+2025-04-05 22:43:41,776 - INFO - game_state_utils - Changing music track to index 2...
+2025-04-05 22:43:41,776 - INFO - game_state_utils - Loading background music: sounds/background_music3.mp3
+2025-04-05 22:43:43,107 - INFO - game_state_utils - Changing music track to index 0...
+2025-04-05 22:43:43,107 - INFO - game_state_utils - Loading background music: sounds/background_music.mp3
+
+0: 416x736 2 whites, 31.1ms
+Speed: 2.8ms preprocess, 31.1ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:55,806 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 28.7ms
+Speed: 5.1ms preprocess, 28.7ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:55,877 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 31.3ms
+Speed: 2.9ms preprocess, 31.3ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:55,948 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 28.5ms
+Speed: 4.7ms preprocess, 28.5ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,018 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 7.9ms
+Speed: 2.0ms preprocess, 7.9ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,068 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.9ms
+Speed: 1.5ms preprocess, 5.9ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,111 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.3ms
+Speed: 1.5ms preprocess, 6.3ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,154 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.4ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,198 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,240 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,282 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.5ms
+Speed: 1.5ms preprocess, 5.5ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,324 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.0ms
+Speed: 1.5ms preprocess, 6.0ms inference, 2.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,367 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,409 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.3ms
+Speed: 1.5ms preprocess, 5.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,450 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,492 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.0ms
+Speed: 2.5ms preprocess, 6.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,552 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,594 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.6ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,636 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,678 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,721 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 8.0ms
+Speed: 2.2ms preprocess, 8.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,766 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 13.0ms
+Speed: 3.6ms preprocess, 13.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:43:56,825 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 31.6ms
+Speed: 3.4ms preprocess, 31.6ms inference, 3.1ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,381 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 30.8ms
+Speed: 2.8ms preprocess, 30.8ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,452 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 31.2ms
+Speed: 4.2ms preprocess, 31.2ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,525 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 25.1ms
+Speed: 5.6ms preprocess, 25.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,593 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.1ms
+Speed: 1.8ms preprocess, 6.1ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,644 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,685 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.6ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,728 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.7ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,770 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,812 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.3ms
+Speed: 1.5ms preprocess, 5.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,853 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.6ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,895 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,937 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:55,979 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.7ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,022 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.3ms
+Speed: 1.5ms preprocess, 6.3ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,065 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,108 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,150 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,192 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,233 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.5ms preprocess, 5.7ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,276 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.4ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,318 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.6ms
+Speed: 1.5ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,360 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.5ms preprocess, 5.4ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,404 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.3ms
+Speed: 1.5ms preprocess, 5.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,446 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.4ms
+Speed: 1.6ms preprocess, 5.4ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,487 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.3ms
+Speed: 1.5ms preprocess, 5.3ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,529 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 9.0ms
+Speed: 2.2ms preprocess, 9.0ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,589 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 5.7ms
+Speed: 1.8ms preprocess, 5.7ms inference, 1.2ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,632 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+
+0: 416x736 2 whites, 6.2ms
+Speed: 1.5ms preprocess, 6.2ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-05 22:44:56,675 - ERROR - game_loop - Error during ball tracking: name 'ball_data' is not defined
+Traceback (most recent call last):
+  File "F:\Whiffle\12.4\game_loop.py", line 126, in _process_frame
+    current_ages = {
+  File "F:\Whiffle\12.4\game_loop.py", line 127, in <dictcomp>
+    ball_id: age for _, _, _, ball_id, age, _ in game_state.tracked_balls if len(ball_data) >= 6 # Use ball_data
+NameError: name 'ball_data' is not defined
+2025-04-05 22:44:56,677 - INFO - cleanup_utils - Initiating clean exit...
+2025-04-05 22:44:56,677 - INFO - cleanup_utils - Saving score for Blake W on exit...
+2025-04-05 22:44:56,677 - INFO - game_state_helpers - Saving score Blake W: 10 Mode:classic
+2025-04-05 22:44:56,678 - INFO - leaderboard - Saved local leaderboard to whiffle_leaderboard.json
+2025-04-05 22:44:56,679 - INFO - leaderboard - Score queued for batch submission: Blake W - 10 (classic)
+2025-04-05 22:44:56,680 - INFO - cleanup_utils - Flushing leaderboard...
+2025-04-05 22:44:57,068 - INFO - leaderboard - Successfully submitted 1 scores to online leaderboard
+2025-04-05 22:44:57,069 - INFO - cleanup_utils - Saving zones...
+2025-04-05 22:44:57,074 - INFO - game_state_helpers - Scoring zones saved to scoring_zones.json
+2025-04-05 22:44:57,075 - INFO - game_state_helpers - Notify: Zones Saved
+2025-04-05 22:44:57,077 - INFO - cleanup_utils - Saving achievements...
+2025-04-05 22:44:57,121 - INFO - cleanup_utils - Clean exit sequence complete. Terminating process.
+2025-04-05 22:44:57,121 - INFO - game_loop - SystemExit caught in game loop, cleanup should have occurred.
+2025-04-05 22:44:57,123 - INFO - game_loop - Main loop exited. Triggering final cleanup.
+2025-04-05 22:44:57,124 - INFO - cleanup_utils - Initiating clean exit...
+2025-04-05 22:44:57,124 - INFO - cleanup_utils - Saving score for Blake W on exit...
+2025-04-05 22:44:57,125 - INFO - game_state_helpers - Saving score Blake W: 10 Mode:classic
+2025-04-05 22:44:57,127 - INFO - leaderboard - Saved local leaderboard to whiffle_leaderboard.json
+2025-04-05 22:44:57,128 - INFO - leaderboard - Score queued for batch submission: Blake W - 10 (classic)
+2025-04-05 22:44:57,130 - INFO - cleanup_utils - Flushing leaderboard...
+2025-04-05 22:44:57,333 - INFO - leaderboard - Successfully submitted 1 scores to online leaderboard
+2025-04-05 22:44:57,334 - INFO - cleanup_utils - Saving zones...
+2025-04-05 22:44:57,335 - INFO - game_state_helpers - Scoring zones saved to scoring_zones.json
+2025-04-05 22:44:57,335 - INFO - game_state_helpers - Notify: Zones Saved
+2025-04-05 22:44:57,336 - INFO - cleanup_utils - Saving achievements...
+2025-04-05 22:44:57,339 - INFO - cleanup_utils - Clean exit sequence complete. Terminating process.
+2025-04-05 22:44:57,339 - INFO - __main__ - Program exited via clean_exit.
+
+F:\Whiffle\12.4>
