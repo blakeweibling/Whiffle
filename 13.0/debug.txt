@@ -1,0 +1,79 @@
+F:\Whiffle\12.9>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.10.9)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2025-04-06 12:38:22,465 - INFO - constants - Trying camera index 0 with backend dshow (700)...
+[ WARN:0@0.185] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(DSHOW): backend is generally available but can't be used to capture by index
+2025-04-06 12:38:22,474 - WARNING - constants - Failed to open camera at index 0 with backend dshow
+2025-04-06 12:38:22,474 - INFO - constants - Trying camera index 1 with backend dshow (700)...
+[ WARN:0@0.192] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(DSHOW): backend is generally available but can't be used to capture by index
+2025-04-06 12:38:22,480 - WARNING - constants - Failed to open camera at index 1 with backend dshow
+2025-04-06 12:38:22,480 - INFO - constants - Trying camera index -1 with backend dshow (700)...
+[ WARN:0@0.197] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(DSHOW): backend is generally available but can't be used to capture by index
+2025-04-06 12:38:22,485 - WARNING - constants - Failed to open camera at index -1 with backend dshow
+2025-04-06 12:38:22,486 - INFO - constants - Trying camera index 0 with fallback backend default (0)...
+[ERROR:0@0.342] global obsensor_uvc_stream_channel.cpp:158 cv::obsensor::getStreamChannelGroup Camera index out of range
+2025-04-06 12:38:22,632 - WARNING - constants - Failed to open camera at index 0 with backend default
+2025-04-06 12:38:22,632 - INFO - constants - Trying camera index 1 with fallback backend default (0)...
+[ERROR:0@0.449] global obsensor_uvc_stream_channel.cpp:158 cv::obsensor::getStreamChannelGroup Camera index out of range
+2025-04-06 12:38:22,739 - WARNING - constants - Failed to open camera at index 1 with backend default
+2025-04-06 12:38:22,739 - INFO - constants - Trying camera index -1 with fallback backend default (0)...
+[ERROR:0@0.454] global obsensor_uvc_stream_channel.cpp:158 cv::obsensor::getStreamChannelGroup Camera index out of range
+2025-04-06 12:38:22,742 - WARNING - constants - Failed to open camera at index -1 with backend default
+2025-04-06 12:38:22,742 - INFO - constants - Trying camera index 0 with fallback backend msmf (1400)...
+[ WARN:0@0.556] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(MSMF): backend is generally available but can't be used to capture by index
+2025-04-06 12:38:22,845 - WARNING - constants - Failed to open camera at index 0 with backend msmf
+2025-04-06 12:38:22,845 - INFO - constants - Trying camera index 1 with fallback backend msmf (1400)...
+[ WARN:0@0.661] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(MSMF): backend is generally available but can't be used to capture by index
+2025-04-06 12:38:22,950 - WARNING - constants - Failed to open camera at index 1 with backend msmf
+2025-04-06 12:38:22,950 - INFO - constants - Trying camera index -1 with fallback backend msmf (1400)...
+[ WARN:0@0.666] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(MSMF): backend is generally available but can't be used to capture by index
+2025-04-06 12:38:22,955 - WARNING - constants - Failed to open camera at index -1 with backend msmf
+2025-04-06 12:38:22,955 - WARNING - constants - No working camera found. Falling back to static frame.
+2025-04-06 12:38:25,810 - INFO - ui_screens - Showing splash screen...
+2025-04-06 12:38:25,905 - INFO - ui_screens - Initializing GameState...
+2025-04-06 12:38:25,905 - INFO - game_state - Starting GameState initialization...
+2025-04-06 12:38:25,906 - WARNING - game_state - Using static frame: last_frame.png
+2025-04-06 12:38:25,957 - WARNING - detection - Could not set OpenCL backend for YOLOv8. Ensure the model is compatible and OpenCL is supported.
+2025-04-06 12:38:25,957 - INFO - game_state - Initial music track index randomly set to: 0
+2025-04-06 12:38:25,958 - INFO - game_state - Loading initial state via utils...
+2025-04-06 12:38:25,959 - INFO - game_state_utils - Loaded settings from settings.json
+2025-04-06 12:38:25,959 - INFO - game_state_helpers - Scoring zones loaded from scoring_zones.json
+2025-04-06 12:38:25,959 - INFO - game_state_helpers - Notify: Zones Loaded
+2025-04-06 12:38:25,960 - INFO - game_state_utils - Loaded high score for mode 'classic': 1272
+2025-04-06 12:38:25,960 - INFO - game_state - Initializing sounds via utils...
+2025-04-06 12:38:26,050 - INFO - game_state - Loading background music via utils...
+2025-04-06 12:38:26,051 - INFO - game_state_utils - Loading background music: sounds/background_music.mp3
+2025-04-06 12:38:26,243 - INFO - game_state - Initializing achievements via utils...
+2025-04-06 12:38:26,243 - INFO - game_state - Loading achievements status via utils...
+2025-04-06 12:38:26,244 - INFO - game_state_utils - Loaded 1 achievements from achievements_status.json.
+2025-04-06 12:38:26,244 - INFO - game_state - Loading HSV ranges via utils...
+2025-04-06 12:38:26,246 - INFO - game_state_utils - Loaded custom HSV ranges from hsv_ranges.json
+2025-04-06 12:38:26,246 - INFO - game_state - GameState initialized successfully.
+2025-04-06 12:38:26,248 - INFO - ui_screens - Starting initial splash display loop with fade.
+2025-04-06 12:38:29,260 - INFO - ui_screens - Initial splash screen finished.
+--- Whiffle Tracker ---
+Press 'q' to quit at any time.
+Press 'm' during gameplay to open the menu.
+2025-04-06 12:38:29,364 - INFO - game_loop - Game window initialized.
+2025-04-06 12:38:32,136 - INFO - game_state_helpers - Notify: Welcome, Blake W!
+2025-04-06 12:38:32,138 - ERROR - game_loop - Unexpected main loop error: draw_scoring_zones() takes from 2 to 3 positional arguments but 4 were given
+Traceback (most recent call last):
+  File "F:\Whiffle\12.9\game_loop.py", line 219, in run_game_loop
+    _render_frame(draw_canvas, game_state)
+  File "F:\Whiffle\12.9\game_loop.py", line 130, in _render_frame
+    draw_ui(draw_canvas, game_state) # Pass game_state here
+  File "F:\Whiffle\12.9\ui.py", line 116, in draw_ui
+    draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole, game_state) # Pass game_state
+TypeError: draw_scoring_zones() takes from 2 to 3 positional arguments but 4 were given
+2025-04-06 12:38:32,139 - INFO - game_loop - Main loop exited. Cleanup.
+2025-04-06 12:38:32,140 - INFO - cleanup_utils - Initiating clean exit...
+2025-04-06 12:38:32,140 - INFO - cleanup_utils - Score not saved on exit (game over or score is 0).
+2025-04-06 12:38:32,141 - INFO - cleanup_utils - Flushing leaderboard...
+2025-04-06 12:38:32,141 - INFO - cleanup_utils - Saving zones...
+2025-04-06 12:38:32,142 - INFO - game_state_helpers - Scoring zones saved to scoring_zones.json
+2025-04-06 12:38:32,142 - INFO - game_state_helpers - Notify: Zones Saved
+2025-04-06 12:38:32,142 - INFO - cleanup_utils - Saving achievements...
+2025-04-06 12:38:32,191 - INFO - cleanup_utils - Clean exit sequence complete. Terminating process.
+2025-04-06 12:38:32,191 - INFO - __main__ - Program exited via clean_exit.
+
+F:\Whiffle\12.9>

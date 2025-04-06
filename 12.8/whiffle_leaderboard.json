@@ -1,0 +1,59 @@
+{
+    "survival": [],
+    "classic": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:15:07.764277"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:15:08.068553"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:19:03.099662"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T19:12:23.461874"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T19:13:00.289248"
+        }
+    ],
+    "practice": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "practice",
+            "created_at": "2025-04-06T19:14:01.015090"
+        }
+    ],
+    "retro": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T18:19:21.204571"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T19:13:35.996049"
+        }
+    ],
+    "fun": [],
+    "timed": []
+}
