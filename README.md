@@ -50,13 +50,8 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
     pip install -r requirements.txt
     ```
 3.  **Configure Supabase:**
-    * Create a `.env` file in the root directory.
-    * Add your Supabase URL and Key:
-        ```env
-        SUPABASE_URL=[https://your-supabase-url.supabase.co](https://www.google.com/search?q=https://your-supabase-url.supabase.co)
-        SUPABASE_KEY=your-supabase-anon-key
-        ```
-    * Make sure your Supabase project has a table named `whifflescores` (or adjust `TABLE_NAME` in `constants.txt`) with columns like `player_name` (text), `score` (integer), `mode` (text), and `created_at` (timestamp).
+    * Ensure the `.env` file is in the root directory.
+    
 4.  **YOLO Model:** Ensure the YOLO model file (`whiffle_new_best.pt` as mentioned in `detection.txt`) is present in the root directory.
 5.  **Assets:** Ensure all required asset files (images like `splash.png`, `game_over.png`, sound files in the `sounds/` directory) are present.
 
