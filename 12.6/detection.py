@@ -17,12 +17,10 @@ logger = logging.getLogger(__name__)
 # Enable OpenCL for OpenCV (Change 2)
 cv2.ocl.setUseOpenCL(True)
 if not cv2.ocl.haveOpenCL():
-    logger.warning(
-        "OpenCL is not available on this device. Falling back to CPU.")
+    logger.warning("OpenCL is not available on this device. Falling back to CPU.")
 
 # Use GameSpecificConstants for excluded positions
-EXCLUDED_POSITIONS: List[Tuple[int,
-                               int]] = GameSpecificConstants.EXCLUDED_POSITIONS
+EXCLUDED_POSITIONS: List[Tuple[int, int]] = GameSpecificConstants.EXCLUDED_POSITIONS
 
 
 class BallDetector:
@@ -35,10 +33,8 @@ class BallDetector:
 
         # Attempt to use OpenCL for YOLOv8 inference (Change 1)
         try:
-            self.model.predictor.set_preferable_backend(
-                cv2.dnn.DNN_BACKEND_OPENCV)
-            self.model.predictor.set_preferable_target(
-                cv2.dnn.DNN_TARGET_OPENCL)
+            self.model.predictor.set_preferable_backend(cv2.dnn.DNN_BACKEND_OPENCV)
+            self.model.predictor.set_preferable_target(cv2.dnn.DNN_TARGET_OPENCL)
             logger.info("YOLOv8 configured to use OpenCL for inference.")
         except AttributeError:
             logger.warning(
@@ -46,13 +42,13 @@ class BallDetector:
             )
 
     def _is_position_excluded(
-            self, x: int, y: int,
-            excluded_positions: List[Tuple[int, int]]) -> bool:
+        self, x: int, y: int, excluded_positions: List[Tuple[int, int]]
+    ) -> bool:
         """
         Check if a position is within the exclusion distance of any excluded position.
         """
         for ex, ey in excluded_positions:
-            dist = np.sqrt((x - ex)**2 + (y - ey)**2)
+            dist = np.sqrt((x - ex) ** 2 + (y - ey) ** 2)
             if dist < DetectionConstants.EXCLUSION_DISTANCE:
                 logger.debug(
                     f"Position ({x}, {y}) excluded: distance {dist} to excluded position ({ex}, {ey})"
@@ -100,9 +96,9 @@ class BallDetector:
         hsv_frame: Optional[np.ndarray] = None,
         debug_mode: bool = False,
     ) -> Tuple[
-            List[Tuple[int, int, float]],
-            List[Tuple[int, int, float]],
-            List[Tuple[int, int, float]],
+        List[Tuple[int, int, float]],
+        List[Tuple[int, int, float]],
+        List[Tuple[int, int, float]],
     ]:
         """
         Detect white, red, and half red/half white balls in the frame using YOLOv8 and infer their state.
@@ -130,8 +126,8 @@ class BallDetector:
 
         # Detect balls using YOLOv8
         results = self.model(
-            inference_frame, conf=0.5,
-            iou=0.5)  # Adjust confidence and IoU thresholds as needed
+            inference_frame, conf=0.5, iou=0.5
+        )  # Adjust confidence and IoU thresholds as needed
 
         # Separate balls by type
         white_balls = []
@@ -148,10 +144,8 @@ class BallDetector:
             for box, score, cls in zip(boxes, scores, classes):
                 x_min, y_min, x_max, y_max = box
                 # Scale coordinates back to original resolution
-                x_min, x_max = int(x_min * scale_factor), int(x_max *
-                                                              scale_factor)
-                y_min, y_max = int(y_min * scale_factor), int(y_max *
-                                                              scale_factor)
+                x_min, x_max = int(x_min * scale_factor), int(x_max * scale_factor)
+                y_min, y_max = int(y_min * scale_factor), int(y_max * scale_factor)
                 x_center = (x_min + x_max) / 2
                 y_center = (y_min + y_max) / 2
                 width = x_max - x_min
@@ -159,8 +153,7 @@ class BallDetector:
                 radius = max(width, height) / 2
 
                 # Filter out excluded positions
-                if self._is_position_excluded(x_center, y_center,
-                                              EXCLUDED_POSITIONS):
+                if self._is_position_excluded(x_center, y_center, EXCLUDED_POSITIONS):
                     if debug_mode:
                         logger.debug(
                             f"Ball at ({x_center}, {y_center}) excluded due to position"
@@ -183,8 +176,7 @@ class BallDetector:
         if debug_mode:
             debug_frame = frame.copy()
             for x, y, radius in white_balls:
-                cv2.circle(debug_frame, (x, y), int(radius), (255, 255, 255),
-                           2)
+                cv2.circle(debug_frame, (x, y), int(radius), (255, 255, 255), 2)
             for x, y, radius in red_balls:
                 cv2.circle(debug_frame, (x, y), int(radius), (0, 0, 255), 2)
             for x, y, radius in half_balls:

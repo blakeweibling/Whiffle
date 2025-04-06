@@ -51,11 +51,10 @@ class Leaderboard:
         }
         self.table_name: str = LeaderboardConstants.TABLE_NAME
         self.local_file: str = LeaderboardConstants.LEADERBOARD_FILE
-        self.local_scores: Dict[str,
-                                List[Dict[str,
-                                          Any]]] = self._load_local_scores()
+        self.local_scores: Dict[str, List[Dict[str, Any]]] = self._load_local_scores()
         self.pending_scores: List[Dict[str, Any]] = (
-            [])  # Queue for batch updates (Change 4)
+            []
+        )  # Queue for batch updates (Change 4)
 
     def _load_local_scores(self) -> Dict[str, List[Dict[str, Any]]]:
         """
@@ -93,7 +92,7 @@ class Leaderboard:
                             f"Data for mode '{mode}' in {self.local_file} is not a list, resetting."
                         )
                         data[mode] = []
-                return data # Return potentially corrected data
+                return data  # Return potentially corrected data
                 # --- END UPDATE ---
         except json.JSONDecodeError as e:
             logger.error(
@@ -118,13 +117,11 @@ class Leaderboard:
                 json.dump(self.local_scores, f, indent=4)
             logger.info(f"Saved local leaderboard to {self.local_file}")
         except (IOError, PermissionError) as e:
-            logger.error(
-                f"Error saving local leaderboard to {self.local_file}: {e}")
+            logger.error(f"Error saving local leaderboard to {self.local_file}: {e}")
 
-    def _post_supabase(self,
-                       data: List[Dict[str, Any]],
-                       retries: int = 3,
-                       delay: float = 1) -> None:
+    def _post_supabase(
+        self, data: List[Dict[str, Any]], retries: int = 3, delay: float = 1
+    ) -> None:
         """
         Make a POST request to the Supabase API with retry logic.
         Args:
@@ -137,7 +134,9 @@ class Leaderboard:
         url = f"{self.supabase_url}/rest/v1/{self.table_name}"
         for attempt in range(retries):
             try:
-                response = requests.post(url, headers=self.headers, json=data, timeout=10) # Added timeout
+                response = requests.post(
+                    url, headers=self.headers, json=data, timeout=10
+                )  # Added timeout
                 if response.status_code == 429:
                     logger.warning(
                         f"Rate limit hit on attempt {attempt + 1}, retrying in {delay}s"
@@ -155,15 +154,15 @@ class Leaderboard:
             except requests.RequestException as e:
                 logger.error(
                     f"Supabase POST failed on attempt {attempt + 1}: {e}, "
-                    f"status: {getattr(e.response, 'status_code', 'N/A')}")
+                    f"status: {getattr(e.response, 'status_code', 'N/A')}"
+                )
                 if attempt == retries - 1:
                     raise
                 sleep(delay)
 
-    def _get_supabase(self,
-                      params: Dict[str, str],
-                      retries: int = 3,
-                      delay: float = 1) -> List[Dict[str, Any]]:
+    def _get_supabase(
+        self, params: Dict[str, str], retries: int = 3, delay: float = 1
+    ) -> List[Dict[str, Any]]:
         """
         Make a GET request to the Supabase API with retry logic.
         Args:
@@ -178,10 +177,9 @@ class Leaderboard:
         url = f"{self.supabase_url}/rest/v1/{self.table_name}"
         for attempt in range(retries):
             try:
-                response = requests.get(url,
-                                        headers=self.headers,
-                                        params=params,
-                                        timeout=10) # Added timeout
+                response = requests.get(
+                    url, headers=self.headers, params=params, timeout=10
+                )  # Added timeout
                 if response.status_code == 429:
                     logger.warning(
                         f"Rate limit hit on attempt {attempt + 1}, retrying in {delay}s"
@@ -198,7 +196,8 @@ class Leaderboard:
             except requests.RequestException as e:
                 logger.error(
                     f"Supabase GET failed on attempt {attempt + 1}: {e}, "
-                    f"status: {getattr(e.response, 'status_code', 'N/A')}")
+                    f"status: {getattr(e.response, 'status_code', 'N/A')}"
+                )
                 if attempt == retries - 1:
                     raise
                 sleep(delay)
@@ -223,8 +222,7 @@ class Leaderboard:
         # --- END UPDATE ---
 
         score_entry = {
-            "player_name":
-            player_name,  # Changed from "initials" to "player_name"
+            "player_name": player_name,  # Changed from "initials" to "player_name"
             "score": score,
             "mode": mode,
             "created_at": datetime.utcnow().isoformat(),
@@ -265,9 +263,9 @@ class Leaderboard:
                 f"Failed to submit {len(self.pending_scores)} scores to online leaderboard, keeping in queue"
             )
 
-    def get_top_scores(self,
-                       mode: str,
-                       limit: int = 5) -> Tuple[List[Dict[str, Any]], bool]:
+    def get_top_scores(
+        self, mode: str, limit: int = 5
+    ) -> Tuple[List[Dict[str, Any]], bool]:
         """
         Retrieve the top scores for a given mode.
         Args:
@@ -291,8 +289,7 @@ class Leaderboard:
                 "mode": f"eq.{mode}",
                 "order": "score.desc",
                 "limit": str(limit),
-                "select":
-                "player_name,score,created_at",  # Updated to select player_name
+                "select": "player_name,score,created_at",  # Updated to select player_name
             }
             scores = self._get_supabase(params)
             logger.info(
@@ -305,14 +302,15 @@ class Leaderboard:
             )
             # --- UPDATED: Ensure mode key exists before accessing ---
             if mode in self.local_scores:
-                sorted_scores = sorted(self.local_scores[mode],
-                                       key=lambda x: x.get("score", 0), # Use .get for safety
-                                       reverse=True)[:limit]
+                sorted_scores = sorted(
+                    self.local_scores[mode],
+                    key=lambda x: x.get("score", 0),  # Use .get for safety
+                    reverse=True,
+                )[:limit]
                 logger.info(
                     f"Using local leaderboard with {len(sorted_scores)} scores for mode: {mode}"
                 )
                 return sorted_scores, False
             # --- END UPDATE ---
-            logger.info(
-                f"No scores found in local leaderboard for mode: {mode}")
+            logger.info(f"No scores found in local leaderboard for mode: {mode}")
             return [], False

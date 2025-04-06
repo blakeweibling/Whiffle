@@ -28,8 +28,9 @@ TEXT_SAFE_DISTANCE: int = UIConstants.TEXT_SAFE_DISTANCE  # Updated
 logger = logging.getLogger(__name__)
 
 
-def _get_text_position(x: int, y: int, w: int, h: int, frame_width: int,
-                       frame_height: int) -> Tuple[int, int]:
+def _get_text_position(
+    x: int, y: int, w: int, h: int, frame_width: int, frame_height: int
+) -> Tuple[int, int]:
     """
     Determine the position to place text to avoid going off-screen.
 
@@ -44,8 +45,7 @@ def _get_text_position(x: int, y: int, w: int, h: int, frame_width: int,
     Returns:
         Tuple of (text_x, text_y) for placing the text.
     """
-    text_x = x + w + TEXT_OFFSET_X if x + w + \
-        TEXT_SAFE_DISTANCE < frame_width else x
+    text_x = x + w + TEXT_OFFSET_X if x + w + TEXT_SAFE_DISTANCE < frame_width else x
     text_y = y if x + w + TEXT_SAFE_DISTANCE < frame_width else y + h + TEXT_OFFSET_Y
     return text_x, text_y
 
@@ -58,8 +58,7 @@ def _validate_frame(frame: np.ndarray) -> bool:
     return True
 
 
-def _handle_mouse_event(event: int, x: int, y: int,
-                        drawing_state: dict) -> None:
+def _handle_mouse_event(event: int, x: int, y: int, drawing_state: dict) -> None:
     """Handle mouse events for drawing scoring zones."""
     if event == cv2.EVENT_LBUTTONDOWN:
         drawing_state["drawing"] = True
@@ -95,11 +94,13 @@ def _draw_existing_zones(
         # Use blue for the special hole, green for others
         color = UIConstants.CV2_BLUE if zone == special_hole else UIConstants.GREEN
         cv2.rectangle(overlay, (x, y), (x + w, y + h), color, FONT_THICKNESS)
-        text_x, text_y = _get_text_position(x, y, w, h, overlay.shape[1],
-                                            overlay.shape[0])
+        text_x, text_y = _get_text_position(
+            x, y, w, h, overlay.shape[1], overlay.shape[0]
+        )
         # Add "Special Hole" label if this is the special hole
-        label = (f"{points} pts (Special Hole)"
-                 if zone == special_hole else f"{points} pts")
+        label = (
+            f"{points} pts (Special Hole)" if zone == special_hole else f"{points} pts"
+        )
         cv2.putText(
             overlay,
             label,
@@ -142,18 +143,23 @@ def _run_drawing_loop(
             return None
 
         temp_frame = frame.copy()
-        temp_frame = cv2.addWeighted(temp_frame, 0.8, overlay, 0.2,
-                                     0)  # Composite overlay
+        temp_frame = cv2.addWeighted(
+            temp_frame, 0.8, overlay, 0.2, 0
+        )  # Composite overlay
 
         if drawing_state["temp_zone"]:
             x, y, w, h = drawing_state["temp_zone"]
-            cv2.rectangle(temp_frame, (x, y), (x + w, y + h),
-                          UIConstants.YELLOW, FONT_THICKNESS)  # Updated
-            points_display = (drawing_state["points"] if
-                              drawing_state["points"] else str(DEFAULT_POINTS))
-            text_x, text_y = _get_text_position(x, y, w, h,
-                                                temp_frame.shape[1],
-                                                temp_frame.shape[0])
+            cv2.rectangle(
+                temp_frame, (x, y), (x + w, y + h), UIConstants.YELLOW, FONT_THICKNESS
+            )  # Updated
+            points_display = (
+                drawing_state["points"]
+                if drawing_state["points"]
+                else str(DEFAULT_POINTS)
+            )
+            text_x, text_y = _get_text_position(
+                x, y, w, h, temp_frame.shape[1], temp_frame.shape[0]
+            )
             cv2.putText(
                 temp_frame,
                 f"{points_display} pts",
@@ -178,13 +184,17 @@ def _run_drawing_loop(
         cv2.imshow(UIConstants.WINDOW_NAME, temp_frame)  # Updated
 
         key = cv2.waitKey(1) & 0xFF
-        if (key == 13 and drawing_state["temp_zone"]
-                and not drawing_state["drawing"]):  # Enter
+        if (
+            key == 13 and drawing_state["temp_zone"] and not drawing_state["drawing"]
+        ):  # Enter
             if _zones_overlap(drawing_state["temp_zone"], scoring_zones):
                 logger.warning("Zone overlaps with existing zone, cancelling")
                 return None
-            points = (DEFAULT_POINTS if not drawing_state["points"] else int(
-                drawing_state["points"]))
+            points = (
+                DEFAULT_POINTS
+                if not drawing_state["points"]
+                else int(drawing_state["points"])
+            )
             points = max(1, min(points, MAX_POINTS))
             zone = (
                 drawing_state["temp_zone"][0],
@@ -201,12 +211,10 @@ def _run_drawing_loop(
         elif not drawing_state["drawing"] and drawing_state["temp_zone"]:
             if ord("0") <= key <= ord("9"):
                 drawing_state["points"] += chr(key)
-                logger.debug(
-                    f"Added digit to points: {drawing_state['points']}")
+                logger.debug(f"Added digit to points: {drawing_state['points']}")
             elif key == 8:  # Backspace
                 drawing_state["points"] = drawing_state["points"][:-1]
-                logger.debug(
-                    f"Backspace applied, points: {drawing_state['points']}")
+                logger.debug(f"Backspace applied, points: {drawing_state['points']}")
 
 
 def define_scoring_zone(
@@ -235,8 +243,9 @@ def define_scoring_zone(
     return zone, False
 
 
-def is_in_scoring_zone(ball: Tuple[int, int, float, int],
-                       zone: Tuple[int, int, int, int, int]) -> bool:
+def is_in_scoring_zone(
+    ball: Tuple[int, int, float, int], zone: Tuple[int, int, int, int, int]
+) -> bool:
     """
     Check if a ball's center is within a scoring zone.
     """
@@ -263,11 +272,11 @@ def draw_scoring_zones(
         # Use blue for the special hole, green for others
         color = UIConstants.CV2_BLUE if zone == special_hole else UIConstants.GREEN
         cv2.rectangle(frame, (x, y), (x + w, y + h), color, FONT_THICKNESS)
-        text_x, text_y = _get_text_position(x, y, w, h, frame.shape[1],
-                                            frame.shape[0])
+        text_x, text_y = _get_text_position(x, y, w, h, frame.shape[1], frame.shape[0])
         # Add "Special Hole" label if this is the special hole
-        label = (f"{points} pts (Special Hole)"
-                 if zone == special_hole else f"{points} pts")
+        label = (
+            f"{points} pts (Special Hole)" if zone == special_hole else f"{points} pts"
+        )
         cv2.putText(
             frame,
             label,

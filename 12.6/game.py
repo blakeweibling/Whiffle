@@ -12,9 +12,11 @@ from dotenv import load_dotenv
 
 # Updated imports: clean_exit from utils, mouse_callback from utils
 from cleanup_utils import clean_exit
+
 # Import constants
 from constants import UIConstants
 from game_loop import run_game_loop
+
 # Import necessary classes and functions
 # Import the specific utility function needed
 from game_state_utils import save_score  # For exception handling
@@ -23,20 +25,18 @@ from utils import mouse_callback  # Assuming mouse_callback remains in utils
 
 # Set up logging
 logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
+    level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
 def validate_config(supabase_url: str, supabase_key: str) -> None:
     """Validate Supabase configuration at startup."""
     if not supabase_url or "default-supabase-url" in supabase_url:
-        logger.error(
-            "Invalid Supabase URL. Please set SUPABASE_URL in .env file.")
+        logger.error("Invalid Supabase URL. Please set SUPABASE_URL in .env file.")
         raise ValueError("Invalid Supabase URL")
     if not supabase_key or "default-supabase-api-key" in supabase_key:
-        logger.error(
-            "Invalid Supabase key. Please set SUPABASE_KEY in .env file.")
+        logger.error("Invalid Supabase key. Please set SUPABASE_KEY in .env file.")
         raise ValueError("Invalid Supabase key")
 
 
@@ -66,8 +66,7 @@ def main() -> None:
     # Check for window close immediately after splash screen
     try:
         # Ensure window name is correct and window exists
-        if cv2.getWindowProperty(UIConstants.WINDOW_NAME,
-                                 cv2.WND_PROP_VISIBLE) < 1:
+        if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:
             logger.info("Window closed after splash screen.")
             # clean_exit should be called even if window closed prematurely
             clean_exit(
@@ -94,10 +93,8 @@ def main() -> None:
     # --- Set Mouse Callback ---
     try:
         # Ensure window exists before setting callback
-        if cv2.getWindowProperty(UIConstants.WINDOW_NAME,
-                                 cv2.WND_PROP_VISIBLE) >= 1:
-            cv2.setMouseCallback(UIConstants.WINDOW_NAME, mouse_callback,
-                                 game_state)
+        if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) >= 1:
+            cv2.setMouseCallback(UIConstants.WINDOW_NAME, mouse_callback, game_state)
             logger.debug("Mouse callback set.")
         else:
             logger.warning("Cannot set mouse callback, window not visible.")
@@ -123,33 +120,31 @@ def main() -> None:
     initial_frame = None
     ret = False
     if hasattr(game_state, "camera_available") and game_state.camera_available:
-        if hasattr(game_state,
-                   "cap") and game_state.cap and game_state.cap.isOpened():
+        if hasattr(game_state, "cap") and game_state.cap and game_state.cap.isOpened():
             ret, initial_frame = game_state.cap.read()
         else:
             logger.error(
                 "Camera was expected but not available/opened for initial frame."
             )
             ret = False  # Mark as failed
-    elif hasattr(game_state,
-                 "static_frame") and game_state.static_frame is not None:
+    elif hasattr(game_state, "static_frame") and game_state.static_frame is not None:
         initial_frame = game_state.static_frame.copy()
         ret = True  # Static frame counts as success
     else:
-        logger.error(
-            "Neither camera nor static frame available for initial display.")
+        logger.error("Neither camera nor static frame available for initial display.")
         ret = False
 
     if ret and initial_frame is not None:
         try:
             # Ensure window exists before showing frame
-            if (cv2.getWindowProperty(UIConstants.WINDOW_NAME,
-                                      cv2.WND_PROP_VISIBLE) >= 1):
+            if (
+                cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE)
+                >= 1
+            ):
                 cv2.imshow(UIConstants.WINDOW_NAME, initial_frame)
                 cv2.waitKey(100)  # Short delay to ensure frame displays
             else:
-                logger.warning(
-                    "Cannot display initial frame, window not visible.")
+                logger.warning("Cannot display initial frame, window not visible.")
                 # clean_exit(...) # Decide if exit needed
                 # return
         except cv2.error as e:
@@ -219,8 +214,7 @@ def main() -> None:
                 logger.info("Attempting minimal cleanup (destroy windows)...")
                 cv2.destroyAllWindows()
             except Exception as minimal_cleanup_error:
-                logger.error(
-                    f"Error during minimal cleanup: {minimal_cleanup_error}")
+                logger.error(f"Error during minimal cleanup: {minimal_cleanup_error}")
 
 
 if __name__ == "__main__":

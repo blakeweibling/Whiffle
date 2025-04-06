@@ -10,27 +10,28 @@ logger = logging.getLogger(__name__)
 
 # Helper Function: Draw text with background (Moved from ui.py)
 def _draw_text_with_background(
-        frame: np.ndarray,
-        text: str,
-        pos: Tuple[int, int],
-        font_scale: float,
-        text_color: Tuple[int, int, int],
-        bg_color: Tuple[int, int, int],
-        thickness: int = 1,
-        padding: int = 3,
-        font: int = cv2.FONT_HERSHEY_SIMPLEX,
-        alpha: float = 0.6,  # Opacity for background
+    frame: np.ndarray,
+    text: str,
+    pos: Tuple[int, int],
+    font_scale: float,
+    text_color: Tuple[int, int, int],
+    bg_color: Tuple[int, int, int],
+    thickness: int = 1,
+    padding: int = 3,
+    font: int = cv2.FONT_HERSHEY_SIMPLEX,
+    alpha: float = 0.6,  # Opacity for background
 ) -> None:
     """Draws text with a semi-transparent background rectangle."""
     try:
-        (text_width,
-         text_height), baseline = cv2.getTextSize(text, font, font_scale,
-                                                  thickness)
+        (text_width, text_height), baseline = cv2.getTextSize(
+            text, font, font_scale, thickness
+        )
     except cv2.error as e:
         logger.error(f"cv2.getTextSize error for text '{text}': {e}")
         # Optionally draw text without background as fallback or just return
-        cv2.putText(frame, text, pos, font, font_scale, text_color, thickness,
-                    cv2.LINE_AA)
+        cv2.putText(
+            frame, text, pos, font, font_scale, text_color, thickness, cv2.LINE_AA
+        )
         return
 
     x, y = pos
@@ -95,8 +96,7 @@ def _draw_text_with_background(
             )
             return
         except Exception as e:
-            logger.error(
-                f"Unexpected error drawing text background for '{text}': {e}")
+            logger.error(f"Unexpected error drawing text background for '{text}': {e}")
             # Fallback: Just draw text
             cv2.putText(
                 frame,

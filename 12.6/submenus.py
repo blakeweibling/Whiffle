@@ -4,30 +4,37 @@ import cv2
 import numpy as np
 
 import submenu_draw_functions
+
 # Import constants, including MenuConstants
-from constants import (MenuConstants, UIConstants)
+from constants import MenuConstants, UIConstants
+
 # Import GameState for type hinting if needed, but avoid direct use that causes cycles
 from game_state import GameState  # Assuming GameState is the type hint
 from menu_utils import _draw_button
+
 # Import the drawing functions from the new file
 # Note: _draw_settings_submenu is now intended to be used FROM submenu_draw_functions
-from submenu_draw_functions import \
-    _draw_settings_submenu  # Ensure this is imported if not already
-from submenu_draw_functions import (_draw_about_submenu,
-                                    _draw_achievements_submenu,
-                                    _draw_edit_zones_submenu,
-                                    _draw_faq_submenu, _draw_help_submenu,
-                                    _draw_leaderboard_submenu,
-                                    _draw_players_submenu)
+from submenu_draw_functions import (
+    _draw_settings_submenu,
+)  # Ensure this is imported if not already
+from submenu_draw_functions import (
+    _draw_about_submenu,
+    _draw_achievements_submenu,
+    _draw_edit_zones_submenu,
+    _draw_faq_submenu,
+    _draw_help_submenu,
+    _draw_leaderboard_submenu,
+    _draw_players_submenu,
+)
 
 logger = logging.getLogger(__name__)
 
 # --- REMOVED Redundant/Incorrect Local _draw_settings_submenu Definition ---
 # The local definition that used lambdas has been removed.
 
+
 # --- UPDATED: Added "retro" mode to list ---
-def _draw_game_mode_submenu(menu_frame: np.ndarray,
-                            game_state: GameState) -> None:
+def _draw_game_mode_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
     """Draw the Game Mode selection submenu."""
     cv2.putText(
         menu_frame,
@@ -40,8 +47,7 @@ def _draw_game_mode_submenu(menu_frame: np.ndarray,
     )
 
     # --- START CHANGE: Add "retro" mode ---
-    modes = ["classic", "timed", "fun", "practice",
-             "survival", "retro"] # Added retro
+    modes = ["classic", "timed", "fun", "practice", "survival", "retro"]  # Added retro
     # --- END CHANGE ---
     y_offset = 80
     item_height = 35
@@ -50,8 +56,9 @@ def _draw_game_mode_submenu(menu_frame: np.ndarray,
     for mode in modes:
         label = mode.capitalize()
         # Highlight the currently active mode
-        color = (UIConstants.GREEN
-                 if game_state.game_mode == mode else UIConstants.CV2_BLUE)
+        color = (
+            UIConstants.GREEN if game_state.game_mode == mode else UIConstants.CV2_BLUE
+        )
         action_key = f"set_mode_{mode}"
 
         _draw_button(
@@ -64,11 +71,13 @@ def _draw_game_mode_submenu(menu_frame: np.ndarray,
             color,
             UIConstants.FONT_SCALE_MEDIUM,
         )
-        game_state.submenu_items.append((
-            (20, y_offset, menu_frame.shape[1] - 40, item_height),
-            action_key,
-            label,
-        ))
+        game_state.submenu_items.append(
+            (
+                (20, y_offset, menu_frame.shape[1] - 40, item_height),
+                action_key,
+                label,
+            )
+        )
         y_offset += item_height + 5
 
     back_y = y_offset + 10
@@ -82,11 +91,13 @@ def _draw_game_mode_submenu(menu_frame: np.ndarray,
         UIConstants.CV2_BLUE,
         UIConstants.FONT_SCALE_MEDIUM,
     )
-    game_state.submenu_items.append((
-        (20, back_y, menu_frame.shape[1] - 40, item_height),
-        "back_to_main",
-        "Back",
-    ))
+    game_state.submenu_items.append(
+        (
+            (20, back_y, menu_frame.shape[1] - 40, item_height),
+            "back_to_main",
+            "Back",
+        )
+    )
     game_state.menu_height = back_y + item_height + 20
 
 
@@ -120,15 +131,18 @@ def _draw_zone_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
             UIConstants.CV2_BLUE,
             UIConstants.FONT_SCALE_MEDIUM,
         )
-        game_state.submenu_items.append((
-            (20, y_offset, menu_frame.shape[1] - 40, item_height),
-            action_key,
-            label,
-        ))
+        game_state.submenu_items.append(
+            (
+                (20, y_offset, menu_frame.shape[1] - 40, item_height),
+                action_key,
+                label,
+            )
+        )
         y_offset += item_height + 5
 
-    game_state.menu_height = (y_offset + 20
-                              )  # Adjust height based on fixed number of items
+    game_state.menu_height = (
+        y_offset + 20
+    )  # Adjust height based on fixed number of items
 
 
 # --- Main Submenu Dispatcher ---
@@ -143,8 +157,7 @@ submenu_draw_functions_map = {
     "edit_zones": _draw_edit_zones_submenu,
     # Assumes this is also imported correctly
     "leaderboard": _draw_leaderboard_submenu,
-    "players":
-    _draw_players_submenu,  # Assumes this is also imported correctly
+    "players": _draw_players_submenu,  # Assumes this is also imported correctly
     # Assumes this is also imported correctly
     "achievements": _draw_achievements_submenu,
     "help": _draw_help_submenu,  # Assumes this is also imported correctly
@@ -192,8 +205,9 @@ def draw_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
                 UIConstants.CV2_BLUE,
                 UIConstants.FONT_SCALE_MEDIUM,
             )
-            game_state.submenu_items = [((20, 80, menu_frame.shape[1] - 40,
-                                          35), "back_to_main", "Back")]
+            game_state.submenu_items = [
+                ((20, 80, menu_frame.shape[1] - 40, 35), "back_to_main", "Back")
+            ]
             game_state.menu_height = (
                 135  # Minimal height for error message and back button
             )

@@ -1,7 +1,7 @@
 # game_state.py
 
 import logging
-import random # <<< ADDED IMPORT
+import random  # <<< ADDED IMPORT
 from typing import Any, Dict, List, Optional, Tuple
 
 import cv2
@@ -10,17 +10,26 @@ import pygame
 
 # Import constants consistently
 from constants import GameConstants, UIConstants
+
 # Import necessary components
 from detection import BallDetector
+
 # Import effects for Fun Mode
 from effects import BallTrail, Explosion
+
 # Import utility functions
 # Removed: is_ball_at_rest, is_ball_zone_stable (no longer needed here)
-from game_state_utils import \
-    load_background_music  # <--- Ensure this is imported
+from game_state_utils import load_background_music  # <--- Ensure this is imported
 from game_state_utils import (  # play_sound, check_achievements, show_notification etc. are now helpers or utils called elsewhere
-    initialize_achievements, initialize_sounds, load_achievements,
-    load_hsv_ranges, load_initial_state, load_settings, set_volume)
+    initialize_achievements,
+    initialize_sounds,
+    load_achievements,
+    load_hsv_ranges,
+    load_initial_state,
+    load_settings,
+    set_volume,
+)
+
 # Import types/enums from new location
 from game_types import CurrentGameState
 from leaderboard import Leaderboard
@@ -51,17 +60,16 @@ class GameState:
                 f"Attempting camera {GameConstants.CAMERA_INDEX} w/ backend {GameConstants.CAMERA_BACKEND}"
             )
             self.cap: Optional[cv2.VideoCapture] = cv2.VideoCapture(
-                GameConstants.CAMERA_INDEX, GameConstants.CAMERA_BACKEND)
+                GameConstants.CAMERA_INDEX, GameConstants.CAMERA_BACKEND
+            )
             if not self.cap or not self.cap.isOpened():
                 logger.error("Failed to open camera.")
                 self.camera_available = False
                 self.cap = None
             else:
                 logger.info("Setting camera resolution...")
-                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH,
-                             UIConstants.WINDOW_WIDTH)
-                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT,
-                             UIConstants.WINDOW_HEIGHT)
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, UIConstants.WINDOW_WIDTH)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, UIConstants.WINDOW_HEIGHT)
                 w = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
                 h = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
                 if w != UIConstants.WINDOW_WIDTH or h != UIConstants.WINDOW_HEIGHT:
@@ -72,17 +80,14 @@ class GameState:
             self.cap = None
 
         if not self.camera_available:  # If camera failed or was configured off
-            logger.warning(
-                f"Using static frame: {GameConstants.STATIC_FRAME_FILE}")
+            logger.warning(f"Using static frame: {GameConstants.STATIC_FRAME_FILE}")
             try:
                 self.static_frame = cv2.imread(GameConstants.STATIC_FRAME_FILE)
                 if self.static_frame is None:
                     raise FileNotFoundError("Static frame not found/invalid.")
-                if self.static_frame.shape[0] == 0 or self.static_frame.shape[
-                    1] == 0:
+                if self.static_frame.shape[0] == 0 or self.static_frame.shape[1] == 0:
                     raise ValueError("Static image invalid dims.")
-                if len(self.static_frame.shape
-                       ) != 3 or self.static_frame.shape[2] != 3:
+                if len(self.static_frame.shape) != 3 or self.static_frame.shape[2] != 3:
                     raise ValueError("Static image not BGR.")
                 self.static_frame = cv2.resize(
                     self.static_frame,
@@ -124,8 +129,7 @@ class GameState:
 
         # Menu State Variables
         self.submenu_active: Optional[str] = None
-        self.submenu_items: List[Tuple[Tuple[int, int, int, int], Any,
-                                       str]] = []
+        self.submenu_items: List[Tuple[Tuple[int, int, int, int], Any, str]] = []
         self.menu_pos: Tuple[int, int] = (0, 0)
         self.menu_width: int = 600
         self.menu_height: int = 450
@@ -139,8 +143,9 @@ class GameState:
         self.selected_zone_for_edit: Optional[int] = None
         self.zone_editing_action: Optional[str] = None
         self.drag_start_pos: Optional[Tuple[int, int]] = None
-        self.original_zone_on_drag_start: Optional[Tuple[int, int, int, int,
-                                                         int]] = (None)
+        self.original_zone_on_drag_start: Optional[Tuple[int, int, int, int, int]] = (
+            None
+        )
         self.editing_player_index: Optional[int] = None
         self.editing_player_mode: Optional[str] = None
         self.editing_player_name_input: Optional[str] = None
@@ -152,15 +157,17 @@ class GameState:
         # Sound Objects
         self.score_sound: Optional[pygame.mixer.Sound] = None
         self.background_music: Optional[pygame.mixer.Sound] = None
-        self.selected_music_track_index: int = 0 # Default if no tracks
+        self.selected_music_track_index: int = 0  # Default if no tracks
         # --- START CHANGE: Randomize initial track index ---
         if GameConstants.BACKGROUND_MUSIC_TRACKS:
             self.selected_music_track_index = random.randint(
                 0, len(GameConstants.BACKGROUND_MUSIC_TRACKS) - 1
             )
-            logger.info(f"Initial music track index randomly set to: {self.selected_music_track_index}")
+            logger.info(
+                f"Initial music track index randomly set to: {self.selected_music_track_index}"
+            )
         else:
-             logger.warning("No background music tracks defined in constants.")
+            logger.warning("No background music tracks defined in constants.")
         # --- END CHANGE ---
         self.achievement_sound: Optional[pygame.mixer.Sound] = None
         self.low_time_sound: Optional[pygame.mixer.Sound] = None
@@ -225,7 +232,8 @@ class GameState:
         # Directly call the imported utility function (using potentially random index set above)
         logger.info("Loading background music via utils...")
         self.background_music = load_background_music(
-            self, self.selected_music_track_index)
+            self, self.selected_music_track_index
+        )
         if self.background_music is None:
             logger.warning("Failed to load initial background music track.")
         # --- End CORRECTED Block ---

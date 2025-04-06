@@ -6,6 +6,7 @@ import numpy as np
 
 # Local project imports
 from constants import UIConstants
+
 # Import GameState for type hinting and accessing effects
 from game_state import GameState
 
@@ -32,7 +33,7 @@ def draw_balls(frame: np.ndarray, game_state: GameState) -> None:
     # --- Draw Ball Trails (Fun / Retro Mode Only) ---
     # --- START CHANGE: Include "retro" mode ---
     if game_state.game_mode in ["fun", "retro"]:
-    # --- END CHANGE ---
+        # --- END CHANGE ---
         if hasattr(game_state, "active_trails"):
             for trail in game_state.active_trails.values():
                 try:
@@ -80,17 +81,17 @@ def _draw_debug_overlay(frame: np.ndarray, game_state: GameState) -> None:
             try:
                 if len(ball) >= 6:
                     x, y, radius, ball_id, age, ball_type = ball[:6]
-                    center_x, center_y, int_radius = int(x), int(y), int(
-                        radius)
+                    center_x, center_y, int_radius = int(x), int(y), int(radius)
                     # Keep drawing the debug bounding box, but not the filled circle
                     pt1 = (center_x - int_radius, center_y - int_radius)
                     pt2 = (center_x + int_radius, center_y + int_radius)
-                    cv2.rectangle(frame, pt1, pt2, UIConstants.YELLOW,
-                                  1)  # Bounding box
+                    cv2.rectangle(
+                        frame, pt1, pt2, UIConstants.YELLOW, 1
+                    )  # Bounding box
                     label = f"ID:{ball_id} T:{ball_type}"
-                    (w,
-                     h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX,
-                                             UIConstants.FONT_SCALE_SMALL, 1)
+                    (w, h), _ = cv2.getTextSize(
+                        label, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_SMALL, 1
+                    )
                     text_x, text_y = pt1[0], pt1[1] - 5
                     cv2.rectangle(
                         frame,

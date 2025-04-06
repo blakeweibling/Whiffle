@@ -13,7 +13,7 @@ import numpy as np
 import pygame  # Needed for play_sound
 
 # Import necessary constants directly
-from constants import (GameConstants, UIConstants)
+from constants import GameConstants, UIConstants
 
 # Import Player class if needed for type hints (though not strictly necessary here)
 # from player import Player
@@ -38,7 +38,7 @@ def is_ball_at_rest(
     start_pos = np.array(relevant_history[0])
     max_dist_sq = GameConstants.REST_THRESHOLD_DISTANCE**2
     for pos in relevant_history[1:]:
-        dist_sq = np.sum((np.array(pos) - start_pos)**2)
+        dist_sq = np.sum((np.array(pos) - start_pos) ** 2)
         if dist_sq > max_dist_sq:
             return False
     return True
@@ -61,8 +61,7 @@ def is_ball_zone_stable(
         ball_zone_history[ball_id].pop(0)
     if len(ball_zone_history[ball_id]) < stability_frames_needed:
         return False
-    if all(zone_id == current_zone_id
-           for zone_id in ball_zone_history[ball_id]):
+    if all(zone_id == current_zone_id for zone_id in ball_zone_history[ball_id]):
         return current_zone_id is not None
     else:
         return False
@@ -81,10 +80,9 @@ def play_sound(game_state: Any, sound: Optional[pygame.mixer.Sound]) -> None:
             logger.error(f"Sound play error: {e}")
 
 
-def show_notification(game_state: Any,
-                      text: str,
-                      duration: float = 2.0,
-                      is_error: bool = False) -> None:
+def show_notification(
+    game_state: Any, text: str, duration: float = 2.0, is_error: bool = False
+) -> None:
     """Display a notification message by updating game_state attributes."""
     # (Code unchanged)
     game_state.notification_text = text
@@ -100,33 +98,27 @@ def save_high_score(game_state: Any):
     data = {}
     high_score_file = GameConstants.HIGH_SCORE_FILE
     try:
-        if os.path.exists(high_score_file) and os.path.getsize(
-                high_score_file) > 0:
+        if os.path.exists(high_score_file) and os.path.getsize(high_score_file) > 0:
             with open(high_score_file, "r") as f:
                 data = json.load(f)
         else:
             data = {
-                mode: {}
-                for mode in
-                ["classic", "timed", "fun", "practice", "survival"]
+                mode: {} for mode in ["classic", "timed", "fun", "practice", "survival"]
             }
         if game_state.game_mode not in data:
             data[game_state.game_mode] = {}
     except Exception as e:
         logger.error(f"Read high score fail: {e}")
         data = {
-            mode: {}
-            for mode in ["classic", "timed", "fun", "practice", "survival"]
+            mode: {} for mode in ["classic", "timed", "fun", "practice", "survival"]
         }
     player_name = "Unknown"
     try:
         player = game_state.get_current_player()
-        player_name = player.name if player and hasattr(player,
-                                                        "name") else "Unknown"
+        player_name = player.name if player and hasattr(player, "name") else "Unknown"
     except Exception as e:
         logger.error(f"Error getting player name for high score: {e}")
-    current_saved_high = data.get(game_state.game_mode,
-                                  {}).get("high_score", 0)
+    current_saved_high = data.get(game_state.game_mode, {}).get("high_score", 0)
     if game_state.score > current_saved_high:
         data[game_state.game_mode]["high_score"] = game_state.score
         data[game_state.game_mode]["player"] = player_name
@@ -142,9 +134,7 @@ def save_high_score(game_state: Any):
         logger.error(f"Save high score file failed: {e}")
 
 
-def save_score(game_state: Any,
-               player_name: str,
-               mode: Optional[str] = None) -> None:
+def save_score(game_state: Any, player_name: str, mode: Optional[str] = None) -> None:
     """Checks bonus, submits to leaderboard, updates high score file."""
     # (Code unchanged)
     final_score = game_state.score
@@ -160,16 +150,18 @@ def save_score(game_state: Any,
         )
         if hasattr(game_state, "leaderboard") and game_state.leaderboard:
             try:
-                game_state.leaderboard.submit_score(player_name, score_to_save,
-                                                    current_mode)
+                game_state.leaderboard.submit_score(
+                    player_name, score_to_save, current_mode
+                )
             except Exception as e:
                 logger.error(f"Leaderboard submit error: {e}")
         else:
             logger.error("Leaderboard missing.")
-        if (current_mode == game_state.game_mode
-                and score_to_save > game_state.high_score):
-            logger.info(
-                f"New high score '{current_mode}': {score_to_save}. Saving.")
+        if (
+            current_mode == game_state.game_mode
+            and score_to_save > game_state.high_score
+        ):
+            logger.info(f"New high score '{current_mode}': {score_to_save}. Saving.")
             game_state.score = score_to_save  # Ensure score attribute has final value
             save_high_score(game_state)
         else:
@@ -188,8 +180,7 @@ def set_special_hole(
         return None
     try:
         valid_zones = [
-            z for z in scoring_zones
-            if isinstance(z, (list, tuple)) and len(z) >= 1
+            z for z in scoring_zones if isinstance(z, (list, tuple)) and len(z) >= 1
         ]
         if not valid_zones:
             return None
@@ -213,8 +204,9 @@ def save_zones(game_state: Any) -> None:
         show_notification(game_state, "Zones Saved")  # Uses helper
     except IOError as e:
         logger.error(f"Error saving scoring zones: {e}")
-        show_notification(game_state, "Error Saving Zones",
-                          is_error=True)  # Uses helper
+        show_notification(
+            game_state, "Error Saving Zones", is_error=True
+        )  # Uses helper
 
 
 def load_zones(game_state: Any) -> None:
@@ -228,35 +220,39 @@ def load_zones(game_state: Any) -> None:
                 game_state.scoring_zones = []
                 game_state.special_hole = None
                 show_notification(
-                    game_state,
-                    "Zones File Empty, Cleared Zones")  # Uses helper
+                    game_state, "Zones File Empty, Cleared Zones"
+                )  # Uses helper
                 return
 
             with open(zones_file_path, "r") as f:
                 loaded_data = json.load(f)
             if isinstance(loaded_data, list) and all(
-                    isinstance(z, (list, tuple)) and len(z) == 5 and all(
-                        isinstance(v, (int, float)) for v in z)
-                    for z in loaded_data):
-                game_state.scoring_zones = [(int(z[0]), int(z[1]), int(z[2]),
-                                             int(z[3]), int(z[4]))
-                                            for z in loaded_data]
+                isinstance(z, (list, tuple))
+                and len(z) == 5
+                and all(isinstance(v, (int, float)) for v in z)
+                for z in loaded_data
+            ):
+                game_state.scoring_zones = [
+                    (int(z[0]), int(z[1]), int(z[2]), int(z[3]), int(z[4]))
+                    for z in loaded_data
+                ]
                 logger.info(f"Scoring zones loaded from {zones_file_path}")
                 show_notification(game_state, "Zones Loaded")  # Uses helper
                 game_state.special_hole = set_special_hole(
-                    game_state.scoring_zones)  # Calls helper above
+                    game_state.scoring_zones
+                )  # Calls helper above
             else:
                 logger.error(f"Invalid format in {zones_file_path}.")
-                show_notification(game_state,
-                                  "Invalid Zone File Format",
-                                  is_error=True)  # Uses helper
+                show_notification(
+                    game_state, "Invalid Zone File Format", is_error=True
+                )  # Uses helper
                 game_state.scoring_zones = []
                 game_state.special_hole = None
         except Exception as e:
-            logger.exception(
-                f"Error loading/processing {zones_file_path}: {e}")
-            show_notification(game_state, "Error Loading Zones",
-                              is_error=True)  # Uses helper
+            logger.exception(f"Error loading/processing {zones_file_path}: {e}")
+            show_notification(
+                game_state, "Error Loading Zones", is_error=True
+            )  # Uses helper
             game_state.scoring_zones = []
             game_state.special_hole = None
     else:
@@ -277,9 +273,9 @@ def clear_zones(game_state: Any) -> None:
             logger.info(f"Removed zones file: {zones_file_path}")
         except OSError as e:
             logger.error(f"Failed remove zones file {zones_file_path}: {e}")
-            show_notification(game_state,
-                              "Error Removing Zone File",
-                              is_error=True)  # Uses helper
+            show_notification(
+                game_state, "Error Removing Zone File", is_error=True
+            )  # Uses helper
     logger.info("All scoring zones cleared.")
     show_notification(game_state, "All Zones Cleared")  # Uses helper
 

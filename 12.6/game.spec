@@ -35,5 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['C:\\Users\\bweibling\\Documents\\GitHub\\Whiffle\\12.5\\pinball_icon.ico'],
+    icon=['C:\\Users\\bweibling\\Documents\\GitHub\\Whiffle\\12.6\\pinball_icon.ico'],
 )

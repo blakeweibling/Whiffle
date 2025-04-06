@@ -8,20 +8,24 @@ Zone management functions have been moved to game_state_helpers.py.
 """
 
 import logging
-# Removed: import json
-# Removed: import os
 
 import cv2
 import numpy as np
 
 # Import constants, including MenuConstants
-from constants import (MenuConstants, UIConstants)
+from constants import MenuConstants, UIConstants
+
 # Import GameState class and CurrentGameState enum from NEW location
 from game_state import GameState  # Keep import for GameState class
 from game_types import CurrentGameState  # Import Enum from new location
 from menu_utils import _draw_button
+
 # Import submenu functions here to avoid circular imports within _draw_menu_content
 from submenus import draw_submenu
+
+# Removed: import json
+# Removed: import os
+
 
 # Removed imports from game_state_helpers/utils
 
@@ -96,9 +100,9 @@ def draw_menu_window(frame: np.ndarray, game_state: GameState) -> None:
         item_height_with_padding = 35 + 5  # Height of button + padding
         num_main_items = len(MenuConstants.MAIN_MENU_ITEMS)
         footer_padding = 20  # Extra space at the bottom
-        estimated_height = (header_height +
-                            (num_main_items * item_height_with_padding) +
-                            footer_padding)
+        estimated_height = (
+            header_height + (num_main_items * item_height_with_padding) + footer_padding
+        )
         # Ensure minimum height
         menu_height_to_use = max(300, estimated_height)
         logger.debug(
@@ -124,7 +128,8 @@ def draw_menu_window(frame: np.ndarray, game_state: GameState) -> None:
     # --- Cache Key Generation (minor update for clarity) ---
     current_item_actions = tuple(
         item[1] if len(item) > 1 else None
-        for item in getattr(game_state, "submenu_items", []))
+        for item in getattr(game_state, "submenu_items", [])
+    )
     cache_key_parts = [
         game_state.submenu_active,
         current_item_actions,
@@ -136,32 +141,53 @@ def draw_menu_window(frame: np.ndarray, game_state: GameState) -> None:
         getattr(game_state, "editing_player_name_input", None),
         getattr(game_state, "current_player_index", 0),
         # Add parts relevant to specific submenus for redraw triggers
-        (getattr(game_state, "edit_zones_current_page", 1)
-         if game_state.submenu_active == "edit_zones" else None),
-        (getattr(game_state, "current_sound_volume", 0.0)
-         if game_state.submenu_active == "settings" else None),
-        (getattr(game_state, "current_music_volume", 0.0)
-         if game_state.submenu_active == "settings" else None),
-        (getattr(game_state, "game_sounds_on", True)
-         if game_state.submenu_active == "settings" else None),
-        (getattr(game_state, "background_music_on", True)
-         if game_state.submenu_active == "settings" else None),
+        (
+            getattr(game_state, "edit_zones_current_page", 1)
+            if game_state.submenu_active == "edit_zones"
+            else None
+        ),
+        (
+            getattr(game_state, "current_sound_volume", 0.0)
+            if game_state.submenu_active == "settings"
+            else None
+        ),
+        (
+            getattr(game_state, "current_music_volume", 0.0)
+            if game_state.submenu_active == "settings"
+            else None
+        ),
+        (
+            getattr(game_state, "game_sounds_on", True)
+            if game_state.submenu_active == "settings"
+            else None
+        ),
+        (
+            getattr(game_state, "background_music_on", True)
+            if game_state.submenu_active == "settings"
+            else None
+        ),
         # Add leaderboard mode if it affects display
-        (getattr(game_state, "leaderboard_mode", "classic")
-         if game_state.submenu_active == "leaderboard" else None),
+        (
+            getattr(game_state, "leaderboard_mode", "classic")
+            if game_state.submenu_active == "leaderboard"
+            else None
+        ),
     ]
-    cache_key = tuple(filter(lambda x: x is not None,
-                             cache_key_parts))  # Use only non-None parts
+    cache_key = tuple(
+        filter(lambda x: x is not None, cache_key_parts)
+    )  # Use only non-None parts
 
     # --- Cache Check & Redraw ---
     menu_frame = None
     cache_valid = (
-        hasattr(game_state, "menu_cache") and game_state.menu_cache is not None
+        hasattr(game_state, "menu_cache")
+        and game_state.menu_cache is not None
         and hasattr(game_state, "menu_cache_key")
         and game_state.menu_cache_key == cache_key
-        and game_state.menu_cache.shape[0] ==
-        menu_height_to_use  # Check against calculated height
-        and game_state.menu_cache.shape[1] == game_state.menu_width)
+        and game_state.menu_cache.shape[0]
+        == menu_height_to_use  # Check against calculated height
+        and game_state.menu_cache.shape[1] == game_state.menu_width
+    )
 
     if cache_valid:
         menu_frame = game_state.menu_cache
@@ -169,8 +195,9 @@ def draw_menu_window(frame: np.ndarray, game_state: GameState) -> None:
         logger.debug(
             f"Redrawing menu. Cache key mismatch or dimensions changed. New HxW: {menu_height_to_use}x{game_state.menu_width}"
         )
-        menu_frame = np.zeros((menu_height_to_use, game_state.menu_width, 3),
-                              dtype=np.uint8)
+        menu_frame = np.zeros(
+            (menu_height_to_use, game_state.menu_width, 3), dtype=np.uint8
+        )
         game_state.menu_height = (
             menu_height_to_use  # Store the height actually used for drawing
         )
@@ -221,18 +248,21 @@ def draw_menu_window(frame: np.ndarray, game_state: GameState) -> None:
     menu_start_y, menu_start_x = max(0, -y1), max(0, -x1)
     menu_end_y, menu_end_x = menu_start_y + roi_h, menu_start_x + roi_w
 
-    if (roi_h > 0 and roi_w > 0 and menu_end_y <= menu_h_actual
-            and menu_end_x <= menu_w_actual):
+    if (
+        roi_h > 0
+        and roi_w > 0
+        and menu_end_y <= menu_h_actual
+        and menu_end_x <= menu_w_actual
+    ):
         try:
             roi = frame[y1c:y2c, x1c:x2c]
-            menu_frame_slice = menu_frame[menu_start_y:menu_end_y,
-                                          menu_start_x:menu_end_x]
+            menu_frame_slice = menu_frame[
+                menu_start_y:menu_end_y, menu_start_x:menu_end_x
+            ]
             if roi.shape == menu_frame_slice.shape:
                 alpha = 0.85
-                cv2.addWeighted(menu_frame_slice, alpha, roi, 1.0 - alpha, 0,
-                                roi)
-                cv2.rectangle(frame, (x1c, y1c), (x2c, y2c), UIConstants.WHITE,
-                              2)
+                cv2.addWeighted(menu_frame_slice, alpha, roi, 1.0 - alpha, 0, roi)
+                cv2.rectangle(frame, (x1c, y1c), (x2c, y2c), UIConstants.WHITE, 2)
             else:
                 logger.warning("ROI/menu slice shape mismatch")
                 cv2.rectangle(frame, (x1c, y1c), (x2c, y2c), (50, 50, 50), -1)

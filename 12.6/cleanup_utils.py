@@ -14,6 +14,7 @@ import pygame
 from constants import GameConstants
 from game_state_helpers import save_score, save_zones  # <--- IMPORT HELPERS
 from game_state_utils import save_achievements  # <--- IMPORT UTILS
+
 # Import necessary utilities from correct locations
 from game_types import CurrentGameState  # <--- IMPORT ENUM FROM NEW LOCATION
 
@@ -42,26 +43,25 @@ def clean_exit(
                 if player and hasattr(player, "name"):
                     player_name = player.name
                 else:
-                    logger.warning(
-                        "Could not get valid player name during cleanup.")
+                    logger.warning("Could not get valid player name during cleanup.")
             else:
-                logger.warning(
-                    "game_state missing get_current_player during cleanup.")
+                logger.warning("game_state missing get_current_player during cleanup.")
 
             # Save score if game wasn't over and score exists
-            if (player_name != "Unknown Player"
-                    and hasattr(game_state, "current_state")
-                    and game_state.current_state
-                    != CurrentGameState.GAME_OVER  # Use imported enum
-                    and hasattr(game_state, "score") and game_state.score > 0):
+            if (
+                player_name != "Unknown Player"
+                and hasattr(game_state, "current_state")
+                and game_state.current_state
+                != CurrentGameState.GAME_OVER  # Use imported enum
+                and hasattr(game_state, "score")
+                and game_state.score > 0
+            ):
                 logger.info(f"Saving score for {player_name} on exit...")
                 save_score(game_state, player_name)  # Use helper
             elif player_name == "Unknown Player":
-                logger.warning(
-                    "Cannot save score on exit: player name unknown.")
+                logger.warning("Cannot save score on exit: player name unknown.")
             else:
-                logger.info(
-                    "Score not saved on exit (game over or score is 0).")
+                logger.info("Score not saved on exit (game over or score is 0).")
 
             # Flush leaderboard if exists
             if hasattr(game_state, "leaderboard") and game_state.leaderboard:
@@ -80,21 +80,19 @@ def clean_exit(
             try:
                 save_zones(game_state)  # Use helper
             except Exception as e:
-                logger.exception(
-                    f"Error calling save_zones during cleanup: {e}")
+                logger.exception(f"Error calling save_zones during cleanup: {e}")
 
             # Save achievements using the utility function from utils
             logger.info("Saving achievements...")
             try:
-                save_achievements(game_state,
-                                  GameConstants.ACHIEVEMENTS_FILE)  # Use util
+                save_achievements(
+                    game_state, GameConstants.ACHIEVEMENTS_FILE
+                )  # Use util
             except Exception as e:
-                logger.exception(
-                    f"Error calling save_achievements during cleanup: {e}")
+                logger.exception(f"Error calling save_achievements during cleanup: {e}")
 
         except Exception as e:
-            logger.exception(
-                f"Error during game state save/flush on exit: {e}")
+            logger.exception(f"Error during game state save/flush on exit: {e}")
 
     # Quit Pygame FIRST
     logger.debug("Attempting to quit Pygame...")

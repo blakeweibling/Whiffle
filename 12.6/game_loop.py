@@ -13,15 +13,21 @@ import numpy as np
 
 # Import cleanup and utility functions
 from cleanup_utils import clean_exit
+
 # Import constants and UI elements
-from constants import GameConstants, UIConstants # Added GameConstants for pixel factor
+from constants import GameConstants, UIConstants  # Added GameConstants for pixel factor
+
 # Import input handling
 from game_input import _handle_input
+
 # Import GameState class and CurrentGameState enum from NEW location
 from game_state import GameState  # Keep import for GameState
+
 # Import the necessary refactored utility functions
 from game_state_utils import (  # check_achievements is called within update_timers_and_state now
-    update_scoring, update_timers_and_state)
+    update_scoring,
+    update_timers_and_state,
+)
 from game_types import CurrentGameState  # Import from new location
 from ui import draw_ui
 
@@ -42,21 +48,26 @@ def _initialize_display():
 def _capture_frame(game_state: GameState) -> Optional[np.ndarray]:
     """Captures a frame from the camera or uses the static frame."""
     # (Code unchanged)
-    if game_state.camera_available and game_state.cap and game_state.cap.isOpened(
-    ):
+    if game_state.camera_available and game_state.cap and game_state.cap.isOpened():
         try:
             ret, frame = game_state.cap.read()
             if not ret or frame is None:
                 logger.error("Cam read fail")
                 game_state.camera_available = False
-                return (game_state.static_frame.copy()
-                        if game_state.static_frame is not None else None)
+                return (
+                    game_state.static_frame.copy()
+                    if game_state.static_frame is not None
+                    else None
+                )
             return frame
         except cv2.error as e:
             logger.error(f"Cam read error: {e}")
             game_state.camera_available = False
-            return (game_state.static_frame.copy()
-                    if game_state.static_frame is not None else None)
+            return (
+                game_state.static_frame.copy()
+                if game_state.static_frame is not None
+                else None
+            )
     elif game_state.static_frame is not None:
         return game_state.static_frame.copy()
     else:
@@ -79,8 +90,7 @@ def _process_frame(frame: np.ndarray, game_state: GameState) -> None:
         logger.exception(f"Detection error: {e}")
         return
 
-    new_balls_white_fmt = [(int(x), int(y), float(r))
-                           for x, y, r in white_balls]
+    new_balls_white_fmt = [(int(x), int(y), float(r)) for x, y, r in white_balls]
     new_balls_red_fmt = [(int(x), int(y), float(r)) for x, y, r in red_balls]
     new_balls_half_fmt = [(int(x), int(y), float(r)) for x, y, r in half_balls]
 
@@ -116,8 +126,8 @@ def _process_frame(frame: np.ndarray, game_state: GameState) -> None:
             for x, y, r, ball_id, b_type in tracked_detected_balls_tuples:
                 age = current_ages.get(ball_id, game_state.frame_count)
                 updated_tracked_list.append(
-                    (int(x), int(y), float(r), int(ball_id), int(age),
-                     str(b_type)))
+                    (int(x), int(y), float(r), int(ball_id), int(age), str(b_type))
+                )
             # --- End CORRECTED Block ---
             game_state.tracked_balls = updated_tracked_list
         else:
@@ -135,8 +145,7 @@ def _render_frame(draw_canvas: np.ndarray, game_state: GameState) -> None:
     # draw_ui handles drawing elements based on state
     draw_ui(draw_canvas, game_state)
     try:
-        if cv2.getWindowProperty(UIConstants.WINDOW_NAME,
-                                 cv2.WND_PROP_VISIBLE) >= 1:
+        if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) >= 1:
             cv2.imshow(UIConstants.WINDOW_NAME, draw_canvas)
         else:
             # Window closed, don't try to show
@@ -165,15 +174,16 @@ def run_game_loop(game_state: GameState) -> None:
             if dt > 0:
                 current_fps = 1.0 / dt
                 alpha = 0.1
-                game_state.fps = alpha * current_fps + \
-                    (1 - alpha) * game_state.fps
+                game_state.fps = alpha * current_fps + (1 - alpha) * game_state.fps
             key_result = _handle_input(game_state)
             if key_result is None:
                 logger.info("Quit signaled from input.")
                 break
             try:
-                if (cv2.getWindowProperty(UIConstants.WINDOW_NAME,
-                                          cv2.WND_PROP_VISIBLE) < 1):
+                if (
+                    cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE)
+                    < 1
+                ):
                     logger.info("Window closed.")
                     break
             except Exception as e:
@@ -188,8 +198,8 @@ def run_game_loop(game_state: GameState) -> None:
                     logger.error("Invalid frame for resize.")
                     continue
                 frame_resized = cv2.resize(
-                    frame,
-                    (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT))
+                    frame, (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT)
+                )
             except Exception as e:
                 logger.exception(f"Resize error: {e}.")
                 continue
@@ -203,14 +213,17 @@ def run_game_loop(game_state: GameState) -> None:
                     h, w = draw_canvas.shape[:2]
                     factor = GameConstants.RETRO_PIXEL_FACTOR
                     small_h, small_w = max(1, h // factor), max(1, w // factor)
-                    temp = cv2.resize(draw_canvas, (small_w, small_h), interpolation=cv2.INTER_LINEAR)
+                    temp = cv2.resize(
+                        draw_canvas, (small_w, small_h), interpolation=cv2.INTER_LINEAR
+                    )
 
                     # 2. Upscale with nearest-neighbor
-                    draw_canvas = cv2.resize(temp, (w, h), interpolation=cv2.INTER_NEAREST)
+                    draw_canvas = cv2.resize(
+                        temp, (w, h), interpolation=cv2.INTER_NEAREST
+                    )
                 except Exception as pixel_error:
                     logger.error(f"Error during retro pixelation: {pixel_error}")
             # --- END CHANGE ---
-
 
             # Update State using Utils
             update_timers_and_state(game_state, dt)
@@ -218,8 +231,8 @@ def run_game_loop(game_state: GameState) -> None:
             # Process frame for detection/tracking only in PLAYING state
             if game_state.current_state == CurrentGameState.PLAYING:
                 run_detection_tracking = (
-                    game_state.frame_count %
-                    GameConstants.DETECTION_FRAME_INTERVAL == 0)
+                    game_state.frame_count % GameConstants.DETECTION_FRAME_INTERVAL == 0
+                )
                 if run_detection_tracking:
                     # Use frame_resized for detection/tracking, not the pixelated draw_canvas
                     _process_frame(frame_resized, game_state)

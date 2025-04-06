@@ -2,6 +2,7 @@
 import logging
 import os
 import time
+
 # Add Callable and Any for type hinting
 from typing import Any, Callable, Optional
 
@@ -10,12 +11,15 @@ import numpy as np
 
 # Import clean_exit from the new cleanup file
 from cleanup_utils import clean_exit
+
 # Local project imports
 from constants import GameConstants, UIConstants
+
 # Import GameState class and CurrentGameState enum from NEW location
 from game_state import GameState  # Keep import for GameState class
 from game_types import CurrentGameState  # Import Enum from new location
 from menu_utils import _draw_button  # Keep if used for splash/game over
+
 # Import the helper function from its new location
 
 logger = logging.getLogger(__name__)
@@ -36,7 +40,8 @@ def _draw_game_over_screen(frame: np.ndarray, game_state: GameState) -> None:
                 splash = cv2.imread(splash_path)
                 if splash is not None:
                     splash_resized = cv2.resize(
-                        splash, (frame.shape[1], frame.shape[0]))
+                        splash, (frame.shape[1], frame.shape[0])
+                    )
                     game_over_splash_cache = splash_resized
                 else:
                     game_over_splash_cache = "fallback"
@@ -48,11 +53,11 @@ def _draw_game_over_screen(frame: np.ndarray, game_state: GameState) -> None:
     if isinstance(game_over_splash_cache, np.ndarray):
         frame[:, :] = game_over_splash_cache.copy()
     else:  # Fallback drawing
-        cv2.rectangle(frame, (0, 0), (frame.shape[1], frame.shape[0]),
-                      (0, 0, 0), -1)
+        cv2.rectangle(frame, (0, 0), (frame.shape[1], frame.shape[0]), (0, 0, 0), -1)
         title_text = "You Win!" if game_state.win_condition_met else "Game Over!"
-        title_color = (UIConstants.GREEN
-                       if game_state.win_condition_met else UIConstants.RED)
+        title_color = (
+            UIConstants.GREEN if game_state.win_condition_met else UIConstants.RED
+        )
         (tw, th), _ = cv2.getTextSize(
             title_text,
             cv2.FONT_HERSHEY_SIMPLEX,
@@ -161,8 +166,8 @@ def display_modal_splash(
     except Exception as e:
         logger.error(f"Error processing splash '{splash_path}': {e}")
     display_frame = np.zeros(
-        (UIConstants.WINDOW_HEIGHT, UIConstants.WINDOW_WIDTH, 3),
-        dtype=np.uint8)
+        (UIConstants.WINDOW_HEIGHT, UIConstants.WINDOW_WIDTH, 3), dtype=np.uint8
+    )
     display_frame[:, :] = UIConstants.BLACK
     if splash_image is not None:
         display_frame = splash_image.copy()
@@ -201,12 +206,10 @@ def display_modal_splash(
         if event == cv2.EVENT_LBUTTONDOWN:
             param["clicked"] = True
 
-    cv2.setMouseCallback(UIConstants.WINDOW_NAME, _modal_mouse_callback,
-                         dismiss_flag)
+    cv2.setMouseCallback(UIConstants.WINDOW_NAME, _modal_mouse_callback, dismiss_flag)
     while True:
         try:
-            if cv2.getWindowProperty(UIConstants.WINDOW_NAME,
-                                     cv2.WND_PROP_VISIBLE) < 1:
+            if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:
                 break
             cv2.imshow(UIConstants.WINDOW_NAME, display_frame)
             key = cv2.waitKey(30)
@@ -215,14 +218,14 @@ def display_modal_splash(
         except Exception as e:
             logger.error(f"Error during modal splash loop: {e}")
             break
-    cv2.setMouseCallback(UIConstants.WINDOW_NAME, main_mouse_callback,
-                         main_callback_param)
+    cv2.setMouseCallback(
+        UIConstants.WINDOW_NAME, main_mouse_callback, main_callback_param
+    )
     logger.info("Exiting modal splash display.")
 
 
 # Initial splash screen function (show_splash_screen)
-def show_splash_screen(supabase_url: str,
-                       supabase_key: str) -> Optional[GameState]:
+def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional[GameState]:
     """Displays the initial loading splash screen and handles initial setup."""
     # (Code mostly unchanged, except for the corrected 'else' block)
     logger.info("Showing splash screen...")
@@ -231,8 +234,8 @@ def show_splash_screen(supabase_url: str,
     if splash is None:
         logger.error(f"Failed to load {splash_path}. Exiting.")
         splash = np.zeros(
-            (UIConstants.WINDOW_HEIGHT, UIConstants.WINDOW_WIDTH, 3),
-            dtype=np.uint8)
+            (UIConstants.WINDOW_HEIGHT, UIConstants.WINDOW_WIDTH, 3), dtype=np.uint8
+        )
         cv2.putText(
             splash,
             f"Error: {splash_path} not found!",
@@ -250,8 +253,7 @@ def show_splash_screen(supabase_url: str,
             pass
         return None
 
-    splash = cv2.resize(splash,
-                        (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT))
+    splash = cv2.resize(splash, (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT))
     try:
         cv2.namedWindow(UIConstants.WINDOW_NAME, cv2.WINDOW_NORMAL)
     except cv2.error as e:
@@ -281,8 +283,8 @@ def show_splash_screen(supabase_url: str,
                 return None
             first_frame = game_state.static_frame.copy()
             first_frame = cv2.resize(
-                first_frame,
-                (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT))
+                first_frame, (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT)
+            )
         else:
             ret, frame_read = game_state.cap.read()
             if not ret or frame_read is None:
@@ -295,8 +297,8 @@ def show_splash_screen(supabase_url: str,
                 )
                 return None
             first_frame = cv2.resize(
-                frame_read,
-                (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT))
+                frame_read, (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT)
+            )
     except Exception as e:
         logger.exception(f"Critical initialization error: {e}")
         # Simplified error display on splash screen
@@ -350,11 +352,12 @@ def show_splash_screen(supabase_url: str,
     # --- Splash fade logic (unchanged) ---
     start_time = time.time()
     logger.info("Starting initial splash display loop with fade.")
-    while (time.time() - start_time
-           < GameConstants.SPLASH_DURATION + GameConstants.FADE_DURATION):
+    while (
+        time.time() - start_time
+        < GameConstants.SPLASH_DURATION + GameConstants.FADE_DURATION
+    ):
         try:
-            if cv2.getWindowProperty(UIConstants.WINDOW_NAME,
-                                     cv2.WND_PROP_VISIBLE) < 1:
+            if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:
                 logger.info("Splash window closed.")
                 clean_exit(
                     game_state.cap,
@@ -376,9 +379,11 @@ def show_splash_screen(supabase_url: str,
         display_frame = np.zeros_like(first_frame)
         try:
             if splash.shape != first_frame.shape:
-                display_frame = (splash.copy()
-                                 if elapsed < GameConstants.SPLASH_DURATION
-                                 else first_frame.copy())
+                display_frame = (
+                    splash.copy()
+                    if elapsed < GameConstants.SPLASH_DURATION
+                    else first_frame.copy()
+                )
                 if elapsed < GameConstants.SPLASH_DURATION:
                     cv2.putText(
                         display_frame,
@@ -401,15 +406,23 @@ def show_splash_screen(supabase_url: str,
                         UIConstants.YELLOW,
                         UIConstants.FONT_THICKNESS,
                     )
-                elif (elapsed < GameConstants.SPLASH_DURATION +
-                      GameConstants.FADE_DURATION):
-                    alpha = (max(
-                        0.0,
-                        1.0 - (elapsed - GameConstants.SPLASH_DURATION) /
-                        GameConstants.FADE_DURATION,
-                    ) if GameConstants.FADE_DURATION > 0 else 0.0)
-                    display_frame = cv2.addWeighted(splash, alpha, first_frame,
-                                                    1.0 - alpha, 0)
+                elif (
+                    elapsed
+                    < GameConstants.SPLASH_DURATION + GameConstants.FADE_DURATION
+                ):
+                    alpha = (
+                        max(
+                            0.0,
+                            1.0
+                            - (elapsed - GameConstants.SPLASH_DURATION)
+                            / GameConstants.FADE_DURATION,
+                        )
+                        if GameConstants.FADE_DURATION > 0
+                        else 0.0
+                    )
+                    display_frame = cv2.addWeighted(
+                        splash, alpha, first_frame, 1.0 - alpha, 0
+                    )
                 else:
                     display_frame = first_frame.copy()
             cv2.imshow(UIConstants.WINDOW_NAME, display_frame)
