@@ -55,8 +55,10 @@ class UIConstants:
 
     # Window and Display
     WINDOW_NAME: str = "Whiffle Tracker"
-    WINDOW_WIDTH: int = _assert_positive(1280, "WINDOW_WIDTH")
-    WINDOW_HEIGHT: int = _assert_positive(720, "WINDOW_HEIGHT")
+    # --- MODIFIED LINES ---
+    WINDOW_WIDTH: int = _assert_positive(1920, "WINDOW_WIDTH")
+    WINDOW_HEIGHT: int = _assert_positive(1080, "WINDOW_HEIGHT")
+    # --- END MODIFIED LINES ---
 
     # Font Sizes
     FONT_SCALE_SMALL: float = _assert_positive(0.5, "FONT_SCALE_SMALL")
@@ -105,7 +107,7 @@ class UIConstants:
     # --- END NEW ---
 
     # --- Click Feedback ---
-    CLICK_FEEDBACK_DURATION: float = 10.2  # Duration in seconds for click highlight
+    CLICK_FEEDBACK_DURATION: float = 0.2  # Duration in seconds for click highlight
 
 
 class CameraConfig:
