@@ -257,9 +257,6 @@ def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional["GameSt
         )
         try:
             cv2.namedWindow(UIConstants.WINDOW_NAME, cv2.WINDOW_NORMAL)
-            # --- ADD THIS LINE ---
-            cv2.setWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-            # --- END ADD ---
             cv2.imshow(UIConstants.WINDOW_NAME, splash)
             cv2.waitKey(3000)
         except cv2.error:
@@ -269,9 +266,7 @@ def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional["GameSt
     splash = cv2.resize(splash, (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT))
     try:
         cv2.namedWindow(UIConstants.WINDOW_NAME, cv2.WINDOW_NORMAL)
-        # --- ADD THIS LINE ---
-        cv2.setWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        # --- END ADD ---
+        
     except cv2.error as e:
         logger.error(f"Failed to create named window: {e}")
         return None

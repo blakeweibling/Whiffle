@@ -1,0 +1,161 @@
+{
+    "survival": [],
+    "classic": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:15:07.764277"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:15:08.068553"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:19:03.099662"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T19:12:23.461874"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T19:13:00.289248"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T20:04:46.578130"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T20:20:40.299744"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T20:21:31.184515"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T20:36:31.880871"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T21:23:42.559025"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-07T17:28:53.017132"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 240,
+            "mode": "classic",
+            "created_at": "2025-04-07T17:30:29.955129"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-07T18:09:48.507211"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T02:49:33.321457"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T02:59:02.040535"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T03:14:18.154678"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T03:25:07.658028"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T03:27:28.292326"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T03:35:31.521674"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T03:44:35.500081"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T03:45:33.266553"
+        }
+    ],
+    "practice": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "practice",
+            "created_at": "2025-04-06T19:14:01.015090"
+        }
+    ],
+    "retro": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T18:19:21.204571"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T19:13:35.996049"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T20:05:14.038028"
+        }
+    ],
+    "fun": [],
+    "timed": []
+}
