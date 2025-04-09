@@ -1,12 +1,12 @@
 {
     "First Score": {
-        "unlocked": true
+        "unlocked": false
     },
     "High Roller": {
-        "unlocked": true
+        "unlocked": false
     },
     "Zone Master": {
-        "unlocked": true
+        "unlocked": false
     },
     "Marathon": {
         "unlocked": false
