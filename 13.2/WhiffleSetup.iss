@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Whiffle"
-#define MyAppVersion "1.0"
+#define MyAppVersion "13.2"
 #define MyAppPublisher "Whiffle Co"
 #define MyAppURL "https://whiffle.co/"
 #define MyAppExeName "Whiffle.exe"
@@ -44,12 +44,11 @@ Source: "Whiffle\achievements_status.json"; DestDir: "{app}"; Flags: ignoreversi
 Source: "Whiffle\game_over.png"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Whiffle\high_scores.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Whiffle\hsv_ranges.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\logo.png"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Whiffle\README.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Whiffle\scoring_zones.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Whiffle\splash.png"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Whiffle\splash2.png"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\static_frame.png"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Whiffle\last_frame.png"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Whiffle\whiffle_leaderboard.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Whiffle\whiffle_new_best.pt"; DestDir: "{app}"; Flags: ignoreversion
 ; Sounds folder (including all files inside)
