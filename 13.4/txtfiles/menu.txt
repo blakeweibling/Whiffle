@@ -19,7 +19,7 @@ from constants import MenuConstants, UIConstants
 from game_state import GameState
 from game_types import CurrentGameState
 
-# <<< MODIFIED: Pass game_state to _draw_button >>>
+# Pass game_state to _draw_button
 from menu_utils import _draw_button
 
 # Import submenu functions here to avoid circular imports within _draw_menu_content
@@ -39,7 +39,6 @@ def draw_menu(frame: np.ndarray, game_state: GameState) -> None:
             UIConstants.MENU_BUTTON_HEIGHT,
             "Menu",
             UIConstants.CV2_BLUE,
-            # <<< ADDED game_state parameter >>>
             game_state=game_state,
         )
 
@@ -64,6 +63,7 @@ def _draw_menu_content(menu_frame: np.ndarray, game_state: GameState) -> None:
         y_offset = 80
         item_height = 35
         for label, action_key in MenuConstants.MAIN_MENU_ITEMS:
+            # Use the potentially modified game_state.menu_width here
             item_rect = (20, y_offset, game_state.menu_width - 40, item_height)
             _draw_button(
                 menu_frame,
@@ -73,7 +73,6 @@ def _draw_menu_content(menu_frame: np.ndarray, game_state: GameState) -> None:
                 item_rect[3],
                 label,
                 UIConstants.CV2_BLUE,
-                # <<< ADDED game_state parameter >>>
                 game_state=game_state,
                 font_scale=UIConstants.FONT_SCALE_MEDIUM,
             )
@@ -108,9 +107,11 @@ def draw_menu_window(frame: np.ndarray, game_state: GameState) -> None:
         )
         menu_height_to_use = default_height
 
-    game_state.menu_width = getattr(game_state, "menu_width", 600)
-    if game_state.menu_width <= 0:
-        game_state.menu_width = 600
+    # --- START CHANGE: Explicitly set menu width ---
+    # Instead of potentially inheriting an incorrect width from game_state (e.g., from GAME_OVER)
+    # set a consistent width for the menu window. 600 is the default used previously.
+    game_state.menu_width = 600
+    # --- END CHANGE ---
 
     # Cache Key Generation (unchanged)
     current_item_actions = tuple(
@@ -147,29 +148,31 @@ def draw_menu_window(frame: np.ndarray, game_state: GameState) -> None:
                    and game_state.menu_cache is not None
                    and hasattr(game_state, "menu_cache_key")
                    and game_state.menu_cache_key == cache_key
+                   # Use the explicitly set menu_width for cache validation
                    and game_state.menu_cache.shape[0] == menu_height_to_use
-                   and game_state.menu_cache.shape[1] == game_state.menu_width)
+                   and game_state.menu_cache.shape[1] == game_state.menu_width) # Use game_state.menu_width here
 
     if cache_valid:
         menu_frame = game_state.menu_cache
     else:
         logger.debug(
-            f"Redrawing menu. Cache key mismatch or dimensions changed. New HxW: {menu_height_to_use}x{game_state.menu_width}"
+             f"Redrawing menu. Cache key mismatch or dimensions changed. New HxW: {menu_height_to_use}x{game_state.menu_width}"
         )
+        # Use the explicitly set menu_width for creating the cache frame
         menu_frame = np.zeros((menu_height_to_use, game_state.menu_width, 3),
                               dtype=np.uint8)
         game_state.menu_height = menu_height_to_use
         _draw_menu_content(
             menu_frame, game_state
-        )  # This now passes game_state to _draw_button indirectly
+        )
 
         # Draw close button before caching (unchanged)
         try:
             pad = UIConstants.MENU_CLOSE_BUTTON_PADDING
             size = UIConstants.MENU_CLOSE_BUTTON_SIZE
-            btn_x1 = game_state.menu_width - pad - size
+            btn_x1 = game_state.menu_width - pad - size # Use game_state.menu_width
             btn_y1 = pad
-            btn_x2 = game_state.menu_width - pad
+            btn_x2 = game_state.menu_width - pad # Use game_state.menu_width
             btn_y2 = pad + size
             line_pad = size // 4
             cv2.line(
@@ -194,7 +197,7 @@ def draw_menu_window(frame: np.ndarray, game_state: GameState) -> None:
         game_state.menu_cache = menu_frame
         game_state.menu_cache_key = cache_key
 
-    # Blending menu onto main frame (unchanged)
+    # Blending menu onto main frame (unchanged - uses game_state.menu_width/height correctly now)
     start_x = (frame.shape[1] - game_state.menu_width) // 2
     start_y = (frame.shape[0] - game_state.menu_height) // 2
     game_state.menu_pos = (start_x, start_y)
