@@ -195,8 +195,8 @@ class GameConstants:
 
     TIMED_MODE_DURATION: float = _assert_positive(90.0, "TIMED_MODE_DURATION")
     TIMED_MODE_WIN_SCORE: int = _assert_positive(500, "TIMED_MODE_WIN_SCORE")
-    SURVIVAL_MODE_START_TIME: float = _assert_positive(30.0, "SURVIVAL_MODE_START_TIME")
-    SURVIVAL_MODE_TIME_GAIN_PER_SCORE: float = _assert_positive(5.0, "SURVIVAL_MODE_TIME_GAIN_PER_SCORE")
+    SURVIVAL_MODE_START_TIME: float = _assert_positive(45.0, "SURVIVAL_MODE_START_TIME")
+    SURVIVAL_MODE_TIME_GAIN_PER_SCORE: float = _assert_positive(10.0, "SURVIVAL_MODE_TIME_GAIN_PER_SCORE")
 
     POSITION_HISTORY_LENGTH: int = _assert_positive(5, "POSITION_HISTORY_LENGTH")
     REST_THRESHOLD_DISTANCE: float = _assert_non_negative(10.0, "REST_THRESHOLD_DISTANCE")

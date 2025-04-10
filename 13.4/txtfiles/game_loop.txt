@@ -65,7 +65,9 @@ def _process_frame(frame: np.ndarray, game_state: GameState) -> None:
     try:
         white_balls, red_balls, half_balls = game_state.detector.detect_all_balls(frame=frame, frame_count=game_state.frame_count, game_state=game_state, scoring_zones=game_state.scoring_zones, debug_mode=game_state.debug_mode,)
     except Exception as e: logger.exception(f"Ball detection error: {e}"); return
-    new_balls_white_fmt = [(int(x), int(y), float(r)) for x, y, r in white_balls]; new_balls_red_fmt = [(int(x), int(y), float(r)) for x, y, r in red_balls]; new_balls_half_fmt = [(int(x), int(y), float(r)) for x, y, r in half_balls]
+    new_balls_white_fmt = [(int(x), int(y), float(r)) for x, y, r in white_balls];
+    new_balls_red_fmt = [(int(x), int(y), float(r)) for x, y, r in red_balls];
+    new_balls_half_fmt = [(int(x), int(y), float(r)) for x, y, r in half_balls]
     try:
         if hasattr(game_state, "tracker") and game_state.tracker:
             tracked_detected_balls_tuples, next_id = game_state.tracker.track_balls(white_balls=new_balls_white_fmt, red_balls=new_balls_red_fmt, half_balls=new_balls_half_fmt, tracked_balls=game_state.tracked_balls, next_ball_id=game_state.next_ball_id, frame_count=game_state.frame_count, scored_positions=game_state.scored_positions, debug_mode=game_state.debug_mode,)
@@ -118,12 +120,30 @@ def run_game_loop(game_state: GameState) -> None:
             else: frame_resized = frame
             draw_canvas = frame_resized.copy()
 
-            # Retro Pixelation (uses draw_canvas)
+            # Retro Pixelation and Sepia Filter
             if game_state.game_mode == "retro":
                 try:
-                     h, w = draw_canvas.shape[:2]; factor = GameConstants.RETRO_PIXEL_FACTOR; small_h, small_w = max(1, h // factor), max(1, w // factor)
-                     temp = cv2.resize(draw_canvas, (small_w, small_h), interpolation=cv2.INTER_LINEAR); draw_canvas = cv2.resize(temp, (w, h), interpolation=cv2.INTER_NEAREST)
-                except Exception as pixel_error: logger.error(f"Error during retro pixelation: {pixel_error}")
+                    # Pixelation
+                    h, w = draw_canvas.shape[:2]; factor = GameConstants.RETRO_PIXEL_FACTOR; small_h, small_w = max(1, h // factor), max(1, w // factor)
+                    temp = cv2.resize(draw_canvas, (small_w, small_h), interpolation=cv2.INTER_LINEAR);
+                    draw_canvas = cv2.resize(temp, (w, h), interpolation=cv2.INTER_NEAREST)
+
+                    # Sepia Filter
+                    if len(draw_canvas.shape) == 2:
+                         draw_canvas = cv2.cvtColor(draw_canvas, cv2.COLOR_GRAY2BGR)
+                    elif draw_canvas.shape[2] == 4:
+                         draw_canvas = cv2.cvtColor(draw_canvas, cv2.COLOR_BGRA2BGR)
+
+                    sepia_kernel = np.array([
+                        [0.272, 0.534, 0.131],
+                        [0.349, 0.686, 0.168],
+                        [0.393, 0.769, 0.189]
+                    ])
+                    sepia_canvas = cv2.transform(draw_canvas, sepia_kernel)
+                    sepia_canvas = np.clip(sepia_canvas, 0, 255).astype(np.uint8)
+                    draw_canvas = sepia_canvas
+
+                except Exception as retro_filter_error: logger.error(f"Error during retro pixelation or sepia filter: {retro_filter_error}")
 
             update_timers_and_state(game_state, dt)
 

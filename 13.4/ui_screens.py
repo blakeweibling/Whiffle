@@ -12,6 +12,7 @@ from cleanup_utils import clean_exit
 
 # Local project imports
 from constants import GameConstants, UIConstants, ResolutionConstants
+from game_state_helpers import show_notification # Import show_notification
 
 # Import Enum from new location
 from game_types import CurrentGameState
@@ -20,8 +21,8 @@ from game_types import CurrentGameState
 try:
     from menu_utils import _draw_button
 except ImportError:
-    # [FIX 3] Ensure def is on a new, indented line
     logger.error("Failed to import _draw_button from menu_utils. Button drawing will fail.")
+    # Ensure def is on a new, indented line
     def _draw_button(*args, **kwargs):
         pass # Indented under except
 
@@ -36,8 +37,8 @@ except ImportError: SessionData = Any
 try:
     from ui_utils import _draw_text_with_background
 except ImportError:
-    # [FIX 3] Ensure def is on a new, indented line
     logger.error("Failed to import _draw_text_with_background from ui_utils. Text drawing will fail.")
+    # Ensure def is on a new, indented line
     def _draw_text_with_background(*args, **kwargs):
         pass # Indented under except
 
@@ -53,9 +54,12 @@ game_over_splash_cache = None
 
 
 # --- Game Over Screen Drawing ---
-# (Function unchanged from previous correction)
 def _draw_game_over_screen(frame: np.ndarray, game_state: "GameState") -> None:
-    global game_over_splash_cache; current_width, current_height = game_state.get_current_resolution_dimensions()
+    """Draws the game over screen and its interactive buttons."""
+    global game_over_splash_cache
+    current_width, current_height = game_state.get_current_resolution_dimensions()
+
+    # Splash image handling (no changes needed here)
     if isinstance(game_over_splash_cache, np.ndarray):
          if (game_over_splash_cache.shape[1] != current_width or game_over_splash_cache.shape[0] != current_height):
               logger.warning("Game over cache dimensions mismatch. Resizing.")
@@ -70,22 +74,47 @@ def _draw_game_over_screen(frame: np.ndarray, game_state: "GameState") -> None:
                 else: logger.error(f"Loaded game_over.png empty."); game_over_splash_cache = "fallback"
             except Exception as e: logger.error(f"Error loading/resizing game_over.png: {e}"); game_over_splash_cache = "fallback"
         else: logger.warning(f"Game over splash file not found: {splash_path}"); game_over_splash_cache = "fallback"
+
+    # Draw background (splash or fallback text)
     if isinstance(game_over_splash_cache, np.ndarray): frame[:, :] = game_over_splash_cache.copy()
     else:
         cv2.rectangle(frame, (0, 0), (current_width, current_height), (0, 0, 0), -1)
-        win_condition = getattr(game_state, "win_condition_met", False); title_text = "You Win!" if win_condition else "Game Over!"; title_color = UIConstants.GREEN if win_condition else UIConstants.RED
+        win_condition = getattr(game_state, "win_condition_met", False)
+        title_text = "You Win!" if win_condition else "Game Over!"
+        title_color = UIConstants.GREEN if win_condition else UIConstants.RED
         (tw, th), _ = cv2.getTextSize(title_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_XLARGE, UIConstants.FONT_THICKNESS + 1,)
-        title_x = (current_width - tw) // 2; title_y = current_height // 3; cv2.putText(frame, title_text, (title_x, title_y), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_XLARGE, title_color, UIConstants.FONT_THICKNESS + 1,)
-        score = getattr(game_state, "score", 0); display_score = score * 2 if getattr(game_state, "special_hole_hit_this_session", False) else score; doubled_indicator = " (x2 Bonus!)" if getattr(game_state, "special_hole_hit_this_session", False) else ""
-        score_text = f"Final Score: {display_score}{doubled_indicator}"; (sw, sh), _ = cv2.getTextSize(score_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_LARGE, UIConstants.FONT_THICKNESS,); score_x = (current_width - sw) // 2; score_y = title_y + th + 30; cv2.putText(frame, score_text, (score_x, score_y), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_LARGE, UIConstants.WHITE, UIConstants.FONT_THICKNESS,)
-    button_width, button_height, button_spacing = (200, 50, 60,); button_y = current_height - int(0.1 * current_height) - button_height; total_button_width = button_width * 2 + button_spacing; start_x = (current_width - total_button_width) // 2
-    new_game_x = start_x; new_game_rect = (new_game_x, button_y, button_width, button_height); _draw_button(frame, new_game_x, button_y, button_width, button_height, "New Game (N)", UIConstants.CV2_BLUE, game_state=game_state,)
-    action_new_game = "new_game_from_gameover"
-    leaderboard_x = new_game_x + button_width + button_spacing; leaderboard_rect = (leaderboard_x, button_y, button_width, button_height); _draw_button(frame, leaderboard_x, button_y, button_width, button_height, "Leaderboard (L)", UIConstants.CV2_BLUE, game_state=game_state,)
-    action_leaderboard = "show_leaderboard_from_gameover"
-    if hasattr(game_state, "submenu_items"): game_state.submenu_items = [(new_game_rect, action_new_game, "New Game"), (leaderboard_rect, action_leaderboard, "Leaderboard"),]
-    if hasattr(game_state, "menu_pos"): game_state.menu_pos = (0, 0); game_state.menu_width = current_width; game_state.menu_height = current_height
+        title_x = (current_width - tw) // 2
+        title_y = current_height // 3
+        cv2.putText(frame, title_text, (title_x, title_y), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_XLARGE, title_color, UIConstants.FONT_THICKNESS + 1,)
+        score = getattr(game_state, "score", 0)
+        display_score = score * 2 if getattr(game_state, "special_hole_hit_this_session", False) else score
+        doubled_indicator = " (x2 Bonus!)" if getattr(game_state, "special_hole_hit_this_session", False) else ""
+        score_text = f"Final Score: {display_score}{doubled_indicator}"
+        (sw, sh), _ = cv2.getTextSize(score_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_LARGE, UIConstants.FONT_THICKNESS,); score_x = (current_width - sw) // 2
+        score_y = title_y + th + 30
+        cv2.putText(frame, score_text, (score_x, score_y), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_LARGE, UIConstants.WHITE, UIConstants.FONT_THICKNESS,)
 
+    # Draw buttons
+    button_width, button_height, button_spacing = (200, 50, 60,)
+    button_y = current_height - int(0.1 * current_height) - button_height
+    total_button_width = button_width * 2 + button_spacing
+    start_x = (current_width - total_button_width) // 2
+    new_game_x = start_x
+    new_game_rect = (new_game_x, button_y, button_width, button_height)
+    _draw_button(frame, new_game_x, button_y, button_width, button_height, "New Game (N)", UIConstants.CV2_BLUE, game_state=game_state,)
+
+    leaderboard_x = new_game_x + button_width + button_spacing
+    leaderboard_rect = (leaderboard_x, button_y, button_width, button_height)
+    _draw_button(frame, leaderboard_x, button_y, button_width, button_height, "Leaderboard (L)", UIConstants.CV2_BLUE, game_state=game_state,)
+
+    # Store rects for direct click checking in mouse_callback
+    if hasattr(game_state, "game_over_buttons"):
+         game_state.game_over_buttons = {
+             "new_game": new_game_rect,
+             "leaderboard": leaderboard_rect
+         }
+    else:
+         logger.warning("game_state missing 'game_over_buttons' attribute.")
 
 # --- Modal Dismissal Callback ---
 # (Unchanged)
@@ -94,29 +123,58 @@ def _modal_mouse_callback(event: int, x: int, y: int, flags: int, param: dict):
 
 
 # --- Modal Splash Screen ---
-# (Unchanged from previous correction)
+# (Modified to fix SyntaxError)
 def display_modal_splash(
     game_state: "GameState",
     main_mouse_callback: Callable,
     main_callback_param: Any,
 ) -> None:
     logger.info("Displaying modal splash screen...")
-    splash_path = GameConstants.SPLASH_SCREEN_FILE; splash_image = None; target_width, target_height = game_state.get_current_resolution_dimensions()
+    splash_path = GameConstants.SPLASH_SCREEN_FILE
+    splash_image = None
+    target_width, target_height = game_state.get_current_resolution_dimensions()
     try:
-        if os.path.exists(splash_path): splash = cv2.imread(splash_path)
-        if splash is not None and splash.size > 0: splash_image = cv2.resize(splash, (target_width, target_height), interpolation=cv2.INTER_AREA,)
-        if splash_image is None: logger.error(f"Failed load/empty '{splash_path}'.")
-    except Exception as e: logger.error(f"Error processing splash '{splash_path}': {e}")
-    display_frame = np.zeros((target_height, target_width, 3), dtype=np.uint8); display_frame[:, :] = UIConstants.BLACK
-    if splash_image is not None: display_frame = splash_image.copy(); message = "Click or press any key to continue..."; text_color = UIConstants.YELLOW
-    else: message = "Splash Image Unavailable. Click or press any key..."; text_color = UIConstants.RED; cv2.putText(display_frame, "Error: Splash Not Found", (50, target_height // 2), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_LARGE, UIConstants.RED, 2,)
+        if os.path.exists(splash_path):
+             splash = cv2.imread(splash_path)
+             if splash is not None and splash.size > 0:
+                  splash_image = cv2.resize(splash, (target_width, target_height), interpolation=cv2.INTER_AREA,)
+             else:
+                  logger.error(f"Loaded splash image '{splash_path}' is empty or invalid.")
+                  splash_image = None # Ensure it's None if loading failed
+        else:
+             logger.warning(f"Splash file not found: {splash_path}")
+             splash_image = None # Ensure it's None if file doesn't exist
+
+        if splash_image is None: logger.error(f"Failed load/resize splash '{splash_path}'.")
+    except Exception as e:
+        logger.error(f"Error processing splash '{splash_path}': {e}")
+        splash_image = None # Ensure it's None on error
+
+    display_frame = np.zeros((target_height, target_width, 3), dtype=np.uint8)
+    display_frame[:, :] = UIConstants.BLACK
+
+    # --- START FIX: Corrected if/else block ---
+    if splash_image is not None:
+        display_frame = splash_image.copy()
+        message = "Click or press any key to continue..."
+        text_color = UIConstants.YELLOW
+    else:
+        # This block now correctly follows the 'if splash_image is not None:'
+        message = "Splash Image Unavailable. Click or press any key..."
+        text_color = UIConstants.RED
+        cv2.putText(display_frame, "Error: Splash Not Found", (50, target_height // 2), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_LARGE, UIConstants.RED, 2,)
+    # --- END FIX ---
+
     (tw, th), _ = cv2.getTextSize(message, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.FONT_THICKNESS,)
     cv2.putText(display_frame, message, ((target_width - tw) // 2, target_height - 50), cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, text_color, UIConstants.FONT_THICKNESS,)
-    dismiss_flag = {"clicked": False}; cv2.setMouseCallback(UIConstants.WINDOW_NAME, _modal_mouse_callback, dismiss_flag)
+
+    dismiss_flag = {"clicked": False}
+    cv2.setMouseCallback(UIConstants.WINDOW_NAME, _modal_mouse_callback, dismiss_flag)
     while True:
         try:
             if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1: logger.warning("Modal splash window closed."); break
-            cv2.imshow(UIConstants.WINDOW_NAME, display_frame); key = cv2.waitKey(30)
+            cv2.imshow(UIConstants.WINDOW_NAME, display_frame)
+            key = cv2.waitKey(30)
             if key != -1 or dismiss_flag["clicked"]: logger.info("Dismissing modal splash."); break
         except cv2.error as e: logger.error(f"OpenCV error during modal splash loop: {e}"); break
         except Exception as e: logger.exception(f"Unexpected error during modal splash loop: {e}"); break
@@ -138,13 +196,15 @@ def display_heatmap_modal(game_state: "GameState",
     try: heatmap_image = generate_heatmap(current_session, width=current_width, height=current_height,)
     except Exception as e: logger.exception(f"Error generating heatmap: {e}"); show_notification(game_state, "Error generating heatmap", is_error=True, duration=3.0); return
     if heatmap_image is None: logger.info("Heatmap generation returned None."); show_notification(game_state, "No position data for heatmap", duration=3.0); return
-    dismiss_flag = {"clicked": False}; cv2.setMouseCallback(UIConstants.WINDOW_NAME, _modal_mouse_callback, dismiss_flag)
+    dismiss_flag = {"clicked": False}
+    cv2.setMouseCallback(UIConstants.WINDOW_NAME, _modal_mouse_callback, dismiss_flag)
     if hasattr(game_state, "show_heatmap"): game_state.show_heatmap = True
     logger.info("Entering heatmap display loop...")
     while True:
         try:
             if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1: logger.warning("Heatmap display window closed."); break
-            background_frame = None; cap = getattr(game_state, "cap", None); static_frame = getattr(game_state, "static_frame", None)
+            background_frame = None; cap = getattr(game_state, "cap", None)
+            static_frame = getattr(game_state, "static_frame", None)
             if (getattr(game_state, "camera_available", False) and cap and cap.isOpened()):
                 ret, frame_read = cap.read()
                 if ret and frame_read is not None: background_frame = cv2.resize(frame_read, (current_width, current_height))
@@ -153,8 +213,10 @@ def display_heatmap_modal(game_state: "GameState",
                  if static_frame.shape[1] != current_width or static_frame.shape[0] != current_height: background_frame = cv2.resize(static_frame, (current_width, current_height))
                  else: background_frame = static_frame.copy()
             if background_frame is None: background_frame = np.zeros((current_height, current_width, 3), dtype=np.uint8,)
-            heatmap_alpha = 0.2; blended_frame = cv2.addWeighted(heatmap_image, heatmap_alpha, background_frame, 1.0 - heatmap_alpha, 0); display_frame = blended_frame
-            message = "Heatmap View - Click or press ESC/Any Key to Close"; text_color = UIConstants.WHITE; bg_color = UIConstants.BLACK
+            heatmap_alpha = 0.2
+            blended_frame = cv2.addWeighted(heatmap_image, heatmap_alpha, background_frame, 1.0 - heatmap_alpha, 0); display_frame = blended_frame
+            message = "Heatmap View - Click or press ESC/Any Key to Close"
+            text_color = UIConstants.WHITE; bg_color = UIConstants.BLACK
             (tw, th), _ = cv2.getTextSize(message, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.FONT_THICKNESS,)
             text_pos = ((current_width - tw) // 2, current_height - 30,)
             try: _draw_text_with_background(display_frame, message, text_pos, UIConstants.FONT_SCALE_MEDIUM, text_color, bg_color, thickness=UIConstants.FONT_THICKNESS, alpha=0.7,)
@@ -170,7 +232,7 @@ def display_heatmap_modal(game_state: "GameState",
 
 
 # --- Initial Splash Screen ---
-# (Unchanged from previous correction, but verify except blocks are correct)
+# (Unchanged from previous correction)
 def show_splash_screen(supabase_url: str,
                        supabase_key: str) -> Optional["GameState"]:
     logger.info("Showing splash screen...")
@@ -187,7 +249,8 @@ def show_splash_screen(supabase_url: str,
         splash = np.zeros((initial_height, initial_width, 3), dtype=np.uint8)
         error_text = f"Error: {os.path.basename(splash_path)} not found!"
         (tw_err, th_err), _ = cv2.getTextSize(error_text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
-        text_x = (initial_width - tw_err) // 2; text_y = initial_height // 2
+        text_x = (initial_width - tw_err) // 2
+        text_y = initial_height // 2
         cv2.putText(splash, error_text, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 1, UIConstants.RED, 2,)
         cv2.imshow(UIConstants.WINDOW_NAME, splash)
         cv2.waitKey(3000)
@@ -211,7 +274,8 @@ def show_splash_screen(supabase_url: str,
     game_state: Optional["GameState"] = None; first_frame: Optional[np.ndarray] = None
     from game_state import GameState
     try:
-        logger.info("Initializing GameState..."); game_state = GameState(supabase_url, supabase_key)
+        logger.info("Initializing GameState...")
+        game_state = GameState(supabase_url, supabase_key)
         current_width, current_height = game_state.get_current_resolution_dimensions()
         if not game_state.camera_available:
             if game_state.static_frame is None: raise RuntimeError("No Camera or Static Frame source available.")
@@ -225,7 +289,8 @@ def show_splash_screen(supabase_url: str,
             else: first_frame = frame_read
     except Exception as e:
         logger.exception(f"Critical error during GameState init or first frame capture: {e}"); cv2.putText(splash, f"Initialization Error", (50, initial_height // 2 - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, UIConstants.RED, 1,); cv2.imshow(UIConstants.WINDOW_NAME, splash); cv2.waitKey(5000)
-        cap = getattr(game_state, "cap", None) if game_state else None; music = getattr(game_state, "background_music", None) if game_state else None; music_on = getattr(game_state, "background_music_on", False) if game_state else False
+        cap = getattr(game_state, "cap", None) if game_state else None
+        music = getattr(game_state, "background_music", None) if game_state else None; music_on = getattr(game_state, "background_music_on", False) if game_state else False
         clean_exit(cap, music, music_on, game_state); return None
     if first_frame is None: logger.error("First frame None after init."); clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state,); return None
     start_time = time.time(); logger.info("Starting splash fade loop.")
@@ -241,20 +306,17 @@ def show_splash_screen(supabase_url: str,
             else: display_frame = first_frame.copy()
             cv2.imshow(UIConstants.WINDOW_NAME, display_frame)
         except cv2.error as e:
-            # --- Correctly formatted except block ---
             logger.error(f"OpenCV error during splash fade display: {e}")
             try:
                 cv2.imshow(UIConstants.WINDOW_NAME, first_frame)
             except:
                 pass
         except Exception as e:
-            # --- Correctly formatted except block ---
             logger.exception(f"Unexpected error during splash fade loop: {e}")
             try:
                 cv2.imshow(UIConstants.WINDOW_NAME, first_frame)
             except:
                 pass
-        # --- End Fixes for except blocks ---
         key = cv2.waitKey(GameConstants.WAIT_KEY_DELAY) & 0xFF
         if key == ord("q") or key == 27: logger.info("Splash skipped."); clean_exit(game_state.cap, game_state.background_music, game_state.background_music_on, game_state,); return None
     logger.info("Initial splash screen finished.")
@@ -270,8 +332,10 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState"):
     current_width, current_height = game_state.get_current_resolution_dimensions()
     overlay = frame.copy(); cv2.rectangle(overlay, (0, 0), (current_width, current_height), UIConstants.BLACK, -1); alpha = 0.7; cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
     popup_width, popup_height = 700, 200 # Fixed size popup
-    popup_x = (current_width - popup_width) // 2; popup_y = (current_height - popup_height) // 2
-    cv2.rectangle(frame, (popup_x, popup_y), (popup_x + popup_width, popup_y + popup_height), UIConstants.GREY_BG, -1,); cv2.rectangle(frame, (popup_x, popup_y), (popup_x + popup_width, popup_y + popup_height), UIConstants.WHITE, 1,)
+    popup_x = (current_width - popup_width) // 2
+    popup_y = (current_height - popup_height) // 2
+    cv2.rectangle(frame, (popup_x, popup_y), (popup_x + popup_width, popup_y + popup_height), UIConstants.GREY_BG, -1,)
+    cv2.rectangle(frame, (popup_x, popup_y), (popup_x + popup_width, popup_y + popup_height), UIConstants.WHITE, 1,)
     prompt_text = "Enter Player Name:"; prompt_pos = (popup_x + 20, popup_y + 40)
     cv2.putText(frame, prompt_text, prompt_pos, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.WHITE, UIConstants.FONT_THICKNESS, cv2.LINE_AA,)
     input_bg_x, input_bg_y = popup_x + 20, popup_y + 70; input_bg_w, input_bg_h = popup_width - 40, 40

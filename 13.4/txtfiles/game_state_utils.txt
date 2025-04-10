@@ -47,8 +47,6 @@ logger = logging.getLogger(__name__)
 # update_notifications, update_timers_and_state) remain largely the same as before,
 # unless they specifically need modification for the stats feature (which they mostly don't).
 # For brevity, their original code is assumed here, focusing on the modified reset_game.
-
-
 def initialize_sounds(
 ) -> (Tuple[Optional[pygame.mixer.Sound], Optional[pygame.mixer.Sound]]):
     """Initialize sound effects (score, low time)."""
@@ -105,8 +103,7 @@ def initialize_achievements() -> List[Achievement]:
             "Marathon",
             "Play 10 games",
             lambda gs: hasattr(gs, "players") and gs.players and hasattr(
-                gs.players[gs.current_player_index], "games_played") and gs.
-            players[gs.current_player_index].games_played >= 10,
+                gs.players[gs.current_player_index], "games_played") and gs.players[gs.current_player_index].games_played >= 10,
         ),
         # Add more achievements here
     ]
@@ -136,7 +133,7 @@ def load_achievements(game_state: Any, filename: str) -> None:
             if isinstance(game_state.achievements, list):
                 for achievement in game_state.achievements:
                     if hasattr(achievement,
-                               "name") and achievement.name in data:
+                            "name") and achievement.name in data:
                         achievement_data = data.get(achievement.name, {})
                         if isinstance(
                                 achievement_data,
@@ -232,7 +229,7 @@ def load_hsv_ranges(
                             and len(loaded_data[key]) == 2):
                         try:
                             lower = np.array(loaded_data[key][0],
-                                             dtype=np.uint8)
+                                            dtype=np.uint8)
                             upper = np.array(loaded_data[key][1],
                                              dtype=np.uint8)
                             if lower.shape == (3, ) and upper.shape == (3, ):
@@ -315,7 +312,7 @@ def load_settings(game_state: Any) -> None:
 
             # Load sound volume safely
             loaded_sound_vol = settings_data.get("sound_volume",
-                                                 default_sound_vol)
+                        default_sound_vol)
             try:
                 sound_vol_float = float(loaded_sound_vol)
                 if 0.0 <= sound_vol_float <= 1.0:
@@ -351,7 +348,7 @@ def load_settings(game_state: Any) -> None:
 
             # Load sound toggle safely
             loaded_sound_on = settings_data.get("game_sounds_on",
-                                                default_sound_on)
+                        default_sound_on)
             if isinstance(loaded_sound_on, bool):
                 game_state.game_sounds_on = loaded_sound_on
             else:
@@ -362,7 +359,7 @@ def load_settings(game_state: Any) -> None:
 
             # Load music toggle safely
             loaded_music_on = settings_data.get("background_music_on",
-                                                default_music_on)
+                        default_music_on)
             if isinstance(loaded_music_on, bool):
                 game_state.background_music_on = loaded_music_on
             else:
@@ -559,7 +556,7 @@ def set_volume(game_state: Any):
 
             # Check if the specific sound object is playing on any channel
             is_playing = any(ch.get_sound() == current_music
-                             for i in range(pygame.mixer.get_num_channels())
+                    for i in range(pygame.mixer.get_num_channels())
                              if (ch := pygame.mixer.Channel(i)).get_busy())
 
             if music_on and music_vol > 0 and not is_playing:
@@ -717,7 +714,7 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
                 and not getattr(game_state, "low_time_warning_played", False)):
             logger.info("Timer low warning triggered.")
             play_sound(game_state, getattr(game_state, "low_time_sound",
-                                           None))  # Use helper
+                                        None))  # Use helper
             game_state.low_time_warning_played = True  # Set flag
 
         # Decrement timer
@@ -742,7 +739,7 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
                             player_name = player.name
                     # Pass current player name and mode
                     save_score(game_state, player_name,
-                               mode=game_mode)  # Use helper
+                            mode=game_mode)  # Use helper
                 except Exception as e:
                     logger.error(f"Error saving score on timer expiry: {e}")
 
@@ -759,7 +756,7 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
     # Update visual effects (Fun Mode)
     if game_mode == "fun" and current_state == CurrentGameState.PLAYING:
         if hasattr(game_state, "active_explosions") and isinstance(
-                game_state.active_explosions, list):
+            game_state.active_explosions, list):
             active_explosions = game_state.active_explosions
             # Update existing explosions
             for explosion in active_explosions:
@@ -852,7 +849,7 @@ def reset_game(game_state: Any) -> None:
                 current_player.reset_score()
             # Optionally increment games played here if desired
             # if hasattr(current_player, 'increment_games_played'):
-            #      current_player.increment_games_played()
+            #     current_player.increment_games_played()
         except Exception as e:
             logger.error(
                 f"Error resetting score for player {game_state.current_player_index}: {e}"
@@ -870,22 +867,39 @@ def reset_game(game_state: Any) -> None:
     # Volume/Music settings loaded earlier via load_settings() should persist
     load_initial_state(game_state)  # Reloads zones, high score
 
-    # --- Randomize music track --- (Keep this behavior)
+    # --- Randomize/Set music track --- # --- >>> MODIFIED SECTION START <<< ---
     available_tracks = getattr(GameConstants, "BACKGROUND_MUSIC_TRACKS", [])
     if available_tracks:
         num_tracks = len(available_tracks)
-        new_track_index = random.randint(0, num_tracks - 1)
-        current_track_index = getattr(game_state, "selected_music_track_index",
-                                      -1)
-        # Avoid repeating if possible
-        if num_tracks > 1 and new_track_index == current_track_index:
-            new_track_index = (new_track_index + 1) % num_tracks
-        logger.info(
-            f"Resetting music track randomly to index: {new_track_index}")
-        # change_music_track handles stopping old, loading new, setting volume/playing
+        new_track_index = -1 # Default to invalid index
+
+        # Check if the game mode being reset *to* is retro
+        if current_game_mode == "retro":
+            try:
+                target_track = "background_music4.mp3"
+                new_track_index = available_tracks.index(target_track)
+                logger.info(f"Resetting music track specifically for Retro mode to index: {new_track_index} ({target_track})")
+            except ValueError:
+                logger.error(f"Could not find '{target_track}' in BACKGROUND_MUSIC_TRACKS. Will randomize instead.")
+                new_track_index = -1 # Signal to randomize below
+            except Exception as e_find:
+                 logger.error(f"Error finding retro track index: {e_find}. Will randomize.")
+                 new_track_index = -1
+
+        # If not retro mode, or retro track not found, randomize
+        if new_track_index == -1:
+            new_track_index = random.randint(0, num_tracks - 1)
+            current_track_index = getattr(game_state, "selected_music_track_index", -1)
+            # Avoid repeating if possible
+            if num_tracks > 1 and new_track_index == current_track_index:
+                new_track_index = (new_track_index + 1) % num_tracks
+            logger.info(f"Resetting music track randomly to index: {new_track_index}")
+
+        # Change to the determined track (retro-specific or random)
         change_music_track(game_state, new_track_index)
     else:
-        logger.warning("Cannot randomize music on reset: No tracks defined.")
+        logger.warning("Cannot randomize/set music on reset: No tracks defined.")
+    # --- >>> MODIFIED SECTION END <<< ---
 
     # Ensure volume is applied correctly after potential changes/reloads
     set_volume(game_state)

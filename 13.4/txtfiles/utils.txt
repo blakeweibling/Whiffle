@@ -264,7 +264,7 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                     elif action == "adjust_music_volume": #
                         new_volume = max(0.0,min(1.0,(rel_click_x_in_item / abs_item_w if abs_item_w > 0 else 0.0),),) #
                         if (abs(getattr(game_state, "current_music_volume", 0) - new_volume) > 0.01): #
-                           game_state.current_music_volume = new_volume; set_volume(game_state); save_settings(game_state); game_state.menu_cache = None; volume_adjusted = True; logger.debug(f"Adjusted music volume to {new_volume:.2f}"); return True #
+                            game_state.current_music_volume = new_volume; set_volume(game_state); save_settings(game_state); game_state.menu_cache = None; volume_adjusted = True; logger.debug(f"Adjusted music volume to {new_volume:.2f}"); return True #
                 # Confirm Quit checks (remain unchanged)
                 if current_state == CurrentGameState.CONFIRM_QUIT: #
                     if action == "confirm_quit_yes": #
@@ -273,7 +273,7 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                         logger.debug("Quit cancelled via 'No' button click."); game_state.click_feedback_state = (item_rect_abs,time.time()); prev_state = getattr(game_state,"previous_state_before_quit_confirm",CurrentGameState.PLAYING,); game_state.current_state = prev_state; game_state.previous_state_before_quit_confirm = None; game_state.submenu_items = []; game_state.menu_cache = None; return True #
                 # Set feedback state if not a volume adjustment
                 if not volume_adjusted: game_state.click_feedback_state = (item_rect_abs, time.time()) #
-                # General menu action handling (remains unchanged)
+                # General menu action handling
                 known_submenu_nav_actions = {item[1] for item in MenuConstants.MAIN_MENU_ITEMS if isinstance(item[1], str)} | {item[1] for item in MenuConstants.ZONE_SUBMENU_ITEMS if isinstance(item[1], str)} #
                 non_nav_actions = {"resume","quit","back_to_main","back_to_manage_zones","save_zones","load_zones","clear_zones","add_zone_info",} #
                 known_submenu_nav_actions -= non_nav_actions #
@@ -291,13 +291,35 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                     elif action == "clear_zones": clear_zones(game_state); _reset_all_menu_editing_states(game_state) #
                     elif action == "save_zones": save_zones(game_state); game_state.menu_cache = None #
                     elif action == "load_zones": load_zones(game_state); _reset_all_menu_editing_states(game_state) #
-                    elif action.startswith("set_mode_"): # Mode change logic...
+                    elif action.startswith("set_mode_"): # --- >>> MODIFIED SECTION START <<< ---
                          new_mode = action.split("set_mode_")[-1]
                          valid_modes = {"classic","timed","fun","practice","survival","retro",}
                          if new_mode in valid_modes and getattr(game_state, "game_mode", "classic") != new_mode:
-                              try: save_score(game_state, game_state.get_current_player().name, mode=game_state.game_mode) #
-                              except Exception as e: logger.error(f"Error saving score before mode change: {e}") #
-                              game_state.game_mode = new_mode; reset_game(game_state); show_notification(game_state, f"Mode set to: {new_mode.capitalize()}"); game_state.current_state = CurrentGameState.PLAYING; game_state.submenu_active = None; _reset_all_menu_editing_states(game_state) #
+                              try: save_score(game_state, game_state.get_current_player().name, mode=game_state.game_mode) # Save score of previous mode
+                              except Exception as e: logger.error(f"Error saving score before mode change: {e}") # Log error if save fails
+
+                              game_state.game_mode = new_mode; # Set the new game mode first
+
+                              # Explicitly set retro music BEFORE reset_game is called
+                              if new_mode == "retro":
+                                  available_tracks = getattr(GameConstants, "BACKGROUND_MUSIC_TRACKS", [])
+                                  try:
+                                      target_track = "background_music4.mp3"
+                                      retro_track_index = available_tracks.index(target_track)
+                                      logger.info(f"Explicitly changing music for Retro mode switch to: {retro_track_index} ({target_track})")
+                                      change_music_track(game_state, retro_track_index) # Call the utility function
+                                  except ValueError:
+                                      logger.error(f"Could not find '{target_track}' for retro mode switch. Music will be randomized by reset_game.")
+                                  except Exception as e_music:
+                                       logger.error(f"Error changing music track during retro mode switch: {e_music}")
+
+                              # Reset game state (reset_game now handles music based on the new mode, including retro)
+                              reset_game(game_state);
+                              show_notification(game_state, f"Mode set to: {new_mode.capitalize()}");
+                              game_state.current_state = CurrentGameState.PLAYING; # Switch back to playing state
+                              game_state.submenu_active = None; # Close menu
+                              _reset_all_menu_editing_states(game_state) # Reset menu editing flags
+                    # --- >>> MODIFIED SECTION END <<< ---
                     elif action.startswith("select_player_"): # Player select logic...
                          try:
                               index = int(action.split("select_player_")[-1])

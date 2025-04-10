@@ -2,7 +2,7 @@
 
 import logging
 import random
-import time # [ADD] Import time for camera init delay and feedback state
+import time
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import cv2
@@ -10,7 +10,6 @@ import numpy as np
 import pygame
 
 # Import constants consistently
-# [ADD] Import ResolutionConstants
 from constants import GameConstants, UIConstants, ResolutionConstants, ScoringConstants
 
 # Import necessary components
@@ -20,8 +19,6 @@ from detection import BallDetector
 from effects import BallTrail, Explosion
 
 # Import utility functions
-# [MODIFY] Make sure load_initial_state is imported (it likely is already)
-# [MODIFY] Make sure set_special_hole is imported if used directly here (likely not)
 from game_state_utils import (
     initialize_achievements,
     initialize_sounds,
@@ -31,7 +28,7 @@ from game_state_utils import (
     load_settings,
     set_volume,
     load_background_music,
-    set_special_hole, # Import this if needed for scaling
+    set_special_hole,
 )
 
 # Import types/enums from new location
@@ -40,11 +37,11 @@ from leaderboard import Leaderboard
 from player import Player
 from tracking import BallTracker
 
-# Import DataLogger [cite: 1465]
+# Import DataLogger
 try:
     from data_logger import DataLogger
 except ImportError:
-    logger.error("Failed to import DataLogger. Stats functionality will be unavailable.") #
+    logger.error("Failed to import DataLogger. Stats functionality will be unavailable.")
     DataLogger = None
 
 logger = logging.getLogger(__name__)
@@ -55,10 +52,10 @@ class GameState:
     def __init__(self, supabase_url: str, supabase_key: str) -> None:
         logger.info("Starting GameState initialization...")
 
-        # [ADD] Resolution State
+        # Resolution State
         self.current_resolution_key = ResolutionConstants.DEFAULT_RESOLUTION
         self.current_width, self.current_height = ResolutionConstants.RESOLUTIONS[self.current_resolution_key]
-        self.previous_width, self.previous_height = self.current_width, self.current_height # For scaling zones
+        self.previous_width, self.previous_height = self.current_width, self.current_height
 
         # DataLogger Initialization
         if DataLogger:
@@ -73,16 +70,16 @@ class GameState:
         self.game_sounds_on: bool = True
         self.background_music_on: bool = True
 
-        # [MODIFY] Camera Initialization - Moved to helper
+        # Camera Initialization
         self.cap: Optional[cv2.VideoCapture] = None
         self.camera_available: bool = False
         self.static_frame: Optional[np.ndarray] = None
-        self._initialize_camera() # Call the helper BEFORE loading zones/state
+        self._initialize_camera()
 
         # Game Variables
         self.score: int = 0
         self.high_score: int = 0
-        self.scoring_zones: List[Tuple[int, int, int, int, int]] = [] # Loaded by load_initial_state
+        self.scoring_zones: List[Tuple[int, int, int, int, int]] = []
         self.drawing: bool = False
         self.start_x: Optional[int] = None
         self.start_y: Optional[int] = None
@@ -113,8 +110,8 @@ class GameState:
         self.submenu_active: Optional[str] = None
         self.submenu_items: List[Tuple[Tuple[int, int, int, int], Any, str]] = ([])
         self.menu_pos: Tuple[int, int] = (0, 0)
-        self.menu_width: int = 600 # Initial menu width, might need adjustment
-        self.menu_height: int = 450 # Initial menu height, might need adjustment
+        self.menu_width: int = 600
+        self.menu_height: int = 450
         self.menu_cache: Optional[np.ndarray] = None
         self.menu_cache_key: Optional[Any] = None
         self.edit_zones_items_per_page: int = 8
@@ -131,7 +128,7 @@ class GameState:
         self.editing_player_name_input: Optional[str] = None
         self.click_feedback_state: Optional[Tuple[Tuple[int, int, int, int], float]] = None
 
-        # Initial Player Name Input State [cite: 1489]
+        # Initial Player Name Input State
         self.player_name_input_active: bool = True
         self.current_player_name_input: str = ""
 
@@ -139,10 +136,10 @@ class GameState:
         self.score_sound: Optional[pygame.mixer.Sound] = None
         self.background_music: Optional[pygame.mixer.Sound] = None
         self.selected_music_track_index: int = 0
-        if GameConstants.BACKGROUND_MUSIC_TRACKS: #
-            self.selected_music_track_index = random.randint(0, len(GameConstants.BACKGROUND_MUSIC_TRACKS) - 1) #
-            logger.info(f"Initial music track index randomly set to: {self.selected_music_track_index}") #
-        else: logger.warning("No background music tracks defined in constants.") #
+        if GameConstants.BACKGROUND_MUSIC_TRACKS:
+            self.selected_music_track_index = random.randint(0, len(GameConstants.BACKGROUND_MUSIC_TRACKS) - 1)
+            logger.info(f"Initial music track index randomly set to: {self.selected_music_track_index}")
+        else: logger.warning("No background music tracks defined in constants.")
         self.achievement_sound: Optional[pygame.mixer.Sound] = None
         self.low_time_sound: Optional[pygame.mixer.Sound] = None
         self.low_time_warning_played: bool = False
@@ -153,15 +150,15 @@ class GameState:
         self.current_state: CurrentGameState = CurrentGameState.GETTING_PLAYER_NAME
         self.previous_state: Optional[CurrentGameState] = None
         self.previous_state_before_quit_confirm: Optional[CurrentGameState] = None
-        self.win_score: int = GameConstants.TIMED_MODE_WIN_SCORE #
+        self.win_score: int = GameConstants.TIMED_MODE_WIN_SCORE
         self.win_condition_met: bool = False
 
-        # Achievements [cite: 1493]
+        # Achievements
         self.achievements: List[Any] = []
         self.achievement_notification: Optional[str] = None
         self.achievement_notification_timer: float = 0.0
 
-        # Debug Flags [cite: 1494]
+        # Debug Flags
         self.debug_mode: bool = False
         self.fps: float = 0.0
         self.show_debug_overlay: bool = False
@@ -170,59 +167,63 @@ class GameState:
         self.players: List[Player] = [Player("Player 1")]
         self.current_player_index: int = 0
 
-        # Leaderboard [cite: 1495]
+        # Leaderboard
         self.leaderboard = Leaderboard(supabase_url, supabase_key)
         self.leaderboard_mode: str = ("classic")
 
-        # HSV Ranges [cite: 1496]
+        # HSV Ranges
         self.hsv_ranges: Dict[str, Tuple[np.ndarray, np.ndarray]] = {}
 
-        # Notifications [cite: 1496]
+        # Notifications
         self.notification_text: Optional[str] = None
         self.notification_timer: float = 0.0
         self.notification_color: Tuple[int, int, int] = UIConstants.GREEN
 
-        # Fun Mode Effects [cite: 1496]
+        # Fun Mode Effects
         self.active_trails: Dict[int, BallTrail] = {}
         self.active_explosions: List[Explosion] = []
 
-        # Heatmap state [cite: 1497]
+        # Heatmap state
         self.show_heatmap: bool = False
 
-        # --- Init Calls Using Utility Functions ---
-        logger.info("Loading settings via utils...") #
-        load_settings(self) # [cite: 1498] # Loads volume levels etc.
+        # --- START CHANGE: Initialize game_over_buttons ---
+        # Dictionary to store the rectangles of buttons on the game over screen
+        self.game_over_buttons: Dict[str, Tuple[int, int, int, int]] = {}
+        # --- END CHANGE ---
 
-        logger.info("Loading initial game state (zones, high score) via utils...") #
-        # Zones are loaded based on current resolution (which is default at this point)
-        load_initial_state(self) # [cite: 1498]
+        # --- Init Calls Using Utility Functions ---
+        logger.info("Loading settings via utils...")
+        load_settings(self)
+
+        logger.info("Loading initial game state (zones, high score) via utils...")
+        load_initial_state(self)
 
         try:
-            logger.info("Initializing sounds via utils...") #
-            sound_results = initialize_sounds() # [cite: 1499]
+            logger.info("Initializing sounds via utils...")
+            sound_results = initialize_sounds()
             if isinstance(sound_results, tuple) and len(sound_results) == 2:
-                self.score_sound, self.low_time_sound = sound_results #
+                self.score_sound, self.low_time_sound = sound_results
             else:
-                logger.error(f"init sounds bad format: {type(sound_results)}") #
+                logger.error(f"init sounds bad format: {type(sound_results)}")
                 self.score_sound, self.low_time_sound = None, None
         except Exception as e:
-            logger.exception(f"Sound init error: {e}") #
+            logger.exception(f"Sound init error: {e}")
             self.score_sound, self.low_time_sound = None, None
 
-        logger.info("Loading background music via utils...") #
-        self.background_music = load_background_music(self, self.selected_music_track_index) # [cite: 1501]
-        if self.background_music is None: logger.warning("Failed to load initial background music track.") #
+        logger.info("Loading background music via utils...")
+        self.background_music = load_background_music(self, self.selected_music_track_index)
+        if self.background_music is None: logger.warning("Failed to load initial background music track.")
 
         # Apply loaded/default volume settings
-        set_volume(self) # [cite: 1501]
+        set_volume(self)
 
-        logger.info("Initializing achievements definitions via utils...") #
-        self.achievements = initialize_achievements() # [cite: 1501]
-        logger.info("Loading achievements status via utils...") #
-        load_achievements(self, GameConstants.ACHIEVEMENTS_FILE) # [cite: 1502]
+        logger.info("Initializing achievements definitions via utils...")
+        self.achievements = initialize_achievements()
+        logger.info("Loading achievements status via utils...")
+        load_achievements(self, GameConstants.ACHIEVEMENTS_FILE)
 
-        logger.info("Loading HSV ranges via utils...") #
-        self.hsv_ranges = load_hsv_ranges(GameConstants.HSV_RANGES_FILE) # [cite: 1502]
+        logger.info("Loading HSV ranges via utils...")
+        self.hsv_ranges = load_hsv_ranges(GameConstants.HSV_RANGES_FILE)
 
         # Set initial game timer based on mode
         if self.game_mode == "timed": self.game_timer = GameConstants.TIMED_MODE_DURATION
@@ -237,15 +238,15 @@ class GameState:
                 except (IndexError, AttributeError): pass
             self.data_logger.start_new_session(current_player_name, self.game_mode)
 
-        logger.info("GameState initialization complete.") #
+        logger.info("GameState initialization complete.")
 
 
-    # [ADD] Helper to get current dimensions
+    # Helper to get current dimensions
     def get_current_resolution_dimensions(self) -> tuple[int, int]:
          """Helper to get current display/processing dimensions"""
          return self.current_width, self.current_height
 
-    # [ADD] Camera Initialization Helper
+    # Camera Initialization Helper
     def _initialize_camera(self):
          """Initializes or re-initializes the camera capture based on current resolution."""
          logger.info(f"Initializing camera for {self.current_width}x{self.current_height}")
@@ -265,7 +266,7 @@ class GameState:
                   self.camera_available = False
              else:
                   logger.info(f"Attempting camera index {cam_index} w/ backend {cam_backend}")
-                  self.cap = cv2.VideoCapture(cam_index, cam_backend) # Use determined index/backend
+                  self.cap = cv2.VideoCapture(cam_index, cam_backend)
 
                   if not self.cap or not self.cap.isOpened():
                       logger.error(f"Failed to open camera index {cam_index} with backend {cam_backend}. Will attempt static frame.")
@@ -290,12 +291,10 @@ class GameState:
                       # Check if the resolution was actually set (allowing some tolerance)
                       if abs(int(w) - self.current_width) > 10 or abs(int(h) - self.current_height) > 10:
                            logger.warning(f"Camera resolution mismatch: Requested {self.current_width}x{self.current_height}, Got {int(w)}x{int(h)}. Check camera capabilities.")
-                           # Consider falling back or accepting the camera's resolution
-                           # For now, we keep the game state dimensions as the target
                       else:
                            logger.info(f"Camera resolution successfully configured to: {int(w)}x{int(h)}")
          else:
-             self.cap = None # Explicitly set cap to None if camera isn't used
+             self.cap = None
 
          # Handle static frame loading if camera failed or isn't used
          if not self.camera_available:
@@ -308,29 +307,28 @@ class GameState:
                  logger.info(f"Loaded and resized static frame to {self.current_width}x{self.current_height}")
              except Exception as e:
                  logger.exception(f"Static frame loading or resizing failed: {e}")
-                 self.static_frame = None # Indicate failure
+                 self.static_frame = None
 
          # Handle case where neither camera nor static frame worked
          if not self.camera_available and self.static_frame is None:
               logger.critical("FATAL: Camera unavailable and static frame failed to load/resize.")
-              # This is a critical failure, maybe raise an exception
               raise RuntimeError("Failed to initialize any video source (Camera or Static Frame).")
 
-    # [ADD] Method to Scale Zones
+    # Method to Scale Zones
     def _scale_scoring_zones(self, old_w: int, old_h: int, new_w: int, new_h: int):
         """Scales existing scoring zones when resolution changes."""
-        if old_w <= 0 or old_h <= 0: # Prevent division by zero or invalid scaling
+        if old_w <= 0 or old_h <= 0:
              logger.warning(f"Cannot scale zones, invalid old dimensions: {old_w}x{old_h}.")
              return
         logger.info(f"Scaling {len(self.scoring_zones)} zones from {old_w}x{old_h} to {new_w}x{new_h}")
         scale_x = new_w / old_w
         scale_y = new_h / old_h
         scaled_zones = []
-        min_size = getattr(ScoringConstants, "MIN_ZONE_SIZE", 10) #
+        min_size = getattr(ScoringConstants, "MIN_ZONE_SIZE", 10)
 
         for zone_index, zone_data in enumerate(self.scoring_zones):
              try:
-                 x, y, w, h, points = zone_data # Assumes 5 elements
+                 x, y, w, h, points = zone_data
                  new_zone_x = int(x * scale_x)
                  new_zone_y = int(y * scale_y)
                  new_zone_w = int(w * scale_x)
@@ -340,23 +338,19 @@ class GameState:
                  new_zone_w = max(min_size, new_zone_w)
                  new_zone_h = max(min_size, new_zone_h)
 
-                 # Ensure zone stays within bounds (optional, but good practice)
+                 # Ensure zone stays within bounds
                  new_zone_x = max(0, min(new_zone_x, new_w - new_zone_w))
                  new_zone_y = max(0, min(new_zone_y, new_h - new_zone_h))
 
                  scaled_zones.append((new_zone_x, new_zone_y, new_zone_w, new_zone_h, points))
-                 # logger.debug(f"Zone {zone_index} scaled from ({x},{y},{w},{h}) to ({new_zone_x},{new_zone_y},{new_zone_w},{new_zone_h})")
              except Exception as e:
-                  logger.error(f"Error scaling zone index {zone_index} ({zone_data}): {e}")
-                  # Keep the original zone if scaling fails? Or skip? Skipping for now.
+                 logger.error(f"Error scaling zone index {zone_index} ({zone_data}): {e}")
 
         self.scoring_zones = scaled_zones
-        self.special_hole = set_special_hole(self.scoring_zones) # Re-evaluate special hole
+        self.special_hole = set_special_hole(self.scoring_zones)
         logger.info(f"Scaled {len(self.scoring_zones)} zones successfully.")
-        # Note: Explicitly saving zones here might be needed if persistence between runs is desired after scaling
-        # save_zones(self) # Consider implications
 
-    # [ADD] Resolution Change Method
+    # Resolution Change Method
     def set_resolution(self, new_resolution_key: str):
         """Changes the game resolution, re-initializes camera, and scales zones."""
         if new_resolution_key not in ResolutionConstants.RESOLUTIONS:
@@ -364,11 +358,12 @@ class GameState:
             return
         if new_resolution_key == self.current_resolution_key:
             logger.debug(f"Resolution already set to {new_resolution_key}.")
-            return # No change needed
+            return
 
         logger.info(f"Initiating resolution change from {self.current_resolution_key} to {new_resolution_key}")
 
         # Store old dimensions for scaling
+        old_key = self.current_resolution_key # Store the key in case of failure
         self.previous_width, self.previous_height = self.current_width, self.current_height
 
         # Update state variables for resolution
@@ -377,22 +372,34 @@ class GameState:
 
         # Scale existing scoring zones based on the dimension change
         if self.previous_width > 0 and self.previous_height > 0:
-             self._scale_scoring_zones(self.previous_width, self.previous_height, self.current_width, self.current_height)
+            self._scale_scoring_zones(self.previous_width, self.previous_height, self.current_width, self.current_height)
         else:
              logger.warning("Previous dimensions were invalid, cannot scale zones on resolution change.")
 
         # Re-initialize camera with the new resolution settings
         try:
-            self._initialize_camera() # This will release the old capture and create a new one
+            self._initialize_camera()
         except Exception as e:
-            logger.exception(f"CRITICAL: Error during camera re-initialization for new resolution: {e}")
-            show_notification(self, "Camera Error! Check Logs.", is_error=True, duration=5.0)
-            # Attempt to revert resolution state if camera fails?
-            # self.current_resolution_key = old_key # Need to store old key before change
-            # self.current_width, self.current_height = self.previous_width, self.previous_height
-            # self._scale_scoring_zones(...) # Scale back
-            # self._initialize_camera() # Try initializing again with old settings
-            return # Stop the process if camera initialization fails
+             logger.exception(f"CRITICAL: Error during camera re-initialization for new resolution: {e}")
+             # --- Attempt to Revert ---
+             logger.warning("Attempting to revert to previous resolution due to camera init failure...")
+             self.current_resolution_key = old_key
+             self.current_width, self.current_height = self.previous_width, self.previous_height
+             # Rescale zones back
+             if self.current_width > 0 and self.current_height > 0:
+                 self._scale_scoring_zones(self.current_width, self.current_height, self.previous_width, self.previous_height) # Note: Reversed order might be needed
+             else:
+                 logger.warning("Cannot scale zones back, target dimensions invalid.")
+             # Try re-initializing camera with old settings
+             try:
+                 self._initialize_camera()
+                 logger.info("Successfully reverted to previous resolution and re-initialized camera.")
+                 show_notification(self, f"Camera error! Reverted to {self.current_resolution_key}.", is_error=True, duration=5.0)
+             except Exception as revert_e:
+                 logger.critical(f"FATAL: Failed to revert to previous resolution after error: {revert_e}")
+                 show_notification(self, "FATAL Camera Error! Check Logs.", is_error=True, duration=10.0)
+                 # Consider raising a specific exception or exiting if this fails
+             return # Stop processing the failed resolution change
 
         # Resize the main application window if it exists
         try:
@@ -403,37 +410,35 @@ class GameState:
             else:
                  logger.info("Window not found or not visible, skipping explicit window resize.")
         except cv2.error as e:
-            # Ignore errors like "Window not found" if it was closed between check and resize
             if "could not find window" not in str(e).lower():
                  logger.warning(f"Could not resize application window: {e}")
         except Exception as e:
             logger.error(f"Unexpected error resizing application window: {e}")
 
         # Invalidate UI caches or trigger UI element recalculations
-        self.menu_cache = None # Invalidate menu cache as its size might depend on resolution
-        # Add any other necessary state resets related to UI layout or cached surfaces
+        self.menu_cache = None
 
         show_notification(self, f"Resolution set to {self.current_resolution_key}", duration=2.0)
         logger.info(f"Resolution change to {self.current_resolution_key} ({self.current_width}x{self.current_height}) complete.")
 
 
-    def get_current_player(self) -> Player: #
-        """Returns the current player object. Handles potential errors.""" # [cite: 1506]
+    def get_current_player(self) -> Player:
+        """Returns the current player object. Handles potential errors."""
         try:
-            if self.players and 0 <= self.current_player_index < len(self.players): #
-                return self.players[self.current_player_index] #
+            if self.players and 0 <= self.current_player_index < len(self.players):
+                return self.players[self.current_player_index]
             else:
-                logger.warning(f"Current player index {self.current_player_index} invalid for players list (len {len(self.players)}). Attempting recovery.") # [cite: 1507]
-                if not self.players: #
-                    self.players.append(Player("Player 1")) # [cite: 1508]
-                    logger.info("Player list was empty, added default 'Player 1'.") #
-                self.current_player_index = 0 # Reset index to 0 # [cite: 1509]
-                return self.players[0] #
+                logger.warning(f"Current player index {self.current_player_index} invalid for players list (len {len(self.players)}). Attempting recovery.")
+                if not self.players:
+                    self.players.append(Player("Player 1"))
+                    logger.info("Player list was empty, added default 'Player 1'.")
+                self.current_player_index = 0
+                return self.players[0]
         except Exception as e:
-            logger.exception(f"Unexpected error in get_current_player: {e}. Returning fallback.") #
-            if not hasattr(self, "players") or not self.players: # [cite: 1510]
-                self.players = [Player("FallbackPlayer")] #
-                self.current_player_index = 0 #
-            elif not isinstance(self.players[0], Player): #
-                self.players[0] = Player("FallbackPlayer") # [cite: 1511]
-            return self.players[0] #
+            logger.exception(f"Unexpected error in get_current_player: {e}. Returning fallback.")
+            if not hasattr(self, "players") or not self.players:
+                self.players = [Player("FallbackPlayer")]
+                self.current_player_index = 0
+            elif not isinstance(self.players[0], Player):
+                self.players[0] = Player("FallbackPlayer")
+            return self.players[0]
