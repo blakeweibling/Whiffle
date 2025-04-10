@@ -1,0 +1,4 @@
+[flake8]
+extend-ignore = E501
+# OR to override all defaults and only ignore E501 (and others):
+# ignore = E501, W291

@@ -200,7 +200,7 @@ class GameConstants: # [cite: 1497]
 
     POSITION_HISTORY_LENGTH: int = _assert_positive(5, "POSITION_HISTORY_LENGTH") # [cite: 1499]
     REST_THRESHOLD_DISTANCE: float = _assert_non_negative(10.0, "REST_THRESHOLD_DISTANCE") # [cite: 1500]
-    ZONE_STABILITY_FRAMES: int = _assert_positive(30, "ZONE_STABILITY_FRAMES") # [cite: 1500]
+    ZONE_STABILITY_FRAMES: int = _assert_positive(45, "ZONE_STABILITY_FRAMES") # [cite: 1500]
     SCORE_COOLDOWN_DURATION: float = _assert_non_negative(9000.0, "SCORE_COOLDOWN_DURATION") # [cite: 1500]
 
     # Camera Configuration uses the dynamic method now
