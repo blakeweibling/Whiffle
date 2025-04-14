@@ -218,7 +218,7 @@ def _reset_all_menu_editing_states(game_state: "GameState") -> None:
 
 
 # --- Process Menu/Game Over/CONFIRM_QUIT Click ---
-# (Content of _process_menu_or_modal_click remains mostly unchanged, just ensure click coordinates are handled correctly)
+# (FIX APPLIED HERE)
 def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> bool:
     current_state = getattr(game_state, "current_state", None)
     if current_state not in [CurrentGameState.MENU, CurrentGameState.GAME_OVER, CurrentGameState.CONFIRM_QUIT,]: return False #
@@ -264,13 +264,31 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                     elif action == "adjust_music_volume": #
                         new_volume = max(0.0,min(1.0,(rel_click_x_in_item / abs_item_w if abs_item_w > 0 else 0.0),),) #
                         if (abs(getattr(game_state, "current_music_volume", 0) - new_volume) > 0.01): #
-                           game_state.current_music_volume = new_volume; set_volume(game_state); save_settings(game_state); game_state.menu_cache = None; volume_adjusted = True; logger.debug(f"Adjusted music volume to {new_volume:.2f}"); return True #
-                # Confirm Quit checks (remain unchanged)
+                            game_state.current_music_volume = new_volume; set_volume(game_state); save_settings(game_state); game_state.menu_cache = None; volume_adjusted = True; logger.debug(f"Adjusted music volume to {new_volume:.2f}"); return True #
+                # Confirm Quit checks
                 if current_state == CurrentGameState.CONFIRM_QUIT: #
                     if action == "confirm_quit_yes": #
                         logger.info("Quit confirmed via 'Yes' button click."); game_state.click_feedback_state = (item_rect_abs,time.time()); cap = getattr(game_state, "cap", None); music = getattr(game_state, "background_music", None); music_on = getattr(game_state, "background_music_on", False); clean_exit(cap, music, music_on, game_state); return True #
                     elif action == "confirm_quit_no": #
-                        logger.debug("Quit cancelled via 'No' button click."); game_state.click_feedback_state = (item_rect_abs,time.time()); prev_state = getattr(game_state,"previous_state_before_quit_confirm",CurrentGameState.PLAYING,); game_state.current_state = prev_state; game_state.previous_state_before_quit_confirm = None; game_state.submenu_items = []; game_state.menu_cache = None; return True #
+                        logger.debug("Quit cancelled via 'No' button click.");
+                        game_state.click_feedback_state = (item_rect_abs, time.time());
+                        # Determine the state to return to (likely MENU)
+                        prev_state = getattr(game_state, "previous_state_before_quit_confirm", CurrentGameState.MENU); # Default to MENU
+                        game_state.current_state = prev_state;
+                        game_state.previous_state_before_quit_confirm = None;
+                        game_state.submenu_items = []; # Clear items from the confirm dialog
+                        game_state.menu_cache = None;  # Invalidate menu cache
+
+                        # <<< --- ADDED FIX --- >>>
+                        # Reset menu dimensions if returning to the MENU state
+                        if prev_state == CurrentGameState.MENU:
+                            # Set width back to the standard menu width (default 600)
+                            game_state.menu_width = 600
+                            # Height is recalculated by draw_menu_window, but you could reset it too if needed:
+                            # game_state.menu_height = 450 # Or a suitable default/initial value
+                        # <<< --- END FIX --- >>>
+
+                        return True #
                 # Set feedback state if not a volume adjustment
                 if not volume_adjusted: game_state.click_feedback_state = (item_rect_abs, time.time()) #
                 # General menu action handling (remains unchanged)
@@ -386,17 +404,20 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
     # 1. Interactive Zone Editing
     if game_state.current_state == CurrentGameState.ZONE_EDITING and event in [cv2.EVENT_LBUTTONDOWN, cv2.EVENT_MOUSEMOVE, cv2.EVENT_LBUTTONUP,]: #
         click_handled = _process_zone_editing_event(event, x, y, game_state)
-        if click_handled and event != cv2.EVENT_MOUSEMOVE: logger.debug(f"Zone editing event {event} handled."); return #
+        if click_handled and event != cv2.EVENT_MOUSEMOVE: logger.debug(f"Zone editing event {event} handled.");
+        return #
 
     # 2. Zone Drawing
     if (not click_handled and game_state.current_state == CurrentGameState.PLAYING and getattr(game_state, "drawing", False) and event in [cv2.EVENT_LBUTTONDOWN, cv2.EVENT_MOUSEMOVE, cv2.EVENT_LBUTTONUP]): #
         _process_drawing_event(event, x, y, game_state)
-        if event in [cv2.EVENT_LBUTTONDOWN, cv2.EVENT_LBUTTONUP]: logger.debug(f"Zone drawing event {event} handled."); click_handled = True; return #
+        if event in [cv2.EVENT_LBUTTONDOWN, cv2.EVENT_LBUTTONUP]: logger.debug(f"Zone drawing event {event} handled.");
+        click_handled = True; return #
 
     # 3. Menu Items / Modal Dialog Buttons
     if (not click_handled and game_state.current_state in [CurrentGameState.MENU, CurrentGameState.GAME_OVER, CurrentGameState.CONFIRM_QUIT,] and event == cv2.EVENT_LBUTTONDOWN): #
         click_handled = _process_menu_or_modal_click(x, y, game_state)
-        if click_handled: logger.debug(f"Menu/Modal item click handled in state {game_state.current_state}."); return #
+        if click_handled: logger.debug(f"Menu/Modal item click handled in state {game_state.current_state}.");
+        return #
 
     # 4. "Show Heatmap" Button Click
     if (not click_handled and game_state.current_state in [CurrentGameState.MENU, CurrentGameState.PAUSED] and event == cv2.EVENT_LBUTTONDOWN): #
@@ -457,7 +478,7 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
             available_keys = list(ResolutionConstants.RESOLUTIONS.keys())
             target_res_key = None
             if len(available_keys) == 2: # Specific logic for 2 resolutions
-                 target_res_key = available_keys[1] if current_res_key == available_keys[0] else available_keys[0]
+                target_res_key = available_keys[1] if current_res_key == available_keys[0] else available_keys[0]
             else: # Generic cycle logic if more than 2 resolutions exist
                  try:
                       current_index = available_keys.index(current_res_key)
