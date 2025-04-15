@@ -11,6 +11,7 @@ import numpy as np
 from constants import UIConstants
 from game_types import CurrentGameState
 from menu import draw_menu, draw_menu_window
+import game_input  # Import game_input module for initialization functions
 
 try:
     from menu_utils import _draw_button
@@ -213,83 +214,6 @@ def _optimized_draw_text(
         _draw_text_with_background(
             frame, text, position, font_scale, color, bg_color, thickness, alpha
         )
-
-
-# --- Player Name Input Drawing ---
-# (Function unchanged from previous correction)
-def _draw_player_name_input(frame: np.ndarray, game_state: "GameState"):
-    current_width, current_height = game_state.get_current_resolution_dimensions()
-    overlay = frame.copy()
-    cv2.rectangle(
-        overlay, (0, 0), (current_width, current_height), UIConstants.BLACK, -1
-    )
-    alpha = 0.7
-    cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
-    popup_width, popup_height = 700, 200
-    popup_x = (current_width - popup_width) // 2
-    popup_y = (current_height - popup_height) // 2
-    cv2.rectangle(
-        frame,
-        (popup_x, popup_y),
-        (popup_x + popup_width, popup_y + popup_height),
-        UIConstants.GREY_BG,
-        -1,
-    )
-    cv2.rectangle(
-        frame,
-        (popup_x, popup_y),
-        (popup_x + popup_width, popup_y + popup_height),
-        UIConstants.WHITE,
-        1,
-    )
-    prompt_text = "Enter Player Name:"
-    prompt_pos = (popup_x + 20, popup_y + 40)
-    cv2.putText(
-        frame,
-        prompt_text,
-        prompt_pos,
-        cv2.FONT_HERSHEY_SIMPLEX,
-        UIConstants.FONT_SCALE_MEDIUM,
-        UIConstants.WHITE,
-        UIConstants.FONT_THICKNESS,
-        cv2.LINE_AA,
-    )
-    input_bg_x, input_bg_y = popup_x + 20, popup_y + 70
-    input_bg_w, input_bg_h = popup_width - 40, 40
-    cv2.rectangle(
-        frame,
-        (input_bg_x, input_bg_y),
-        (input_bg_x + input_bg_w, input_bg_y + input_bg_h),
-        (50, 50, 50),
-        -1,
-    )
-    show_cursor = int(time.time() * 2) % 2 == 0
-    cursor = "_" if show_cursor else " "
-    current_input = getattr(game_state, "current_player_name_input", "")
-    display_name = current_input + cursor
-    name_pos = (input_bg_x + 10, input_bg_y + 30)
-    cv2.putText(
-        frame,
-        display_name,
-        name_pos,
-        cv2.FONT_HERSHEY_SIMPLEX,
-        UIConstants.FONT_SCALE_LARGE,
-        UIConstants.YELLOW,
-        UIConstants.FONT_THICKNESS + 1,
-        cv2.LINE_AA,
-    )
-    instructions_text = "Enter=Confirm, Esc=Default ('Player 1'), Backspace=Delete"
-    instr_pos = (popup_x + 20, popup_y + popup_height - 30)
-    cv2.putText(
-        frame,
-        instructions_text,
-        instr_pos,
-        cv2.FONT_HERSHEY_SIMPLEX,
-        UIConstants.FONT_SCALE_SMALL,
-        UIConstants.WHITE,
-        UIConstants.FONT_THICKNESS,
-        cv2.LINE_AA,
-    )
 
 
 # --- Helper: Draw Zone Editing Handles ---
@@ -601,7 +525,16 @@ def _draw_stats_display(frame: np.ndarray, game_state: "GameState") -> None:
 def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
     current_width, current_height = game_state.get_current_resolution_dimensions()
     if game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
+        # Initialize cursor position if not done yet
+        if not hasattr(game_state, "player_name_cursor_pos"):
+            if hasattr(game_input, "init_player_name_input"):
+                game_input.init_player_name_input(game_state)
+            else:
+                # Fallback initialization if import failed
+                game_state.player_name_cursor_pos = len(getattr(game_state, "current_player_name_input", ""))
+        
         _draw_player_name_input(frame, game_state)
+        
         if getattr(game_state, "debug_mode", False):
             fps = getattr(game_state, "fps", 0)
             state_text = str(game_state.current_state).split(".")[-1]

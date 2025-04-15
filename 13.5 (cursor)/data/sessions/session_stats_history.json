@@ -1,2025 +1,6 @@
 [
   {
     "player_name": "Blake W",
-    "game_mode": "survival",
-    "start_timestamp_iso": "2025-04-14T19:55:26.735984",
-    "end_timestamp_iso": "2025-04-14T19:55:44.124663",
-    "duration_seconds": 17.388679027557373,
-    "final_score": 0,
-    "score_events": [
-      {
-        "timestamp": 1744685732.715773,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685732.9386683,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685733.1166577,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685733.345202,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685733.515466,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685733.7641613,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685733.9163606,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685734.1589003,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685734.3154924,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685734.5578713,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685734.716924,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685734.958696,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685735.1204352,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685735.3579435,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685735.5205443,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685735.7592816,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685735.9150286,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685736.1556778,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685736.315441,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685736.559754,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685736.7157626,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685736.9649012,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685737.1149876,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685737.362969,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685737.5146606,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685737.7584817,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685737.9153333,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685738.1583278,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685738.3142953,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685738.5586703,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685738.721042,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685738.9589553,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685739.1192613,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685739.3558476,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685739.5149918,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685739.7591157,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685739.9144886,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685740.1140182,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685740.3148258,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685740.5197496,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685740.7142594,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685740.9186406,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685741.1146352,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685741.313905,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685741.5140388,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685741.7137632,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685741.9144878,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685742.1137664,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685742.31396,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685742.5136607,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685742.7189324,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685742.9135933,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685743.1188571,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685743.3136992,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685743.5145175,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685743.713665,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685743.91367,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685744.114451,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      }
-    ],
-    "zone_definitions": []
-  },
-  {
-    "player_name": "Blake W",
-    "game_mode": "classic",
-    "start_timestamp_iso": "2025-04-14T19:55:44.137457",
-    "end_timestamp_iso": "2025-04-14T19:57:26.660869",
-    "duration_seconds": 102.52341198921204,
-    "final_score": 517,
-    "score_events": [
-      {
-        "timestamp": 1744685750.1128087,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685750.1128087,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685750.1147761,
-        "zone_id": 6,
-        "points": 300,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685750.1147761,
-        "zone_id": 4,
-        "points": 60,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685750.1158676,
-        "zone_id": 5,
-        "points": 120,
-        "ball_type": "red"
-      },
-      {
-        "timestamp": 1744685759.1551495,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685768.3518727,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685777.5499625,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685786.7491374,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685795.9159887,
-        "zone_id": 14,
-        "points": 2,
-        "ball_type": "red"
-      }
-    ],
-    "zone_definitions": [
-      [
-        159,
-        414,
-        53,
-        45,
-        100
-      ],
-      [
-        264,
-        421,
-        50,
-        40,
-        50
-      ],
-      [
-        359,
-        401,
-        41,
-        72,
-        100
-      ],
-      [
-        459,
-        418,
-        44,
-        43,
-        30
-      ],
-      [
-        1249,
-        570,
-        44,
-        54,
-        60
-      ],
-      [
-        1108,
-        354,
-        69,
-        73,
-        60
-      ],
-      [
-        1410,
-        395,
-        51,
-        73,
-        300
-      ],
-      [
-        1338,
-        255,
-        41,
-        36,
-        100
-      ],
-      [
-        763,
-        346,
-        52,
-        41,
-        100
-      ],
-      [
-        889,
-        396,
-        50,
-        63,
-        200
-      ],
-      [
-        858,
-        243,
-        51,
-        43,
-        60
-      ],
-      [
-        1187,
-        291,
-        44,
-        37,
-        50
-      ],
-      [
-        1247,
-        401,
-        51,
-        54,
-        150
-      ],
-      [
-        1459,
-        630,
-        47,
-        57,
-        80
-      ],
-      [
-        1523,
-        421,
-        134,
-        288,
-        1
-      ],
-      [
-        527,
-        265,
-        49,
-        41,
-        20
-      ],
-      [
-        466,
-        601,
-        60,
-        51,
-        10
-      ],
-      [
-        861,
-        667,
-        55,
-        57,
-        30
-      ],
-      [
-        737,
-        402,
-        53,
-        71,
-        50
-      ],
-      [
-        758,
-        483,
-        52,
-        44,
-        300
-      ],
-      [
-        1126,
-        444,
-        66,
-        60,
-        80
-      ]
-    ]
-  },
-  {
-    "player_name": "Player 1",
-    "game_mode": "classic",
-    "start_timestamp_iso": "2025-04-14T19:57:39.427611",
-    "end_timestamp_iso": "2025-04-14T19:58:51.898882",
-    "duration_seconds": 72.47127151489258,
-    "final_score": 0,
-    "score_events": [
-      {
-        "timestamp": 1744685875.1062102,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685875.1062102,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685875.1082044,
-        "zone_id": 6,
-        "points": 300,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685875.1082044,
-        "zone_id": 5,
-        "points": 120,
-        "ball_type": "red"
-      },
-      {
-        "timestamp": 1744685875.5006707,
-        "zone_id": 4,
-        "points": 60,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685884.2985692,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685893.503192,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685902.6951578,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685911.893908,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685921.091161,
-        "zone_id": 14,
-        "points": 2,
-        "ball_type": "red"
-      }
-    ],
-    "zone_definitions": []
-  },
-  {
-    "player_name": "Blake W",
-    "game_mode": "survival",
-    "start_timestamp_iso": "2025-04-14T19:58:51.911083",
-    "end_timestamp_iso": "2025-04-14T19:59:20.012396",
-    "duration_seconds": 28.10131311416626,
-    "final_score": 3300,
-    "score_events": [
-      {
-        "timestamp": 1744685937.888031,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685938.1347961,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685938.2896786,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685938.5406795,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685938.6945589,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685938.9365306,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685939.093466,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685939.3394852,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685939.4873462,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685939.7341168,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685939.8882668,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685940.1388977,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685940.28747,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685940.5393097,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685940.687741,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685940.9405448,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685941.087311,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685941.3335557,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685941.4880128,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685941.7500572,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685941.8871527,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685942.1508782,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685942.2945442,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685942.5459187,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685942.6943932,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685942.9418514,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685943.0871646,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685943.3454993,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685943.4871235,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685943.7363386,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685943.8882616,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685944.1426263,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685944.2869864,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685944.5399175,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685944.6871457,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685944.950621,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685945.087133,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685945.3362267,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685945.4874358,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685945.7404926,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685945.8874567,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685946.1339226,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685946.2918177,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685946.5378292,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685946.6906822,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685946.9360294,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685947.0872633,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685947.3391929,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685947.4862118,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685947.733744,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685947.886762,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685948.1422014,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685948.285782,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685948.5609999,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685948.6867273,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685948.938867,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685949.086749,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685949.3344188,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685949.4881554,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685949.705853,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685949.8909342,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685950.109792,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685950.2914386,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685950.5127048,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685950.6851363,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685950.9030867,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685951.0858066,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685951.3078911,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685951.485367,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685951.7087336,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685951.8857675,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685952.1118855,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685952.2851436,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685952.5055158,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685952.6855283,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685952.910924,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685953.0847037,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685953.3050466,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685953.486783,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685953.7270532,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685953.8903325,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685954.1047328,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685954.2911909,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685954.5116787,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685954.684766,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685954.905201,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685955.0851033,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685955.3238587,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685955.4853911,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685955.7186441,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685955.8849826,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685956.124011,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685956.284264,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685956.5123978,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685956.6851542,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685956.9197068,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685957.0863266,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685957.3144932,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685957.4921057,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685957.7372198,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685957.8887203,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685958.1307466,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685958.2843523,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685958.5358722,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685958.684342,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685958.9318705,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685959.0844133,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685959.3394396,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685959.483862,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744685959.7357867,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      }
-    ],
-    "zone_definitions": [
-      [
-        159,
-        414,
-        53,
-        45,
-        100
-      ],
-      [
-        264,
-        421,
-        50,
-        40,
-        50
-      ],
-      [
-        359,
-        401,
-        41,
-        72,
-        100
-      ],
-      [
-        459,
-        418,
-        44,
-        43,
-        30
-      ],
-      [
-        1249,
-        570,
-        44,
-        54,
-        60
-      ],
-      [
-        1108,
-        354,
-        69,
-        73,
-        60
-      ],
-      [
-        1410,
-        395,
-        51,
-        73,
-        300
-      ],
-      [
-        1338,
-        255,
-        41,
-        36,
-        100
-      ],
-      [
-        763,
-        346,
-        52,
-        41,
-        100
-      ],
-      [
-        889,
-        396,
-        50,
-        63,
-        200
-      ],
-      [
-        858,
-        243,
-        51,
-        43,
-        60
-      ],
-      [
-        1187,
-        291,
-        44,
-        37,
-        50
-      ],
-      [
-        1247,
-        401,
-        51,
-        54,
-        150
-      ],
-      [
-        1459,
-        630,
-        47,
-        57,
-        80
-      ],
-      [
-        1523,
-        421,
-        134,
-        288,
-        1
-      ],
-      [
-        527,
-        265,
-        49,
-        41,
-        20
-      ],
-      [
-        466,
-        601,
-        60,
-        51,
-        10
-      ],
-      [
-        861,
-        667,
-        55,
-        57,
-        30
-      ],
-      [
-        737,
-        402,
-        53,
-        71,
-        50
-      ],
-      [
-        758,
-        483,
-        52,
-        44,
-        300
-      ],
-      [
-        1126,
-        444,
-        66,
-        60,
-        80
-      ]
-    ]
-  },
-  {
-    "player_name": "Player 1",
-    "game_mode": "classic",
-    "start_timestamp_iso": "2025-04-14T20:01:08.609578",
-    "end_timestamp_iso": "2025-04-14T20:01:21.311026",
-    "duration_seconds": 12.70144772529602,
-    "final_score": 0,
-    "score_events": [],
-    "zone_definitions": []
-  },
-  {
-    "player_name": "Blake W",
-    "game_mode": "survival",
-    "start_timestamp_iso": "2025-04-14T20:01:21.323992",
-    "end_timestamp_iso": "2025-04-14T20:02:12.708388",
-    "duration_seconds": 51.38439583778381,
-    "final_score": 0,
-    "score_events": [
-      {
-        "timestamp": 1744686087.301356,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686087.304036,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686087.307027,
-        "zone_id": 6,
-        "points": 300,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686087.308667,
-        "zone_id": 5,
-        "points": 120,
-        "ball_type": "red"
-      },
-      {
-        "timestamp": 1744686088.905546,
-        "zone_id": 4,
-        "points": 60,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686096.3491337,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686105.5501854,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686114.746107,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686123.9531531,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      }
-    ],
-    "zone_definitions": []
-  },
-  {
-    "player_name": "Blake W",
-    "game_mode": "fun",
-    "start_timestamp_iso": "2025-04-14T20:02:12.720369",
-    "end_timestamp_iso": "2025-04-14T20:02:29.727339",
-    "duration_seconds": 17.006970405578613,
-    "final_score": 0,
-    "score_events": [
-      {
-        "timestamp": 1744686138.699775,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686138.7018704,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686138.7038665,
-        "zone_id": 6,
-        "points": 300,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686138.7058606,
-        "zone_id": 5,
-        "points": 120,
-        "ball_type": "red"
-      },
-      {
-        "timestamp": 1744686139.895982,
-        "zone_id": 4,
-        "points": 60,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686147.8909814,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      }
-    ],
-    "zone_definitions": []
-  },
-  {
-    "player_name": "Blake W",
-    "game_mode": "timed",
-    "start_timestamp_iso": "2025-04-14T20:02:29.739306",
-    "end_timestamp_iso": "2025-04-14T20:02:36.289821",
-    "duration_seconds": 6.5505146980285645,
-    "final_score": 31,
-    "score_events": [
-      {
-        "timestamp": 1744686155.6933298,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686155.9369965,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      }
-    ],
-    "zone_definitions": [
-      [
-        159,
-        414,
-        53,
-        45,
-        100
-      ],
-      [
-        264,
-        421,
-        50,
-        40,
-        50
-      ],
-      [
-        359,
-        401,
-        41,
-        72,
-        100
-      ],
-      [
-        459,
-        418,
-        44,
-        43,
-        30
-      ],
-      [
-        1249,
-        570,
-        44,
-        54,
-        60
-      ],
-      [
-        1108,
-        354,
-        69,
-        73,
-        60
-      ],
-      [
-        1410,
-        395,
-        51,
-        73,
-        300
-      ],
-      [
-        1338,
-        255,
-        41,
-        36,
-        100
-      ],
-      [
-        763,
-        346,
-        52,
-        41,
-        100
-      ],
-      [
-        889,
-        396,
-        50,
-        63,
-        200
-      ],
-      [
-        858,
-        243,
-        51,
-        43,
-        60
-      ],
-      [
-        1187,
-        291,
-        44,
-        37,
-        50
-      ],
-      [
-        1247,
-        401,
-        51,
-        54,
-        150
-      ],
-      [
-        1459,
-        630,
-        47,
-        57,
-        80
-      ],
-      [
-        1523,
-        421,
-        134,
-        288,
-        1
-      ],
-      [
-        527,
-        265,
-        49,
-        41,
-        20
-      ],
-      [
-        466,
-        601,
-        60,
-        51,
-        10
-      ],
-      [
-        861,
-        667,
-        55,
-        57,
-        30
-      ],
-      [
-        737,
-        402,
-        53,
-        71,
-        50
-      ],
-      [
-        758,
-        483,
-        52,
-        44,
-        300
-      ],
-      [
-        1126,
-        444,
-        66,
-        60,
-        80
-      ]
-    ]
-  },
-  {
-    "player_name": "Player 1",
-    "game_mode": "classic",
-    "start_timestamp_iso": "2025-04-14T20:07:56.159526",
-    "end_timestamp_iso": "2025-04-14T20:08:46.054053",
-    "duration_seconds": 49.894526720047,
-    "final_score": 0,
-    "score_events": [
-      {
-        "timestamp": 1744686490.4182217,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686490.4192193,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686490.4202163,
-        "zone_id": 6,
-        "points": 300,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686490.4202163,
-        "zone_id": 5,
-        "points": 120,
-        "ball_type": "red"
-      },
-      {
-        "timestamp": 1744686490.8173056,
-        "zone_id": 4,
-        "points": 60,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686499.4591424,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686508.6642423,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686517.853134,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      }
-    ],
-    "zone_definitions": []
-  },
-  {
-    "player_name": "Blake W",
-    "game_mode": "timed",
-    "start_timestamp_iso": "2025-04-14T20:08:46.067939",
-    "end_timestamp_iso": "2025-04-14T20:08:53.774569",
-    "duration_seconds": 7.706630229949951,
-    "final_score": 541,
-    "score_events": [
-      {
-        "timestamp": 1744686532.009175,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686532.2526116,
-        "zone_id": 14,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686532.4086244,
-        "zone_id": 6,
-        "points": 300,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1744686532.6519995,
-        "zone_id": 5,
-        "points": 120,
-        "ball_type": "red"
-      },
-      {
-        "timestamp": 1744686532.809568,
-        "zone_id": 4,
-        "points": 90,
-        "ball_type": "half"
-      }
-    ],
-    "zone_definitions": [
-      [
-        159,
-        414,
-        53,
-        45,
-        100
-      ],
-      [
-        264,
-        421,
-        50,
-        40,
-        50
-      ],
-      [
-        359,
-        401,
-        41,
-        72,
-        100
-      ],
-      [
-        459,
-        418,
-        44,
-        43,
-        30
-      ],
-      [
-        1249,
-        570,
-        44,
-        54,
-        60
-      ],
-      [
-        1108,
-        354,
-        69,
-        73,
-        60
-      ],
-      [
-        1410,
-        395,
-        51,
-        73,
-        300
-      ],
-      [
-        1338,
-        255,
-        41,
-        36,
-        100
-      ],
-      [
-        763,
-        346,
-        52,
-        41,
-        100
-      ],
-      [
-        889,
-        396,
-        50,
-        63,
-        200
-      ],
-      [
-        858,
-        243,
-        51,
-        43,
-        60
-      ],
-      [
-        1187,
-        291,
-        44,
-        37,
-        50
-      ],
-      [
-        1247,
-        401,
-        51,
-        54,
-        150
-      ],
-      [
-        1459,
-        630,
-        47,
-        57,
-        80
-      ],
-      [
-        1523,
-        421,
-        134,
-        288,
-        1
-      ],
-      [
-        527,
-        265,
-        49,
-        41,
-        20
-      ],
-      [
-        466,
-        601,
-        60,
-        51,
-        10
-      ],
-      [
-        861,
-        667,
-        55,
-        57,
-        30
-      ],
-      [
-        737,
-        402,
-        53,
-        71,
-        50
-      ],
-      [
-        758,
-        483,
-        52,
-        44,
-        300
-      ],
-      [
-        1126,
-        444,
-        66,
-        60,
-        80
-      ]
-    ]
-  },
-  {
-    "player_name": "Player 1",
-    "game_mode": "classic",
-    "start_timestamp_iso": "2025-04-14T20:09:46.198337",
-    "end_timestamp_iso": "2025-04-14T20:09:59.178150",
-    "duration_seconds": 12.97981333732605,
-    "final_score": 0,
-    "score_events": [],
-    "zone_definitions": []
-  },
-  {
-    "player_name": "Blake W",
     "game_mode": "timed",
     "start_timestamp_iso": "2025-04-14T20:09:59.191117",
     "end_timestamp_iso": "2025-04-14T20:10:05.018115",
@@ -6889,6 +4870,1744 @@
     "start_timestamp_iso": "2025-04-15T10:59:38.978021",
     "end_timestamp_iso": "2025-04-15T10:59:57.814271",
     "duration_seconds": 18.836249589920044,
+    "final_score": 0,
+    "score_events": [],
+    "zone_definitions": [
+      [
+        159,
+        414,
+        53,
+        45,
+        100
+      ],
+      [
+        264,
+        421,
+        50,
+        40,
+        50
+      ],
+      [
+        359,
+        401,
+        41,
+        72,
+        100
+      ],
+      [
+        459,
+        418,
+        44,
+        43,
+        30
+      ],
+      [
+        1249,
+        570,
+        44,
+        54,
+        60
+      ],
+      [
+        1108,
+        354,
+        69,
+        73,
+        60
+      ],
+      [
+        1410,
+        395,
+        51,
+        73,
+        300
+      ],
+      [
+        1338,
+        255,
+        41,
+        36,
+        100
+      ],
+      [
+        763,
+        346,
+        52,
+        41,
+        100
+      ],
+      [
+        889,
+        396,
+        50,
+        63,
+        200
+      ],
+      [
+        858,
+        243,
+        51,
+        43,
+        60
+      ],
+      [
+        1187,
+        291,
+        44,
+        37,
+        50
+      ],
+      [
+        1247,
+        401,
+        51,
+        54,
+        150
+      ],
+      [
+        1459,
+        630,
+        47,
+        57,
+        80
+      ],
+      [
+        1523,
+        421,
+        134,
+        288,
+        1
+      ],
+      [
+        527,
+        265,
+        49,
+        41,
+        20
+      ],
+      [
+        466,
+        601,
+        60,
+        51,
+        10
+      ],
+      [
+        861,
+        667,
+        55,
+        57,
+        30
+      ],
+      [
+        737,
+        402,
+        53,
+        71,
+        50
+      ],
+      [
+        758,
+        483,
+        52,
+        44,
+        300
+      ],
+      [
+        1126,
+        444,
+        66,
+        60,
+        80
+      ]
+    ]
+  },
+  {
+    "player_name": "Player 1",
+    "game_mode": "classic",
+    "start_timestamp_iso": "2025-04-15T14:35:24.713541",
+    "end_timestamp_iso": "2025-04-15T14:35:37.828904",
+    "duration_seconds": 13.115362644195557,
+    "final_score": 0,
+    "score_events": [],
+    "zone_definitions": [
+      [
+        159,
+        414,
+        53,
+        45,
+        100
+      ],
+      [
+        264,
+        421,
+        50,
+        40,
+        50
+      ],
+      [
+        359,
+        401,
+        41,
+        72,
+        100
+      ],
+      [
+        459,
+        418,
+        44,
+        43,
+        30
+      ],
+      [
+        1249,
+        570,
+        44,
+        54,
+        60
+      ],
+      [
+        1108,
+        354,
+        69,
+        73,
+        60
+      ],
+      [
+        1410,
+        395,
+        51,
+        73,
+        300
+      ],
+      [
+        1338,
+        255,
+        41,
+        36,
+        100
+      ],
+      [
+        763,
+        346,
+        52,
+        41,
+        100
+      ],
+      [
+        889,
+        396,
+        50,
+        63,
+        200
+      ],
+      [
+        858,
+        243,
+        51,
+        43,
+        60
+      ],
+      [
+        1187,
+        291,
+        44,
+        37,
+        50
+      ],
+      [
+        1247,
+        401,
+        51,
+        54,
+        150
+      ],
+      [
+        1459,
+        630,
+        47,
+        57,
+        80
+      ],
+      [
+        1523,
+        421,
+        134,
+        288,
+        1
+      ],
+      [
+        527,
+        265,
+        49,
+        41,
+        20
+      ],
+      [
+        466,
+        601,
+        60,
+        51,
+        10
+      ],
+      [
+        861,
+        667,
+        55,
+        57,
+        30
+      ],
+      [
+        737,
+        402,
+        53,
+        71,
+        50
+      ],
+      [
+        758,
+        483,
+        52,
+        44,
+        300
+      ],
+      [
+        1126,
+        444,
+        66,
+        60,
+        80
+      ]
+    ]
+  },
+  {
+    "player_name": "Player 1",
+    "game_mode": "classic",
+    "start_timestamp_iso": "2025-04-15T14:37:08.762363",
+    "end_timestamp_iso": "2025-04-15T14:38:41.615385",
+    "duration_seconds": 92.8530216217041,
+    "final_score": 0,
+    "score_events": [],
+    "zone_definitions": [
+      [
+        159,
+        414,
+        53,
+        45,
+        100
+      ],
+      [
+        264,
+        421,
+        50,
+        40,
+        50
+      ],
+      [
+        359,
+        401,
+        41,
+        72,
+        100
+      ],
+      [
+        459,
+        418,
+        44,
+        43,
+        30
+      ],
+      [
+        1249,
+        570,
+        44,
+        54,
+        60
+      ],
+      [
+        1108,
+        354,
+        69,
+        73,
+        60
+      ],
+      [
+        1410,
+        395,
+        51,
+        73,
+        300
+      ],
+      [
+        1338,
+        255,
+        41,
+        36,
+        100
+      ],
+      [
+        763,
+        346,
+        52,
+        41,
+        100
+      ],
+      [
+        889,
+        396,
+        50,
+        63,
+        200
+      ],
+      [
+        858,
+        243,
+        51,
+        43,
+        60
+      ],
+      [
+        1187,
+        291,
+        44,
+        37,
+        50
+      ],
+      [
+        1247,
+        401,
+        51,
+        54,
+        150
+      ],
+      [
+        1459,
+        630,
+        47,
+        57,
+        80
+      ],
+      [
+        1523,
+        421,
+        134,
+        288,
+        1
+      ],
+      [
+        527,
+        265,
+        49,
+        41,
+        20
+      ],
+      [
+        466,
+        601,
+        60,
+        51,
+        10
+      ],
+      [
+        861,
+        667,
+        55,
+        57,
+        30
+      ],
+      [
+        737,
+        402,
+        53,
+        71,
+        50
+      ],
+      [
+        758,
+        483,
+        52,
+        44,
+        300
+      ],
+      [
+        1126,
+        444,
+        66,
+        60,
+        80
+      ]
+    ]
+  },
+  {
+    "player_name": "Player 1",
+    "game_mode": "classic",
+    "start_timestamp_iso": "2025-04-15T14:39:49.924614",
+    "end_timestamp_iso": "2025-04-15T14:40:21.035589",
+    "duration_seconds": 31.110974073410034,
+    "final_score": 0,
+    "score_events": [],
+    "zone_definitions": [
+      [
+        159,
+        414,
+        53,
+        45,
+        100
+      ],
+      [
+        264,
+        421,
+        50,
+        40,
+        50
+      ],
+      [
+        359,
+        401,
+        41,
+        72,
+        100
+      ],
+      [
+        459,
+        418,
+        44,
+        43,
+        30
+      ],
+      [
+        1249,
+        570,
+        44,
+        54,
+        60
+      ],
+      [
+        1108,
+        354,
+        69,
+        73,
+        60
+      ],
+      [
+        1410,
+        395,
+        51,
+        73,
+        300
+      ],
+      [
+        1338,
+        255,
+        41,
+        36,
+        100
+      ],
+      [
+        763,
+        346,
+        52,
+        41,
+        100
+      ],
+      [
+        889,
+        396,
+        50,
+        63,
+        200
+      ],
+      [
+        858,
+        243,
+        51,
+        43,
+        60
+      ],
+      [
+        1187,
+        291,
+        44,
+        37,
+        50
+      ],
+      [
+        1247,
+        401,
+        51,
+        54,
+        150
+      ],
+      [
+        1459,
+        630,
+        47,
+        57,
+        80
+      ],
+      [
+        1523,
+        421,
+        134,
+        288,
+        1
+      ],
+      [
+        527,
+        265,
+        49,
+        41,
+        20
+      ],
+      [
+        466,
+        601,
+        60,
+        51,
+        10
+      ],
+      [
+        861,
+        667,
+        55,
+        57,
+        30
+      ],
+      [
+        737,
+        402,
+        53,
+        71,
+        50
+      ],
+      [
+        758,
+        483,
+        52,
+        44,
+        300
+      ],
+      [
+        1126,
+        444,
+        66,
+        60,
+        80
+      ]
+    ]
+  },
+  {
+    "player_name": "Player 1",
+    "game_mode": "classic",
+    "start_timestamp_iso": "2025-04-15T14:43:48.649464",
+    "end_timestamp_iso": "2025-04-15T14:45:02.334863",
+    "duration_seconds": 73.68539881706238,
+    "final_score": 0,
+    "score_events": [],
+    "zone_definitions": [
+      [
+        159,
+        414,
+        53,
+        45,
+        100
+      ],
+      [
+        264,
+        421,
+        50,
+        40,
+        50
+      ],
+      [
+        359,
+        401,
+        41,
+        72,
+        100
+      ],
+      [
+        459,
+        418,
+        44,
+        43,
+        30
+      ],
+      [
+        1249,
+        570,
+        44,
+        54,
+        60
+      ],
+      [
+        1108,
+        354,
+        69,
+        73,
+        60
+      ],
+      [
+        1410,
+        395,
+        51,
+        73,
+        300
+      ],
+      [
+        1338,
+        255,
+        41,
+        36,
+        100
+      ],
+      [
+        763,
+        346,
+        52,
+        41,
+        100
+      ],
+      [
+        889,
+        396,
+        50,
+        63,
+        200
+      ],
+      [
+        858,
+        243,
+        51,
+        43,
+        60
+      ],
+      [
+        1187,
+        291,
+        44,
+        37,
+        50
+      ],
+      [
+        1247,
+        401,
+        51,
+        54,
+        150
+      ],
+      [
+        1459,
+        630,
+        47,
+        57,
+        80
+      ],
+      [
+        1523,
+        421,
+        134,
+        288,
+        1
+      ],
+      [
+        527,
+        265,
+        49,
+        41,
+        20
+      ],
+      [
+        466,
+        601,
+        60,
+        51,
+        10
+      ],
+      [
+        861,
+        667,
+        55,
+        57,
+        30
+      ],
+      [
+        737,
+        402,
+        53,
+        71,
+        50
+      ],
+      [
+        758,
+        483,
+        52,
+        44,
+        300
+      ],
+      [
+        1126,
+        444,
+        66,
+        60,
+        80
+      ]
+    ]
+  },
+  {
+    "player_name": "Player 1",
+    "game_mode": "classic",
+    "start_timestamp_iso": "2025-04-15T14:49:51.170484",
+    "end_timestamp_iso": "2025-04-15T14:50:44.725528",
+    "duration_seconds": 53.55504393577576,
+    "final_score": 0,
+    "score_events": [],
+    "zone_definitions": [
+      [
+        159,
+        414,
+        53,
+        45,
+        100
+      ],
+      [
+        264,
+        421,
+        50,
+        40,
+        50
+      ],
+      [
+        359,
+        401,
+        41,
+        72,
+        100
+      ],
+      [
+        459,
+        418,
+        44,
+        43,
+        30
+      ],
+      [
+        1249,
+        570,
+        44,
+        54,
+        60
+      ],
+      [
+        1108,
+        354,
+        69,
+        73,
+        60
+      ],
+      [
+        1410,
+        395,
+        51,
+        73,
+        300
+      ],
+      [
+        1338,
+        255,
+        41,
+        36,
+        100
+      ],
+      [
+        763,
+        346,
+        52,
+        41,
+        100
+      ],
+      [
+        889,
+        396,
+        50,
+        63,
+        200
+      ],
+      [
+        858,
+        243,
+        51,
+        43,
+        60
+      ],
+      [
+        1187,
+        291,
+        44,
+        37,
+        50
+      ],
+      [
+        1247,
+        401,
+        51,
+        54,
+        150
+      ],
+      [
+        1459,
+        630,
+        47,
+        57,
+        80
+      ],
+      [
+        1523,
+        421,
+        134,
+        288,
+        1
+      ],
+      [
+        527,
+        265,
+        49,
+        41,
+        20
+      ],
+      [
+        466,
+        601,
+        60,
+        51,
+        10
+      ],
+      [
+        861,
+        667,
+        55,
+        57,
+        30
+      ],
+      [
+        737,
+        402,
+        53,
+        71,
+        50
+      ],
+      [
+        758,
+        483,
+        52,
+        44,
+        300
+      ],
+      [
+        1126,
+        444,
+        66,
+        60,
+        80
+      ]
+    ]
+  },
+  {
+    "player_name": "Player 1",
+    "game_mode": "classic",
+    "start_timestamp_iso": "2025-04-15T14:52:32.134742",
+    "end_timestamp_iso": "2025-04-15T14:53:01.812713",
+    "duration_seconds": 29.677971363067627,
+    "final_score": 0,
+    "score_events": [],
+    "zone_definitions": [
+      [
+        159,
+        414,
+        53,
+        45,
+        100
+      ],
+      [
+        264,
+        421,
+        50,
+        40,
+        50
+      ],
+      [
+        359,
+        401,
+        41,
+        72,
+        100
+      ],
+      [
+        459,
+        418,
+        44,
+        43,
+        30
+      ],
+      [
+        1249,
+        570,
+        44,
+        54,
+        60
+      ],
+      [
+        1108,
+        354,
+        69,
+        73,
+        60
+      ],
+      [
+        1410,
+        395,
+        51,
+        73,
+        300
+      ],
+      [
+        1338,
+        255,
+        41,
+        36,
+        100
+      ],
+      [
+        763,
+        346,
+        52,
+        41,
+        100
+      ],
+      [
+        889,
+        396,
+        50,
+        63,
+        200
+      ],
+      [
+        858,
+        243,
+        51,
+        43,
+        60
+      ],
+      [
+        1187,
+        291,
+        44,
+        37,
+        50
+      ],
+      [
+        1247,
+        401,
+        51,
+        54,
+        150
+      ],
+      [
+        1459,
+        630,
+        47,
+        57,
+        80
+      ],
+      [
+        1523,
+        421,
+        134,
+        288,
+        1
+      ],
+      [
+        527,
+        265,
+        49,
+        41,
+        20
+      ],
+      [
+        466,
+        601,
+        60,
+        51,
+        10
+      ],
+      [
+        861,
+        667,
+        55,
+        57,
+        30
+      ],
+      [
+        737,
+        402,
+        53,
+        71,
+        50
+      ],
+      [
+        758,
+        483,
+        52,
+        44,
+        300
+      ],
+      [
+        1126,
+        444,
+        66,
+        60,
+        80
+      ]
+    ]
+  },
+  {
+    "player_name": "Player 1",
+    "game_mode": "classic",
+    "start_timestamp_iso": "2025-04-15T14:55:33.157358",
+    "end_timestamp_iso": "2025-04-15T14:55:59.701823",
+    "duration_seconds": 26.54446506500244,
+    "final_score": 0,
+    "score_events": [],
+    "zone_definitions": [
+      [
+        159,
+        414,
+        53,
+        45,
+        100
+      ],
+      [
+        264,
+        421,
+        50,
+        40,
+        50
+      ],
+      [
+        359,
+        401,
+        41,
+        72,
+        100
+      ],
+      [
+        459,
+        418,
+        44,
+        43,
+        30
+      ],
+      [
+        1249,
+        570,
+        44,
+        54,
+        60
+      ],
+      [
+        1108,
+        354,
+        69,
+        73,
+        60
+      ],
+      [
+        1410,
+        395,
+        51,
+        73,
+        300
+      ],
+      [
+        1338,
+        255,
+        41,
+        36,
+        100
+      ],
+      [
+        763,
+        346,
+        52,
+        41,
+        100
+      ],
+      [
+        889,
+        396,
+        50,
+        63,
+        200
+      ],
+      [
+        858,
+        243,
+        51,
+        43,
+        60
+      ],
+      [
+        1187,
+        291,
+        44,
+        37,
+        50
+      ],
+      [
+        1247,
+        401,
+        51,
+        54,
+        150
+      ],
+      [
+        1459,
+        630,
+        47,
+        57,
+        80
+      ],
+      [
+        1523,
+        421,
+        134,
+        288,
+        1
+      ],
+      [
+        527,
+        265,
+        49,
+        41,
+        20
+      ],
+      [
+        466,
+        601,
+        60,
+        51,
+        10
+      ],
+      [
+        861,
+        667,
+        55,
+        57,
+        30
+      ],
+      [
+        737,
+        402,
+        53,
+        71,
+        50
+      ],
+      [
+        758,
+        483,
+        52,
+        44,
+        300
+      ],
+      [
+        1126,
+        444,
+        66,
+        60,
+        80
+      ]
+    ]
+  },
+  {
+    "player_name": "Player 1",
+    "game_mode": "classic",
+    "start_timestamp_iso": "2025-04-15T14:57:33.302328",
+    "end_timestamp_iso": "2025-04-15T14:58:09.489691",
+    "duration_seconds": 36.18736290931702,
+    "final_score": 0,
+    "score_events": [],
+    "zone_definitions": [
+      [
+        159,
+        414,
+        53,
+        45,
+        100
+      ],
+      [
+        264,
+        421,
+        50,
+        40,
+        50
+      ],
+      [
+        359,
+        401,
+        41,
+        72,
+        100
+      ],
+      [
+        459,
+        418,
+        44,
+        43,
+        30
+      ],
+      [
+        1249,
+        570,
+        44,
+        54,
+        60
+      ],
+      [
+        1108,
+        354,
+        69,
+        73,
+        60
+      ],
+      [
+        1410,
+        395,
+        51,
+        73,
+        300
+      ],
+      [
+        1338,
+        255,
+        41,
+        36,
+        100
+      ],
+      [
+        763,
+        346,
+        52,
+        41,
+        100
+      ],
+      [
+        889,
+        396,
+        50,
+        63,
+        200
+      ],
+      [
+        858,
+        243,
+        51,
+        43,
+        60
+      ],
+      [
+        1187,
+        291,
+        44,
+        37,
+        50
+      ],
+      [
+        1247,
+        401,
+        51,
+        54,
+        150
+      ],
+      [
+        1459,
+        630,
+        47,
+        57,
+        80
+      ],
+      [
+        1523,
+        421,
+        134,
+        288,
+        1
+      ],
+      [
+        527,
+        265,
+        49,
+        41,
+        20
+      ],
+      [
+        466,
+        601,
+        60,
+        51,
+        10
+      ],
+      [
+        861,
+        667,
+        55,
+        57,
+        30
+      ],
+      [
+        737,
+        402,
+        53,
+        71,
+        50
+      ],
+      [
+        758,
+        483,
+        52,
+        44,
+        300
+      ],
+      [
+        1126,
+        444,
+        66,
+        60,
+        80
+      ]
+    ]
+  },
+  {
+    "player_name": "Player 1",
+    "game_mode": "classic",
+    "start_timestamp_iso": "2025-04-15T14:58:19.077323",
+    "end_timestamp_iso": "2025-04-15T14:59:29.946405",
+    "duration_seconds": 70.86908221244812,
+    "final_score": 0,
+    "score_events": [],
+    "zone_definitions": [
+      [
+        159,
+        414,
+        53,
+        45,
+        100
+      ],
+      [
+        264,
+        421,
+        50,
+        40,
+        50
+      ],
+      [
+        359,
+        401,
+        41,
+        72,
+        100
+      ],
+      [
+        459,
+        418,
+        44,
+        43,
+        30
+      ],
+      [
+        1249,
+        570,
+        44,
+        54,
+        60
+      ],
+      [
+        1108,
+        354,
+        69,
+        73,
+        60
+      ],
+      [
+        1410,
+        395,
+        51,
+        73,
+        300
+      ],
+      [
+        1338,
+        255,
+        41,
+        36,
+        100
+      ],
+      [
+        763,
+        346,
+        52,
+        41,
+        100
+      ],
+      [
+        889,
+        396,
+        50,
+        63,
+        200
+      ],
+      [
+        858,
+        243,
+        51,
+        43,
+        60
+      ],
+      [
+        1187,
+        291,
+        44,
+        37,
+        50
+      ],
+      [
+        1247,
+        401,
+        51,
+        54,
+        150
+      ],
+      [
+        1459,
+        630,
+        47,
+        57,
+        80
+      ],
+      [
+        1523,
+        421,
+        134,
+        288,
+        1
+      ],
+      [
+        527,
+        265,
+        49,
+        41,
+        20
+      ],
+      [
+        466,
+        601,
+        60,
+        51,
+        10
+      ],
+      [
+        861,
+        667,
+        55,
+        57,
+        30
+      ],
+      [
+        737,
+        402,
+        53,
+        71,
+        50
+      ],
+      [
+        758,
+        483,
+        52,
+        44,
+        300
+      ],
+      [
+        1126,
+        444,
+        66,
+        60,
+        80
+      ]
+    ]
+  },
+  {
+    "player_name": "Player 1",
+    "game_mode": "classic",
+    "start_timestamp_iso": "2025-04-15T15:06:31.685046",
+    "end_timestamp_iso": "2025-04-15T15:08:08.372200",
+    "duration_seconds": 96.68715405464172,
+    "final_score": 0,
+    "score_events": [],
+    "zone_definitions": [
+      [
+        159,
+        414,
+        53,
+        45,
+        100
+      ],
+      [
+        264,
+        421,
+        50,
+        40,
+        50
+      ],
+      [
+        359,
+        401,
+        41,
+        72,
+        100
+      ],
+      [
+        459,
+        418,
+        44,
+        43,
+        30
+      ],
+      [
+        1249,
+        570,
+        44,
+        54,
+        60
+      ],
+      [
+        1108,
+        354,
+        69,
+        73,
+        60
+      ],
+      [
+        1410,
+        395,
+        51,
+        73,
+        300
+      ],
+      [
+        1338,
+        255,
+        41,
+        36,
+        100
+      ],
+      [
+        763,
+        346,
+        52,
+        41,
+        100
+      ],
+      [
+        889,
+        396,
+        50,
+        63,
+        200
+      ],
+      [
+        858,
+        243,
+        51,
+        43,
+        60
+      ],
+      [
+        1187,
+        291,
+        44,
+        37,
+        50
+      ],
+      [
+        1247,
+        401,
+        51,
+        54,
+        150
+      ],
+      [
+        1459,
+        630,
+        47,
+        57,
+        80
+      ],
+      [
+        1523,
+        421,
+        134,
+        288,
+        1
+      ],
+      [
+        527,
+        265,
+        49,
+        41,
+        20
+      ],
+      [
+        466,
+        601,
+        60,
+        51,
+        10
+      ],
+      [
+        861,
+        667,
+        55,
+        57,
+        30
+      ],
+      [
+        737,
+        402,
+        53,
+        71,
+        50
+      ],
+      [
+        758,
+        483,
+        52,
+        44,
+        300
+      ],
+      [
+        1126,
+        444,
+        66,
+        60,
+        80
+      ]
+    ]
+  },
+  {
+    "player_name": "Player 1",
+    "game_mode": "classic",
+    "start_timestamp_iso": "2025-04-15T15:09:03.686647",
+    "end_timestamp_iso": "2025-04-15T15:09:26.941588",
+    "duration_seconds": 23.25494122505188,
     "final_score": 0,
     "score_events": [],
     "zone_definitions": [

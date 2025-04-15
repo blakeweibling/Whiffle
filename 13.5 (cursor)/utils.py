@@ -78,6 +78,28 @@ def _get_mouse_event_handlers() -> MouseEventHandlers:
         """Specialized handler for game over screen"""
         return _process_game_over_click(x, y, game_state, mouse_callback)
 
+    # Handler for username input screen
+    def username_input_handler(event: int, x: int, y: int, game_state: "GameState") -> bool:
+        """Handler for username input screen X button click"""
+        # Check if X button exists and was clicked
+        if hasattr(game_state, "username_x_button"):
+            btn_x, btn_y, btn_w, btn_h = game_state.username_x_button
+            if btn_x <= x <= btn_x + btn_w and btn_y <= y <= btn_y + btn_h:
+                logger.debug("Username input X button clicked")
+                # Same behavior as pressing ESC - use default name
+                if hasattr(game_state, "players") and game_state.players:
+                    try:
+                        game_state.players[0].name = "Player 1"  # Use default
+                        game_state.player_name_input_active = False
+                        game_state.current_state = CurrentGameState.PLAYING
+                        show_notification(
+                            game_state, "Using default name 'Player 1'", duration=2.0
+                        )
+                        return True
+                    except Exception as e:
+                        logger.error(f"Error setting default name via X button: {e}")
+        return False
+
     # State-specific handlers
     handlers[CurrentGameState.PLAYING] = {
         cv2.EVENT_LBUTTONDOWN: lambda e, x, y, g: (
@@ -115,6 +137,11 @@ def _get_mouse_event_handlers() -> MouseEventHandlers:
         CurrentGameState.CONFIRM_QUIT,
     ]:
         handlers[state] = {cv2.EVENT_LBUTTONDOWN: menu_handler}
+
+    # Register username input handler
+    handlers[CurrentGameState.GETTING_PLAYER_NAME] = {
+        cv2.EVENT_LBUTTONDOWN: username_input_handler
+    }
 
     return handlers
 

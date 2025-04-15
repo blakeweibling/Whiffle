@@ -499,26 +499,62 @@ def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional["GameSt
 
 
 # --- Add _draw_player_name_input function ---
-# (Copied from ui.py correction)
 def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
-    """Draw the player name input interface."""
+    """Draw the player name input interface with improved visuals and cursor movement."""
     try:
         current_width, current_height = game_state.get_current_resolution_dimensions()
-        input_text = getattr(game_state, "player_name_input", "")
+        
+        # IMPORTANT: Use current_player_name_input instead of player_name_input
+        input_text = getattr(game_state, "current_player_name_input", "")
+        cursor_pos = getattr(game_state, "player_name_cursor_pos", len(input_text))
 
-        # Draw background
-        cv2.rectangle(frame, (0, 0), (current_width, current_height), (0, 0, 0), -1)
-
+        # Create a semi-transparent overlay instead of full cover
+        overlay = frame.copy()
+        cv2.rectangle(overlay, (0, 0), (current_width, current_height), (10, 10, 10), -1)
+        cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
+        
+        # Create a contained popup box instead of using the whole screen
+        popup_width, popup_height = 700, 300
+        popup_x = (current_width - popup_width) // 2
+        popup_y = (current_height - popup_height) // 2
+        
+        # Draw popup background - changed to light blue
+        cv2.rectangle(
+            frame,
+            (popup_x, popup_y),
+            (popup_x + popup_width, popup_y + popup_height),
+            (170, 130, 100),  # Light blue background (BGR format)
+            -1,
+        )
+        
+        # Draw border
+        cv2.rectangle(
+            frame,
+            (popup_x, popup_y),
+            (popup_x + popup_width, popup_y + popup_height),
+            UIConstants.WHITE,
+            2,
+        )
+        
+        # Draw header - changed to light blue
+        cv2.rectangle(
+            frame,
+            (popup_x, popup_y),
+            (popup_x + popup_width, popup_y + 60),
+            (200, 150, 100),  # Sky blue header (BGR format)
+            -1,
+        )
+        
         # Draw title
         title = "Enter Player Name"
         (tw, th), _ = cv2.getTextSize(
             title,
             cv2.FONT_HERSHEY_SIMPLEX,
             UIConstants.FONT_SCALE_LARGE,
-            UIConstants.FONT_THICKNESS,
+            UIConstants.FONT_THICKNESS + 1,
         )
-        title_x = (current_width - tw) // 2
-        title_y = current_height // 3
+        title_x = popup_x + (popup_width - tw) // 2
+        title_y = popup_y + 40
         cv2.putText(
             frame,
             title,
@@ -526,57 +562,196 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
             cv2.FONT_HERSHEY_SIMPLEX,
             UIConstants.FONT_SCALE_LARGE,
             UIConstants.WHITE,
-            UIConstants.FONT_THICKNESS,
+            UIConstants.FONT_THICKNESS + 1,
         )
 
-        # Draw input box
-        input_box_width = min(400, current_width - 100)
-        input_box_height = 50
-        input_box_x = (current_width - input_box_width) // 2
-        input_box_y = title_y + th + 30
+        # Add a red X button in the top-right corner
+        x_button_size = 30
+        x_button_x = popup_x + popup_width - x_button_size - 10
+        x_button_y = popup_y + 10
+        
+        # Draw X button circle
+        cv2.circle(
+            frame,
+            (x_button_x + x_button_size//2, x_button_y + x_button_size//2),
+            x_button_size//2,
+            UIConstants.RED,
+            -1
+        )
+        
+        # Draw X
+        line_thickness = 2
+        offset = x_button_size//4
+        cv2.line(
+            frame,
+            (x_button_x + offset, x_button_y + offset),
+            (x_button_x + x_button_size - offset, x_button_y + x_button_size - offset),
+            UIConstants.WHITE,
+            line_thickness
+        )
+        cv2.line(
+            frame,
+            (x_button_x + offset, x_button_y + x_button_size - offset),
+            (x_button_x + x_button_size - offset, x_button_y + offset),
+            UIConstants.WHITE,
+            line_thickness
+        )
+        
+        # Store X button coordinates for mouse detection
+        if hasattr(game_state, "username_x_button"):
+            game_state.username_x_button = (x_button_x, x_button_y, x_button_size, x_button_size)
+        else:
+            # Always create the attribute if it doesn't exist
+            setattr(game_state, "username_x_button", (x_button_x, x_button_y, x_button_size, x_button_size))
 
+        # Draw input box
+        input_box_width = popup_width - 80
+        input_box_height = 60
+        input_box_x = popup_x + 40
+        input_box_y = popup_y + 100
+
+        # Draw box shadow
+        cv2.rectangle(
+            frame,
+            (input_box_x + 3, input_box_y + 3),
+            (input_box_x + input_box_width + 3, input_box_y + input_box_height + 3),
+            (30, 30, 30),
+            -1,
+        )
+        
+        # Draw main box
         cv2.rectangle(
             frame,
             (input_box_x, input_box_y),
             (input_box_x + input_box_width, input_box_y + input_box_height),
-            UIConstants.WHITE,
+            (50, 50, 50),
+            -1,
+        )
+        
+        # Draw box border
+        cv2.rectangle(
+            frame,
+            (input_box_x, input_box_y),
+            (input_box_x + input_box_width, input_box_y + input_box_height),
+            (120, 120, 120),
             2,
         )
 
         # Draw input text
         if input_text:
-            (iw, ih), _ = cv2.getTextSize(
-                input_text,
-                cv2.FONT_HERSHEY_SIMPLEX,
-                UIConstants.FONT_SCALE_MEDIUM,
-                UIConstants.FONT_THICKNESS,
-            )
-            text_x = input_box_x + 10
-            text_y = input_box_y + input_box_height - 10
+            font_scale = UIConstants.FONT_SCALE_LARGE
+            font_thickness = UIConstants.FONT_THICKNESS + 1
+            text_x = input_box_x + 15
+            text_y = input_box_y + (input_box_height // 2) + 10
+            
+            # Draw text before cursor
+            before_cursor = input_text[:cursor_pos]
+            if before_cursor:
+                cv2.putText(
+                    frame,
+                    before_cursor,
+                    (text_x, text_y),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    font_scale,
+                    UIConstants.WHITE,  # Use white for better visibility
+                    font_thickness,
+                )
+                
+                # Calculate width of text before cursor
+                (before_width, _), _ = cv2.getTextSize(
+                    before_cursor,
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    font_scale,
+                    font_thickness,
+                )
+            else:
+                before_width = 0
+
+            # Draw cursor
+            cursor_height = 25
+            cursor_x = text_x + before_width
+            cursor_y_top = text_y - cursor_height
+            cursor_y_bottom = text_y + 5
+            
+            # Make cursor blink
+            current_time = time.time()
+            if int(current_time * 2) % 2 == 0:
+                cv2.line(frame, (cursor_x, cursor_y_top), (cursor_x, cursor_y_bottom), 
+                         UIConstants.WHITE, 2)
+
+            # Draw text after cursor
+            after_cursor = input_text[cursor_pos:]
+            if after_cursor:
+                cv2.putText(
+                    frame,
+                    after_cursor,
+                    (cursor_x, text_y),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    font_scale,
+                    UIConstants.WHITE,  # Use white for better visibility
+                    font_thickness,
+                )
+        else:
+            # Draw cursor at start position when there's no text
+            text_x = input_box_x + 15
+            text_y = input_box_y + (input_box_height // 2) + 10
+            cursor_height = 25
+            cursor_y_top = text_y - cursor_height
+            cursor_y_bottom = text_y + 5
+            
+            # Blinking cursor
+            current_time = time.time()
+            if int(current_time * 2) % 2 == 0:
+                cv2.line(frame, (text_x, cursor_y_top), (text_x, cursor_y_bottom), 
+                         UIConstants.WHITE, 2)
+                
+            # Draw placeholder text
+            placeholder = "Type your name here..."
             cv2.putText(
                 frame,
-                input_text,
-                (text_x, text_y),
+                placeholder,
+                (text_x + 5, text_y),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 UIConstants.FONT_SCALE_MEDIUM,
-                UIConstants.WHITE,
+                (120, 120, 120),  # Gray placeholder text
                 UIConstants.FONT_THICKNESS,
             )
 
         # Draw instructions
-        instructions = "Press Enter to confirm, Backspace to delete"
-        (iw, ih), _ = cv2.getTextSize(
-            instructions,
+        instructions_y = input_box_y + input_box_height + 50
+        
+        # Instructions line 1
+        instructions1 = "Enter=Confirm, Esc=Default (Player 1), Backspace=Delete"
+        (iw1, ih1), _ = cv2.getTextSize(
+            instructions1,
             cv2.FONT_HERSHEY_SIMPLEX,
             UIConstants.FONT_SCALE_SMALL,
             UIConstants.FONT_THICKNESS,
         )
-        inst_x = (current_width - iw) // 2
-        inst_y = input_box_y + input_box_height + 30
+        inst1_x = popup_x + (popup_width - iw1) // 2
         cv2.putText(
             frame,
-            instructions,
-            (inst_x, inst_y),
+            instructions1,
+            (inst1_x, instructions_y),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            UIConstants.FONT_SCALE_SMALL,
+            UIConstants.WHITE,
+            UIConstants.FONT_THICKNESS,
+        )
+        
+        # Instructions line 2
+        instructions2 = "Use Left/Right arrows to move cursor"
+        (iw2, ih2), _ = cv2.getTextSize(
+            instructions2,
+            cv2.FONT_HERSHEY_SIMPLEX,
+            UIConstants.FONT_SCALE_SMALL,
+            UIConstants.FONT_THICKNESS,
+        )
+        inst2_x = popup_x + (popup_width - iw2) // 2
+        cv2.putText(
+            frame,
+            instructions2,
+            (inst2_x, instructions_y + ih1 + 10),
             cv2.FONT_HERSHEY_SIMPLEX,
             UIConstants.FONT_SCALE_SMALL,
             UIConstants.WHITE,
