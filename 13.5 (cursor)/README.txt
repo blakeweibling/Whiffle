@@ -57,8 +57,8 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
         SUPABASE_KEY=your-supabase-anon-key
         ```
     * Make sure your Supabase project has a table named `whifflescores` (or adjust `TABLE_NAME` in `constants.txt` [cite: 50]) with columns like `player_name` (text), `score` (integer), `mode` (text), and `created_at` (timestamp).
-4.  **YOLO Model:** Ensure the YOLO model file (`whiffle_new_best.pt` as mentioned in `detection.txt` [cite: 57, 58]) is present in the root directory.
-5.  **Assets:** Ensure all required asset files (images like `splash.png`[cite: 50], `game_over.png`[cite: 50], sound files in the `sounds/` directory [cite: 50, 408]) are present.
+4.  **YOLO Model:** Ensure the YOLO model file (`data/whiffle_new_best.pt` as mentioned in `detection.txt` [cite: 57, 58]) is present in the data directory.
+5.  **Assets:** Ensure all required asset files (images like `assets/splash.png`, `assets/game_over.png`, sound files in the `data/sounds/` directory) are present.
 
 ## How to Run
 

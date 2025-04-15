@@ -24,7 +24,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=Output
 OutputBaseFilename=WhiffleSetup  ; Consider renaming output for clarity
-SetupIconFile=pinball_icon.ico
+SetupIconFile=assets/pinball_icon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -39,28 +39,30 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 ; Main executable
 Source: "Whiffle\Whiffle.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; Icon file for shortcuts
-Source: "pinball_icon.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Whiffle\assets\pinball_icon.ico"; DestDir: "{app}\assets"; Flags: ignoreversion
 ; Other files in the root directory
 Source: "Whiffle\.env"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\achievements.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\achievements_status.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\game_over.png"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\high_scores.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\hsv_ranges.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Whiffle\data\achievements\achievements.json"; DestDir: "{app}\data\achievements"; Flags: ignoreversion
+Source: "Whiffle\data\achievements\achievements_status.json"; DestDir: "{app}\data\achievements"; Flags: ignoreversion
+Source: "Whiffle\assets\game_over.png"; DestDir: "{app}\assets"; Flags: ignoreversion
+Source: "Whiffle\data\scores\high_scores.json"; DestDir: "{app}\data\scores"; Flags: ignoreversion
+Source: "Whiffle\configs\hsv_ranges.json"; DestDir: "{app}\configs"; Flags: ignoreversion
+Source: "Whiffle\configs\settings.json"; DestDir: "{app}\configs"; Flags: ignoreversion
 Source: "Whiffle\README.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\scoring_zones.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\splash.png"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\splash2.png"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\last_frame.png"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\whiffle_leaderboard.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\whiffle_new_best.pt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Whiffle\data\game\scoring_zones.json"; DestDir: "{app}\data\game"; Flags: ignoreversion
+Source: "Whiffle\assets\splash.png"; DestDir: "{app}\assets"; Flags: ignoreversion
+Source: "Whiffle\assets\splash2.png"; DestDir: "{app}\assets"; Flags: ignoreversion
+Source: "Whiffle\assets\last_frame.png"; DestDir: "{app}\assets"; Flags: ignoreversion
+Source: "Whiffle\assets\pinball_icon.png"; DestDir: "{app}\assets"; Flags: ignoreversion
+Source: "Whiffle\data\scores\whiffle_leaderboard.json"; DestDir: "{app}\data\scores"; Flags: ignoreversion
+Source: "Whiffle\data\whiffle_new_best.pt"; DestDir: "{app}\data"; Flags: ignoreversion
 ; Sounds folder (including all files inside)
-Source: "Whiffle\sounds\*"; DestDir: "{app}\sounds"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "Whiffle\data\sounds\*"; DestDir: "{app}\data\sounds"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\pinball_icon.ico"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\assets\pinball_icon.ico"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\pinball_icon.ico"; Tasks: desktopicon
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\assets\pinball_icon.ico"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
