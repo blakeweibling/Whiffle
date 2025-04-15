@@ -6,7 +6,8 @@ to determine scores based on zones and game state. Also logs data for stats.
 
 import logging
 import time
-from typing import Any
+from typing import Any, Tuple, List, Dict
+import numpy as np
 
 # Import necessary constants and classes from the project
 from constants import GameConstants
@@ -43,16 +44,16 @@ def update_scoring(game_state: Any) -> None:
     # Ensure tracked_balls exists and is a list
     tracked_balls_list = getattr(game_state, "tracked_balls", [])
     if not isinstance(tracked_balls_list, list):
-        logger.error(
-            "game_state.tracked_balls is not a list. Cannot update scoring.")
+        logger.error("game_state.tracked_balls is not a list. Cannot update scoring.")
         return
 
     # --- Log current ball positions for heatmap data ---
-    # Ensure data_logger exists on game_state (will be added later)
+    # Ensure data_logger exists on game_state
     if hasattr(game_state, "data_logger") and game_state.data_logger:
         try:
-            # Use the tracked_balls_list we already validated
-            game_state.data_logger.log_ball_positions(tracked_balls_list)
+            # Use the tracked_balls_list directly since it's already in the correct format
+            if tracked_balls_list:
+                game_state.data_logger.log_ball_positions(tracked_balls_list)
         except Exception as e:
             logger.error(f"Error logging ball positions: {e}")
     # --- End position logging ---
@@ -71,63 +72,62 @@ def update_scoring(game_state: Any) -> None:
     ]
     keys_to_remove = set()
 
-    for dict_name in state_dicts_to_clean_names:
-        state_dict = getattr(game_state, dict_name, None)
-        if isinstance(state_dict, dict):
-            keys_to_remove.update(
-                set(state_dict.keys()) - tracked_ids_this_frame)
-        elif dict_name == "active_trails" and not hasattr(
-                game_state, "active_trails"):
-            pass
-        else:
-            logger.warning(
-                f"Expected dictionary '{dict_name}' not found or not a dict in game_state during cleanup."
-            )
-
-    if keys_to_remove:
-        logger.debug(
-            f"Cleaning up state for untracked ball IDs: {keys_to_remove}")
+    # Optimize cleanup by doing it less frequently
+    if game_state.frame_count % 30 == 0:  # Clean up every 30 frames
         for dict_name in state_dicts_to_clean_names:
             state_dict = getattr(game_state, dict_name, None)
             if isinstance(state_dict, dict):
-                for ball_id in keys_to_remove:
-                    state_dict.pop(ball_id, None)
+                keys_to_remove.update(set(state_dict.keys()) - tracked_ids_this_frame)
+            elif dict_name == "active_trails" and not hasattr(game_state, "active_trails"):
+                pass
+            else:
+                logger.warning(f"Expected dictionary '{dict_name}' not found or not a dict in game_state during cleanup.")
+
+        if keys_to_remove:
+            logger.debug(f"Cleaning up state for untracked ball IDs: {keys_to_remove}")
+            for dict_name in state_dicts_to_clean_names:
+                state_dict = getattr(game_state, dict_name, None)
+                if isinstance(state_dict, dict):
+                    for ball_id in keys_to_remove:
+                        state_dict.pop(ball_id, None)
     # --- End Cleanup ---
 
     # --- Process currently tracked balls ---
     for ball in tracked_balls_list:
         try:
             if len(ball) < 6:
-                logger.warning(
-                    f"Skipping scoring update for malformed ball data: {ball}")
+                logger.warning(f"Skipping scoring update for malformed ball data: {ball}")
                 continue
             x, y, r, ball_id, age, b_type = ball
             center = (int(x), int(y))
         except (ValueError, TypeError, IndexError) as e:
-            logger.warning(
-                f"Error unpacking ball data in scoring update: {ball} - {e}")
+            logger.warning(f"Error unpacking ball data in scoring update: {ball} - {e}")
             continue
 
         # Update position history (ensure dict exists)
-        if not hasattr(game_state, "ball_positions_history") or not isinstance(
-                game_state.ball_positions_history, dict):
-            logger.error(
-                "game_state.ball_positions_history missing or not a dict.")
-            continue
+        if not hasattr(game_state, "ball_positions_history"):
+            game_state.ball_positions_history = {}
+        
+        if not isinstance(game_state.ball_positions_history, dict):
+            logger.error("game_state.ball_positions_history is not a dict.")
+            game_state.ball_positions_history = {}
+            
         if ball_id not in game_state.ball_positions_history:
             game_state.ball_positions_history[ball_id] = []
-        game_state.ball_positions_history[ball_id].append(center)
-        # Limit history length
-        if (len(game_state.ball_positions_history[ball_id])
-                > GameConstants.POSITION_HISTORY_LENGTH *
-                2  # Store a bit more for stability checks maybe?
-            ):
+            
+        # Add current position to history
+        game_state.ball_positions_history[ball_id].append((center, current_time))
+        
+        # Limit history length and remove old entries
+        while (len(game_state.ball_positions_history[ball_id]) > GameConstants.POSITION_HISTORY_LENGTH or 
+               (len(game_state.ball_positions_history[ball_id]) > 0 and 
+                current_time - game_state.ball_positions_history[ball_id][0][1] > 5.0)):  # Keep 5 seconds of history
             game_state.ball_positions_history[ball_id].pop(0)
 
-        # Update trail (Fun Mode / Retro Mode - check attribute exists)
-        if (game_state.game_mode in ["fun", "retro"]
-                and hasattr(game_state, "active_trails")
-                and isinstance(game_state.active_trails, dict)):
+        # Update trail (Fun Mode / Retro Mode)
+        if (game_state.game_mode in ["fun", "retro"] and 
+            hasattr(game_state, "active_trails") and 
+            isinstance(game_state.active_trails, dict)):
             if ball_id not in game_state.active_trails:
                 game_state.active_trails[ball_id] = BallTrail(ball_id)
             game_state.active_trails[ball_id].add_position(center)
@@ -159,22 +159,27 @@ def update_scoring(game_state: Any) -> None:
             logger.error("game_state.ball_zone_history is not a dict.")
             continue
 
-        rest = is_ball_at_rest(ball_id, game_state.ball_positions_history,
-                               game_state.debug_mode)
-        stable = is_ball_zone_stable(ball_id, zone, ball_zone_hist_dict,
-                                     game_state.debug_mode)
+        rest = is_ball_at_rest(
+            ball_id, game_state.ball_positions_history, game_state.debug_mode
+        )
+        stable = is_ball_zone_stable(
+            ball_id, zone, ball_zone_hist_dict, game_state.debug_mode
+        )
 
         # Store current state and check against previous (ensure dicts exist)
         if not hasattr(game_state, "ball_states") or not isinstance(
-                game_state.ball_states, dict):
+            game_state.ball_states, dict
+        ):
             logger.error("game_state.ball_states missing or not a dict.")
             continue
         if not hasattr(game_state, "previous_ball_states") or not isinstance(
-                game_state.previous_ball_states, dict):
+            game_state.previous_ball_states, dict
+        ):
             game_state.previous_ball_states = {}
 
         game_state.previous_ball_states[ball_id] = game_state.ball_states.get(
-            ball_id, {}).copy()
+            ball_id, {}
+        ).copy()
         game_state.ball_states[ball_id] = {
             "at_rest": rest,
             "stable": stable,
@@ -187,13 +192,14 @@ def update_scoring(game_state: Any) -> None:
         if zone and stable:  # Must be in a zone and stable
             # Ensure necessary dicts exist
             if not hasattr(game_state, "zone_cooldown") or not isinstance(
-                    game_state.zone_cooldown, dict):
+                game_state.zone_cooldown, dict
+            ):
                 logger.error("game_state.zone_cooldown missing or not a dict.")
                 continue
             if not hasattr(game_state, "ball_scored_zones") or not isinstance(
-                    game_state.ball_scored_zones, dict):
-                logger.error(
-                    "game_state.ball_scored_zones missing or not a dict.")
+                game_state.ball_scored_zones, dict
+            ):
+                logger.error("game_state.ball_scored_zones missing or not a dict.")
                 continue
 
             # Check zone cooldown
@@ -222,9 +228,9 @@ def update_scoring(game_state: Any) -> None:
                     logger.info(
                         "*** First hit in Special Hole this session! End score will be doubled. ***"
                     )
-                    show_notification(game_state,
-                                      "Special Hole Hit! Score will double!",
-                                      duration=3.0)
+                    show_notification(
+                        game_state, "Special Hole Hit! Score will double!", duration=3.0
+                    )
                 game_state.special_hole_hit_this_session = True
             else:
                 current_score_pts = base_pts
@@ -254,9 +260,8 @@ def update_scoring(game_state: Any) -> None:
             if hasattr(game_state, "data_logger") and game_state.data_logger:
                 try:
                     game_state.data_logger.log_score_event(
-                        zone_id=zone_idx,
-                        points=points_to_add,
-                        ball_type=b_type)
+                        zone_id=zone_idx, points=points_to_add, ball_type=b_type
+                    )
                 except Exception as e:
                     logger.error(f"Error logging score event: {e}")
             # --- >>> END ADDED <<< ---
@@ -278,9 +283,12 @@ def update_scoring(game_state: Any) -> None:
                         )
                     else:
                         logger.warning(
-                            "Attempted to add survival time, but timer is None.")
+                            "Attempted to add survival time, but timer is None."
+                        )
                 except AttributeError:
-                    logger.error("SURVIVAL_MODE_TIME_GAIN_PER_SCORE constant not found in GameConstants")
+                    logger.error(
+                        "SURVIVAL_MODE_TIME_GAIN_PER_SCORE constant not found in GameConstants"
+                    )
                     time_gain = 5.0  # Default fallback value
                     if game_state.game_timer is not None:
                         game_state.game_timer += time_gain
@@ -296,40 +304,47 @@ def update_scoring(game_state: Any) -> None:
 
             # Record score event (ensure dicts exist)
             if hasattr(game_state, "scored_balls") and isinstance(
-                    game_state.scored_balls, list):
+                game_state.scored_balls, list
+            ):
                 game_state.scored_balls.append(ball_id)
             if hasattr(game_state, "balls_in_zone") and isinstance(
-                    game_state.balls_in_zone, dict):
+                game_state.balls_in_zone, dict
+            ):
                 game_state.balls_in_zone[ball_id] = zone
             if hasattr(game_state, "ball_scored_zones") and isinstance(
-                    game_state.ball_scored_zones, dict):
+                game_state.ball_scored_zones, dict
+            ):
                 game_state.ball_scored_zones[ball_id] = zone_idx
             # Set zone cooldown
             cooldown_duration = GameConstants.SCORE_COOLDOWN_DURATION / 1000.0
-            game_state.zone_cooldown[
-                zone_idx] = current_time + cooldown_duration
+            game_state.zone_cooldown[zone_idx] = current_time + cooldown_duration
 
             logger.info(
                 f"Ball {ball_id}({b_type}) scored {points_to_add}pts [Base:{base_pts}, Mult:{score_multiplier}] in Zone:{zone_idx}{' (Special Hole)' if is_sp else ''}. Total:{game_state.score}. Zone {zone_idx} cooldown:{cooldown_duration:.1f}s."
             )
 
             # Fun Mode / Retro Mode Explosion
-            if (game_state.game_mode in ["fun", "retro"]
-                    and hasattr(game_state, "active_explosions")
-                    and isinstance(game_state.active_explosions, list)):
+            if (
+                game_state.game_mode in ["fun", "retro"]
+                and hasattr(game_state, "active_explosions")
+                and isinstance(game_state.active_explosions, list)
+            ):
                 zone_x, zone_y, zone_w, zone_h, _ = zone
                 explosion_center_x = int(zone_x + zone_w / 2)
                 explosion_center_y = int(zone_y + zone_h / 2)
                 game_state.active_explosions.append(
-                    Explosion(explosion_center_x, explosion_center_y))
+                    Explosion(explosion_center_x, explosion_center_y)
+                )
                 logger.debug(
                     f"Created explosion at ({explosion_center_x}, {explosion_center_y}) for score in zone {zone_idx}"
                 )
 
             # Check Timed Mode Win Condition
-            if (game_state.game_mode == "timed"
-                    and game_state.score >= game_state.win_score and
-                    game_state.current_state != CurrentGameState.GAME_OVER):
+            if (
+                game_state.game_mode == "timed"
+                and game_state.score >= game_state.win_score
+                and game_state.current_state != CurrentGameState.GAME_OVER
+            ):
                 game_state.win_condition_met = True
                 game_state.current_state = CurrentGameState.GAME_OVER
                 logger.info(
@@ -348,26 +363,31 @@ def update_scoring(game_state: Any) -> None:
 
         # --- Ball Left/Became Unstable After Scoring ---
         elif ball_id in getattr(
-                game_state, "ball_scored_zones", {}
+            game_state, "ball_scored_zones", {}
         ):  # Check dict exists before access  # Check if ball HAD scored previously
             # Ensure necessary dicts exist before modifying
             if not hasattr(game_state, "ball_scored_zones") or not isinstance(
-                    game_state.ball_scored_zones, dict):
+                game_state.ball_scored_zones, dict
+            ):
                 continue
             if not hasattr(game_state, "balls_in_zone") or not isinstance(
-                    game_state.balls_in_zone, dict):
+                game_state.balls_in_zone, dict
+            ):
                 continue
             if not hasattr(game_state, "scored_balls") or not isinstance(
-                    game_state.scored_balls, list):
+                game_state.scored_balls, list
+            ):
                 continue
 
             last_scored_zone_idx = game_state.ball_scored_zones[ball_id]
             # Ball is no longer stable OR it's not in the same zone it scored in
             if not stable or zone_idx != last_scored_zone_idx:
                 del game_state.ball_scored_zones[
-                    ball_id]  # Clear score status for this entry
+                    ball_id
+                ]  # Clear score status for this entry
                 game_state.balls_in_zone.pop(
-                    ball_id, None)  # Remove from current zone tracking
+                    ball_id, None
+                )  # Remove from current zone tracking
                 logger.debug(
                     f"Ball {ball_id} left/became unstable in zone {last_scored_zone_idx}. Cleared score status."
                 )
@@ -382,3 +402,16 @@ def update_scoring(game_state: Any) -> None:
     # Play score sound if any points were scored this frame
     if newly_scored_pts_this_frame > 0:
         play_sound(game_state, game_state.score_sound)
+
+    def _process_frame(self, frame: np.ndarray, game_state: 'GameState') -> Tuple[np.ndarray, List[Dict[str, Any]]]:
+        """Process a frame and update game state."""
+        # Track balls in the frame
+        tracked_balls = self.ball_tracker.track(frame)
+        
+        # Log ball positions if tracking is active
+        game_state.log_ball_positions(tracked_balls)
+        
+        # Draw tracking visualization
+        annotated_frame = self._draw_tracking(frame, tracked_balls)
+        
+        return annotated_frame, tracked_balls

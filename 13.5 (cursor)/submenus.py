@@ -1,17 +1,13 @@
 # submenus.py
 import logging
-
 import cv2
 import numpy as np
-
-import submenu_draw_functions
 
 # Import constants, including MenuConstants
 from constants import MenuConstants, UIConstants
 
 # Import GameState for type hinting if needed, but avoid direct use that causes cycles
 from game_state import GameState
-from game_types import CurrentGameState
 
 # <<< MODIFIED: Pass game_state to _draw_button >>>
 from menu_utils import _draw_button
@@ -31,8 +27,7 @@ from submenu_draw_functions import (
 logger = logging.getLogger(__name__)
 
 
-def _draw_game_mode_submenu(menu_frame: np.ndarray,
-                            game_state: GameState) -> None:
+def _draw_game_mode_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
     """Draw the Game Mode selection submenu."""
     cv2.putText(
         menu_frame,
@@ -51,8 +46,9 @@ def _draw_game_mode_submenu(menu_frame: np.ndarray,
 
     for mode in modes:
         label = mode.capitalize()
-        color = (UIConstants.GREEN
-                 if game_state.game_mode == mode else UIConstants.CV2_BLUE)
+        color = (
+            UIConstants.GREEN if game_state.game_mode == mode else UIConstants.CV2_BLUE
+        )
         action_key = f"set_mode_{mode}"
 
         _draw_button(
@@ -67,11 +63,13 @@ def _draw_game_mode_submenu(menu_frame: np.ndarray,
             game_state=game_state,
             font_scale=UIConstants.FONT_SCALE_MEDIUM,
         )
-        game_state.submenu_items.append((
-            (20, y_offset, menu_frame.shape[1] - 40, item_height),
-            action_key,
-            label,
-        ))
+        game_state.submenu_items.append(
+            (
+                (20, y_offset, menu_frame.shape[1] - 40, item_height),
+                action_key,
+                label,
+            )
+        )
         y_offset += item_height + 5
 
     back_y = y_offset + 10
@@ -87,11 +85,13 @@ def _draw_game_mode_submenu(menu_frame: np.ndarray,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
     )
-    game_state.submenu_items.append((
-        (20, back_y, menu_frame.shape[1] - 40, item_height),
-        "back_to_main",
-        "Back",
-    ))
+    game_state.submenu_items.append(
+        (
+            (20, back_y, menu_frame.shape[1] - 40, item_height),
+            "back_to_main",
+            "Back",
+        )
+    )
     game_state.menu_height = back_y + item_height + 20
 
 
@@ -124,11 +124,13 @@ def _draw_zone_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
             game_state=game_state,
             font_scale=UIConstants.FONT_SCALE_MEDIUM,
         )
-        game_state.submenu_items.append((
-            (20, y_offset, menu_frame.shape[1] - 40, item_height),
-            action_key,
-            label,
-        ))
+        game_state.submenu_items.append(
+            (
+                (20, y_offset, menu_frame.shape[1] - 40, item_height),
+                action_key,
+                label,
+            )
+        )
         y_offset += item_height + 5
 
     game_state.menu_height = y_offset + 20
@@ -189,8 +191,9 @@ def draw_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
                 game_state=game_state,
                 font_scale=UIConstants.FONT_SCALE_MEDIUM,
             )
-            game_state.submenu_items = [((20, 80, menu_frame.shape[1] - 40,
-                                          35), "back_to_main", "Back")]
+            game_state.submenu_items = [
+                ((20, 80, menu_frame.shape[1] - 40, 35), "back_to_main", "Back")
+            ]
             game_state.menu_height = 135
         else:
             logger.error(

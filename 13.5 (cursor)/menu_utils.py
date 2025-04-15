@@ -27,23 +27,22 @@ logger = logging.getLogger(__name__)
 
 # --- CHANGE: Updated _draw_button function ---
 def _draw_button(
-        frame: cv2.typing.MatLike,
-        x: int,
-        y: int,
-        w: int,
-        h: int,
-        text: str,
-        color: Tuple[int, int, int],
-        # <<< ADDED game_state PARAMETER >>>
-        game_state: "GameState",  # Use string literal for type hint
-        font_scale: float = UIConstants.FONT_SCALE_MEDIUM,
-        font_thickness: int = 2,
-        text_color: Tuple[int, int, int] = UIConstants.WHITE,
-        shadow_offset: int = 3,
-        shadow_color: Tuple[int, int, int] = UIConstants.BLACK,
-        # <<< ADDED click_color PARAMETER (Optional) >>>
-        click_color: Tuple[int, int,
-                           int] = UIConstants.YELLOW,  # Color when clicked
+    frame: cv2.typing.MatLike,
+    x: int,
+    y: int,
+    w: int,
+    h: int,
+    text: str,
+    color: Tuple[int, int, int],
+    # <<< ADDED game_state PARAMETER >>>
+    game_state: "GameState",  # Use string literal for type hint
+    font_scale: float = UIConstants.FONT_SCALE_MEDIUM,
+    font_thickness: int = 2,
+    text_color: Tuple[int, int, int] = UIConstants.WHITE,
+    shadow_offset: int = 3,
+    shadow_color: Tuple[int, int, int] = UIConstants.BLACK,
+    # <<< ADDED click_color PARAMETER (Optional) >>>
+    click_color: Tuple[int, int, int] = UIConstants.YELLOW,  # Color when clicked
 ) -> None:
     """
     Draws a button with centered text, specified color, and a drop shadow.
@@ -54,12 +53,16 @@ def _draw_button(
         # <<< MODIFIED LOGIC to check for click state and duration >>>
         button_rect = (x, y, w, h)
         is_clicked = False
-        if (hasattr(game_state, "click_feedback_state")
-                and game_state.click_feedback_state):
+        if (
+            hasattr(game_state, "click_feedback_state")
+            and game_state.click_feedback_state
+        ):
             stored_rect, click_time = game_state.click_feedback_state
             # Check if the rectangle matches AND the time is within the duration
-            if (stored_rect == button_rect and (time.time() - click_time)
-                    < UIConstants.CLICK_FEEDBACK_DURATION):
+            if (
+                stored_rect == button_rect
+                and (time.time() - click_time) < UIConstants.CLICK_FEEDBACK_DURATION
+            ):
                 is_clicked = True
         current_color = click_color if is_clicked else color
         # <<< END MODIFIED LOGIC >>>
@@ -72,18 +75,19 @@ def _draw_button(
         shadow_x = max(0, shadow_x)
         shadow_y = max(0, shadow_y)
         if shadow_x < shadow_x2 and shadow_y < shadow_y2:
-            cv2.rectangle(frame, (shadow_x, shadow_y), (shadow_x2, shadow_y2),
-                          shadow_color, -1)
+            cv2.rectangle(
+                frame, (shadow_x, shadow_y), (shadow_x2, shadow_y2), shadow_color, -1
+            )
 
         # Draw the main button rectangle (using current_color)
-        cv2.rectangle(frame, (x, y), (x + w, y + h), current_color,
-                      -1)  # <<< USE current_color >>>
+        cv2.rectangle(
+            frame, (x, y), (x + w, y + h), current_color, -1
+        )  # <<< USE current_color >>>
 
         # Center Text
-        (text_width,
-         text_height), baseline = cv2.getTextSize(text,
-                                                  cv2.FONT_HERSHEY_SIMPLEX,
-                                                  font_scale, font_thickness)
+        (text_width, text_height), baseline = cv2.getTextSize(
+            text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, font_thickness
+        )
         text_x = x + (w - text_width) // 2
         text_y = y + (h + text_height) // 2
 
@@ -106,8 +110,7 @@ def _draw_button(
 # --- End Change ---
 
 
-def _mouse_callback_splash(event: int, x: int, y: int, flags: int,
-                           param: dict) -> None:
+def _mouse_callback_splash(event: int, x: int, y: int, flags: int, param: dict) -> None:
     """Handle mouse events for dismissing the splash screen."""
     if event == cv2.EVENT_LBUTTONDOWN:
         param["dismissed"] = True
@@ -125,8 +128,7 @@ def show_splash_on_click(
     """
     splash = cv2.imread("splash.png")
     if splash is None:
-        logger.error(
-            "Failed to load splash.png for About menu, skipping splash screen")
+        logger.error("Failed to load splash.png for About menu, skipping splash screen")
         cv2.putText(
             frame,
             "Splash unavailable",
@@ -139,8 +141,7 @@ def show_splash_on_click(
         cv2.imshow(UIConstants.WINDOW_NAME, frame)
         cv2.waitKey(1000)  # Show error briefly
         return
-    splash = cv2.resize(splash,
-                        (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT))
+    splash = cv2.resize(splash, (UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT))
 
     # Add instructions to the splash screen
     cv2.putText(
@@ -155,19 +156,20 @@ def show_splash_on_click(
 
     # Set up mouse callback to detect clicks
     param = {"dismissed": False}
-    cv2.setMouseCallback(UIConstants.WINDOW_NAME, _mouse_callback_splash,
-                         param)
+    cv2.setMouseCallback(UIConstants.WINDOW_NAME, _mouse_callback_splash, param)
 
     while True:
         cv2.imshow(UIConstants.WINDOW_NAME, splash)
         key = cv2.waitKey(20) & 0xFF
         # Exit on Esc key, mouse click, or window closure
-        if (key == 27 or param["dismissed"] or cv2.getWindowProperty(
-                UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) <= 0):
+        if (
+            key == 27
+            or param["dismissed"]
+            or cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) <= 0
+        ):
             break
 
     # Restore the main mouse callback
-    cv2.setMouseCallback(UIConstants.WINDOW_NAME, main_callback,
-                         callback_param)
+    cv2.setMouseCallback(UIConstants.WINDOW_NAME, main_callback, callback_param)
     cv2.imshow(UIConstants.WINDOW_NAME, frame)
     logger.info("Returned to game frame after splash screen")

@@ -3,12 +3,15 @@
 Visual effects like ball trails and explosions for Whiffle Tracker Fun Mode.
 """
 
+import logging
 import random
 import time
 from typing import List, Tuple
 
 import cv2
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 # Trail parameters (remain as red fade to black)
 TRAIL_MAX_LENGTH = 20
@@ -62,19 +65,16 @@ class BallTrail:
             fade_ratio = (i / (num_points - 1)) if num_points > 1 else 0
             color = tuple(
                 int(c1 + (c2 - c1) * fade_ratio)
-                for c1, c2 in zip(TRAIL_START_COLOR, TRAIL_END_COLOR))
-            thickness = int(TRAIL_START_THICKNESS +
-                            (TRAIL_END_THICKNESS - TRAIL_START_THICKNESS) *
-                            fade_ratio)
+                for c1, c2 in zip(TRAIL_START_COLOR, TRAIL_END_COLOR)
+            )
+            thickness = int(
+                TRAIL_START_THICKNESS
+                + (TRAIL_END_THICKNESS - TRAIL_START_THICKNESS) * fade_ratio
+            )
             thickness = max(1, thickness)
 
             try:
-                cv2.line(frame,
-                         pt1,
-                         pt2,
-                         color,
-                         thickness,
-                         lineType=cv2.LINE_AA)
+                cv2.line(frame, pt1, pt2, color, thickness, lineType=cv2.LINE_AA)
             except OverflowError:
                 pass
             except Exception as e:
@@ -93,15 +93,13 @@ class Explosion:
         for _ in range(EXPLOSION_PARTICLE_COUNT):
             angle = random.uniform(0, 2 * np.pi)
             # Give a slightly stronger initial upward bias to counteract gravity a bit
-            speed = random.uniform(EXPLOSION_MAX_SPEED * 0.4,
-                                   EXPLOSION_MAX_SPEED)
+            speed = random.uniform(EXPLOSION_MAX_SPEED * 0.4, EXPLOSION_MAX_SPEED)
             vx = np.cos(angle) * speed
             vy = np.sin(angle) * speed - random.uniform(
-                0, EXPLOSION_GRAVITY * 0.1)  # Slight upward nudge
+                0, EXPLOSION_GRAVITY * 0.1
+            )  # Slight upward nudge
             color = random.choice(EXPLOSION_COLORS)
-            self.particles.append(
-                [float(center_x),
-                 float(center_y), vx, vy, color])
+            self.particles.append([float(center_x), float(center_y), vx, vy, color])
 
     def update(self, dt: float):
         """Updates particle positions, adding gravity."""
@@ -124,55 +122,62 @@ class Explosion:
 
     def draw(self, frame: np.ndarray):
         """Draws the particles onto the frame."""
-        elapsed_time = time.time() - self.start_time
-        # Optional: Fade out particles over time using alpha (might affect performance slightly)
-        # If performance is an issue, remove alpha calculation and blending.
-        alpha_blend = 0.5 + 0.5 * (1.0 - (elapsed_time / EXPLOSION_DURATION)
-                                   )  # Fade alpha from 1.0 down to 0.5
-        alpha_blend = max(0.0, min(1.0, alpha_blend))
-
-        if alpha_blend <= 0:
-            return
-
-        overlay = frame.copy()  # Create overlay for alpha blending particles
-        output = frame  # Final output frame
-
-        for p in self.particles:
-            x, y, _, _, color = p
-            try:
-                # Draw particle onto the overlay
-                cv2.circle(
-                    overlay,
-                    (int(x), int(y)),
-                    EXPLOSION_PARTICLE_SIZE,
-                    color,
-                    -1,
-                    lineType=cv2.LINE_AA,
-                )
-            except OverflowError:
-                pass
-            except Exception as e:
-                print(f"Error drawing explosion particle: {e}")
-
-        # Blend the overlay with the original frame
         try:
-            cv2.addWeighted(overlay, alpha_blend, output, 1 - alpha_blend, 0,
-                            output)
-        except cv2.error as e:
-            # Fallback if blending fails, just draw directly (no transparency)
-            print(
-                f"Warning: addWeighted failed ({e}). Drawing particles directly."
-            )
+            elapsed_time = time.time() - self.start_time
+            # Optional: Fade out particles over time using alpha (might affect performance slightly)
+            # If performance is an issue, remove alpha calculation and blending.
+            alpha_blend = 0.5 + 0.5 * (
+                1.0 - (elapsed_time / EXPLOSION_DURATION)
+            )  # Fade alpha from 1.0 down to 0.5
+            alpha_blend = max(0.0, min(1.0, alpha_blend))
+
+            if alpha_blend <= 0:
+                return frame
+
+            overlay = frame.copy()  # Create overlay for alpha blending particles
+            output = frame  # Final output frame
+
             for p in self.particles:
                 x, y, _, _, color = p
                 try:
+                    # Draw particle onto the overlay
                     cv2.circle(
-                        frame,
+                        overlay,
                         (int(x), int(y)),
                         EXPLOSION_PARTICLE_SIZE,
                         color,
                         -1,
                         lineType=cv2.LINE_AA,
                     )
-                except:
-                    pass  # Ignore errors in fallback
+                except OverflowError:
+                    continue
+                except cv2.error as e:
+                    logger.debug(f"Error drawing explosion particle: {e}")
+                    continue
+
+            # Blend the overlay with the original frame
+            try:
+                cv2.addWeighted(
+                    overlay, alpha_blend, output, 1 - alpha_blend, 0, output
+                )
+            except cv2.error as e:
+                # Fallback if blending fails, just draw directly (no transparency)
+                logger.warning(f"addWeighted failed ({e}). Drawing particles directly.")
+                for p in self.particles:
+                    x, y, _, _, color = p
+                    try:
+                        cv2.circle(
+                            frame,
+                            (int(x), int(y)),
+                            EXPLOSION_PARTICLE_SIZE,
+                            color,
+                            -1,
+                            lineType=cv2.LINE_AA,
+                        )
+                    except cv2.error as e:
+                        logger.debug(f"Error drawing explosion particle: {e}")
+                        continue
+            return frame
+        except Exception as e:
+            logger.error(f"Error applying effect: {e}")
+            return frame

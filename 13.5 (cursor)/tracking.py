@@ -22,9 +22,9 @@ from constants import TrackingConstants
 logger = logging.getLogger(__name__)
 
 
-def _filter_old_balls(tracked_balls: List[Tuple[int, int, float, int, int,
-                                                str]],
-                      frame_count: int) -> None:
+def _filter_old_balls(
+    tracked_balls: List[Tuple[int, int, float, int, int, str]], frame_count: int
+) -> None:
     """
     Remove balls that have exceeded the maximum age from tracked_balls in-place.
 
@@ -34,7 +34,8 @@ def _filter_old_balls(tracked_balls: List[Tuple[int, int, float, int, int,
     """
     initial_count = len(tracked_balls)
     tracked_balls[:] = [
-        ball for ball in tracked_balls
+        ball
+        for ball in tracked_balls
         if frame_count - ball[4] < TrackingConstants.MAX_AGE_FRAMES
     ]
     dropped = initial_count - len(tracked_balls)
@@ -77,20 +78,21 @@ def _match_balls(
         # Optimized KD-tree approach
         logger.debug("Using KD-tree for ball matching")
         new_positions = np.array([(x, y) for x, y, _, _ in new_balls])
-        tracked_positions = np.array([(x, y)
-                                      for x, y, _, _, _, _ in tracked_balls])
+        tracked_positions = np.array([(x, y) for x, y, _, _, _, _ in tracked_balls])
         tree = KDTree(tracked_positions)
         distances, indices = tree.query(
-            new_positions, distance_upper_bound=distance_threshold)
+            new_positions, distance_upper_bound=distance_threshold
+        )
 
         for i, (dist, idx) in enumerate(zip(distances, indices)):
-            if (dist != float("inf") and idx < len(tracked_balls)
-                    and idx not in used_tracked_indices):
+            if (
+                dist != float("inf")
+                and idx < len(tracked_balls)
+                and idx not in used_tracked_indices
+            ):
                 new_x, new_y, radius, ball_type = new_balls[i]
-                tracked_x, tracked_y, _, ball_id, age, tracked_type = tracked_balls[
-                    idx]
-                matched_balls.append(
-                    (new_x, new_y, radius, ball_id, ball_type))
+                tracked_x, tracked_y, _, ball_id, age, tracked_type = tracked_balls[idx]
+                matched_balls.append((new_x, new_y, radius, ball_id, ball_type))
                 matched_new_indices.append(i)
                 used_tracked_indices.append(idx)
                 tracked_balls[idx] = (
@@ -119,15 +121,15 @@ def _match_balls(
             for j, (x, y, _, ball_id, age, _) in enumerate(tracked_balls):
                 if j in used_tracked_indices:
                     continue
-                dist_squared = (new_x - x)**2 + (new_y - y)**2
+                dist_squared = (new_x - x) ** 2 + (new_y - y) ** 2
                 if dist_squared < min_dist and dist_squared < distance_threshold**2:
                     min_dist = dist_squared
                     closest_ball_idx = j
             if closest_ball_idx is not None:
                 tracked_x, tracked_y, _, ball_id, age, tracked_type = tracked_balls[
-                    closest_ball_idx]
-                matched_balls.append(
-                    (new_x, new_y, radius, ball_id, ball_type))
+                    closest_ball_idx
+                ]
+                matched_balls.append((new_x, new_y, radius, ball_id, ball_type))
                 matched_new_indices.append(i)
                 used_tracked_indices.append(closest_ball_idx)
                 tracked_balls[closest_ball_idx] = (
@@ -159,7 +161,7 @@ def _is_scored_recently(
 ) -> bool:
     """Check if a position has been scored recently within the threshold."""
     for (sx, sy), _ in scored_positions.items():
-        dist_squared = (new_x - sx)**2 + (new_y - sy)**2
+        dist_squared = (new_x - sx) ** 2 + (new_y - sy) ** 2
         if dist_squared < threshold**2:
             logger.debug(
                 f"Position ({new_x}, {new_y}) matches scored position ({sx}, {sy})"
@@ -208,7 +210,9 @@ def _add_new_balls(
             # Skip if this position has been scored recently
             if _is_scored_recently(x, y, scored_positions, radius * 2):
                 if debug_mode:
-                    logger.debug(f"Skipped adding new ball at ({x}, {y}) - recently scored position")
+                    logger.debug(
+                        f"Skipped adding new ball at ({x}, {y}) - recently scored position"
+                    )
                 continue
 
             # Add the new ball with a new ID
@@ -216,7 +220,9 @@ def _add_new_balls(
             # Create a new tracked ball
             tracked_balls.append((x, y, radius, next_ball_id, frame_count, ball_type))
             if debug_mode:
-                logger.debug(f"Added new ball ID {next_ball_id} at ({x}, {y}), type {ball_type}")
+                logger.debug(
+                    f"Added new ball ID {next_ball_id} at ({x}, {y}), type {ball_type}"
+                )
             next_ball_id += 1
 
     return tracked_detected_balls, next_ball_id
@@ -233,7 +239,7 @@ def track_balls(
 ) -> Tuple[List[Tuple[int, int, float, int, str]], int]:
     """
     Track and match balls between frames, assigning consistent IDs.
-    
+
     This is an optimized version that reduces computational load and improves performance.
 
     Args:
@@ -279,12 +285,12 @@ def track_balls(
 # Wrapper class to maintain compatibility with existing codebase
 class BallTracker:
     """Manages ball tracking between frames."""
-    
+
     # Store distance threshold and last validation time at class level for optimization
     _distance_threshold = TrackingConstants.TRACKING_DISTANCE_THRESHOLD
     _last_validation_time = 0
     _validation_interval = 5.0  # Only validate scipy every 5 seconds
-    
+
     def __init__(self):
         """Initialize the BallTracker."""
         # Confirm SciPy availability only once on initialization
@@ -293,7 +299,7 @@ class BallTracker:
             logger.info("SciPy available - using KDTree for efficient ball tracking")
         else:
             logger.info("SciPy not available - using fallback ball tracking method")
-        
+
         # Throttling state variables
         self._skip_counter = 0
 
@@ -330,8 +336,11 @@ class BallTracker:
         if self._skip_counter % 2 != 0 and len(tracked_balls) > 0:
             # Skip tracking on some frames if we already have tracked balls
             # Just return existing tracked balls
-            return [(x, y, r, ball_id, ball_type) for x, y, r, ball_id, _, ball_type in tracked_balls], next_ball_id
-        
+            return [
+                (x, y, r, ball_id, ball_type)
+                for x, y, r, ball_id, _, ball_type in tracked_balls
+            ], next_ball_id
+
         # Repackage balls with type information
         white_balls_with_type = [(x, y, r, "white") for x, y, r in white_balls]
         red_balls_with_type = [(x, y, r, "red") for x, y, r in red_balls]
@@ -345,10 +354,15 @@ class BallTracker:
             # Sample only a subset of new balls to process
             # This significantly reduces computational load when there are many balls
             all_balls = all_balls[:5]
-        
+
         # Perform the actual tracking
         tracked_detected_balls, next_ball_id = track_balls(
-            all_balls, tracked_balls, next_ball_id, frame_count, scored_positions, debug_mode
+            all_balls,
+            tracked_balls,
+            next_ball_id,
+            frame_count,
+            scored_positions,
+            debug_mode,
         )
 
         return tracked_detected_balls, next_ball_id

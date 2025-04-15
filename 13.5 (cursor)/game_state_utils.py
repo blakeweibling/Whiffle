@@ -7,38 +7,32 @@ Handles initialization, saving/loading state, and state transitions like reset.
 import json
 import logging
 import os
-import random
 import time
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
-import pygame
+import pygame  # Add pygame import
 
 # Import local components
 from achievement import Achievement
-from constants import (
-    GameConstants,
-    UIConstants,
-    ScoringConstants,  # Added ScoringConstants
-)
-from effects import BallTrail, Explosion
+from constants import GameConstants, UIConstants
 from game_state_helpers import (
     set_special_hole,
-)  # Keep this specific import if needed by load_initial_state
-from game_state_helpers import (  # Import necessary helpers
-    play_sound, save_score, show_notification,
+    play_sound,
+    save_score,
+    show_notification,
 )
 from game_types import CurrentGameState
-from player import Player
 from scoring_logic import update_scoring as _update_scoring_logic  # Alias for clarity
 
 # Import DataLogger for type hinting (optional but good practice)
 try:
     from data_logger import DataLogger
 except ImportError:
-    DataLogger = Any  # Fallback type
+    DataLogger = None
 
 logger = logging.getLogger(__name__)
+
 
 # --- Functions Remaining in game_state_utils (Initialization, Load/Save, Volume etc.) ---
 # These functions (initialize_sounds, initialize_achievements, load/save_achievements,
@@ -47,18 +41,19 @@ logger = logging.getLogger(__name__)
 # update_notifications, update_timers_and_state) remain largely the same as before,
 # unless they specifically need modification for the stats feature (which they mostly don't).
 # For brevity, their original code is assumed here, focusing on the modified reset_game.
-def initialize_sounds(
-) -> (Tuple[Optional[pygame.mixer.Sound], Optional[pygame.mixer.Sound]]):
+def initialize_sounds() -> (
+    Tuple[Optional[pygame.mixer.Sound], Optional[pygame.mixer.Sound]]
+):
     """Initialize sound effects (score, low time)."""
     pygame.mixer.init()
     score_sound = None
     low_time_sound = None
     # achievement_sound = None # Add if you have an achievement sound
     try:
-        score_sound_path = os.path.join(GameConstants.SOUND_EFFECTS_PATH,
-                                        "ding.wav")
-        low_time_sound_path = os.path.join(GameConstants.SOUND_EFFECTS_PATH,
-                                           "10_sec_timer.mp3")
+        score_sound_path = os.path.join(GameConstants.SOUND_EFFECTS_PATH, "ding.wav")
+        low_time_sound_path = os.path.join(
+            GameConstants.SOUND_EFFECTS_PATH, "10_sec_timer.mp3"
+        )
         # achievement_sound_path = os.path.join(GameConstants.SOUND_EFFECTS_PATH, "achievement.wav")
 
         if os.path.exists(score_sound_path):
@@ -88,22 +83,27 @@ def initialize_achievements() -> List[Achievement]:
             "First Score",
             "Score first points",
             # Lambda functions now access score via player object
-            lambda gs: hasattr(gs, "players") and gs.players and gs.players[
-                gs.current_player_index].score >= 100,
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and gs.players[gs.current_player_index].score >= 100,
         ),
         Achievement(
             "High Roller",
             "Score 1000 points",
-            lambda gs: hasattr(gs, "players") and gs.players and gs.players[
-                gs.current_player_index].score >= 1000,
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and gs.players[gs.current_player_index].score >= 1000,
         ),
-        Achievement("Zone Master", "Create 5 zones",
-                    lambda gs: len(gs.scoring_zones) >= 5),
+        Achievement(
+            "Zone Master", "Create 5 zones", lambda gs: len(gs.scoring_zones) >= 5
+        ),
         Achievement(
             "Marathon",
             "Play 10 games",
-            lambda gs: hasattr(gs, "players") and gs.players and hasattr(
-                gs.players[gs.current_player_index], "games_played") and gs.players[gs.current_player_index].games_played >= 10,
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and hasattr(gs.players[gs.current_player_index], "games_played")
+            and gs.players[gs.current_player_index].games_played >= 10,
         ),
         # Add more achievements here
     ]
@@ -118,8 +118,7 @@ def load_achievements(game_state: Any, filename: str) -> None:
         return
     achievements_file = filename
     try:
-        if os.path.exists(achievements_file) and os.path.getsize(
-                achievements_file) > 0:
+        if os.path.exists(achievements_file) and os.path.getsize(achievements_file) > 0:
             with open(achievements_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
             if not isinstance(data, dict):
@@ -132,12 +131,11 @@ def load_achievements(game_state: Any, filename: str) -> None:
             # Ensure achievement objects exist before trying to update them
             if isinstance(game_state.achievements, list):
                 for achievement in game_state.achievements:
-                    if hasattr(achievement,
-                            "name") and achievement.name in data:
+                    if hasattr(achievement, "name") and achievement.name in data:
                         achievement_data = data.get(achievement.name, {})
-                        if isinstance(
-                                achievement_data,
-                                dict) and achievement_data.get("unlocked"):
+                        if isinstance(achievement_data, dict) and achievement_data.get(
+                            "unlocked"
+                        ):
                             achievement.unlocked = True
                             loaded_count += 1
                 logger.info(
@@ -166,7 +164,8 @@ def load_achievements(game_state: Any, filename: str) -> None:
 def save_achievements(game_state: Any, filename: str) -> None:
     """Save achievements status to a JSON file."""
     if not hasattr(game_state, "achievements") or not isinstance(
-            game_state.achievements, list):
+        game_state.achievements, list
+    ):
         logger.warning(
             "Cannot save achievements status: game_state.achievements is missing or not a list."
         )
@@ -175,9 +174,7 @@ def save_achievements(game_state: Any, filename: str) -> None:
     try:
         # Create data dictionary safely checking for attributes
         data = {
-            a.name: {
-                "unlocked": a.unlocked
-            }
+            a.name: {"unlocked": a.unlocked}
             for a in game_state.achievements
             if hasattr(a, "name") and hasattr(a, "unlocked")
         }
@@ -185,8 +182,7 @@ def save_achievements(game_state: Any, filename: str) -> None:
             json.dump(data, f, indent=4)
         logger.debug(f"Saved achievements status to {achievements_file}.")
     except IOError as e:
-        logger.error(
-            f"Failed to save achievements file {achievements_file}: {e}")
+        logger.error(f"Failed to save achievements file {achievements_file}: {e}")
     except Exception as e:
         logger.exception(f"Unexpected error saving achievements: {e}")
 
@@ -225,14 +221,14 @@ def load_hsv_ranges(
             # Update defaults with loaded data, validating format
             for key in hsv_ranges.keys():  # Iterate through expected keys
                 if key in loaded_data:
-                    if (isinstance(loaded_data[key], list)
-                            and len(loaded_data[key]) == 2):
+                    if (
+                        isinstance(loaded_data[key], list)
+                        and len(loaded_data[key]) == 2
+                    ):
                         try:
-                            lower = np.array(loaded_data[key][0],
-                                            dtype=np.uint8)
-                            upper = np.array(loaded_data[key][1],
-                                             dtype=np.uint8)
-                            if lower.shape == (3, ) and upper.shape == (3, ):
+                            lower = np.array(loaded_data[key][0], dtype=np.uint8)
+                            upper = np.array(loaded_data[key][1], dtype=np.uint8)
+                            if lower.shape == (3,) and upper.shape == (3,):
                                 hsv_ranges[key] = (lower, upper)
                             else:
                                 logger.warning(
@@ -254,11 +250,10 @@ def load_hsv_ranges(
             )
         except Exception as e:
             logger.exception(
-                f"Unexpected error loading HSV ranges: {e}. Using defaults.")
+                f"Unexpected error loading HSV ranges: {e}. Using defaults."
+            )
     else:
-        logger.info(
-            f"HSV ranges file '{hsv_file}' not found or empty, using defaults."
-        )
+        logger.info(f"HSV ranges file '{hsv_file}' not found or empty, using defaults.")
     return hsv_ranges
 
 
@@ -280,7 +275,8 @@ def save_hsv_ranges(
                 )
         else:
             logger.warning(
-                f"Cannot serialize non-numpy HSV data for '{key}'. Skipping.")
+                f"Cannot serialize non-numpy HSV data for '{key}'. Skipping."
+            )
 
     if not serializable_data:
         logger.warning("No valid HSV data to save.")
@@ -305,14 +301,12 @@ def load_settings(game_state: Any) -> None:
     default_music_on = True
 
     try:
-        if os.path.exists(settings_file) and os.path.getsize(
-                settings_file) > 0:
+        if os.path.exists(settings_file) and os.path.getsize(settings_file) > 0:
             with open(settings_file, "r") as f:
                 settings_data = json.load(f)
 
             # Load sound volume safely
-            loaded_sound_vol = settings_data.get("sound_volume",
-                        default_sound_vol)
+            loaded_sound_vol = settings_data.get("sound_volume", default_sound_vol)
             try:
                 sound_vol_float = float(loaded_sound_vol)
                 if 0.0 <= sound_vol_float <= 1.0:
@@ -329,8 +323,7 @@ def load_settings(game_state: Any) -> None:
                 )
 
             # Load music volume safely
-            loaded_music_vol = settings_data.get("music_volume",
-                                                 default_music_vol)
+            loaded_music_vol = settings_data.get("music_volume", default_music_vol)
             try:
                 music_vol_float = float(loaded_music_vol)
                 if 0.0 <= music_vol_float <= 1.0:
@@ -347,8 +340,7 @@ def load_settings(game_state: Any) -> None:
                 )
 
             # Load sound toggle safely
-            loaded_sound_on = settings_data.get("game_sounds_on",
-                        default_sound_on)
+            loaded_sound_on = settings_data.get("game_sounds_on", default_sound_on)
             if isinstance(loaded_sound_on, bool):
                 game_state.game_sounds_on = loaded_sound_on
             else:
@@ -358,8 +350,7 @@ def load_settings(game_state: Any) -> None:
                 )
 
             # Load music toggle safely
-            loaded_music_on = settings_data.get("background_music_on",
-                        default_music_on)
+            loaded_music_on = settings_data.get("background_music_on", default_music_on)
             if isinstance(loaded_music_on, bool):
                 game_state.background_music_on = loaded_music_on
             else:
@@ -378,15 +369,13 @@ def load_settings(game_state: Any) -> None:
             game_state.game_sounds_on = default_sound_on
             game_state.background_music_on = default_music_on
     except (IOError, json.JSONDecodeError) as e:
-        logger.error(
-            f"Failed load settings from {settings_file}: {e}. Using defaults.")
+        logger.error(f"Failed load settings from {settings_file}: {e}. Using defaults.")
         game_state.current_sound_volume = default_sound_vol
         game_state.current_music_volume = default_music_vol
         game_state.game_sounds_on = default_sound_on
         game_state.background_music_on = default_music_on
     except Exception as e:
-        logger.exception(
-            f"Unexpected error loading settings: {e}. Using defaults.")
+        logger.exception(f"Unexpected error loading settings: {e}. Using defaults.")
         game_state.current_sound_volume = default_sound_vol
         game_state.current_music_volume = default_music_vol
         game_state.game_sounds_on = default_sound_on
@@ -398,16 +387,14 @@ def save_settings(game_state: Any) -> None:
     settings_file = GameConstants.SETTINGS_FILE
     # Ensure attributes exist before saving
     settings_data = {
-        "sound_volume":
-        getattr(game_state, "current_sound_volume",
-                GameConstants.INITIAL_SOUND_VOLUME),
-        "music_volume":
-        getattr(game_state, "current_music_volume",
-                GameConstants.INITIAL_MUSIC_VOLUME),
-        "game_sounds_on":
-        getattr(game_state, "game_sounds_on", True),
-        "background_music_on":
-        getattr(game_state, "background_music_on", True),
+        "sound_volume": getattr(
+            game_state, "current_sound_volume", GameConstants.INITIAL_SOUND_VOLUME
+        ),
+        "music_volume": getattr(
+            game_state, "current_music_volume", GameConstants.INITIAL_MUSIC_VOLUME
+        ),
+        "game_sounds_on": getattr(game_state, "game_sounds_on", True),
+        "background_music_on": getattr(game_state, "background_music_on", True),
     }
     try:
         with open(settings_file, "w") as f:
@@ -419,8 +406,9 @@ def save_settings(game_state: Any) -> None:
         logger.exception(f"Unexpected error saving settings: {e}")
 
 
-def load_background_music(game_state: Any,
-                          track_index: int) -> Optional[pygame.mixer.Sound]:
+def load_background_music(
+    game_state: Any, track_index: int
+) -> Optional[pygame.mixer.Sound]:
     """Loads a specific background music track by index."""
     # Use getattr to safely access BACKGROUND_MUSIC_TRACKS
     available_tracks = getattr(GameConstants, "BACKGROUND_MUSIC_TRACKS", [])
@@ -456,8 +444,7 @@ def load_background_music(game_state: Any,
     except pygame.error as e:
         logger.error(f"Pygame error loading music '{track_filename}': {e}")
     except Exception as e:
-        logger.exception(
-            f"Unexpected error loading music '{track_filename}': {e}")
+        logger.exception(f"Unexpected error loading music '{track_filename}': {e}")
     return None
 
 
@@ -476,36 +463,40 @@ def change_music_track(game_state: Any, new_index: int):
 
     if valid_index == current_index and current_music:
         # Ensure volume is correct even if track is the same
-        logger.debug(
-            f"Track index {valid_index} already selected. Ensuring volume.")
+        logger.debug(f"Track index {valid_index} already selected. Ensuring volume.")
         set_volume(game_state)  # Assumes set_volume handles starting if needed
         return
 
-    logger.info(
-        f"Changing music track from {current_index} to {valid_index}...")
+    logger.info(f"Changing music track from {current_index} to {valid_index}...")
     game_state.selected_music_track_index = valid_index
 
     # Stop previous music if it exists and is playing
-    if (current_music and pygame.mixer.get_init()
-            and any(ch.get_sound() == current_music
-                    for i in range(pygame.mixer.get_num_channels())
-                    if (ch := pygame.mixer.Channel(i)).get_busy())):
+    if (
+        current_music
+        and pygame.mixer.get_init()
+        and any(
+            ch.get_sound() == current_music
+            for i in range(pygame.mixer.get_num_channels())
+            if (ch := pygame.mixer.Channel(i)).get_busy()
+        )
+    ):
         logger.debug("Stopping previous background music track.")
         current_music.stop()
 
     # Load the new track
     game_state.background_music = load_background_music(
-        game_state, game_state.selected_music_track_index)
+        game_state, game_state.selected_music_track_index
+    )
     # Set volume and potentially start the new track
     set_volume(game_state)
 
 
 def toggle_background_music(game_state: Any) -> None:
     """Toggle background music ON/OFF flag and update playback/volume."""
-    game_state.background_music_on = not getattr(game_state,
-                                                 "background_music_on", True)
-    logger.info(
-        f"Music toggled {'ON' if game_state.background_music_on else 'OFF'}")
+    game_state.background_music_on = not getattr(
+        game_state, "background_music_on", True
+    )
+    logger.info(f"Music toggled {'ON' if game_state.background_music_on else 'OFF'}")
     set_volume(game_state)  # Applies volume change and stops/starts playback
     save_settings(game_state)  # Persist the toggle state
 
@@ -513,8 +504,7 @@ def toggle_background_music(game_state: Any) -> None:
 def toggle_game_sounds(game_state: Any) -> None:
     """Toggle game sounds ON/OFF flag and update volume."""
     game_state.game_sounds_on = not getattr(game_state, "game_sounds_on", True)
-    logger.info(
-        f"Sounds toggled {'ON' if game_state.game_sounds_on else 'OFF'}")
+    logger.info(f"Sounds toggled {'ON' if game_state.game_sounds_on else 'OFF'}")
     set_volume(game_state)  # Applies volume change to sound effects
     save_settings(game_state)  # Persist the toggle state
 
@@ -522,10 +512,12 @@ def toggle_game_sounds(game_state: Any) -> None:
 def set_volume(game_state: Any):
     """Sets volume for all sounds based on current levels and on/off flags."""
     # Safely get volume levels and on/off flags
-    sound_vol_level = getattr(game_state, "current_sound_volume",
-                              GameConstants.INITIAL_SOUND_VOLUME)
-    music_vol_level = getattr(game_state, "current_music_volume",
-                              GameConstants.INITIAL_MUSIC_VOLUME)
+    sound_vol_level = getattr(
+        game_state, "current_sound_volume", GameConstants.INITIAL_SOUND_VOLUME
+    )
+    music_vol_level = getattr(
+        game_state, "current_music_volume", GameConstants.INITIAL_MUSIC_VOLUME
+    )
     sound_on = getattr(game_state, "game_sounds_on", True)
     music_on = getattr(game_state, "background_music_on", True)
 
@@ -543,21 +535,21 @@ def set_volume(game_state: Any):
             game_state.score_sound.set_volume(sound_vol)
         if hasattr(game_state, "low_time_sound") and game_state.low_time_sound:
             game_state.low_time_sound.set_volume(sound_vol)
-        if hasattr(game_state,
-                   "achievement_sound") and game_state.achievement_sound:
+        if hasattr(game_state, "achievement_sound") and game_state.achievement_sound:
             game_state.achievement_sound.set_volume(sound_vol)
         # Add other sound effects here...
 
         # Handle background music volume and playback state
-        if hasattr(game_state,
-                   "background_music") and game_state.background_music:
+        if hasattr(game_state, "background_music") and game_state.background_music:
             current_music = game_state.background_music
             current_music.set_volume(music_vol)
 
             # Check if the specific sound object is playing on any channel
-            is_playing = any(ch.get_sound() == current_music
-                    for i in range(pygame.mixer.get_num_channels())
-                             if (ch := pygame.mixer.Channel(i)).get_busy())
+            is_playing = any(
+                ch.get_sound() == current_music
+                for i in range(pygame.mixer.get_num_channels())
+                if (ch := pygame.mixer.Channel(i)).get_busy()
+            )
 
             if music_on and music_vol > 0 and not is_playing:
                 logger.debug(
@@ -598,12 +590,12 @@ def load_initial_state(game_state: Any):
     # Load high score for the current game mode
     try:
         high_score_file = GameConstants.HIGH_SCORE_FILE
-        current_mode = getattr(game_state, "game_mode",
-                               "classic")  # Default to classic if mode not set
+        current_mode = getattr(
+            game_state, "game_mode", "classic"
+        )  # Default to classic if mode not set
         game_state.high_score = 0  # Default high score
 
-        if os.path.exists(high_score_file) and os.path.getsize(
-                high_score_file) > 0:
+        if os.path.exists(high_score_file) and os.path.getsize(high_score_file) > 0:
             with open(high_score_file, "r") as f:
                 data = json.load(f)
             if isinstance(data, dict):
@@ -615,7 +607,7 @@ def load_initial_state(game_state: Any):
                         f"Data for mode '{current_mode}' in high score file is not a dict."
                     )
             else:
-                logger.warning(f"High score file format is not a dict.")
+                logger.warning("High score file format is not a dict.")
 
         logger.info(
             f"Loaded high score for mode '{current_mode}': {game_state.high_score}"
@@ -631,14 +623,18 @@ def load_initial_state(game_state: Any):
 def check_achievements(game_state: Any) -> None:
     """Check achievements and notify."""
     if not hasattr(game_state, "achievements") or not isinstance(
-            game_state.achievements, list):
+        game_state.achievements, list
+    ):
         return  # Cannot check if achievements list doesn't exist
 
     newly_unlocked = False
     for ach in game_state.achievements:
         # Ensure achievement object is valid before checking
-        if (not isinstance(ach, Achievement) or not hasattr(ach, "unlocked")
-                or not hasattr(ach, "check")):
+        if (
+            not isinstance(ach, Achievement)
+            or not hasattr(ach, "unlocked")
+            or not hasattr(ach, "check")
+        ):
             logger.warning(f"Invalid object found in achievements list: {ach}")
             continue
 
@@ -650,12 +646,11 @@ def check_achievements(game_state: Any) -> None:
                     ach.unlocked = True
                     logger.info(f"Achieved: {ach.name} - {ach.description}")
                     # Use helper for notification
-                    show_notification(game_state,
-                                      f"Unlocked: {ach.name}",
-                                      duration=5.0)
+                    show_notification(game_state, f"Unlocked: {ach.name}", duration=5.0)
                     # Use helper for sound (ensure achievement_sound is loaded)
-                    play_sound(game_state,
-                               getattr(game_state, "achievement_sound", None))
+                    play_sound(
+                        game_state, getattr(game_state, "achievement_sound", None)
+                    )
                     newly_unlocked = True
             except Exception as e:
                 logger.error(
@@ -664,13 +659,16 @@ def check_achievements(game_state: Any) -> None:
 
     if newly_unlocked:
         save_achievements(  # Call local save function
-            game_state, GameConstants.ACHIEVEMENTS_FILE)
+            game_state, GameConstants.ACHIEVEMENTS_FILE
+        )
 
 
 def update_achievement_notification(game_state: Any, dt: float) -> None:
     """Updates timer for achievement popup."""
-    if (hasattr(game_state, "achievement_notification_timer")
-            and game_state.achievement_notification_timer > 0):
+    if (
+        hasattr(game_state, "achievement_notification_timer")
+        and game_state.achievement_notification_timer > 0
+    ):
         game_state.achievement_notification_timer -= dt
         if game_state.achievement_notification_timer <= 0:
             game_state.achievement_notification_timer = 0  # Prevent negative values
@@ -680,8 +678,7 @@ def update_achievement_notification(game_state: Any, dt: float) -> None:
 
 def update_notifications(game_state: Any, dt: float) -> None:
     """Update notification timer."""
-    if hasattr(game_state,
-               "notification_timer") and game_state.notification_timer > 0:
+    if hasattr(game_state, "notification_timer") and game_state.notification_timer > 0:
         game_state.notification_timer -= dt
         if game_state.notification_timer <= 0:
             game_state.notification_timer = 0  # Prevent negative values
@@ -693,8 +690,7 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
     """Handle timer decrement, state changes based on timer, and click feedback timeout."""
 
     # --- Handle click feedback timeout ---
-    if hasattr(game_state,
-               "click_feedback_state") and game_state.click_feedback_state:
+    if hasattr(game_state, "click_feedback_state") and game_state.click_feedback_state:
         _rect, click_time = game_state.click_feedback_state
         if time.time() - click_time >= UIConstants.CLICK_FEEDBACK_DURATION:
             game_state.click_feedback_state = None
@@ -704,17 +700,22 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
     current_state = getattr(game_state, "current_state", None)
     game_mode = getattr(game_state, "game_mode", None)
 
-    if (current_state == CurrentGameState.PLAYING
-            and game_mode in ["timed", "survival"]
-            and hasattr(game_state, "game_timer")
-            and game_state.game_timer is not None):
+    if (
+        current_state == CurrentGameState.PLAYING
+        and game_mode in ["timed", "survival"]
+        and hasattr(game_state, "game_timer")
+        and game_state.game_timer is not None
+    ):
         # Low time warning sound
-        if (game_state.game_timer > 0
-                and game_state.game_timer <= 10.0  # Threshold for warning
-                and not getattr(game_state, "low_time_warning_played", False)):
+        if (
+            game_state.game_timer > 0
+            and game_state.game_timer <= 10.0  # Threshold for warning
+            and not getattr(game_state, "low_time_warning_played", False)
+        ):
             logger.info("Timer low warning triggered.")
-            play_sound(game_state, getattr(game_state, "low_time_sound",
-                                        None))  # Use helper
+            play_sound(
+                game_state, getattr(game_state, "low_time_sound", None)
+            )  # Use helper
             game_state.low_time_warning_played = True  # Set flag
 
         # Decrement timer
@@ -738,8 +739,7 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
                         if player and hasattr(player, "name"):
                             player_name = player.name
                     # Pass current player name and mode
-                    save_score(game_state, player_name,
-                            mode=game_mode)  # Use helper
+                    save_score(game_state, player_name, mode=game_mode)  # Use helper
                 except Exception as e:
                     logger.error(f"Error saving score on timer expiry: {e}")
 
@@ -756,19 +756,19 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
     # Update visual effects (Fun Mode)
     if game_mode == "fun" and current_state == CurrentGameState.PLAYING:
         if hasattr(game_state, "active_explosions") and isinstance(
-            game_state.active_explosions, list):
+            game_state.active_explosions, list
+        ):
             active_explosions = game_state.active_explosions
             # Update existing explosions
             for explosion in active_explosions:
-                if hasattr(explosion, "update") and hasattr(
-                        explosion, "is_active"):
+                if hasattr(explosion, "update") and hasattr(explosion, "is_active"):
                     explosion.update(dt)
                 else:
-                    logger.warning(
-                        "Found invalid object in active_explosions list.")
+                    logger.warning("Found invalid object in active_explosions list.")
             # Remove inactive explosions (iterate backwards or create new list)
             game_state.active_explosions = [
-                exp for exp in active_explosions
+                exp
+                for exp in active_explosions
                 if hasattr(exp, "is_active") and exp.is_active()
             ]
 
@@ -776,7 +776,7 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
 def reset_game(game_state: Any) -> None:
     """Reset game state for a new game, while preserving player and leaderboard."""
     logger.info("Resetting game for new round.")
-    
+
     # Preserve objects that should survive reset
     preserved_objects = {
         "leaderboard": getattr(game_state, "leaderboard", None),
@@ -787,7 +787,9 @@ def reset_game(game_state: Any) -> None:
         "hsv_ranges": getattr(game_state, "hsv_ranges", {}),
         "achievements": getattr(game_state, "achievements", []),
         "high_score": getattr(game_state, "high_score", 0),
-        "game_mode": getattr(game_state, "game_mode", "classic"),  # Preserve selected game mode
+        "game_mode": getattr(
+            game_state, "game_mode", "classic"
+        ),  # Preserve selected game mode
         "current_resolution_key": getattr(game_state, "current_resolution_key", None),
         "current_width": getattr(game_state, "current_width", 0),
         "current_height": getattr(game_state, "current_height", 0),
@@ -799,12 +801,18 @@ def reset_game(game_state: Any) -> None:
         # Sound-related objects to preserve
         "score_sound": getattr(game_state, "score_sound", None),
         "background_music": getattr(game_state, "background_music", None),
-        "selected_music_track_index": getattr(game_state, "selected_music_track_index", 0),
+        "selected_music_track_index": getattr(
+            game_state, "selected_music_track_index", 0
+        ),
         "achievement_sound": getattr(game_state, "achievement_sound", None),
         "low_time_sound": getattr(game_state, "low_time_sound", None),
         # Audio settings
-        "current_sound_volume": getattr(game_state, "current_sound_volume", GameConstants.INITIAL_SOUND_VOLUME),
-        "current_music_volume": getattr(game_state, "current_music_volume", GameConstants.INITIAL_MUSIC_VOLUME),
+        "current_sound_volume": getattr(
+            game_state, "current_sound_volume", GameConstants.INITIAL_SOUND_VOLUME
+        ),
+        "current_music_volume": getattr(
+            game_state, "current_music_volume", GameConstants.INITIAL_MUSIC_VOLUME
+        ),
         "game_sounds_on": getattr(game_state, "game_sounds_on", True),
         "background_music_on": getattr(game_state, "background_music_on", True),
         # Debug & UI preferences
@@ -813,11 +821,13 @@ def reset_game(game_state: Any) -> None:
         # Data logger to be preserved but reset
         "data_logger": getattr(game_state, "data_logger", None),
     }
-    
+
     # Reset player's game count and score before preserving
     try:
         if preserved_objects["players"]:
-            current_player = preserved_objects["players"][preserved_objects["current_player_index"]]
+            current_player = preserved_objects["players"][
+                preserved_objects["current_player_index"]
+            ]
             if hasattr(current_player, "games_played"):
                 current_player.games_played += 1  # Increment games played count
             if hasattr(current_player, "score"):
@@ -827,7 +837,7 @@ def reset_game(game_state: Any) -> None:
 
     # Reset objects that have their own reset
     data_logger = preserved_objects.pop("data_logger", None)
-    
+
     # Initialize clean state variables
     score = 0
     tracked_balls = []
@@ -837,7 +847,7 @@ def reset_game(game_state: Any) -> None:
     scored_balls = []
     scored_positions = {}
     zone_cooldown = {}
-    
+
     # Initialize all required dictionaries
     ball_positions_history = {}
     ball_zone_history = {}
@@ -847,7 +857,7 @@ def reset_game(game_state: Any) -> None:
     previous_ball_states = {}
     active_trails = {}
     active_explosions = []
-    
+
     # Reset game timer based on mode
     timer = None
     if preserved_objects["game_mode"] == "timed":
@@ -858,7 +868,7 @@ def reset_game(game_state: Any) -> None:
         game_state.win_score = GameConstants.SURVIVAL_MODE_WIN_SCORE
     else:
         game_state.win_score = GameConstants.CLASSIC_MODE_WIN_SCORE
-    
+
     # Set all non-preserved attributes to defaults
     for attr_name in list(vars(game_state).keys()):
         if attr_name not in preserved_objects:
@@ -866,11 +876,11 @@ def reset_game(game_state: Any) -> None:
                 delattr(game_state, attr_name)
             except (AttributeError, Exception) as e:
                 logger.warning(f"Error clearing attribute {attr_name}: {e}")
-    
+
     # Restore preserved objects
     for name, obj in preserved_objects.items():
         setattr(game_state, name, obj)
-    
+
     # Set new game state basics
     game_state.score = score
     game_state.tracked_balls = tracked_balls
@@ -901,13 +911,13 @@ def reset_game(game_state: Any) -> None:
     game_state.fps = 0.0  # Initialize fps counter
     game_state.special_hole_hit_this_session = False
     game_state.current_session_stats = None
-    
+
     # Initialize notification attributes
     game_state.achievement_notification = None
     game_state.achievement_notification_timer = 0.0
     game_state.notification_text = None
     game_state.notification_timer = 0.0
-    
+
     # Initialize menu-related attributes
     game_state.submenu_items = []
     game_state.menu_scroll_offset = 0
@@ -917,10 +927,10 @@ def reset_game(game_state: Any) -> None:
     game_state.menu_fade_direction = 1
     game_state.menu_fade_speed = 0.1
     game_state.menu_max_alpha = 200
-    
+
     # Reset menu/editing state
     _reset_all_menu_editing_states(game_state)
-    
+
     # Start new data logging session if available
     if data_logger:
         try:
@@ -932,7 +942,7 @@ def reset_game(game_state: Any) -> None:
             game_state.data_logger = data_logger
         except Exception as e:
             logger.error(f"Error starting new data logging session: {e}")
-    
+
     logger.info("Game reset complete.")
 
 
@@ -976,11 +986,9 @@ def save_historical_stats_on_exit(game_state: Any):
             # game_state.data_logger._save_historical_stats() # Or game_state.data_logger.save_history()
             pass  # Assuming cleanup calls end_current_session which saves history
         except AttributeError:
-            logger.error(
-                "DataLogger instance does not have the expected save method.")
+            logger.error("DataLogger instance does not have the expected save method.")
         except Exception as e:
-            logger.error(
-                f"Error explicitly saving historical stats on exit: {e}")
+            logger.error(f"Error explicitly saving historical stats on exit: {e}")
     else:
         logger.warning(
             "Data logger not found in game_state. Cannot save historical stats."

@@ -17,8 +17,8 @@ import numpy as np
 
 # Set up logging
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -39,6 +39,7 @@ def _assert_fractional(value, name):
     assert 0.0 <= value <= 1.0, f"{name} must be between 0.0 and 1.0"
     return value
 
+
 # --- [ADD] Resolution Constants ---
 class ResolutionConstants:
     RESOLUTIONS = {
@@ -47,7 +48,10 @@ class ResolutionConstants:
     }
     # Set the initial default resolution key
     DEFAULT_RESOLUTION = "1080p"
+
+
 # --- [END ADD] ---
+
 
 class UIConstants:
     """Constants for user interface and display settings."""
@@ -94,24 +98,30 @@ class UIConstants:
     # Positioned below the Menu button using absolute coordinates for now.
     # Consider calculating relatively: e.g., res_y = menu_y + menu_h + int(0.01 * current_height)
     RESOLUTION_BUTTON_X: int = MENU_BUTTON_X
-    RESOLUTION_BUTTON_Y: int = MENU_BUTTON_Y + MENU_BUTTON_HEIGHT + 10 # 10px spacing below
+    RESOLUTION_BUTTON_Y: int = (
+        MENU_BUTTON_Y + MENU_BUTTON_HEIGHT + 10
+    )  # 10px spacing below
     RESOLUTION_BUTTON_WIDTH: int = MENU_BUTTON_WIDTH
     RESOLUTION_BUTTON_HEIGHT: int = MENU_BUTTON_HEIGHT
     # --- [END ADD] ---
 
     # Menu Close Button
     MENU_CLOSE_BUTTON_SIZE: int = _assert_positive(40, "MENU_CLOSE_BUTTON_SIZE")
-    MENU_CLOSE_BUTTON_PADDING: int = _assert_non_negative(10, "MENU_CLOSE_BUTTON_PADDING")
+    MENU_CLOSE_BUTTON_PADDING: int = _assert_non_negative(
+        10, "MENU_CLOSE_BUTTON_PADDING"
+    )
     MENU_CLOSE_BUTTON_COLOR: Tuple[int, int, int] = RED
-    MENU_CLOSE_BUTTON_THICKNESS: int = _assert_positive(2, "MENU_CLOSE_BUTTON_THICKNESS")
+    MENU_CLOSE_BUTTON_THICKNESS: int = _assert_positive(
+        2, "MENU_CLOSE_BUTTON_THICKNESS"
+    )
 
     # Zone Editing Visuals (Handle size absolute, colors okay)
     ZONE_EDIT_HANDLE_SIZE: int = 8
-    ZONE_EDIT_HANDLE_COLOR: Tuple[int, int, int] = (255, 165, 0) # Orange
-    ZONE_EDIT_LINE_COLOR: Tuple[int, int, int] = (255, 165, 0) # Orange
-    ZONE_EDIT_SELECTED_COLOR: Tuple[int, int, int] = (0, 255, 255) # Yellow highlight
-    ZONE_EDIT_MOVE_COLOR: Tuple[int, int, int] = (0, 165, 255) # Orange-Red for move
-    ZONE_EDIT_RESIZE_COLOR: Tuple[int, int, int] = (255, 0, 255) # Magenta for resize
+    ZONE_EDIT_HANDLE_COLOR: Tuple[int, int, int] = (255, 165, 0)  # Orange
+    ZONE_EDIT_LINE_COLOR: Tuple[int, int, int] = (255, 165, 0)  # Orange
+    ZONE_EDIT_SELECTED_COLOR: Tuple[int, int, int] = (0, 255, 255)  # Yellow highlight
+    ZONE_EDIT_MOVE_COLOR: Tuple[int, int, int] = (0, 165, 255)  # Orange-Red for move
+    ZONE_EDIT_RESIZE_COLOR: Tuple[int, int, int] = (255, 0, 255)  # Magenta for resize
 
     # Settings Slider Dimensions (Absolute pixel sizes okay for sliders)
     SLIDER_WIDTH: int = 200
@@ -125,6 +135,7 @@ class UIConstants:
 
 class CameraConfig:
     """Configuration for camera index and backend selection."""
+
     # --- (Content of CameraConfig remains unchanged) ---
     CAMERA_INDICES: List[int] = [0, 1, -1]
     CAMERA_BACKENDS: Dict[str, int] = {
@@ -133,19 +144,27 @@ class CameraConfig:
         "msmf": cv2.CAP_MSMF,
     }
     DEFAULT_BACKEND: str = "dshow"
+
     @staticmethod
     def get_camera_config() -> Tuple[Optional[int], Optional[int], bool]:
-       # (Implementation unchanged)
+        # (Implementation unchanged)
         env_index = os.getenv("WHIFFLE_CAMERA_INDEX")
         env_backend = os.getenv("WHIFFLE_CAMERA_BACKEND", CameraConfig.DEFAULT_BACKEND)
         preferred_index = None
         if env_index is not None:
             try:
                 preferred_index = int(env_index)
-                if preferred_index < -1: preferred_index = None
-            except ValueError: preferred_index = None
-        if env_backend not in CameraConfig.CAMERA_BACKENDS: env_backend = CameraConfig.DEFAULT_BACKEND
-        indices_to_try = ([preferred_index] if preferred_index is not None else CameraConfig.CAMERA_INDICES)
+                if preferred_index < -1:
+                    preferred_index = None
+            except ValueError:
+                preferred_index = None
+        if env_backend not in CameraConfig.CAMERA_BACKENDS:
+            env_backend = CameraConfig.DEFAULT_BACKEND
+        indices_to_try = (
+            [preferred_index]
+            if preferred_index is not None
+            else CameraConfig.CAMERA_INDICES
+        )
         backend = CameraConfig.CAMERA_BACKENDS[env_backend]
         backend_name = env_backend
         for index in indices_to_try:
@@ -158,24 +177,29 @@ class CameraConfig:
                     return index, backend, True
             cap.release()
         if env_backend == CameraConfig.DEFAULT_BACKEND:
-             other_backends = [name for name in CameraConfig.CAMERA_BACKENDS.keys() if name != CameraConfig.DEFAULT_BACKEND]
-             for backend_name in other_backends:
-                  backend = CameraConfig.CAMERA_BACKENDS[backend_name]
-                  for index in indices_to_try:
-                       # logger.info(f"Trying camera index {index} with fallback backend {backend_name} ({backend})...")
-                       cap = cv2.VideoCapture(index, backend)
-                       if cap.isOpened():
-                            ret, _ = cap.read()
-                            if ret:
-                                 cap.release()
-                                 return index, backend, True
-                       cap.release()
+            other_backends = [
+                name
+                for name in CameraConfig.CAMERA_BACKENDS.keys()
+                if name != CameraConfig.DEFAULT_BACKEND
+            ]
+            for backend_name in other_backends:
+                backend = CameraConfig.CAMERA_BACKENDS[backend_name]
+                for index in indices_to_try:
+                    # logger.info(f"Trying camera index {index} with fallback backend {backend_name} ({backend})...")
+                    cap = cv2.VideoCapture(index, backend)
+                    if cap.isOpened():
+                        ret, _ = cap.read()
+                        if ret:
+                            cap.release()
+                            return index, backend, True
+                    cap.release()
         logger.warning("No working camera found. Falling back to static frame.")
         return None, None, False
 
 
 class GameConstants:
     """Constants for general game configuration and timing."""
+
     # Application Configuration
     USE_CAMERA = True
     CAMERA_INDEX = 0  # Default camera (built-in webcam)
@@ -184,16 +208,14 @@ class GameConstants:
     FRAME_RATE = 30  # Target frame rate
     DEBUG_MODE = False  # Debug mode flag
     DETECTION_FRAME_INTERVAL = 2  # Process every Nth frame for detection
-    
+
     # Retro mode constants
-    RETRO_PIXEL_FACTOR = 8  # Pixelation factor for retro mode
+    RETRO_PIXEL_FACTOR = 8  # Pixelation factor for retro mode (higher = more pixelated)
     # Pre-computed sepia kernel for faster processing
-    RETRO_SEPIA_KERNEL = np.array([
-        [0.272, 0.534, 0.131],
-        [0.349, 0.686, 0.168],
-        [0.393, 0.769, 0.189]
-    ])
-    
+    RETRO_SEPIA_KERNEL = np.array(
+        [[0.272, 0.534, 0.131], [0.349, 0.686, 0.168], [0.393, 0.769, 0.189]]
+    )
+
     # Game Modes & Timers
     TIMED_MODE_DURATION = 90.0  # Seconds for timed mode
     TIMED_MODE_WIN_SCORE = 2000  # Score to win in timed mode
@@ -201,7 +223,7 @@ class GameConstants:
     SURVIVAL_MODE_TIME_GAIN_PER_SCORE = 10.0  # Time added per score in survival
     SURVIVAL_MODE_WIN_SCORE = 2000  # Score to win in survival mode
     CLASSIC_MODE_WIN_SCORE = 2000  # Score to win in classic mode
-    
+
     # ... rest of the constants
     FRAME_RATE: int = _assert_positive(30, "FRAME_RATE")
     WAIT_KEY_DELAY: int = max(1, int(1000 / FRAME_RATE) // 3)
@@ -220,9 +242,13 @@ class GameConstants:
     FADE_DURATION: float = _assert_non_negative(1.0, "FADE_DURATION")
 
     POSITION_HISTORY_LENGTH: int = _assert_positive(5, "POSITION_HISTORY_LENGTH")
-    REST_THRESHOLD_DISTANCE: float = _assert_non_negative(10.0, "REST_THRESHOLD_DISTANCE")
+    REST_THRESHOLD_DISTANCE: float = _assert_non_negative(
+        10.0, "REST_THRESHOLD_DISTANCE"
+    )
     ZONE_STABILITY_FRAMES: int = _assert_positive(30, "ZONE_STABILITY_FRAMES")
-    SCORE_COOLDOWN_DURATION: float = _assert_non_negative(9000.0, "SCORE_COOLDOWN_DURATION")
+    SCORE_COOLDOWN_DURATION: float = _assert_non_negative(
+        9000.0, "SCORE_COOLDOWN_DURATION"
+    )
 
     # Audio defaults
     INITIAL_SOUND_VOLUME: float = _assert_fractional(0.7, "INITIAL_SOUND_VOLUME")
@@ -233,7 +259,7 @@ class GameConstants:
         "background_music.mp3",
         "background_music2.mp3",
         "background_music3.mp3",
-        "background_music4.mp3", # --- >>> MODIFICATION: Added this line <<< ---
+        "background_music4.mp3",  # --- >>> MODIFICATION: Added this line <<< ---
     ]
 
     # Camera Configuration uses the dynamic method now
@@ -242,50 +268,76 @@ class GameConstants:
 
 class MenuConstants:
     """Constants defining menu structures."""
+
     # --- (Content remains unchanged) ---
     MAIN_MENU_ITEMS: List[Tuple[str, str]] = [
-        ("Resume", "resume"), ("Settings", "settings"), ("Game Mode", "game_mode"),
-        ("Manage Zones", "manage_zones"), ("Players", "players"), ("Leaderboard", "leaderboard"),
-        ("Achievements", "achievements"), ("Help", "help"), ("FAQ", "faq"),
-        ("About", "about"), ("Quit Game", "quit"),
+        ("Resume", "resume"),
+        ("Settings", "settings"),
+        ("Game Mode", "game_mode"),
+        ("Manage Zones", "manage_zones"),
+        ("Players", "players"),
+        ("Leaderboard", "leaderboard"),
+        ("Achievements", "achievements"),
+        ("Help", "help"),
+        ("FAQ", "faq"),
+        ("About", "about"),
+        ("Quit Game", "quit"),
     ]
     ZONE_SUBMENU_ITEMS: List[Tuple[str, str]] = [
-        ("Add Zone (Start 's')", "add_zone_info"), ("Clear All Zones", "clear_zones"),
-        ("Edit Zones", "edit_zones"), ("Save Zones", "save_zones"),
-        ("Load Zones", "load_zones"), ("Back", "back_to_main"),
+        ("Add Zone (Start 's')", "add_zone_info"),
+        ("Clear All Zones", "clear_zones"),
+        ("Edit Zones", "edit_zones"),
+        ("Save Zones", "save_zones"),
+        ("Load Zones", "load_zones"),
+        ("Back", "back_to_main"),
     ]
 
 
 class GameSpecificConstants:
     """Constants specific to the Whiffle ball game physics or rules."""
+
     EXCLUDED_POSITIONS: List[Tuple[int, int, int]] = []
 
 
 class PlayerConstants:
     """Constants related to player configuration."""
+
     MAX_PLAYER_NAME_LENGTH: int = _assert_positive(15, "MAX_PLAYER_NAME_LENGTH")
-    ALLOWED_PLAYER_NAME_CHARS: str = (string.ascii_letters + string.digits + " _-")
+    ALLOWED_PLAYER_NAME_CHARS: str = string.ascii_letters + string.digits + " _-"
 
 
 class DetectionConstants:
     """Constants for ball detection parameters."""
-    YOLO_CONFIDENCE_THRESHOLD: float = _assert_non_negative(0.5, "YOLO_CONFIDENCE_THRESHOLD")
-    SMALL_BALL_CONFIRM_THRESHOLD: int = _assert_positive(3, "SMALL_BALL_CONFIRM_THRESHOLD")
+
+    YOLO_CONFIDENCE_THRESHOLD: float = _assert_non_negative(
+        0.5, "YOLO_CONFIDENCE_THRESHOLD"
+    )
+    SMALL_BALL_CONFIRM_THRESHOLD: int = _assert_positive(
+        3, "SMALL_BALL_CONFIRM_THRESHOLD"
+    )
     KERNEL_SIZE: Tuple[int, int] = (5, 5)
     ERODE_ITERATIONS: int = _assert_positive(1, "ERODE_ITERATIONS")
     DILATE_ITERATIONS: int = _assert_positive(2, "DILATE_ITERATIONS")
-    EXCLUSION_DISTANCE: float = _assert_non_negative(50.0, "EXCLUSION_DISTANCE") # Added based on detection.txt usage
+    EXCLUSION_DISTANCE: float = _assert_non_negative(
+        50.0, "EXCLUSION_DISTANCE"
+    )  # Added based on detection.txt usage
 
 
 class TrackingConstants:
     """Constants for ball tracking parameters."""
-    TRACKING_DISTANCE_THRESHOLD: float = _assert_positive(100.0, "TRACKING_DISTANCE_THRESHOLD")
-    SCORED_DISTANCE_THRESHOLD: float = _assert_positive(100.0, "SCORED_DISTANCE_THRESHOLD")
+
+    TRACKING_DISTANCE_THRESHOLD: float = _assert_positive(
+        100.0, "TRACKING_DISTANCE_THRESHOLD"
+    )
+    SCORED_DISTANCE_THRESHOLD: float = _assert_positive(
+        100.0, "SCORED_DISTANCE_THRESHOLD"
+    )
     MAX_AGE_FRAMES: int = _assert_positive(30000, "MAX_AGE_FRAMES")
 
 
 class ScoringConstants:
     """Constants for scoring logic."""
+
     DEFAULT_POINTS: int = _assert_positive(100, "DEFAULT_POINTS")
     MAX_POINTS: int = _assert_positive(999, "MAX_POINTS")
     MIN_ZONE_SIZE: int = _assert_positive(10, "MIN_ZONE_SIZE")
@@ -293,6 +345,7 @@ class ScoringConstants:
 
 class LeaderboardConstants:
     """Constants for leaderboard management."""
+
     LEADERBOARD_FILE: str = "whiffle_leaderboard.json"
     TABLE_NAME: str = "whifflescores"
     BATCH_SIZE: int = _assert_positive(10, "BATCH_SIZE")

@@ -8,8 +8,9 @@ from typing import Any, Callable
 
 class Achievement:
 
-    def __init__(self, name: str, description: str,
-                 condition: Callable[[Any], bool]) -> None:
+    def __init__(
+        self, name: str, description: str, condition: Callable[[Any], bool]
+    ) -> None:
         self.name = name
         self.description = description
         self.condition = condition

@@ -81,17 +81,17 @@ def _draw_debug_overlay(frame: np.ndarray, game_state: GameState) -> None:
             try:
                 if len(ball) >= 6:
                     x, y, radius, ball_id, age, ball_type = ball[:6]
-                    center_x, center_y, int_radius = int(x), int(y), int(
-                        radius)
+                    center_x, center_y, int_radius = int(x), int(y), int(radius)
                     # Keep drawing the debug bounding box, but not the filled circle
                     pt1 = (center_x - int_radius, center_y - int_radius)
                     pt2 = (center_x + int_radius, center_y + int_radius)
-                    cv2.rectangle(frame, pt1, pt2, UIConstants.YELLOW,
-                                  1)  # Bounding box
+                    cv2.rectangle(
+                        frame, pt1, pt2, UIConstants.YELLOW, 1
+                    )  # Bounding box
                     label = f"ID:{ball_id} T:{ball_type}"
-                    (w,
-                     h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX,
-                                             UIConstants.FONT_SCALE_SMALL, 1)
+                    (w, h), _ = cv2.getTextSize(
+                        label, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_SMALL, 1
+                    )
                     text_x, text_y = pt1[0], pt1[1] - 5
                     cv2.rectangle(
                         frame,
