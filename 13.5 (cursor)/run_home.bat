@@ -1,3 +1,3 @@
 @echo off
-python "F:\Whiffle\12.7\game.py"
+python "F:\Whiffle\13.5 (cursor)\game.py"
 pause

@@ -65,7 +65,7 @@ def _capture_frame(game_state: GameState) -> Optional[np.ndarray]:
 
 # Optimized retro mode processing
 def _apply_retro_effects(frame: np.ndarray, game_state: GameState) -> np.ndarray:
-    """Apply retro mode effects (pixelation and sepia) with caching for static frames."""
+    """Apply retro mode effects (sepia only) with caching for static frames."""
     global retro_frame_cache
     
     # For static frames, use cached version if available
@@ -85,23 +85,14 @@ def _apply_retro_effects(frame: np.ndarray, game_state: GameState) -> np.ndarray
                 del retro_frame_cache[k]
     
     try:
-        # Pixelation
-        h, w = frame.shape[:2]
-        factor = GameConstants.RETRO_PIXEL_FACTOR
-        small_h, small_w = max(1, h // factor), max(1, w // factor)
-        
-        # Apply pixelation effect by resizing down and back up
-        temp = cv2.resize(frame, (small_w, small_h), interpolation=cv2.INTER_LINEAR)
-        pixelated = cv2.resize(temp, (w, h), interpolation=cv2.INTER_NEAREST)
-        
         # Ensure frame is in BGR format
-        if len(pixelated.shape) == 2:  # Grayscale
-            pixelated = cv2.cvtColor(pixelated, cv2.COLOR_GRAY2BGR)
-        elif pixelated.shape[2] == 4:  # RGBA
-            pixelated = cv2.cvtColor(pixelated, cv2.COLOR_BGRA2BGR)
+        if len(frame.shape) == 2:  # Grayscale
+            frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+        elif frame.shape[2] == 4:  # RGBA
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
         
         # Apply sepia effect using pre-computed kernel
-        sepia_canvas = cv2.transform(pixelated, GameConstants.RETRO_SEPIA_KERNEL)
+        sepia_canvas = cv2.transform(frame, GameConstants.RETRO_SEPIA_KERNEL)
         retro_frame = np.clip(sepia_canvas, 0, 255).astype(np.uint8)
         
         # Cache result for static frames

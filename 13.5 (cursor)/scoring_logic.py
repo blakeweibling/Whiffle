@@ -263,21 +263,36 @@ def update_scoring(game_state: Any) -> None:
 
             # Survival Mode Time Gain
             if game_state.game_mode == "survival":
-                time_gain = GameConstants.SURVIVAL_MODE_TIME_GAIN_PER_SCORE
-                if game_state.game_timer is not None:
-                    game_state.game_timer += time_gain
-                    logger.info(
-                        f"Survival Mode: Gained {time_gain:.1f}s. New time: {game_state.game_timer:.1f}s"
-                    )
-                    show_notification(
-                        game_state,
-                        f"+{time_gain:.0f} Secs!",
-                        duration=1.0,
-                        is_error=False,
-                    )
-                else:
-                    logger.warning(
-                        "Attempted to add survival time, but timer is None.")
+                try:
+                    time_gain = GameConstants.SURVIVAL_MODE_TIME_GAIN_PER_SCORE
+                    if game_state.game_timer is not None:
+                        game_state.game_timer += time_gain
+                        logger.info(
+                            f"Survival Mode: Gained {time_gain:.1f}s. New time: {game_state.game_timer:.1f}s"
+                        )
+                        show_notification(
+                            game_state,
+                            f"+{time_gain:.0f} Secs!",
+                            duration=1.0,
+                            is_error=False,
+                        )
+                    else:
+                        logger.warning(
+                            "Attempted to add survival time, but timer is None.")
+                except AttributeError:
+                    logger.error("SURVIVAL_MODE_TIME_GAIN_PER_SCORE constant not found in GameConstants")
+                    time_gain = 5.0  # Default fallback value
+                    if game_state.game_timer is not None:
+                        game_state.game_timer += time_gain
+                        logger.info(
+                            f"Survival Mode: Using fallback time gain of {time_gain:.1f}s. New time: {game_state.game_timer:.1f}s"
+                        )
+                        show_notification(
+                            game_state,
+                            f"+{time_gain:.0f} Secs!",
+                            duration=1.0,
+                            is_error=False,
+                        )
 
             # Record score event (ensure dicts exist)
             if hasattr(game_state, "scored_balls") and isinstance(

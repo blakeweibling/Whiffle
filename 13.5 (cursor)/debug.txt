@@ -1,0 +1,206 @@
+F:\Whiffle\13.5 (cursor)>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.10.9)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2025-04-14 20:13:45,445 - INFO - ui_screens - Showing splash screen...
+2025-04-14 20:13:45,582 - INFO - ui_screens - Initializing GameState...
+2025-04-14 20:13:45,582 - INFO - game_state - Starting GameState initialization...
+2025-04-14 20:13:45,589 - INFO - data_logger - Loaded 50 historical session records.
+2025-04-14 20:13:45,590 - INFO - game_state - Initializing camera for 1920x1080
+2025-04-14 20:13:45,590 - INFO - game_state - Attempting camera index 0 w/ backend 700
+2025-04-14 20:13:45,960 - INFO - game_state - Setting camera properties for 1920x1080
+2025-04-14 20:13:47,216 - INFO - game_state - Camera Get Properties: W=1920.0, H=1080.0. Set Success: Width=True, Height=True
+2025-04-14 20:13:47,217 - INFO - game_state - Camera resolution successfully configured to: 1920x1080
+2025-04-14 20:13:47,240 - INFO - detection - YOLOv8 device preference potentially set (check Ultralytics docs).
+2025-04-14 20:13:47,241 - INFO - tracking - SciPy available - using KDTree for efficient ball tracking
+2025-04-14 20:13:47,241 - INFO - game_state - Initial music track index randomly set to: 3
+2025-04-14 20:13:47,247 - INFO - game_state - Loading settings via utils...
+2025-04-14 20:13:47,248 - INFO - game_state_utils - Loaded settings from settings.json
+2025-04-14 20:13:47,248 - INFO - game_state - Loading initial game state (zones, high score) via utils...
+2025-04-14 20:13:47,249 - INFO - game_state_helpers - Scoring zones loaded from scoring_zones.json
+2025-04-14 20:13:47,249 - INFO - game_state_helpers - Notify: Zones Loaded
+2025-04-14 20:13:47,250 - INFO - game_state_utils - Loaded high score for mode 'classic': 826
+2025-04-14 20:13:47,250 - INFO - game_state - Initializing sounds via utils...
+2025-04-14 20:13:47,312 - INFO - game_state - Loading background music via utils...
+2025-04-14 20:13:47,312 - INFO - game_state_utils - Loading background music: sounds/background_music4.mp3
+2025-04-14 20:13:47,563 - INFO - game_state - Initializing achievements definitions via utils...
+2025-04-14 20:13:47,563 - INFO - game_state - Loading achievements status via utils...
+2025-04-14 20:13:47,564 - INFO - game_state_utils - Loaded status for 3 achievements from achievements_status.json.
+2025-04-14 20:13:47,564 - INFO - game_state - Loading HSV ranges via utils...
+2025-04-14 20:13:47,565 - INFO - game_state_utils - Loaded custom HSV ranges from hsv_ranges.json
+2025-04-14 20:13:47,565 - INFO - data_logger - Starting new session for Player: Player 1, Mode: classic
+2025-04-14 20:13:47,566 - INFO - game_state - GameState initialization complete.
+2025-04-14 20:13:48,364 - INFO - ui_screens - Starting splash fade loop.
+2025-04-14 20:13:51,366 - INFO - ui_screens - Initial splash screen finished.
+--- Whiffle Tracker ---
+Press 'q' to quit at any time.
+Press 'm' during gameplay to open the menu.
+2025-04-14 20:13:51,489 - INFO - game_loop - Game window initialized with initial size 1920x1080.
+2025-04-14 20:13:54,568 - INFO - game_state_helpers - Notify: Welcome, Blake W!
+
+0: 416x736 7 whites, 2 reds, 1 half, 28.9ms
+Speed: 3.5ms preprocess, 28.9ms inference, 73.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 2 reds, 1 half, 5.6ms
+Speed: 2.5ms preprocess, 5.6ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 6 whites, 2 reds, 5.6ms
+Speed: 1.6ms preprocess, 5.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 2 reds, 1 half, 5.5ms
+Speed: 1.6ms preprocess, 5.5ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 2 reds, 1 half, 5.5ms
+Speed: 1.8ms preprocess, 5.5ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 7 whites, 2 reds, 5.6ms
+Speed: 1.8ms preprocess, 5.6ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-14 20:13:59,577 - INFO - game_state_helpers - Notify: Debug Mode: ON
+
+0: 416x736 7 whites, 2 reds, 5.6ms
+Speed: 1.7ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-14 20:13:59,972 - DEBUG - detection - Detected white ball at (480, 440) with radius=18.0, confidence=0.91
+2025-04-14 20:13:59,973 - DEBUG - detection - Detected white ball at (1546, 508) with radius=14.5, confidence=0.88
+2025-04-14 20:13:59,973 - DEBUG - detection - Detected white ball at (1540, 482) with radius=15.0, confidence=0.87
+2025-04-14 20:13:59,973 - DEBUG - detection - Detected white ball at (1536, 453) with radius=16.5, confidence=0.86
+2025-04-14 20:13:59,974 - DEBUG - detection - Detected red ball at (1156, 408) with radius=18.5, confidence=0.84
+2025-04-14 20:13:59,974 - DEBUG - detection - Detected white ball at (1578, 596) with radius=17.0, confidence=0.78
+2025-04-14 20:13:59,975 - DEBUG - detection - Detected red ball at (1566, 564) with radius=16.5, confidence=0.65
+2025-04-14 20:13:59,975 - DEBUG - detection - Detected white ball at (1559, 539) with radius=18.0, confidence=0.59
+2025-04-14 20:13:59,975 - DEBUG - detection - Detected white ball at (1428, 426) with radius=16.0, confidence=0.57
+
+0: 416x736 7 whites, 2 reds, 1 half, 5.6ms
+Speed: 1.8ms preprocess, 5.6ms inference, 1.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-14 20:14:00,374 - DEBUG - detection - Detected white ball at (480, 440) with radius=18.0, confidence=0.90
+2025-04-14 20:14:00,374 - DEBUG - detection - Detected white ball at (1546, 508) with radius=15.0, confidence=0.88
+2025-04-14 20:14:00,374 - DEBUG - detection - Detected white ball at (1536, 452) with radius=16.5, confidence=0.87
+2025-04-14 20:14:00,375 - DEBUG - detection - Detected white ball at (1540, 482) with radius=15.0, confidence=0.87
+2025-04-14 20:14:00,375 - DEBUG - detection - Detected red ball at (1155, 407) with radius=18.0, confidence=0.84
+2025-04-14 20:14:00,375 - DEBUG - detection - Detected white ball at (1578, 596) with radius=17.0, confidence=0.77
+2025-04-14 20:14:00,376 - DEBUG - detection - Detected red ball at (1566, 564) with radius=16.5, confidence=0.67
+2025-04-14 20:14:00,376 - DEBUG - detection - Detected white ball at (1559, 538) with radius=17.5, confidence=0.61
+2025-04-14 20:14:00,376 - DEBUG - detection - Detected white ball at (1428, 426) with radius=16.0, confidence=0.55
+2025-04-14 20:14:00,376 - DEBUG - detection - Detected half ball at (1266, 598) with radius=21.5, confidence=0.55
+2025-04-14 20:14:00,379 - DEBUG - tracking - Tracking 10 new balls with 10 existing tracked balls
+2025-04-14 20:14:00,379 - DEBUG - tracking - Using KD-tree for ball matching
+2025-04-14 20:14:00,380 - DEBUG - tracking - Matched ball ID 0 at (480, 440) with distance 1.0, type white
+2025-04-14 20:14:00,380 - DEBUG - tracking - Matched ball ID 2 at (1546, 508) with distance 0.0, type white
+2025-04-14 20:14:00,380 - DEBUG - tracking - Matched ball ID 3 at (1536, 452) with distance 1.0, type white
+2025-04-14 20:14:00,381 - DEBUG - tracking - Matched ball ID 1 at (1540, 482) with distance 1.0, type white
+2025-04-14 20:14:00,381 - DEBUG - tracking - Matched ball ID 4 at (1578, 596) with distance 0.0, type white
+2025-04-14 20:14:00,381 - DEBUG - tracking - Matched ball ID 5 at (1559, 538) with distance 0.0, type white
+2025-04-14 20:14:00,382 - DEBUG - tracking - Matched ball ID 6 at (1428, 426) with distance 1.0, type white
+2025-04-14 20:14:00,382 - DEBUG - tracking - Matched ball ID 7 at (1155, 407) with distance 0.0, type red
+2025-04-14 20:14:00,382 - DEBUG - tracking - Matched ball ID 8 at (1566, 564) with distance 0.0, type red
+2025-04-14 20:14:00,383 - DEBUG - tracking - Matched ball ID 9 at (1266, 598) with distance 0.0, type half
+
+0: 416x736 7 whites, 2 reds, 1 half, 31.7ms
+Speed: 3.1ms preprocess, 31.7ms inference, 2.6ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-14 20:14:25,200 - DEBUG - detection - Detected white ball at (480, 440) with radius=18.0, confidence=0.91
+2025-04-14 20:14:25,200 - DEBUG - detection - Detected white ball at (1546, 508) with radius=15.0, confidence=0.88
+2025-04-14 20:14:25,200 - DEBUG - detection - Detected white ball at (1540, 482) with radius=15.0, confidence=0.87
+2025-04-14 20:14:25,201 - DEBUG - detection - Detected white ball at (1536, 453) with radius=17.0, confidence=0.87
+2025-04-14 20:14:25,201 - DEBUG - detection - Detected red ball at (1156, 408) with radius=18.5, confidence=0.83
+2025-04-14 20:14:25,201 - DEBUG - detection - Detected white ball at (1578, 596) with radius=17.0, confidence=0.74
+2025-04-14 20:14:25,202 - DEBUG - detection - Detected red ball at (1566, 564) with radius=16.5, confidence=0.65
+2025-04-14 20:14:25,202 - DEBUG - detection - Detected white ball at (1428, 427) with radius=16.0, confidence=0.65
+2025-04-14 20:14:25,203 - DEBUG - detection - Detected white ball at (1559, 538) with radius=17.5, confidence=0.61
+2025-04-14 20:14:25,203 - DEBUG - detection - Detected half ball at (1266, 598) with radius=21.5, confidence=0.51
+2025-04-14 20:14:25,206 - DEBUG - tracking - Tracking 10 new balls with 10 existing tracked balls
+2025-04-14 20:14:25,206 - DEBUG - tracking - Using KD-tree for ball matching
+2025-04-14 20:14:25,206 - DEBUG - tracking - Matched ball ID 0 at (480, 440) with distance 0.0, type white
+2025-04-14 20:14:25,206 - DEBUG - tracking - Matched ball ID 2 at (1546, 508) with distance 0.0, type white
+2025-04-14 20:14:25,207 - DEBUG - tracking - Matched ball ID 1 at (1540, 482) with distance 1.0, type white
+2025-04-14 20:14:25,207 - DEBUG - tracking - Matched ball ID 3 at (1536, 453) with distance 0.0, type white
+2025-04-14 20:14:25,208 - DEBUG - tracking - Matched ball ID 4 at (1578, 596) with distance 0.0, type white
+2025-04-14 20:14:25,208 - DEBUG - tracking - Matched ball ID 6 at (1428, 427) with distance 0.0, type white
+2025-04-14 20:14:25,208 - DEBUG - tracking - Matched ball ID 5 at (1559, 538) with distance 0.0, type white
+2025-04-14 20:14:25,209 - DEBUG - tracking - Matched ball ID 7 at (1155, 407) with distance 0.0, type red
+2025-04-14 20:14:25,209 - DEBUG - tracking - Matched ball ID 8 at (1565, 564) with distance 1.0, type red
+2025-04-14 20:14:25,209 - DEBUG - tracking - Matched ball ID 9 at (1266, 598) with distance 0.0, type half
+2025-04-14 20:14:25,210 - DEBUG - scoring_logic - Ball 0 already scored in zone 3 this entry.
+2025-04-14 20:14:25,210 - DEBUG - scoring_logic - Ball 1 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,210 - DEBUG - scoring_logic - Ball 2 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,210 - DEBUG - scoring_logic - Ball 3 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,211 - DEBUG - scoring_logic - Ball 4 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,211 - DEBUG - scoring_logic - Ball 5 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,211 - DEBUG - scoring_logic - Ball 6 already scored in zone 6 this entry.
+2025-04-14 20:14:25,212 - DEBUG - scoring_logic - Ball 7 already scored in zone 5 this entry.
+2025-04-14 20:14:25,212 - DEBUG - scoring_logic - Ball 8 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,212 - DEBUG - scoring_logic - Ball 9 already scored in zone 4 this entry.
+2025-04-14 20:14:25,356 - DEBUG - scoring_logic - Ball 0 already scored in zone 3 this entry.
+2025-04-14 20:14:25,356 - DEBUG - scoring_logic - Ball 1 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,357 - DEBUG - scoring_logic - Ball 2 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,358 - DEBUG - scoring_logic - Ball 3 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,359 - DEBUG - scoring_logic - Ball 4 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,359 - DEBUG - scoring_logic - Ball 5 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,359 - DEBUG - scoring_logic - Ball 6 already scored in zone 6 this entry.
+2025-04-14 20:14:25,359 - DEBUG - scoring_logic - Ball 7 already scored in zone 5 this entry.
+2025-04-14 20:14:25,360 - DEBUG - scoring_logic - Ball 8 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,360 - DEBUG - scoring_logic - Ball 9 already scored in zone 4 this entry.
+
+0: 416x736 6 whites, 2 reds, 1 half, 30.0ms
+Speed: 3.0ms preprocess, 30.0ms inference, 2.3ms postprocess per image at shape (1, 3, 416, 736)
+2025-04-14 20:14:25,596 - DEBUG - detection - Detected white ball at (480, 440) with radius=18.0, confidence=0.90
+2025-04-14 20:14:25,597 - DEBUG - detection - Detected white ball at (1546, 508) with radius=15.0, confidence=0.88
+2025-04-14 20:14:25,597 - DEBUG - detection - Detected white ball at (1540, 482) with radius=14.5, confidence=0.88
+2025-04-14 20:14:25,597 - DEBUG - detection - Detected white ball at (1536, 453) with radius=16.5, confidence=0.86
+2025-04-14 20:14:25,598 - DEBUG - detection - Detected red ball at (1155, 407) with radius=18.0, confidence=0.86
+2025-04-14 20:14:25,598 - DEBUG - detection - Detected white ball at (1578, 596) with radius=17.0, confidence=0.75
+2025-04-14 20:14:25,598 - DEBUG - detection - Detected red ball at (1566, 564) with radius=16.5, confidence=0.70
+2025-04-14 20:14:25,599 - DEBUG - detection - Detected white ball at (1559, 538) with radius=17.5, confidence=0.61
+2025-04-14 20:14:25,599 - DEBUG - detection - Detected half ball at (1267, 598) with radius=22.0, confidence=0.61
+2025-04-14 20:14:25,602 - DEBUG - scoring_logic - Ball 0 already scored in zone 3 this entry.
+2025-04-14 20:14:25,602 - DEBUG - scoring_logic - Ball 1 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,603 - DEBUG - scoring_logic - Ball 2 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,603 - DEBUG - scoring_logic - Ball 3 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,603 - DEBUG - scoring_logic - Ball 4 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,604 - DEBUG - scoring_logic - Ball 5 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,605 - DEBUG - scoring_logic - Ball 6 already scored in zone 6 this entry.
+2025-04-14 20:14:25,605 - DEBUG - scoring_logic - Ball 7 already scored in zone 5 this entry.
+2025-04-14 20:14:25,605 - DEBUG - scoring_logic - Ball 8 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,606 - DEBUG - scoring_logic - Ball 9 already scored in zone 4 this entry.
+2025-04-14 20:14:25,762 - DEBUG - scoring_logic - Ball 0 already scored in zone 3 this entry.
+2025-04-14 20:14:25,762 - DEBUG - scoring_logic - Ball 1 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,763 - DEBUG - scoring_logic - Ball 2 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,763 - DEBUG - scoring_logic - Ball 3 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,764 - DEBUG - scoring_logic - Ball 4 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,764 - DEBUG - scoring_logic - Ball 5 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,765 - DEBUG - scoring_logic - Ball 6 already scored in zone 6 this entry.
+2025-04-14 20:14:25,765 - DEBUG - scoring_logic - Ball 7 already scored in zone 5 this entry.
+2025-04-14 20:14:25,765 - DEBUG - scoring_logic - Ball 8 in zone 14, but zone is on cooldown.
+2025-04-14 20:14:25,766 - DEBUG - scoring_logic - Ball 9 already scored in zone 4 this entry.
+2025-04-14 20:14:25,855 - INFO - game_loop - Window closed by user.
+2025-04-14 20:14:25,855 - INFO - game_loop - Main game loop exited. Initiating cleanup sequence.
+2025-04-14 20:14:25,857 - INFO - cleanup_utils - Initiating clean exit sequence...
+2025-04-14 20:14:25,859 - INFO - cleanup_utils - Saving score (543) for Blake W on exit...
+2025-04-14 20:14:25,860 - INFO - game_state_helpers - Saving score Blake W: 543 Mode:survival
+2025-04-14 20:14:25,863 - INFO - leaderboard - Saved local leaderboard to whiffle_leaderboard.json
+2025-04-14 20:14:25,863 - INFO - leaderboard - Score queued for batch submission: Blake W - 543 (survival)
+2025-04-14 20:14:25,865 - INFO - cleanup_utils - Flushing pending leaderboard scores...
+2025-04-14 20:14:26,106 - INFO - leaderboard - Supabase POST successful (status 201)
+2025-04-14 20:14:26,106 - INFO - leaderboard - Successfully submitted 2 scores to online leaderboard
+2025-04-14 20:14:26,107 - INFO - cleanup_utils - Saving zones...
+2025-04-14 20:14:26,109 - INFO - game_state_helpers - Scoring zones saved to scoring_zones.json
+2025-04-14 20:14:26,109 - INFO - game_state_helpers - Notify: Zones Saved
+2025-04-14 20:14:26,110 - INFO - cleanup_utils - Saving achievements...
+2025-04-14 20:14:26,111 - DEBUG - game_state_utils - Saved achievements status to achievements_status.json.
+2025-04-14 20:14:26,111 - INFO - cleanup_utils - Ending current session data log...
+2025-04-14 20:14:26,112 - INFO - data_logger - Ending current session.
+2025-04-14 20:14:26,112 - INFO - data_logger - Finalizing session. Score: 543, Duration: 38.5s
+2025-04-14 20:14:26,127 - INFO - data_logger - Saved 50 historical session records to 'session_stats_history.json'.
+2025-04-14 20:14:26,127 - INFO - cleanup_utils - Current session data finalized and history saved.
+2025-04-14 20:14:26,128 - DEBUG - cleanup_utils - Clearing UI and rendering caches...
+2025-04-14 20:14:26,129 - DEBUG - cleanup_utils - Cleared retro_frame_cache
+2025-04-14 20:14:26,129 - DEBUG - cleanup_utils - Attempting to quit Pygame mixer...
+2025-04-14 20:14:26,156 - DEBUG - cleanup_utils - Pygame mixer quit.
+2025-04-14 20:14:26,156 - DEBUG - cleanup_utils - Attempting to quit Pygame...
+2025-04-14 20:14:26,158 - DEBUG - cleanup_utils - Pygame was not initialized.
+2025-04-14 20:14:26,159 - DEBUG - cleanup_utils - Attempting to release camera...
+2025-04-14 20:14:26,268 - DEBUG - cleanup_utils - Camera released.
+2025-04-14 20:14:26,268 - DEBUG - cleanup_utils - Attempting to destroy OpenCV windows...
+2025-04-14 20:14:26,275 - DEBUG - cleanup_utils - cv2.destroyAllWindows() called.
+2025-04-14 20:14:26,275 - INFO - cleanup_utils - Clean exit sequence complete. Terminating process.
+2025-04-14 20:14:26,275 - INFO - __main__ - Program exited via clean_exit.
+2025-04-14 20:14:26,332 - INFO - __main__ - Application exit complete.
+
+F:\Whiffle\13.5 (cursor)>

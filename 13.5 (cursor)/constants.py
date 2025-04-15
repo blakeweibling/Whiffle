@@ -195,10 +195,12 @@ class GameConstants:
     ])
     
     # Game Modes & Timers
-    TIMED_MODE_DURATION = 60.0  # Seconds for timed mode
-    TIMED_MODE_WIN_SCORE = 1000  # Score to win in timed mode
-    SURVIVAL_MODE_START_TIME = 30.0  # Initial time for survival mode
-    SURVIVAL_MODE_TIME_BONUS = 5.0  # Time added per score in survival
+    TIMED_MODE_DURATION = 90.0  # Seconds for timed mode
+    TIMED_MODE_WIN_SCORE = 2000  # Score to win in timed mode
+    SURVIVAL_MODE_START_TIME = 45.0  # Initial time for survival mode
+    SURVIVAL_MODE_TIME_GAIN_PER_SCORE = 10.0  # Time added per score in survival
+    SURVIVAL_MODE_WIN_SCORE = 2000  # Score to win in survival mode
+    CLASSIC_MODE_WIN_SCORE = 2000  # Score to win in classic mode
     
     # ... rest of the constants
     FRAME_RATE: int = _assert_positive(30, "FRAME_RATE")

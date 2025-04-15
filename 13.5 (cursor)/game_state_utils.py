@@ -838,25 +838,26 @@ def reset_game(game_state: Any) -> None:
     scored_positions = {}
     zone_cooldown = {}
     
-    # Memory-conscious collection resets
-    # Instead of creating new empty collections, clear existing ones to reuse memory
-    for collection_name in [
-        "ball_positions_history", "ball_zone_history", "balls_in_zone", 
-        "ball_scored_zones", "ball_states", "previous_ball_states", 
-        "active_trails", "active_explosions"
-    ]:
-        collection = getattr(game_state, collection_name, {})
-        if isinstance(collection, dict):
-            collection.clear()
-        elif isinstance(collection, list):
-            del collection[:]  # Clear list in-place
+    # Initialize all required dictionaries
+    ball_positions_history = {}
+    ball_zone_history = {}
+    balls_in_zone = {}
+    ball_scored_zones = {}
+    ball_states = {}
+    previous_ball_states = {}
+    active_trails = {}
+    active_explosions = []
     
     # Reset game timer based on mode
     timer = None
     if preserved_objects["game_mode"] == "timed":
         timer = GameConstants.TIMED_MODE_DURATION
+        game_state.win_score = GameConstants.TIMED_MODE_WIN_SCORE
     elif preserved_objects["game_mode"] == "survival":
         timer = GameConstants.SURVIVAL_MODE_START_TIME
+        game_state.win_score = GameConstants.SURVIVAL_MODE_WIN_SCORE
+    else:
+        game_state.win_score = GameConstants.CLASSIC_MODE_WIN_SCORE
     
     # Set all non-preserved attributes to defaults
     for attr_name in list(vars(game_state).keys()):
@@ -881,8 +882,14 @@ def reset_game(game_state: Any) -> None:
     game_state.zone_cooldown = zone_cooldown
     game_state.current_state = CurrentGameState.PLAYING
     game_state.previous_state = None
-    game_state.ball_positions_history = {}
-    game_state.ball_zone_history = {}
+    game_state.ball_positions_history = ball_positions_history
+    game_state.ball_zone_history = ball_zone_history
+    game_state.balls_in_zone = balls_in_zone
+    game_state.ball_scored_zones = ball_scored_zones
+    game_state.ball_states = ball_states
+    game_state.previous_ball_states = previous_ball_states
+    game_state.active_trails = active_trails
+    game_state.active_explosions = active_explosions
     game_state.game_timer = timer
     game_state.win_condition_met = False
     game_state.temp_zone = None
@@ -891,36 +898,41 @@ def reset_game(game_state: Any) -> None:
     game_state.menu_cache = None
     game_state.menu_cache_key = None
     game_state.low_time_warning_played = False
+    game_state.fps = 0.0  # Initialize fps counter
+    game_state.special_hole_hit_this_session = False
+    game_state.current_session_stats = None
     
-    # Reset DataLogger session
+    # Initialize notification attributes
+    game_state.achievement_notification = None
+    game_state.achievement_notification_timer = 0.0
+    game_state.notification_text = None
+    game_state.notification_timer = 0.0
+    
+    # Initialize menu-related attributes
+    game_state.submenu_items = []
+    game_state.menu_scroll_offset = 0
+    game_state.menu_selected_index = 0
+    game_state.menu_visible = False
+    game_state.menu_alpha = 0
+    game_state.menu_fade_direction = 1
+    game_state.menu_fade_speed = 0.1
+    game_state.menu_max_alpha = 200
+    
+    # Reset menu/editing state
+    _reset_all_menu_editing_states(game_state)
+    
+    # Start new data logging session if available
     if data_logger:
         try:
             current_player_name = "Player 1"
             if game_state.players:
-                try:
-                    current_player_name = game_state.players[game_state.current_player_index].name
-                except (IndexError, AttributeError):
-                    pass
-                    
-            # End previous session properly
-            try:
-                data_logger.end_current_session(0, game_state.scoring_zones)
-            except Exception as end_e:
-                logger.warning(f"Error ending previous data logger session: {end_e}")
-                
-            # Start new session
+                current_player = game_state.players[game_state.current_player_index]
+                current_player_name = current_player.name
             data_logger.start_new_session(current_player_name, game_state.game_mode)
             game_state.data_logger = data_logger
-            logger.info(f"Started new data logging session for {current_player_name}")
-        except Exception as logger_e:
-            logger.error(f"Error resetting data logger: {logger_e}")
+        except Exception as e:
+            logger.error(f"Error starting new data logging session: {e}")
     
-    # Clear notifications
-    game_state.notification_text = None
-    game_state.notification_timer = 0.0
-    game_state.achievement_notification = None
-    game_state.achievement_notification_timer = 0.0
-
     logger.info("Game reset complete.")
 
 

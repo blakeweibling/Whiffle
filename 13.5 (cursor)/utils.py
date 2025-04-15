@@ -486,6 +486,7 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                               try: save_score(game_state, game_state.get_current_player().name, mode=game_state.game_mode)
                               except Exception as e: logger.error(f"Error saving score before mode change: {e}")
                               game_state.game_mode = new_mode;
+                              game_state.menu_cache = None  # Clear menu cache when changing modes
                               if new_mode == "retro":
                                    available_tracks = getattr(GameConstants, "BACKGROUND_MUSIC_TRACKS", [])
                                    try:
@@ -495,8 +496,11 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                                        change_music_track(game_state, retro_track_index)
                                    except ValueError: logger.error(f"Could not find '{target_track}' for retro mode switch. Music will be randomized by reset_game.")
                                    except Exception as e_music: logger.error(f"Error changing music track during retro mode switch: {e_music}")
-                              reset_game(game_state); show_notification(game_state, f"Mode set to: {new_mode.capitalize()}");
-                              game_state.current_state = CurrentGameState.PLAYING; game_state.submenu_active = None; _reset_all_menu_editing_states(game_state)
+                              reset_game(game_state)  # Reset game state after all mode-specific changes
+                              show_notification(game_state, f"Mode set to: {new_mode.capitalize()}")
+                              game_state.current_state = CurrentGameState.PLAYING  # Ensure we're in playing state
+                              game_state.submenu_active = None  # Clear any active submenu
+                              _reset_all_menu_editing_states(game_state)  # Reset all menu states
                     elif action.startswith("select_player_"):
                          try:
                               index = int(action.split("select_player_")[-1])
