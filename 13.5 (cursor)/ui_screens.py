@@ -25,7 +25,9 @@ logger = logging.getLogger(__name__)
 try:
     from menu_utils import _draw_button
 except ImportError as e:
-    logger.error(f"Failed to import _draw_button from menu_utils: {e}. Button drawing will fail.")
+    logger.error(
+        f"Failed to import _draw_button from menu_utils: {e}. Button drawing will fail."
+    )
 
     def _draw_button(*args, **kwargs):
         pass
@@ -49,7 +51,9 @@ except ImportError as e:
 try:
     from ui_utils import _draw_text_with_background
 except ImportError as e:
-    logger.error(f"Failed to import _draw_text_with_background from ui_utils: {e}. Text drawing will fail.")
+    logger.error(
+        f"Failed to import _draw_text_with_background from ui_utils: {e}. Text drawing will fail."
+    )
 
     def _draw_text_with_background(*args, **kwargs):
         pass
@@ -282,7 +286,7 @@ def display_modal_splash(
     # Display the splash screen
     cv2.imshow(UIConstants.WINDOW_NAME, display_frame)
     cv2.waitKey(3000)  # Display for 3 seconds
-    
+
     # Get the first frame to show after splash
     first_frame = None
     if game_state.camera_available and game_state.cap and game_state.cap.isOpened():
@@ -291,7 +295,7 @@ def display_modal_splash(
             first_frame = cv2.resize(frame, (target_width, target_height))
     elif game_state.static_frame is not None:
         first_frame = cv2.resize(game_state.static_frame, (target_width, target_height))
-    
+
     if first_frame is not None:
         cv2.imshow(UIConstants.WINDOW_NAME, first_frame)
         cv2.waitKey(1)
@@ -311,7 +315,7 @@ def display_heatmap_modal(
         if not hasattr(game_state, "data_logger") or not game_state.data_logger:
             logger.error("No data logger available")
             return
-            
+
         current_session = game_state.data_logger.get_current_session_data()
         if not current_session:
             logger.error("No current session data available")
@@ -319,15 +323,19 @@ def display_heatmap_modal(
 
         # Generate heatmap with current session data
         current_width, current_height = game_state.get_current_resolution_dimensions()
-        heatmap = generate_heatmap(current_session, width=current_width, height=current_height)
+        heatmap = generate_heatmap(
+            current_session, width=current_width, height=current_height
+        )
         if heatmap is None:
             logger.error("Failed to generate heatmap")
             return
 
         # Set up mouse callback for dismissal
         dismiss_flag = {"clicked": False}
-        cv2.setMouseCallback(UIConstants.WINDOW_NAME, _modal_mouse_callback, dismiss_flag)
-        
+        cv2.setMouseCallback(
+            UIConstants.WINDOW_NAME, _modal_mouse_callback, dismiss_flag
+        )
+
         # Set heatmap display flag
         if hasattr(game_state, "show_heatmap"):
             game_state.show_heatmap = True
@@ -336,33 +344,64 @@ def display_heatmap_modal(
         while True:
             try:
                 # Check if window is still valid
-                if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:
+                if (
+                    cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE)
+                    < 1
+                ):
                     logger.info("Heatmap window closed by user")
                     break
 
                 # Get background frame
                 background_frame = None
-                if getattr(game_state, "camera_available", False) and hasattr(game_state, "cap") and game_state.cap and game_state.cap.isOpened():
+                if (
+                    getattr(game_state, "camera_available", False)
+                    and hasattr(game_state, "cap")
+                    and game_state.cap
+                    and game_state.cap.isOpened()
+                ):
                     ret, frame = game_state.cap.read()
                     if ret and frame is not None:
-                        background_frame = cv2.resize(frame, (current_width, current_height))
-                elif hasattr(game_state, "static_frame") and game_state.static_frame is not None:
-                    background_frame = cv2.resize(game_state.static_frame, (current_width, current_height))
+                        background_frame = cv2.resize(
+                            frame, (current_width, current_height)
+                        )
+                elif (
+                    hasattr(game_state, "static_frame")
+                    and game_state.static_frame is not None
+                ):
+                    background_frame = cv2.resize(
+                        game_state.static_frame, (current_width, current_height)
+                    )
 
                 if background_frame is None:
-                    background_frame = np.zeros((current_height, current_width, 3), dtype=np.uint8)
+                    background_frame = np.zeros(
+                        (current_height, current_width, 3), dtype=np.uint8
+                    )
 
                 # Blend heatmap with background
                 heatmap_alpha = 0.2
-                blended_frame = cv2.addWeighted(heatmap, heatmap_alpha, background_frame, 1.0 - heatmap_alpha, 0)
+                blended_frame = cv2.addWeighted(
+                    heatmap, heatmap_alpha, background_frame, 1.0 - heatmap_alpha, 0
+                )
 
                 # Add instruction text
                 message = "Heatmap View - Click or press ESC/Any Key to Close"
                 text_color = UIConstants.WHITE
                 bg_color = UIConstants.BLACK
-                (tw, th), _ = cv2.getTextSize(message, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, UIConstants.FONT_THICKNESS)
+                (tw, th), _ = cv2.getTextSize(
+                    message,
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    UIConstants.FONT_SCALE_MEDIUM,
+                    UIConstants.FONT_THICKNESS,
+                )
                 text_pos = ((current_width - tw) // 2, current_height - 30)
-                _draw_text_with_background(blended_frame, message, text_pos, UIConstants.FONT_SCALE_MEDIUM, text_color, bg_color)
+                _draw_text_with_background(
+                    blended_frame,
+                    message,
+                    text_pos,
+                    UIConstants.FONT_SCALE_MEDIUM,
+                    text_color,
+                    bg_color,
+                )
 
                 # Display frame
                 cv2.imshow(UIConstants.WINDOW_NAME, blended_frame)
@@ -385,7 +424,9 @@ def display_heatmap_modal(
     finally:
         # Cleanup
         try:
-            cv2.setMouseCallback(UIConstants.WINDOW_NAME, main_mouse_callback, main_callback_param)
+            cv2.setMouseCallback(
+                UIConstants.WINDOW_NAME, main_mouse_callback, main_callback_param
+            )
             if hasattr(game_state, "show_heatmap"):
                 game_state.show_heatmap = False
         except Exception as e:
@@ -399,6 +440,7 @@ def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional["GameSt
     try:
         # Initialize game state
         from game_state import GameState
+
         game_state = GameState(supabase_url, supabase_key)
 
         # Create splash window
@@ -406,11 +448,7 @@ def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional["GameSt
         window_created = True
 
         # Display splash screen
-        display_modal_splash(
-            game_state,
-            lambda *args: None,  # Dummy callback
-            None
-        )
+        display_modal_splash(game_state, lambda *args: None, None)  # Dummy callback
 
         return game_state
     except Exception as e:

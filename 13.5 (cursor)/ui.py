@@ -333,8 +333,12 @@ def _draw_stats_display(frame: np.ndarray, game_state: "GameState") -> None:
         stats["total_score"] = live_score
         live_duration_seconds = game_state.get_duration()
         stats["duration_seconds"] = live_duration_seconds
-        live_duration_min = live_duration_seconds / 60.0 if live_duration_seconds > 0 else 0
-        stats["score_rate_per_min"] = (live_score / live_duration_min) if live_duration_min > 0 else 0
+        live_duration_min = (
+            live_duration_seconds / 60.0 if live_duration_seconds > 0 else 0
+        )
+        stats["score_rate_per_min"] = (
+            (live_score / live_duration_min) if live_duration_min > 0 else 0
+        )
 
         # Panel dimensions and positioning
         current_width, current_height = game_state.get_current_resolution_dimensions()
@@ -343,9 +347,13 @@ def _draw_stats_display(frame: np.ndarray, game_state: "GameState") -> None:
         stats_content_height = 230
         button_height = 35
         panel_padding_bottom = 15
-        total_content_height = stats_content_height + button_height + panel_padding_bottom
+        total_content_height = (
+            stats_content_height + button_height + panel_padding_bottom
+        )
         panel_width = 350
-        panel_height = max(total_content_height + 40, getattr(game_state, "menu_height", 450))
+        panel_height = max(
+            total_content_height + 40, getattr(game_state, "menu_height", 450)
+        )
         padding = 20
 
         # Position panel next to menu
@@ -395,66 +403,178 @@ def _draw_stats_display(frame: np.ndarray, game_state: "GameState") -> None:
         title_color = UIConstants.YELLOW
 
         # Draw title
-        cv2.putText(frame, "Session Stats", (panel_x + text_x_offset, panel_y + 25),
-                    font, small_scale * 1.1, title_color, 1, cv2.LINE_AA)
+        cv2.putText(
+            frame,
+            "Session Stats",
+            (panel_x + text_x_offset, panel_y + 25),
+            font,
+            small_scale * 1.1,
+            title_color,
+            1,
+            cv2.LINE_AA,
+        )
 
         # Draw duration
         duration = stats.get("duration_seconds", 0)
         duration_str = f"{int(duration // 60):02d}:{int(duration % 60):02d}"
-        cv2.putText(frame, "Duration:", (panel_x + text_x_offset, current_y),
-                    font, small_scale, text_color, 1, cv2.LINE_AA)
-        cv2.putText(frame, duration_str, (panel_x + 150, current_y),
-                    font, small_scale, value_color, 1, cv2.LINE_AA)
+        cv2.putText(
+            frame,
+            "Duration:",
+            (panel_x + text_x_offset, current_y),
+            font,
+            small_scale,
+            text_color,
+            1,
+            cv2.LINE_AA,
+        )
+        cv2.putText(
+            frame,
+            duration_str,
+            (panel_x + 150, current_y),
+            font,
+            small_scale,
+            value_color,
+            1,
+            cv2.LINE_AA,
+        )
         current_y += line_height
 
         # Draw score
         score = stats.get("total_score", 0)
-        cv2.putText(frame, "Score:", (panel_x + text_x_offset, current_y),
-                    font, small_scale, text_color, 1, cv2.LINE_AA)
-        cv2.putText(frame, f"{score}", (panel_x + 150, current_y),
-                    font, small_scale, value_color, 1, cv2.LINE_AA)
+        cv2.putText(
+            frame,
+            "Score:",
+            (panel_x + text_x_offset, current_y),
+            font,
+            small_scale,
+            text_color,
+            1,
+            cv2.LINE_AA,
+        )
+        cv2.putText(
+            frame,
+            f"{score}",
+            (panel_x + 150, current_y),
+            font,
+            small_scale,
+            value_color,
+            1,
+            cv2.LINE_AA,
+        )
         current_y += line_height
 
         # Draw score rate
         rate = stats.get("score_rate_per_min", 0)
-        cv2.putText(frame, "Score Rate:", (panel_x + text_x_offset, current_y),
-                    font, small_scale, text_color, 1, cv2.LINE_AA)
-        cv2.putText(frame, f"{rate:.1f} pts/min", (panel_x + 150, current_y),
-                    font, small_scale, value_color, 1, cv2.LINE_AA)
+        cv2.putText(
+            frame,
+            "Score Rate:",
+            (panel_x + text_x_offset, current_y),
+            font,
+            small_scale,
+            text_color,
+            1,
+            cv2.LINE_AA,
+        )
+        cv2.putText(
+            frame,
+            f"{rate:.1f} pts/min",
+            (panel_x + 150, current_y),
+            font,
+            small_scale,
+            value_color,
+            1,
+            cv2.LINE_AA,
+        )
         current_y += line_height + 5
 
         # Draw points by ball type
-        cv2.putText(frame, "Points by Ball Type:", (panel_x + text_x_offset, current_y),
-                    font, small_scale, text_color, 1, cv2.LINE_AA)
+        cv2.putText(
+            frame,
+            "Points by Ball Type:",
+            (panel_x + text_x_offset, current_y),
+            font,
+            small_scale,
+            text_color,
+            1,
+            cv2.LINE_AA,
+        )
         current_y += line_height
 
         ball_pts = stats.get("points_by_ball_type", {})
         type_order = ["white", "red", "half"]
         for ball_type in type_order:
             pts = ball_pts.get(ball_type, 0)
-            cv2.putText(frame, f"  - {ball_type.capitalize()}:", (panel_x + text_x_offset, current_y),
-                        font, small_scale, text_color, 1, cv2.LINE_AA)
-            cv2.putText(frame, f"{pts}", (panel_x + 150, current_y),
-                        font, small_scale, value_color, 1, cv2.LINE_AA)
+            cv2.putText(
+                frame,
+                f"  - {ball_type.capitalize()}:",
+                (panel_x + text_x_offset, current_y),
+                font,
+                small_scale,
+                text_color,
+                1,
+                cv2.LINE_AA,
+            )
+            cv2.putText(
+                frame,
+                f"{pts}",
+                (panel_x + 150, current_y),
+                font,
+                small_scale,
+                value_color,
+                1,
+                cv2.LINE_AA,
+            )
             current_y += line_height
 
         # Draw top scoring zones
         current_y += 5
-        cv2.putText(frame, "Top Scoring Zones:", (panel_x + text_x_offset, current_y),
-                    font, small_scale, text_color, 1, cv2.LINE_AA)
+        cv2.putText(
+            frame,
+            "Top Scoring Zones:",
+            (panel_x + text_x_offset, current_y),
+            font,
+            small_scale,
+            text_color,
+            1,
+            cv2.LINE_AA,
+        )
         current_y += line_height
 
         top_zones = stats.get("top_3_zones", [])
         if not top_zones:
-            cv2.putText(frame, "  (No scores yet)", (panel_x + text_x_offset, current_y),
-                        font, small_scale, text_color, 1, cv2.LINE_AA)
+            cv2.putText(
+                frame,
+                "  (No scores yet)",
+                (panel_x + text_x_offset, current_y),
+                font,
+                small_scale,
+                text_color,
+                1,
+                cv2.LINE_AA,
+            )
             current_y += line_height
         else:
             for i, (zone_id, zone_points) in enumerate(top_zones):
-                cv2.putText(frame, f"  {i+1}. Zone {zone_id + 1}:", (panel_x + text_x_offset, current_y),
-                            font, small_scale, text_color, 1, cv2.LINE_AA)
-                cv2.putText(frame, f"{zone_points} pts", (panel_x + 150, current_y),
-                            font, small_scale, value_color, 1, cv2.LINE_AA)
+                cv2.putText(
+                    frame,
+                    f"  {i+1}. Zone {zone_id + 1}:",
+                    (panel_x + text_x_offset, current_y),
+                    font,
+                    small_scale,
+                    text_color,
+                    1,
+                    cv2.LINE_AA,
+                )
+                cv2.putText(
+                    frame,
+                    f"{zone_points} pts",
+                    (panel_x + 150, current_y),
+                    font,
+                    small_scale,
+                    value_color,
+                    1,
+                    cv2.LINE_AA,
+                )
                 current_y += line_height
 
         # Draw heatmap button

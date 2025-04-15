@@ -78,10 +78,14 @@ def update_scoring(game_state: Any) -> None:
             state_dict = getattr(game_state, dict_name, None)
             if isinstance(state_dict, dict):
                 keys_to_remove.update(set(state_dict.keys()) - tracked_ids_this_frame)
-            elif dict_name == "active_trails" and not hasattr(game_state, "active_trails"):
+            elif dict_name == "active_trails" and not hasattr(
+                game_state, "active_trails"
+            ):
                 pass
             else:
-                logger.warning(f"Expected dictionary '{dict_name}' not found or not a dict in game_state during cleanup.")
+                logger.warning(
+                    f"Expected dictionary '{dict_name}' not found or not a dict in game_state during cleanup."
+                )
 
         if keys_to_remove:
             logger.debug(f"Cleaning up state for untracked ball IDs: {keys_to_remove}")
@@ -96,7 +100,9 @@ def update_scoring(game_state: Any) -> None:
     for ball in tracked_balls_list:
         try:
             if len(ball) < 6:
-                logger.warning(f"Skipping scoring update for malformed ball data: {ball}")
+                logger.warning(
+                    f"Skipping scoring update for malformed ball data: {ball}"
+                )
                 continue
             x, y, r, ball_id, age, b_type = ball
             center = (int(x), int(y))
@@ -107,27 +113,32 @@ def update_scoring(game_state: Any) -> None:
         # Update position history (ensure dict exists)
         if not hasattr(game_state, "ball_positions_history"):
             game_state.ball_positions_history = {}
-        
+
         if not isinstance(game_state.ball_positions_history, dict):
             logger.error("game_state.ball_positions_history is not a dict.")
             game_state.ball_positions_history = {}
-            
+
         if ball_id not in game_state.ball_positions_history:
             game_state.ball_positions_history[ball_id] = []
-            
+
         # Add current position to history
         game_state.ball_positions_history[ball_id].append((center, current_time))
-        
+
         # Limit history length and remove old entries
-        while (len(game_state.ball_positions_history[ball_id]) > GameConstants.POSITION_HISTORY_LENGTH or 
-               (len(game_state.ball_positions_history[ball_id]) > 0 and 
-                current_time - game_state.ball_positions_history[ball_id][0][1] > 5.0)):  # Keep 5 seconds of history
+        while len(
+            game_state.ball_positions_history[ball_id]
+        ) > GameConstants.POSITION_HISTORY_LENGTH or (
+            len(game_state.ball_positions_history[ball_id]) > 0
+            and current_time - game_state.ball_positions_history[ball_id][0][1] > 5.0
+        ):  # Keep 5 seconds of history
             game_state.ball_positions_history[ball_id].pop(0)
 
         # Update trail (Fun Mode / Retro Mode)
-        if (game_state.game_mode in ["fun", "retro"] and 
-            hasattr(game_state, "active_trails") and 
-            isinstance(game_state.active_trails, dict)):
+        if (
+            game_state.game_mode in ["fun", "retro"]
+            and hasattr(game_state, "active_trails")
+            and isinstance(game_state.active_trails, dict)
+        ):
             if ball_id not in game_state.active_trails:
                 game_state.active_trails[ball_id] = BallTrail(ball_id)
             game_state.active_trails[ball_id].add_position(center)
@@ -403,15 +414,17 @@ def update_scoring(game_state: Any) -> None:
     if newly_scored_pts_this_frame > 0:
         play_sound(game_state, game_state.score_sound)
 
-    def _process_frame(self, frame: np.ndarray, game_state: 'GameState') -> Tuple[np.ndarray, List[Dict[str, Any]]]:
+    def _process_frame(
+        self, frame: np.ndarray, game_state: "GameState"
+    ) -> Tuple[np.ndarray, List[Dict[str, Any]]]:
         """Process a frame and update game state."""
         # Track balls in the frame
         tracked_balls = self.ball_tracker.track(frame)
-        
+
         # Log ball positions if tracking is active
         game_state.log_ball_positions(tracked_balls)
-        
+
         # Draw tracking visualization
         annotated_frame = self._draw_tracking(frame, tracked_balls)
-        
+
         return annotated_frame, tracked_balls

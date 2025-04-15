@@ -34,7 +34,9 @@ class SessionData:
         self.ball_position_history: Dict[int, List[Tuple[int, int, float]]] = (
             defaultdict(list)
         )  # ball_id -> [(x, y, timestamp), ...]
-        self.has_position_data: bool = False  # Flag to track if we have any position data
+        self.has_position_data: bool = (
+            False  # Flag to track if we have any position data
+        )
 
     def log_score(self, zone_id: int, points: int, ball_type: str):
         """Logs a scoring event."""
@@ -96,7 +98,9 @@ class SessionData:
 
     def has_ball_position_data(self) -> bool:
         """Returns True if this session has any ball position data recorded."""
-        return self.has_position_data and any(len(positions) > 0 for positions in self.ball_position_history.values())
+        return self.has_position_data and any(
+            len(positions) > 0 for positions in self.ball_position_history.values()
+        )
 
 
 class DataLogger:

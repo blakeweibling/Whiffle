@@ -629,7 +629,10 @@ class GameState:
         self.ball_speed = self.INITIAL_BALL_SPEED
         self.ball_position = [self.SCREEN_WIDTH // 2, self.SCREEN_HEIGHT // 2]
         self.ball_direction = [random.choice([-1, 1]), -1]
-        self.paddle_position = [self.SCREEN_WIDTH // 2 - self.PADDLE_WIDTH // 2, self.SCREEN_HEIGHT - 40]
+        self.paddle_position = [
+            self.SCREEN_WIDTH // 2 - self.PADDLE_WIDTH // 2,
+            self.SCREEN_HEIGHT - 40,
+        ]
         self.bricks = self.generate_bricks()
         self.powerups = []
         self.active_powerups = []
@@ -641,5 +644,7 @@ class GameState:
         # Reset session data
         if self.data_logger:
             self.data_logger.start_new_session(player_name, game_mode)
-            self.current_session = self.data_logger.current_session  # Sync current_session
+            self.current_session = (
+                self.data_logger.current_session
+            )  # Sync current_session
             self.current_session_stats = None
