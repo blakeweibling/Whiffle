@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Whiffle"
-#define MyAppVersion "13.4"
+#define MyAppVersion "13.5"
 #define MyAppPublisher "Whiffle Co"
 #define MyAppURL "https://whiffle.co/"
 #define MyAppExeName "Whiffle.exe"
@@ -19,7 +19,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 ; Use {programfiles} constant - it respects ArchitecturesInstallIn64BitMode
-DefaultDirName={programfiles}\{#MyAppName} 
+DefaultDirName={commonpf64}\{#MyAppName} 
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=Output

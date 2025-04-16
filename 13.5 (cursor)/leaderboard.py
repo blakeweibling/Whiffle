@@ -14,6 +14,9 @@ from time import sleep
 from typing import Any, Dict, List, Tuple
 
 import requests
+# Suppress SSL warnings since we're disabling verification
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 from constants import LeaderboardConstants
 
@@ -55,6 +58,9 @@ class Leaderboard:
         self.pending_scores: List[Dict[str, Any]] = (
             []
         )  # Queue for batch updates (Change 4)
+        
+        # Warning about disabled SSL verification
+        logger.warning("SSL certificate verification is disabled for Supabase requests. This is not recommended for production environments.")
 
     def _load_local_scores(self) -> Dict[str, List[Dict[str, Any]]]:
         """
@@ -135,8 +141,8 @@ class Leaderboard:
         for attempt in range(retries):
             try:
                 response = requests.post(
-                    url, headers=self.headers, json=data, timeout=10
-                )  # Added timeout
+                    url, headers=self.headers, json=data, timeout=10, verify=False
+                )  # Added verify=False to bypass SSL cert verification
                 if response.status_code == 429:
                     logger.warning(
                         f"Rate limit hit on attempt {attempt + 1}, retrying in {delay}s"
@@ -178,8 +184,8 @@ class Leaderboard:
         for attempt in range(retries):
             try:
                 response = requests.get(
-                    url, headers=self.headers, params=params, timeout=10
-                )  # Added timeout
+                    url, headers=self.headers, params=params, timeout=10, verify=False
+                )  # Added verify=False to bypass SSL cert verification
                 if response.status_code == 429:
                     logger.warning(
                         f"Rate limit hit on attempt {attempt + 1}, retrying in {delay}s"

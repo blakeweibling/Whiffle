@@ -14,7 +14,6 @@ a = Analysis(
         ('assets', 'assets'),
         ('configs', 'configs'),
         ('data', 'data'),
-        ('txtfiles', 'txtfiles'),
         ('requirements.txt', '.'),
         ('.env', '.')
     ],
