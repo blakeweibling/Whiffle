@@ -7,8 +7,11 @@ Initializes the game and runs the main loop.
 import logging
 import os
 import gc
+import threading
+import time
 
 import cv2
+import numpy as np
 from dotenv import load_dotenv
 
 # Updated imports: clean_exit from utils, mouse_callback from utils
@@ -31,6 +34,60 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def show_loading_screen():
+    """
+    Display a simple loading screen that indicates the application is starting.
+    Returns the window name so it can be closed later.
+    """
+    loading_window_name = "Whiffle Tracker - Loading"
+    
+    # Create a simple black background with loading text
+    loading_img = np.zeros((300, 600, 3), dtype=np.uint8)
+    
+    # Add a title
+    cv2.putText(
+        loading_img,
+        "Whiffle Tracker",
+        (150, 100),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        1.2,
+        (255, 255, 255),
+        2,
+        cv2.LINE_AA
+    )
+    
+    # Add loading message
+    cv2.putText(
+        loading_img,
+        "Loading, please wait...",
+        (150, 180),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.8,
+        (255, 255, 255),
+        1,
+        cv2.LINE_AA
+    )
+    
+    # Add hint message
+    cv2.putText(
+        loading_img,
+        "Initial startup may take 30-45 seconds",
+        (130, 240),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.6,
+        (200, 200, 200),
+        1,
+        cv2.LINE_AA
+    )
+    
+    # Create and show the window
+    cv2.namedWindow(loading_window_name, cv2.WINDOW_NORMAL)
+    cv2.imshow(loading_window_name, loading_img)
+    cv2.waitKey(1)  # Update the window
+    
+    return loading_window_name
+
+
 def validate_config(supabase_url: str, supabase_key: str) -> None:
     """Validate Supabase configuration at startup."""
     if not supabase_url or "default-supabase-url" in supabase_url:
@@ -43,6 +100,9 @@ def validate_config(supabase_url: str, supabase_key: str) -> None:
 
 def main() -> None:
     """Run the main game loop for Whiffle Tracker."""
+    # Show loading screen immediately
+    loading_window = show_loading_screen()
+    
     load_dotenv()
     supabase_url = os.getenv("SUPABASE_URL")  # Get URL from env
     supabase_key = os.getenv("SUPABASE_KEY")  # Get Key from env
@@ -51,13 +111,17 @@ def main() -> None:
         validate_config(supabase_url, supabase_key)
     except ValueError as e:
         logger.error(f"Configuration error: {e}")
-        # Optionally, wait for user input or exit gracefully
-        # input("Press Enter to exit...") # Uncomment to pause before exit
+        # Keep loading screen visible while showing error
+        cv2.waitKey(3000)  # Show for 3 seconds before exiting
+        cv2.destroyWindow(loading_window)
         return  # Exit if config invalid
 
     # Initialize game state via splash screen
     game_state = None  # Initialize to None for proper cleanup in finally block
     try:
+        # Close loading screen just before showing the real splash screen
+        cv2.destroyWindow(loading_window)
+        
         game_state = show_splash_screen(supabase_url, supabase_key)
         if game_state is None:
             logger.info(
@@ -252,6 +316,11 @@ def main() -> None:
                 pass
     finally:
         # Final cleanup - force garbage collection
+        try:
+            # Make sure loading window is closed if it somehow still exists
+            cv2.destroyWindow(loading_window)
+        except:
+            pass
         gc.collect()
         logger.info("Application exit complete.")
 

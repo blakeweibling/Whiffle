@@ -19,7 +19,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 ; Use {programfiles} constant - it respects ArchitecturesInstallIn64BitMode
-DefaultDirName={autopf}\{#MyAppName} 
+DefaultDirName={commonpf64}\{#MyAppName} 
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=Output
