@@ -282,7 +282,7 @@ def display_modal_splash(
             UIConstants.WHITE,
             UIConstants.FONT_THICKNESS,
         )
-    
+
     # Add instruction text at the bottom
     instruction = "Click or press any key to continue"
     (tw, th), _ = cv2.getTextSize(
@@ -305,13 +305,11 @@ def display_modal_splash(
 
     # Set up mouse callback for dismissal
     dismiss_flag = {"clicked": False}
-    cv2.setMouseCallback(
-        UIConstants.WINDOW_NAME, _modal_mouse_callback, dismiss_flag
-    )
+    cv2.setMouseCallback(UIConstants.WINDOW_NAME, _modal_mouse_callback, dismiss_flag)
 
     # Display the splash screen
     cv2.imshow(UIConstants.WINDOW_NAME, display_frame)
-    
+
     # Wait for key press or mouse click (up to 3 seconds)
     start_time = time.time()
     while (time.time() - start_time) < 3.0:
@@ -336,7 +334,7 @@ def display_modal_splash(
     if first_frame is not None:
         cv2.imshow(UIConstants.WINDOW_NAME, first_frame)
         cv2.waitKey(1)
-    
+
     # Restore the original mouse callback
     cv2.setMouseCallback(
         UIConstants.WINDOW_NAME, main_mouse_callback, main_callback_param
@@ -503,21 +501,23 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
     """Draw the player name input interface with improved visuals and cursor movement."""
     try:
         current_width, current_height = game_state.get_current_resolution_dimensions()
-        
+
         # IMPORTANT: Use current_player_name_input instead of player_name_input
         input_text = getattr(game_state, "current_player_name_input", "")
         cursor_pos = getattr(game_state, "player_name_cursor_pos", len(input_text))
 
         # Create a semi-transparent overlay instead of full cover
         overlay = frame.copy()
-        cv2.rectangle(overlay, (0, 0), (current_width, current_height), (10, 10, 10), -1)
+        cv2.rectangle(
+            overlay, (0, 0), (current_width, current_height), (10, 10, 10), -1
+        )
         cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
-        
+
         # Create a contained popup box instead of using the whole screen
         popup_width, popup_height = 700, 300
         popup_x = (current_width - popup_width) // 2
         popup_y = (current_height - popup_height) // 2
-        
+
         # Draw popup background - changed to light blue
         cv2.rectangle(
             frame,
@@ -526,7 +526,7 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
             (170, 130, 100),  # Light blue background (BGR format)
             -1,
         )
-        
+
         # Draw border
         cv2.rectangle(
             frame,
@@ -535,7 +535,7 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
             UIConstants.WHITE,
             2,
         )
-        
+
         # Draw header - changed to light blue
         cv2.rectangle(
             frame,
@@ -544,7 +544,7 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
             (200, 150, 100),  # Sky blue header (BGR format)
             -1,
         )
-        
+
         # Draw title
         title = "Enter Player Name"
         (tw, th), _ = cv2.getTextSize(
@@ -569,40 +569,49 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
         x_button_size = 30
         x_button_x = popup_x + popup_width - x_button_size - 10
         x_button_y = popup_y + 10
-        
+
         # Draw X button circle
         cv2.circle(
             frame,
-            (x_button_x + x_button_size//2, x_button_y + x_button_size//2),
-            x_button_size//2,
+            (x_button_x + x_button_size // 2, x_button_y + x_button_size // 2),
+            x_button_size // 2,
             UIConstants.RED,
-            -1
+            -1,
         )
-        
+
         # Draw X
         line_thickness = 2
-        offset = x_button_size//4
+        offset = x_button_size // 4
         cv2.line(
             frame,
             (x_button_x + offset, x_button_y + offset),
             (x_button_x + x_button_size - offset, x_button_y + x_button_size - offset),
             UIConstants.WHITE,
-            line_thickness
+            line_thickness,
         )
         cv2.line(
             frame,
             (x_button_x + offset, x_button_y + x_button_size - offset),
             (x_button_x + x_button_size - offset, x_button_y + offset),
             UIConstants.WHITE,
-            line_thickness
+            line_thickness,
         )
-        
+
         # Store X button coordinates for mouse detection
         if hasattr(game_state, "username_x_button"):
-            game_state.username_x_button = (x_button_x, x_button_y, x_button_size, x_button_size)
+            game_state.username_x_button = (
+                x_button_x,
+                x_button_y,
+                x_button_size,
+                x_button_size,
+            )
         else:
             # Always create the attribute if it doesn't exist
-            setattr(game_state, "username_x_button", (x_button_x, x_button_y, x_button_size, x_button_size))
+            setattr(
+                game_state,
+                "username_x_button",
+                (x_button_x, x_button_y, x_button_size, x_button_size),
+            )
 
         # Draw input box
         input_box_width = popup_width - 80
@@ -618,7 +627,7 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
             (30, 30, 30),
             -1,
         )
-        
+
         # Draw main box
         cv2.rectangle(
             frame,
@@ -627,7 +636,7 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
             (50, 50, 50),
             -1,
         )
-        
+
         # Draw box border
         cv2.rectangle(
             frame,
@@ -643,7 +652,7 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
             font_thickness = UIConstants.FONT_THICKNESS + 1
             text_x = input_box_x + 15
             text_y = input_box_y + (input_box_height // 2) + 10
-            
+
             # Draw text before cursor
             before_cursor = input_text[:cursor_pos]
             if before_cursor:
@@ -656,7 +665,7 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
                     UIConstants.WHITE,  # Use white for better visibility
                     font_thickness,
                 )
-                
+
                 # Calculate width of text before cursor
                 (before_width, _), _ = cv2.getTextSize(
                     before_cursor,
@@ -672,12 +681,17 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
             cursor_x = text_x + before_width
             cursor_y_top = text_y - cursor_height
             cursor_y_bottom = text_y + 5
-            
+
             # Make cursor blink
             current_time = time.time()
             if int(current_time * 2) % 2 == 0:
-                cv2.line(frame, (cursor_x, cursor_y_top), (cursor_x, cursor_y_bottom), 
-                         UIConstants.WHITE, 2)
+                cv2.line(
+                    frame,
+                    (cursor_x, cursor_y_top),
+                    (cursor_x, cursor_y_bottom),
+                    UIConstants.WHITE,
+                    2,
+                )
 
             # Draw text after cursor
             after_cursor = input_text[cursor_pos:]
@@ -698,13 +712,18 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
             cursor_height = 25
             cursor_y_top = text_y - cursor_height
             cursor_y_bottom = text_y + 5
-            
+
             # Blinking cursor
             current_time = time.time()
             if int(current_time * 2) % 2 == 0:
-                cv2.line(frame, (text_x, cursor_y_top), (text_x, cursor_y_bottom), 
-                         UIConstants.WHITE, 2)
-                
+                cv2.line(
+                    frame,
+                    (text_x, cursor_y_top),
+                    (text_x, cursor_y_bottom),
+                    UIConstants.WHITE,
+                    2,
+                )
+
             # Draw placeholder text
             placeholder = "Type your name here..."
             cv2.putText(
@@ -719,7 +738,7 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
 
         # Draw instructions
         instructions_y = input_box_y + input_box_height + 50
-        
+
         # Instructions line 1
         instructions1 = "Enter=Confirm, Esc=Default (Player 1), Backspace=Delete"
         (iw1, ih1), _ = cv2.getTextSize(
@@ -738,7 +757,7 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
             UIConstants.WHITE,
             UIConstants.FONT_THICKNESS,
         )
-        
+
         # Instructions line 2
         instructions2 = "Use Left/Right arrows to move cursor"
         (iw2, ih2), _ = cv2.getTextSize(

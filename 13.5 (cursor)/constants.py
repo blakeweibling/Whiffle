@@ -210,7 +210,7 @@ class GameConstants:
     DETECTION_FRAME_INTERVAL = 2  # Process every Nth frame for detection
 
     # Retro mode constants
-    RETRO_PIXEL_FACTOR = 8  # Pixelation factor for retro mode (higher = more pixelated)
+    RETRO_PIXEL_FACTOR = 0  # Pixelation factor for retro mode (higher = more pixelated)
     # Pre-computed sepia kernel for faster processing
     RETRO_SEPIA_KERNEL = np.array(
         [[0.272, 0.534, 0.131], [0.349, 0.686, 0.168], [0.393, 0.769, 0.189]]

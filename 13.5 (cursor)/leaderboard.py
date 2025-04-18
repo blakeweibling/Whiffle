@@ -14,8 +14,10 @@ from time import sleep
 from typing import Any, Dict, List, Tuple
 
 import requests
+
 # Suppress SSL warnings since we're disabling verification
 import urllib3
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 from constants import LeaderboardConstants
@@ -58,9 +60,11 @@ class Leaderboard:
         self.pending_scores: List[Dict[str, Any]] = (
             []
         )  # Queue for batch updates (Change 4)
-        
+
         # Warning about disabled SSL verification
-        logger.warning("SSL certificate verification is disabled for Supabase requests. This is not recommended for production environments.")
+        logger.warning(
+            "SSL certificate verification is disabled for Supabase requests. This is not recommended for production environments."
+        )
 
     def _load_local_scores(self) -> Dict[str, List[Dict[str, Any]]]:
         """

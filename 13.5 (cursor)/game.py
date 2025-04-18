@@ -40,10 +40,10 @@ def show_loading_screen():
     Returns the window name so it can be closed later.
     """
     loading_window_name = "Whiffle Tracker - Loading"
-    
+
     # Create a simple black background with loading text
     loading_img = np.zeros((300, 600, 3), dtype=np.uint8)
-    
+
     # Add a title
     cv2.putText(
         loading_img,
@@ -53,9 +53,9 @@ def show_loading_screen():
         1.2,
         (255, 255, 255),
         2,
-        cv2.LINE_AA
+        cv2.LINE_AA,
     )
-    
+
     # Add loading message
     cv2.putText(
         loading_img,
@@ -65,9 +65,9 @@ def show_loading_screen():
         0.8,
         (255, 255, 255),
         1,
-        cv2.LINE_AA
+        cv2.LINE_AA,
     )
-    
+
     # Add hint message
     cv2.putText(
         loading_img,
@@ -77,14 +77,14 @@ def show_loading_screen():
         0.6,
         (200, 200, 200),
         1,
-        cv2.LINE_AA
+        cv2.LINE_AA,
     )
-    
+
     # Create and show the window
     cv2.namedWindow(loading_window_name, cv2.WINDOW_NORMAL)
     cv2.imshow(loading_window_name, loading_img)
     cv2.waitKey(1)  # Update the window
-    
+
     return loading_window_name
 
 
@@ -102,7 +102,7 @@ def main() -> None:
     """Run the main game loop for Whiffle Tracker."""
     # Show loading screen immediately
     loading_window = show_loading_screen()
-    
+
     load_dotenv()
     supabase_url = os.getenv("SUPABASE_URL")  # Get URL from env
     supabase_key = os.getenv("SUPABASE_KEY")  # Get Key from env
@@ -121,7 +121,7 @@ def main() -> None:
     try:
         # Close loading screen just before showing the real splash screen
         cv2.destroyWindow(loading_window)
-        
+
         game_state = show_splash_screen(supabase_url, supabase_key)
         if game_state is None:
             logger.info(

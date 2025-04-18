@@ -531,10 +531,12 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 game_input.init_player_name_input(game_state)
             else:
                 # Fallback initialization if import failed
-                game_state.player_name_cursor_pos = len(getattr(game_state, "current_player_name_input", ""))
-        
+                game_state.player_name_cursor_pos = len(
+                    getattr(game_state, "current_player_name_input", "")
+                )
+
         _draw_player_name_input(frame, game_state)
-        
+
         if getattr(game_state, "debug_mode", False):
             fps = getattr(game_state, "fps", 0)
             state_text = str(game_state.current_state).split(".")[-1]

@@ -28,19 +28,19 @@ logger = logging.getLogger(__name__)
 
 # Constants for arrow key codes
 # OpenCV key codes can vary across systems, so we need to be comprehensive
-LEFT_ARROW = 81      # Common OpenCV code
-RIGHT_ARROW = 83     # Common OpenCV code
-UP_ARROW = 82        # Common OpenCV code
-DOWN_ARROW = 84      # Common OpenCV code
+LEFT_ARROW = 81  # Common OpenCV code
+RIGHT_ARROW = 83  # Common OpenCV code
+UP_ARROW = 82  # Common OpenCV code
+DOWN_ARROW = 84  # Common OpenCV code
 
 # More arrow key codes (some systems use these)
-ALT_LEFT_ARROW = 2424832   # Extended code sometimes returned
+ALT_LEFT_ARROW = 2424832  # Extended code sometimes returned
 ALT_RIGHT_ARROW = 2555904
 ALT_UP_ARROW = 2490368
 ALT_DOWN_ARROW = 2621440
 
 # Additional common arrow key codes
-LEFT_ARROW_ALT2 = 37   # Common arrow key code on some systems
+LEFT_ARROW_ALT2 = 37  # Common arrow key code on some systems
 RIGHT_ARROW_ALT2 = 39
 UP_ARROW_ALT2 = 38
 DOWN_ARROW_ALT2 = 40
@@ -48,25 +48,30 @@ DOWN_ARROW_ALT2 = 40
 # Special arrow key codes for some systems
 LEFT_ARROW_ALT3 = 65361  # Linux/X11 systems
 RIGHT_ARROW_ALT3 = 65363
-UP_ARROW_ALT3 = 65362  
+UP_ARROW_ALT3 = 65362
 DOWN_ARROW_ALT3 = 65364
+
 
 # Function to check if a key is an arrow key
 def is_left_arrow(key: int) -> bool:
     """Check if the key code represents a left arrow key."""
     return key in [LEFT_ARROW, ALT_LEFT_ARROW, LEFT_ARROW_ALT2, LEFT_ARROW_ALT3]
 
+
 def is_right_arrow(key: int) -> bool:
     """Check if the key code represents a right arrow key."""
     return key in [RIGHT_ARROW, ALT_RIGHT_ARROW, RIGHT_ARROW_ALT2, RIGHT_ARROW_ALT3]
+
 
 def is_up_arrow(key: int) -> bool:
     """Check if the key code represents an up arrow key."""
     return key in [UP_ARROW, ALT_UP_ARROW, UP_ARROW_ALT2, UP_ARROW_ALT3]
 
+
 def is_down_arrow(key: int) -> bool:
     """Check if the key code represents a down arrow key."""
     return key in [DOWN_ARROW, ALT_DOWN_ARROW, DOWN_ARROW_ALT2, DOWN_ARROW_ALT3]
+
 
 # Function to initialize player input attributes
 def init_player_name_input(game_state: Any) -> None:
@@ -75,6 +80,7 @@ def init_player_name_input(game_state: Any) -> None:
         game_state.player_name_cursor_pos = 0
     current_input = getattr(game_state, "current_player_name_input", "")
     game_state.player_name_cursor_pos = len(current_input)
+
 
 def _handle_input(game_state: Any) -> Optional[int]:
     """Handles keyboard input using cv2.waitKey, including heatmap dismissal."""
@@ -88,41 +94,63 @@ def _handle_input(game_state: Any) -> Optional[int]:
             raw_key = cv2.waitKey(GameConstants.WAIT_KEY_DELAY)  # Get raw key code
             if raw_key != -1:  # Only process if a key was actually pressed
                 key = raw_key & 0xFF  # Get the significant byte
-                
+
                 # Special handling for extended keys (like arrow keys)
                 # Check if this is an extended key (first byte is 0, but raw_key != 0)
                 if key == 0 and raw_key != 0:
                     # This is an extended key, use the full raw_key value
                     key = raw_key
-                
+
                 # Special direct handling for arrow keys based on common values
-                if raw_key == 0x250000 or raw_key == 0xFF51 or raw_key == 2424832:  # Left arrow variations
+                if (
+                    raw_key == 0x250000 or raw_key == 0xFF51 or raw_key == 2424832
+                ):  # Left arrow variations
                     key = LEFT_ARROW
-                elif raw_key == 0x270000 or raw_key == 0xFF53 or raw_key == 2555904:  # Right arrow variations
+                elif (
+                    raw_key == 0x270000 or raw_key == 0xFF53 or raw_key == 2555904
+                ):  # Right arrow variations
                     key = RIGHT_ARROW
-                elif raw_key == 0x260000 or raw_key == 0xFF52 or raw_key == 2490368:  # Up arrow variations
+                elif (
+                    raw_key == 0x260000 or raw_key == 0xFF52 or raw_key == 2490368
+                ):  # Up arrow variations
                     key = UP_ARROW
-                elif raw_key == 0x280000 or raw_key == 0xFF54 or raw_key == 2621440:  # Down arrow variations
+                elif (
+                    raw_key == 0x280000 or raw_key == 0xFF54 or raw_key == 2621440
+                ):  # Down arrow variations
                     key = DOWN_ARROW
                 # Handle Windows-specific arrow keys that appear as key=0
                 elif key == 0:
                     # Windows often reports arrow keys as raw_key=0 with special handling needed
                     # Check for these keys in GETTING_PLAYER_NAME state
-                    if getattr(game_state, "current_state", None) == CurrentGameState.GETTING_PLAYER_NAME:
+                    if (
+                        getattr(game_state, "current_state", None)
+                        == CurrentGameState.GETTING_PLAYER_NAME
+                    ):
                         # For simplicity, always treat key=0 as LEFT arrow (most commonly needed for editing)
-                        logger.info(f"Detected potential arrow key: key=0, raw_key={raw_key}, treating as LEFT arrow")
-                        
-                        current_input = getattr(game_state, "current_player_name_input", "")
+                        logger.info(
+                            f"Detected potential arrow key: key=0, raw_key={raw_key}, treating as LEFT arrow"
+                        )
+
+                        current_input = getattr(
+                            game_state, "current_player_name_input", ""
+                        )
                         cursor_pos = getattr(game_state, "player_name_cursor_pos", 0)
-                        
+
                         # Always treat as LEFT ARROW for consistency and because it's more commonly needed
                         if cursor_pos > 0:
                             game_state.player_name_cursor_pos = cursor_pos - 1
-                            logger.info(f"Simulated left arrow, moved cursor to {cursor_pos-1}")
-                
+                            logger.info(
+                                f"Simulated left arrow, moved cursor to {cursor_pos-1}"
+                            )
+
                 # Debug log for key presses when in username input screen
-                if getattr(game_state, "current_state", None) == CurrentGameState.GETTING_PLAYER_NAME:
-                    logger.info(f"Key pressed in username input: key={key}, raw_key={raw_key}")
+                if (
+                    getattr(game_state, "current_state", None)
+                    == CurrentGameState.GETTING_PLAYER_NAME
+                ):
+                    logger.info(
+                        f"Key pressed in username input: key={key}, raw_key={raw_key}"
+                    )
                 else:
                     logger.debug(f"Key pressed: {key} (raw: {raw_key})")
         else:
@@ -214,11 +242,11 @@ def _handle_input(game_state: Any) -> Optional[int]:
         # Handle input in GETTING_PLAYER_NAME state
         elif game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
             player_name_key_handled = False
-            
+
             # Initialize cursor position if not already set
             if not hasattr(game_state, "player_name_cursor_pos"):
                 init_player_name_input(game_state)
-                
+
             if key == 13:  # Enter key
                 entered_name = getattr(
                     game_state, "current_player_name_input", ""
@@ -283,26 +311,38 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 player_name_key_handled = True
             elif key == 8:  # Backspace key
                 current_input = getattr(game_state, "current_player_name_input", "")
-                cursor_pos = getattr(game_state, "player_name_cursor_pos", len(current_input))
-                
+                cursor_pos = getattr(
+                    game_state, "player_name_cursor_pos", len(current_input)
+                )
+
                 if current_input and cursor_pos > 0:
                     # Delete character before cursor
-                    game_state.current_player_name_input = current_input[:cursor_pos-1] + current_input[cursor_pos:]
+                    game_state.current_player_name_input = (
+                        current_input[: cursor_pos - 1] + current_input[cursor_pos:]
+                    )
                     game_state.player_name_cursor_pos = cursor_pos - 1
                 player_name_key_handled = True
             # Handle left and right arrow keys for cursor movement
-            elif is_left_arrow(key) or key == 2 or key == 75 or key == 100:  # 2,75,100 are common numpad/directional key codes
+            elif (
+                is_left_arrow(key) or key == 2 or key == 75 or key == 100
+            ):  # 2,75,100 are common numpad/directional key codes
                 cursor_pos = getattr(game_state, "player_name_cursor_pos", 0)
                 if cursor_pos > 0:
                     game_state.player_name_cursor_pos = cursor_pos - 1
-                    logger.info(f"Left arrow detected (key={key}), moved cursor to {cursor_pos-1}")
+                    logger.info(
+                        f"Left arrow detected (key={key}), moved cursor to {cursor_pos-1}"
+                    )
                 player_name_key_handled = True
-            elif is_right_arrow(key) or key == 3 or key == 77 or key == 102:  # 3,77,102 are common numpad/directional key codes
+            elif (
+                is_right_arrow(key) or key == 3 or key == 77 or key == 102
+            ):  # 3,77,102 are common numpad/directional key codes
                 current_input = getattr(game_state, "current_player_name_input", "")
                 cursor_pos = getattr(game_state, "player_name_cursor_pos", 0)
                 if cursor_pos < len(current_input):
                     game_state.player_name_cursor_pos = cursor_pos + 1
-                    logger.info(f"Right arrow detected (key={key}), moved cursor to {cursor_pos+1}")
+                    logger.info(
+                        f"Right arrow detected (key={key}), moved cursor to {cursor_pos+1}"
+                    )
                 player_name_key_handled = True
             elif key >= 32 and key <= 126:  # Printable ASCII characters
                 char = chr(key)
@@ -313,12 +353,18 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 )  # Default allowed chars
                 max_len = getattr(PlayerConstants, "MAX_PLAYER_NAME_LENGTH", 15)
                 current_input = getattr(game_state, "current_player_name_input", "")
-                cursor_pos = getattr(game_state, "player_name_cursor_pos", len(current_input))
+                cursor_pos = getattr(
+                    game_state, "player_name_cursor_pos", len(current_input)
+                )
 
                 if char in allowed_chars:
                     if len(current_input) < max_len:
                         # Insert character at cursor position
-                        new_input = current_input[:cursor_pos] + char + current_input[cursor_pos:]
+                        new_input = (
+                            current_input[:cursor_pos]
+                            + char
+                            + current_input[cursor_pos:]
+                        )
                         game_state.current_player_name_input = new_input
                         game_state.player_name_cursor_pos = cursor_pos + 1
                     else:

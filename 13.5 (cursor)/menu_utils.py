@@ -128,7 +128,9 @@ def show_splash_on_click(
     """
     splash = cv2.imread("assets/splash.png")
     if splash is None:
-        logger.error("Failed to load assets/splash.png for About menu, skipping splash screen")
+        logger.error(
+            "Failed to load assets/splash.png for About menu, skipping splash screen"
+        )
         cv2.putText(
             frame,
             "Splash unavailable",
