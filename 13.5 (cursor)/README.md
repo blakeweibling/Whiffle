@@ -40,7 +40,6 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 * `utils.py`: Contains utility functions, including the main mouse callback.
 * `cleanup_utils.py`: Provides the `clean_exit` function for resource cleanup.
 * `game_state_utils.py`: Utility functions specifically for `GameState` initialization and state management.
-* `setup.py`: Script to build the application into an executable using `cx_Freeze`.
 
 ## Installation & Setup
 
