@@ -7,7 +7,7 @@ a = Analysis(
      'scoring_logic.py', 'leaderboard.py', 'tracking.py', 'effects.py', 'stats_calculator.py',
      'heatmap_utils.py', 'data_logger.py', 'detection.py', 'utils.py', 'ui_utils.py',
      'ui_elements.py', 'cleanup_utils.py', 'achievement.py', 'player.py', 'game_types.py',
-     'game_state_utils.py', 'game_state_helpers.py'],
+     'game_state_utils.py', 'game_state_helpers.py', 'interaction_utils.py'],
     pathex=[],
     binaries=[],
     datas=[
