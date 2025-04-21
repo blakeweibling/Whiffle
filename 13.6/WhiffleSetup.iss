@@ -61,11 +61,10 @@ Source: "Whiffle\data\sounds\*"; DestDir: "{app}\data\sounds"; Flags: ignorevers
 ; High score proof folder
 Source: "Whiffle\high_score_proof\*"; DestDir: "{app}\high_score_proof"; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full
 ; Google API configuration files
-Source: "Whiffle\configs\client_secrets.json"; DestDir: "{app}\configs"; Flags: ignoreversion skipifsourcedoesnotexist
-Source: "Whiffle\configs\google_credentials.json"; DestDir: "{app}\configs"; Flags: ignoreversion skipifsourcedoesnotexist
-Source: "Whiffle\configs\google_credentials2.json"; DestDir: "{app}\configs"; Flags: ignoreversion skipifsourcedoesnotexist
-Source: "Whiffle\configs\youtube_token.json"; DestDir: "{app}\configs"; Flags: ignoreversion skipifsourcedoesnotexist
-Source: "Whiffle\configs\token.pickle"; DestDir: "{app}\configs"; Flags: ignoreversion skipifsourcedoesnotexist
+Source: "Whiffle\configs\client_secrets.json"; DestDir: "{app}\configs"; Flags: ignoreversion
+Source: "Whiffle\configs\google_credentials.json"; DestDir: "{app}\configs"; Flags: ignoreversion
+Source: "Whiffle\configs\google_credentials2.json"; DestDir: "{app}\configs"; Flags: ignoreversion
+Source: "Whiffle\configs\token.pickle"; DestDir: "{app}\configs"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\assets\pinball_icon.ico"
