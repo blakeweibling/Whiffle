@@ -1056,45 +1056,54 @@ class ReplayManager:
         """
         Start recording a new replay.
         """
-        if self.current_replay and self.current_replay.recording:
-            logger.warning(
-                "Already recording a replay, stopping current recording first"
+        # Debug logging to verify the method is being called
+        logger.info("start_recording method called in ReplayManager")
+        
+        try:
+            if self.current_replay and self.current_replay.recording:
+                logger.warning(
+                    "Already recording a replay, stopping current recording first"
+                )
+                self.stop_recording(game_state.score)
+
+            # Get necessary data from game state
+            player_name = (
+                game_state.get_current_player().name
+                if hasattr(game_state, "get_current_player")
+                else "Player"
             )
-            self.stop_recording(game_state.score)
+            game_mode = getattr(game_state, "game_mode", "classic")
+            scoring_zones = getattr(game_state, "scoring_zones", []).copy()
+            resolution = getattr(
+                game_state, "get_current_resolution_dimensions", lambda: (1920, 1080)
+            )()
 
-        # Get necessary data from game state
-        player_name = (
-            game_state.get_current_player().name
-            if hasattr(game_state, "get_current_player")
-            else "Player"
-        )
-        game_mode = getattr(game_state, "game_mode", "classic")
-        scoring_zones = getattr(game_state, "scoring_zones", []).copy()
-        resolution = getattr(
-            game_state, "get_current_resolution_dimensions", lambda: (1920, 1080)
-        )()
+            # Create new replay
+            self.current_replay = Replay(
+                player_name=player_name, game_mode=game_mode, scoring_zones=scoring_zones
+            )
 
-        # Create new replay
-        self.current_replay = Replay(
-            player_name=player_name, game_mode=game_mode, scoring_zones=scoring_zones
-        )
+            # Start recording
+            self.current_replay.start_recording(resolution)
 
-        # Start recording
-        self.current_replay.start_recording(resolution)
+            # Add the first frame
+            current_frame = getattr(game_state, "current_frame", None)
+            self.current_replay.add_frame(game_state, current_frame)
 
-        # Add the first frame
-        current_frame = getattr(game_state, "current_frame", None)
-        self.current_replay.add_frame(game_state, current_frame)
+            # Set a flag in game_state to indicate we're recording
+            setattr(game_state, "replay_recording", True)
 
-        # Set a flag in game_state to indicate we're recording
-        setattr(game_state, "replay_recording", True)
-
-        logger.info(
-            f"Started recording replay {self.current_replay.replay_id} at {resolution[0]}x{resolution[1]}"
-        )
-        logger.info(
-            f"Started recording replay {self.current_replay.replay_id} for player {player_name} in {game_mode} mode"
-        )
+            logger.info(
+                f"Started recording replay {self.current_replay.replay_id} at {resolution[0]}x{resolution[1]}"
+            )
+            logger.info(
+                f"Started recording replay {self.current_replay.replay_id} for player {player_name} in {game_mode} mode"
+            )
+        except Exception as e:
+            logger.error(f"Exception in start_recording: {e}")
+            logger.exception("Full traceback for start_recording error:")
+            # Don't set the replay_recording flag if there was an error
+            setattr(game_state, "replay_recording", False)
 
     def update_recording(self, game_state: Any) -> None:
         """

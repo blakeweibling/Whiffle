@@ -1026,6 +1026,9 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                             and game_state.replay_manager
                         ):
                             try:
+                                logger.info("Start recording action triggered in interaction_utils")
+                                if not game_state.replay_manager:
+                                    logger.error("game_state.replay_manager is None")
                                 game_state.replay_manager.start_recording(game_state)
                                 game_state.menu_cache = (
                                     None  # Reset menu cache to reflect recording state
@@ -1035,12 +1038,20 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                                 return True
                             except Exception as e:
                                 logger.error(f"Error starting replay recording: {e}")
+                                logger.exception("Full traceback for start_recording error in interaction_utils:")
                                 show_notification(
                                     game_state,
                                     "Error starting recording",
                                     is_error=True,
                                 )
                                 return True
+                        else:
+                            logger.error("Cannot start recording - replay_manager not available")
+                            show_notification(
+                                game_state,
+                                "Cannot start recording - replay system not initialized",
+                                is_error=True,
+                            )
                         return False
 
                     elif action == "stop_recording":

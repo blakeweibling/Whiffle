@@ -279,17 +279,18 @@ def run_game_loop(game_state: GameState) -> None:
                 if run_detection_tracking:
                     _process_frame(draw_canvas, game_state)
 
-            # Update replay recording if active - do this regardless of game state
-            # This allows recording to continue even in menus
-            replay_recording_active = (
-                hasattr(game_state, "replay_recording")
-                and game_state.replay_recording
-                and hasattr(game_state, "replay_manager")
-                and game_state.replay_manager
-            )
-
+            # Handle replay recording if active
+            replay_recording_active = getattr(game_state, "replay_recording", False)
+            
             if replay_recording_active:
                 try:
+                    # Check if replay_manager exists
+                    if not hasattr(game_state, "replay_manager") or game_state.replay_manager is None:
+                        logger.error("Replay recording flag is set but replay_manager is not available")
+                        setattr(game_state, "replay_recording", False)
+                        show_notification(game_state, "Replay system error", is_error=True)
+                        continue
+                        
                     # Log recording activity occasionally
                     if game_state.frame_count % 300 == 0:  # Every ~10 seconds at 30fps
                         logger.debug(
@@ -299,6 +300,10 @@ def run_game_loop(game_state: GameState) -> None:
                     game_state.replay_manager.update_recording(game_state)
                 except Exception as e:
                     logger.error(f"Error updating replay recording: {e}")
+                    logger.exception("Full traceback for replay recording error:")
+                    # Disable recording if there's an error
+                    setattr(game_state, "replay_recording", False)
+                    show_notification(game_state, "Replay recording error", is_error=True)
 
             update_scoring(game_state)
             _render_frame(draw_canvas, game_state)
