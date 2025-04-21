@@ -41,6 +41,9 @@ from leaderboard import Leaderboard
 from player import Player
 from tracking import BallTracker
 
+# Import the replay manager
+from replay_manager import ReplayManager
+
 # Import DataLogger
 try:
     from data_logger import DataLogger
@@ -223,6 +226,13 @@ class GameState:
         self.game_over_buttons: Dict[str, Tuple[int, int, int, int]] = {}
         # --- END CHANGE ---
 
+        # --- Initialize replay system ---
+        self.replay_manager: Optional[ReplayManager] = None
+        self.current_replay: Optional[Any] = None
+        self.replay_recording: bool = False
+
+        # --- END Initialize replay system ---
+
         # --- Init Calls Using Utility Functions ---
         logger.info("Loading settings via utils...")
         load_settings(self)
@@ -280,15 +290,30 @@ class GameState:
 
         # Initialize leaderboard with Supabase connection
         self.leaderboard = Leaderboard(supabase_url, supabase_key)
-        
+
+        # Initialize the replay manager
+        try:
+            self.replay_manager = ReplayManager()
+            logger.info("Replay manager initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize replay manager: {e}")
+            self.replay_manager = None
+
         # Ensure the high_score_screenshots bucket exists
         from screenshot_utils import ensure_supabase_bucket_exists
+
         bucket_name = "high-score-screenshots"
-        bucket_exists = ensure_supabase_bucket_exists(supabase_url, supabase_key, bucket_name)
+        bucket_exists = ensure_supabase_bucket_exists(
+            supabase_url, supabase_key, bucket_name
+        )
         if not bucket_exists:
-            logger.warning(f"Failed to create or verify '{bucket_name}' bucket in Supabase Storage")
+            logger.warning(
+                f"Failed to create or verify '{bucket_name}' bucket in Supabase Storage"
+            )
         else:
-            logger.info(f"Successfully verified '{bucket_name}' bucket in Supabase Storage")
+            logger.info(
+                f"Successfully verified '{bucket_name}' bucket in Supabase Storage"
+            )
 
         logger.info("GameState initialization complete.")
 

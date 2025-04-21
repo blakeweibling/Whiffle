@@ -194,9 +194,9 @@ def _render_frame(draw_canvas: np.ndarray, game_state: GameState) -> None:
 
     # Draw UI elements on the display frame
     draw_ui(display_frame, game_state)
-    
-    # Store the current display frame in game state for screenshot capture
-    game_state.current_frame = display_frame.copy()
+
+    # Note: current_frame is now set earlier in the main loop for replay recording
+    # We don't need to set it again here
 
     try:
         if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) >= 1:
@@ -261,18 +261,44 @@ def run_game_loop(game_state: GameState) -> None:
                 frame_resized = frame
             draw_canvas = frame_resized.copy()
 
+            # Store the current frame in game state for replay recording and screenshot capture
+            # Do this early in the loop so it's available for replay recording
+            game_state.current_frame = draw_canvas.copy()
+
             # Apply retro mode effects if enabled
             if game_state.game_mode == "retro":
                 draw_canvas = _apply_retro_effects(draw_canvas, game_state)
 
             update_timers_and_state(game_state, dt)
 
+            # Process detection and tracking during gameplay
             if game_state.current_state == CurrentGameState.PLAYING:
                 run_detection_tracking = (
                     game_state.frame_count % GameConstants.DETECTION_FRAME_INTERVAL == 0
                 )
                 if run_detection_tracking:
                     _process_frame(draw_canvas, game_state)
+
+            # Update replay recording if active - do this regardless of game state
+            # This allows recording to continue even in menus
+            replay_recording_active = (
+                hasattr(game_state, "replay_recording")
+                and game_state.replay_recording
+                and hasattr(game_state, "replay_manager")
+                and game_state.replay_manager
+            )
+
+            if replay_recording_active:
+                try:
+                    # Log recording activity occasionally
+                    if game_state.frame_count % 300 == 0:  # Every ~10 seconds at 30fps
+                        logger.debug(
+                            f"Replay recording active - frame {game_state.frame_count}"
+                        )
+
+                    game_state.replay_manager.update_recording(game_state)
+                except Exception as e:
+                    logger.error(f"Error updating replay recording: {e}")
 
             update_scoring(game_state)
             _render_frame(draw_canvas, game_state)

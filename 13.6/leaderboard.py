@@ -142,17 +142,67 @@ class Leaderboard:
             requests.RequestException: If all retries fail.
         """
         url = f"{self.supabase_url}/rest/v1/{self.table_name}"
+
+        # Validate and sanitize data before sending
+        validated_data = []
+        for entry in data:
+            # Ensure required fields are present and of proper type
+            if (
+                isinstance(entry.get("player_name"), str)
+                and isinstance(entry.get("score"), int)
+                and isinstance(entry.get("mode"), str)
+                and entry.get("mode") in VALID_MODES
+            ):
+
+                # Create a clean entry with only the fields expected by the API
+                clean_entry = {
+                    "player_name": entry["player_name"],
+                    "score": entry["score"],
+                    "mode": entry["mode"],
+                    "created_at": entry.get(
+                        "created_at", datetime.utcnow().isoformat()
+                    ),
+                }
+
+                # Only add screenshot_url if it's present and a string
+                if isinstance(entry.get("screenshot_url"), str):
+                    clean_entry["screenshot_url"] = entry["screenshot_url"]
+
+                validated_data.append(clean_entry)
+            else:
+                logger.warning(f"Skipping invalid score entry: {entry}")
+
+        if not validated_data:
+            logger.warning("No valid data to send to Supabase after validation")
+            return
+
         for attempt in range(retries):
             try:
                 response = requests.post(
-                    url, headers=self.headers, json=data, timeout=10, verify=False
+                    url,
+                    headers=self.headers,
+                    json=validated_data,
+                    timeout=10,
+                    verify=False,
                 )  # Added verify=False to bypass SSL cert verification
+
                 if response.status_code == 429:
                     logger.warning(
                         f"Rate limit hit on attempt {attempt + 1}, retrying in {delay}s"
                     )
                     sleep(delay)
                     continue
+
+                # Try to get more detailed error information
+                if response.status_code >= 400:
+                    try:
+                        error_detail = response.json()
+                        logger.error(f"Supabase error details: {error_detail}")
+                    except:
+                        logger.error(
+                            f"Supabase error (no details available): {response.text[:500]}"
+                        )
+
                 response.raise_for_status()
                 logger.info(f"Supabase POST successful (status {response.status_code})")
                 return
@@ -166,6 +216,15 @@ class Leaderboard:
                     f"Supabase POST failed on attempt {attempt + 1}: {e}, "
                     f"status: {getattr(e.response, 'status_code', 'N/A')}"
                 )
+
+                # Try to get response content for more details
+                try:
+                    if hasattr(e, "response") and e.response is not None:
+                        content = e.response.text
+                        logger.error(f"Error response content: {content[:500]}")
+                except:
+                    pass
+
                 if attempt == retries - 1:
                     raise
                 sleep(delay)
@@ -212,7 +271,13 @@ class Leaderboard:
                     raise
                 sleep(delay)
 
-    def submit_score(self, player_name: str, score: int, mode: str, screenshot_url: Optional[str] = None) -> bool:
+    def submit_score(
+        self,
+        player_name: str,
+        score: int,
+        mode: str,
+        screenshot_url: Optional[str] = None,
+    ) -> bool:
         """
         Queue a score for batch submission to the leaderboard, both online and locally.
         Args:
@@ -238,11 +303,13 @@ class Leaderboard:
             "mode": mode,
             "created_at": datetime.utcnow().isoformat(),
         }
-        
+
         # Add screenshot URL if provided
         if screenshot_url:
             score_entry["screenshot_url"] = screenshot_url
-            logger.info(f"Including screenshot URL with score submission: {screenshot_url}")
+            logger.info(
+                f"Including screenshot URL with score submission: {screenshot_url}"
+            )
 
         # --- UPDATED: Ensure mode key exists before appending ---
         if mode not in self.local_scores:
@@ -268,16 +335,29 @@ class Leaderboard:
         if not self.pending_scores:
             logger.debug("No pending scores to flush")
             return
+
+        # Make a copy of the scores to avoid modifying during iteration
+        scores_to_submit = self.pending_scores.copy()
+
         try:
-            self._post_supabase(self.pending_scores, retries, delay)
             logger.info(
-                f"Successfully submitted {len(self.pending_scores)} scores to online leaderboard"
+                f"Attempting to flush {len(scores_to_submit)} pending score(s) to online leaderboard"
+            )
+            self._post_supabase(scores_to_submit, retries, delay)
+            logger.info(
+                f"Successfully submitted {len(scores_to_submit)} scores to online leaderboard"
             )
             self.pending_scores.clear()
-        except requests.RequestException:
+        except requests.RequestException as e:
+            logger.warning(f"Failed to submit scores to online leaderboard: {e}")
+            # We keep the scores in pending_scores for possible future submission
             logger.warning(
                 f"Failed to submit {len(self.pending_scores)} scores to online leaderboard, keeping in queue"
             )
+        except Exception as e:
+            # Catch any other exceptions to ensure game can still exit gracefully
+            logger.error(f"Unexpected error when flushing scores: {e}")
+            # Don't clear pending_scores, but don't let the exception propagate either
 
     def get_top_scores(
         self, mode: str, limit: int = 5

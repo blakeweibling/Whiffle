@@ -149,44 +149,59 @@ def save_score(game_state: Any, player_name: str, mode: Optional[str] = None) ->
     score_to_save = final_score
     game_state.final_score = final_score  # Set the final_score attribute
     current_mode = mode or game_state.game_mode
-    
+
     # Variable to hold screenshot URL
     screenshot_url = None
-    
+
     if score_to_save > 0:
         logger.info(
             f"Saving score {player_name}: {score_to_save} Mode:{current_mode}{' (D)' if doubled else ''}"
         )
-        
+
         # Capture screenshot if we have a frame to capture
         try:
             current_frame = None
             # Check if there's a current frame we can capture from different potential sources
-            if hasattr(game_state, "current_frame") and game_state.current_frame is not None:
+            if (
+                hasattr(game_state, "current_frame")
+                and game_state.current_frame is not None
+            ):
                 current_frame = game_state.current_frame
-            elif hasattr(game_state, "display_frame") and game_state.display_frame is not None:
+            elif (
+                hasattr(game_state, "display_frame")
+                and game_state.display_frame is not None
+            ):
                 current_frame = game_state.display_frame
-            elif hasattr(game_state, "static_frame") and game_state.static_frame is not None:
+            elif (
+                hasattr(game_state, "static_frame")
+                and game_state.static_frame is not None
+            ):
                 current_frame = game_state.static_frame
-                
-            if current_frame is not None and hasattr(game_state, "supabase_url") and hasattr(game_state, "supabase_key"):
+
+            if (
+                current_frame is not None
+                and hasattr(game_state, "supabase_url")
+                and hasattr(game_state, "supabase_key")
+            ):
                 screenshot_url = capture_and_upload_game_screenshot(
                     current_frame,
                     player_name,
                     score_to_save,
                     current_mode,
                     game_state.supabase_url,
-                    game_state.supabase_key
+                    game_state.supabase_key,
                 )
                 if screenshot_url:
                     logger.info(f"Screenshot captured and uploaded: {screenshot_url}")
                 else:
                     logger.warning("Failed to capture or upload screenshot")
             else:
-                logger.warning("Missing frame data or Supabase credentials for screenshot capture")
+                logger.warning(
+                    "Missing frame data or Supabase credentials for screenshot capture"
+                )
         except Exception as e:
             logger.error(f"Error during screenshot capture: {e}")
-        
+
         if hasattr(game_state, "leaderboard") and game_state.leaderboard:
             try:
                 # If we have a screenshot URL, include it in the score submission
