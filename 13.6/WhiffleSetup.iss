@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Whiffle"
-#define MyAppVersion "13.5"
+#define MyAppVersion "13.6"
 #define MyAppPublisher "Whiffle Co"
 #define MyAppURL "https://whiffle.co/"
 #define MyAppExeName "Whiffle.exe"
@@ -58,6 +58,14 @@ Source: "Whiffle\data\scores\whiffle_leaderboard.json"; DestDir: "{app}\data\sco
 Source: "Whiffle\data\whiffle_new_best.pt"; DestDir: "{app}\data"; Flags: ignoreversion
 ; Sounds folder (including all files inside)
 Source: "Whiffle\data\sounds\*"; DestDir: "{app}\data\sounds"; Flags: ignoreversion recursesubdirs createallsubdirs
+; High score proof folder
+Source: "Whiffle\high_score_proof\*"; DestDir: "{app}\high_score_proof"; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full
+; Google API configuration files
+Source: "Whiffle\configs\client_secrets.json"; DestDir: "{app}\configs"; Flags: ignoreversion skipifsourcedoesnotexist
+Source: "Whiffle\configs\google_credentials.json"; DestDir: "{app}\configs"; Flags: ignoreversion skipifsourcedoesnotexist
+Source: "Whiffle\configs\google_credentials2.json"; DestDir: "{app}\configs"; Flags: ignoreversion skipifsourcedoesnotexist
+Source: "Whiffle\configs\youtube_token.json"; DestDir: "{app}\configs"; Flags: ignoreversion skipifsourcedoesnotexist
+Source: "Whiffle\configs\token.pickle"; DestDir: "{app}\configs"; Flags: ignoreversion skipifsourcedoesnotexist
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\assets\pinball_icon.ico"
@@ -66,3 +74,8 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilen
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+
+[Dirs]
+; Create directories with write permissions
+Name: "{app}\configs"; Permissions: everyone-full
+Name: "{app}\high_score_proof"; Permissions: everyone-full
