@@ -322,18 +322,25 @@ def _handle_input(game_state: Any) -> Optional[int]:
         # Handle input in GETTING_PLAYER_NAME state
         elif game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
             player_name_key_handled = False  # Flag for player name input handling
-            
+
             # Initialize cursor position if not already set
             if not hasattr(game_state, "player_name_cursor_pos"):
                 init_player_name_input(game_state)
-                
+
             # Handle Enter key to submit the name
             if key == 13:  # Enter key
-                logger.info(f"Key pressed in username input: key={key}, raw_key={raw_key}")
-                current_input = getattr(game_state, "current_player_name_input", "").strip()
+                logger.info(
+                    f"Key pressed in username input: key={key}, raw_key={raw_key}"
+                )
+                current_input = getattr(
+                    game_state, "current_player_name_input", ""
+                ).strip()
                 if not current_input:
                     show_notification(
-                        game_state, "Player name cannot be empty!", is_error=True, duration=2.0
+                        game_state,
+                        "Player name cannot be empty!",
+                        is_error=True,
+                        duration=2.0,
                     )
                 else:
                     try:
@@ -350,12 +357,18 @@ def _handle_input(game_state: Any) -> Optional[int]:
                         else:
                             logger.error("Cannot find players list in game_state")
                             show_notification(
-                                game_state, "Error saving name!", is_error=True, duration=2.0
+                                game_state,
+                                "Error saving name!",
+                                is_error=True,
+                                duration=2.0,
                             )
                     except Exception as e:
                         logger.error(f"Error setting player name: {e}")
                         show_notification(
-                            game_state, "Error saving name!", is_error=True, duration=2.0
+                            game_state,
+                            "Error saving name!",
+                            is_error=True,
+                            duration=2.0,
                         )
                 player_name_key_handled = True
             # Handle Escape key to cancel name input and use default
@@ -971,11 +984,12 @@ def _handle_input(game_state: Any) -> Optional[int]:
 
                 # Handle mouse press for zone editing (dragging/resizing)
                 if (
-                    (game_state.current_state == CurrentGameState.PLAYING
-                    and game_state.submenu_active == "edit_zones")
-                    or game_state.current_state == CurrentGameState.ZONE_EDITING
-                ):
-                    logger.debug(f"Attempting zone editing process for click at ({x}, {y}), state={game_state.current_state}")
+                    game_state.current_state == CurrentGameState.PLAYING
+                    and game_state.submenu_active == "edit_zones"
+                ) or game_state.current_state == CurrentGameState.ZONE_EDITING:
+                    logger.debug(
+                        f"Attempting zone editing process for click at ({x}, {y}), state={game_state.current_state}"
+                    )
                     handled = _process_zone_editing_event(x, y, game_state)
                     if handled:
                         logger.debug("Zone editing event was handled successfully")
@@ -993,8 +1007,10 @@ def _handle_input(game_state: Any) -> Optional[int]:
 
                 # Handle mouse release for zone dragging/resizing
                 if (
-                    (game_state.current_state == CurrentGameState.PLAYING
-                    and game_state.submenu_active == "edit_zones")
+                    (
+                        game_state.current_state == CurrentGameState.PLAYING
+                        and game_state.submenu_active == "edit_zones"
+                    )
                     or game_state.current_state == CurrentGameState.ZONE_EDITING
                 ) and game_state.drag_start_pos is not None:
                     _process_zone_editing_event(0, 0, game_state, is_dragging=False)
@@ -1014,8 +1030,10 @@ def _handle_input(game_state: Any) -> Optional[int]:
 
                 # Handle mouse motion for zone editing
                 if (
-                    (game_state.current_state == CurrentGameState.PLAYING
-                    and game_state.submenu_active == "edit_zones")
+                    (
+                        game_state.current_state == CurrentGameState.PLAYING
+                        and game_state.submenu_active == "edit_zones"
+                    )
                     or game_state.current_state == CurrentGameState.ZONE_EDITING
                 ) and game_state.drag_start_pos is not None:
                     _process_zone_editing_event(x, y, game_state, is_dragging=True)

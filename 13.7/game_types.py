@@ -17,5 +17,8 @@ class CurrentGameState(Enum):
     FUN = auto()  # Added previously
     CONFIRM_QUIT = auto()  # <-- Added this line
 
+
 # Define MouseEventHandlers type for use in interaction_utils.py
-MouseEventHandlers = Dict[CurrentGameState, Dict[int, Callable[[int, int, int, Any], bool]]]
+MouseEventHandlers = Dict[
+    CurrentGameState, Dict[int, Callable[[int, int, int, Any], bool]]
+]

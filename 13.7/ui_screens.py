@@ -487,35 +487,38 @@ def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional["GameSt
         if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:
             cv2.namedWindow(UIConstants.WINDOW_NAME, cv2.WINDOW_NORMAL)
             window_created = True
-            
+
             # Get the current resolution dimensions
-            current_width, current_height = game_state.get_current_resolution_dimensions()
-            
+            current_width, current_height = (
+                game_state.get_current_resolution_dimensions()
+            )
+
             # Center the window on the screen
             try:
                 # Try to get screen resolution - this is platform-dependent
                 # For Windows, we can use GetSystemMetrics
                 import ctypes
+
                 user32 = ctypes.windll.user32
                 screen_width = user32.GetSystemMetrics(0)
                 screen_height = user32.GetSystemMetrics(1)
-                
+
                 # Calculate center position
                 x_pos = max(0, (screen_width - current_width) // 2)
                 y_pos = max(0, (screen_height - current_height) // 2)
-                
+
                 # Move window to center
                 cv2.moveWindow(UIConstants.WINDOW_NAME, x_pos, y_pos)
                 logger.info(f"Centered main window at ({x_pos}, {y_pos})")
             except Exception as e:
                 logger.error(f"Failed to center main window: {e}")
-            
+
             # Display splash screen
             display_modal_splash(game_state, lambda *args: None, None)  # Dummy callback
         else:
             # Window already exists, just make sure it's visible
             logger.info("Window already exists, skipping splash display")
-            
+
         return game_state
     except Exception as e:
         logger.error(f"Error in splash screen: {e}")

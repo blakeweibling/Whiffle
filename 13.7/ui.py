@@ -527,10 +527,12 @@ def _draw_stats_display(frame: np.ndarray, game_state: "GameState") -> None:
 def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
     """Main UI drawing function."""
     if not hasattr(game_state, "get_current_resolution_dimensions"):
-        logger.warning("Missing get_current_resolution_dimensions method in game_state.")
+        logger.warning(
+            "Missing get_current_resolution_dimensions method in game_state."
+        )
         return
     current_width, current_height = game_state.get_current_resolution_dimensions()
-    
+
     # Handle player name input screen
     if game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
         # Initialize cursor position if not done yet
@@ -542,11 +544,12 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 game_state.player_name_cursor_pos = len(
                     getattr(game_state, "current_player_name_input", "")
                 )
-        
+
         # Draw the player name input screen
         from ui_screens import _draw_player_name_input
+
         _draw_player_name_input(frame, game_state)
-        
+
         # Show debug information if enabled
         if getattr(game_state, "debug_mode", False):
             fps = getattr(game_state, "fps", 0)
@@ -562,12 +565,12 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 alpha=0.7,
             )
         return
-    
+
     # Draw game-related UI elements during gameplay
     if game_state.current_state == CurrentGameState.PLAYING:
         scores_text = f"Score: {game_state.score}"
         high_score_text = f"High: {game_state.high_score}"
-        
+
         # Draw score texts
         _optimized_draw_text(
             frame,
@@ -577,16 +580,15 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             UIConstants.WHITE,
             UIConstants.BLACK,
         )
-        
+
         # Calculate position for high score to be on the right side
         (high_score_width, _), _ = cv2.getTextSize(
-            high_score_text, 
-            cv2.FONT_HERSHEY_SIMPLEX, 
-            UIConstants.FONT_SCALE_MEDIUM, 
-            1
+            high_score_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_MEDIUM, 1
         )
-        high_score_x = current_width - high_score_width - 20  # 20px padding from right edge
-        
+        high_score_x = (
+            current_width - high_score_width - 20
+        )  # 20px padding from right edge
+
         _optimized_draw_text(
             frame,
             high_score_text,
@@ -595,7 +597,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             UIConstants.WHITE,
             UIConstants.BLACK,
         )
-        
+
         # Draw timer if in timed mode
         if game_state.game_mode == "timed":
             timer_text = f"Time: {int(game_state.game_timer)}s"
@@ -611,7 +613,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 timer_color,
                 UIConstants.BLACK,
             )
-            
+
         # Draw menu button
         menu_rect = (
             UIConstants.MENU_BUTTON_X,
@@ -630,7 +632,10 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             game_state=game_state,
         )
         # Highlight menu button if it was recently clicked
-        if hasattr(game_state, "click_feedback_state") and game_state.click_feedback_state:
+        if (
+            hasattr(game_state, "click_feedback_state")
+            and game_state.click_feedback_state
+        ):
             rect, click_time = game_state.click_feedback_state
             if (
                 rect == menu_rect
@@ -643,7 +648,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                     UIConstants.CLICK_FEEDBACK_COLOR,
                     2,
                 )
-        
+
         # Draw resolution toggle button
         _draw_button(
             frame,
@@ -656,12 +661,18 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             game_state=game_state,
             font_scale=UIConstants.FONT_SCALE_SMALL,
         )
-        
+
         # Draw temporary zone if drawing
-        if getattr(game_state, "drawing", False) and getattr(game_state, "temp_zone", None):
+        if getattr(game_state, "drawing", False) and getattr(
+            game_state, "temp_zone", None
+        ):
             x1, y1, w, h = game_state.temp_zone
             cv2.rectangle(
-                frame, (x1, y1), (x1 + w, y1 + h), UIConstants.YELLOW, UIConstants.FONT_THICKNESS
+                frame,
+                (x1, y1),
+                (x1 + w, y1 + h),
+                UIConstants.YELLOW,
+                UIConstants.FONT_THICKNESS,
             )
             # Show potential points value if entered
             points_input = getattr(game_state, "drawing_points_input", "")
@@ -675,7 +686,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                     UIConstants.YELLOW,
                     1,
                 )
-            
+
         # Always display zone drawing instructions if drawing is active
         if getattr(game_state, "drawing", False):
             instruction_text = "Drawing zone: Click and drag, enter numbers for points"
@@ -690,25 +701,27 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 UIConstants.YELLOW,
                 1,
             )
-        
+
         # Draw existing scoring zones
         draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole)
-        
+
         # Remove stats display from PLAYING state - it should only show in MENU state
-        
+
         # Draw special submenu if active (like edit_zones)
         if getattr(game_state, "submenu_active") == "edit_zones":
             # Darken the frame
             overlay = frame.copy()
-            cv2.rectangle(overlay, (0, 0), (current_width, current_height), (0, 0, 0), -1)
+            cv2.rectangle(
+                overlay, (0, 0), (current_width, current_height), (0, 0, 0), -1
+            )
             cv2.addWeighted(overlay, 0.5, frame, 0.5, 0, frame)
-            
+
             # Get the edit_zones_submenu drawing function from submenu_draw_functions
             from submenu_draw_functions import _draw_edit_zones_submenu
-            
+
             # Draw the edit zones submenu UI
             _draw_edit_zones_submenu(frame, game_state)
-    
+
     # Rest of the code remains unchanged
     elif game_state.current_state == CurrentGameState.MENU:
         overlay = frame.copy()

@@ -62,7 +62,7 @@ def initialize_game_state():
 
     # Validate configuration
     validate_config(supabase_url, supabase_key)
-    
+
     # Initialize game state via splash screen
     game_state = show_splash_screen(supabase_url, supabase_key)
     if game_state is None:
@@ -70,7 +70,7 @@ def initialize_game_state():
             "Exiting due to None game_state from show_splash_screen (likely window closed or init failed)."
         )
         return None
-        
+
     return game_state
 
 
@@ -78,7 +78,7 @@ def main() -> None:
     """Run the main game loop for Whiffle Tracker."""
     # Use the loading screen wrapper for initialization
     game_state = wrap_initialization(initialize_game_state)
-    
+
     # Exit if initialization failed
     if game_state is None:
         return
