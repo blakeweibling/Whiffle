@@ -604,6 +604,7 @@ class GameState:
         # Re-initialize camera with the new resolution settings
         try:
             self._initialize_camera()
+            logger.info(f"Camera successfully reinitialized for {new_resolution_key} resolution")
         except Exception as e:
             logger.exception(
                 f"CRITICAL: Error during camera re-initialization for new resolution: {e}"
@@ -675,9 +676,14 @@ class GameState:
         except Exception as e:
             logger.error(f"Unexpected error resizing application window: {e}")
 
-        # Invalidate UI caches or trigger UI element recalculations
+        # Make sure to invalidate all UI caches to ensure proper redrawing
         self.menu_cache = None
-
+        
+        # Clear any other UI element caches that might exist
+        if hasattr(self, 'ui_cache'):
+            self.ui_cache = None
+            
+        # Update display elements
         show_notification(
             self, f"Resolution set to {self.current_resolution_key}", duration=2.0
         )
