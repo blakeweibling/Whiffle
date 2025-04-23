@@ -477,10 +477,11 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
         menu_frame.shape[1] - 40 - (button_width * 2 + UIConstants.TEXT_SAFE_DISTANCE)
     )
     game_state.submenu_items.clear()
-    if (
-        game_state.editing_player_mode == "edit_name"
-        and game_state.editing_player_index is not None
-    ):
+
+    # Check if editing_player_mode attribute exists before using it
+    editing_mode = getattr(game_state, "editing_player_mode", None)
+
+    if editing_mode == "edit_name" and game_state.editing_player_index is not None:
         cv2.putText(
             menu_frame,
             "Enter Name (A-Z, 0-9), Bksp, Enter=Save, ESC=Cancel",
@@ -495,10 +496,7 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
     for i, player in enumerate(game_state.players):
         name_color = UIConstants.WHITE
         display_name = f"{i+1}. {player.name}"
-        if (
-            game_state.editing_player_index == i
-            and game_state.editing_player_mode == "edit_name"
-        ):
+        if game_state.editing_player_index == i and editing_mode == "edit_name":
             display_name = f"Edit: [{game_state.editing_player_name_input or ''}_]"
             name_color = UIConstants.GREEN
         max_name_len = name_width // 8
@@ -516,8 +514,7 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
         edit_rect = (edit_x, y_offset, button_width, item_height)
         edit_color = (
             UIConstants.GREEN
-            if game_state.editing_player_index == i
-            and game_state.editing_player_mode == "edit_name"
+            if game_state.editing_player_index == i and editing_mode == "edit_name"
             else UIConstants.CV2_BLUE
         )
         _draw_button(
@@ -540,10 +537,7 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
         is_current = i == game_state.current_player_index
         select_color = UIConstants.GREEN if is_current else UIConstants.CV2_BLUE
         select_text = "Current" if is_current else "Select"
-        if (
-            game_state.editing_player_index == i
-            and game_state.editing_player_mode == "edit_name"
-        ):
+        if game_state.editing_player_index == i and editing_mode == "edit_name":
             _draw_button(
                 menu_frame,
                 select_x,
@@ -834,78 +828,40 @@ def _draw_faq_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
 
 
 # --- About Submenu ---
-def _draw_about_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
-    """Draw the About submenu."""
+def _draw_about_submenu(frame, game_state):
+    """Draw the about submenu."""
+    game_state.submenu_items = []
+
+    # Get submenu dimensions
+    x, y, width, height = _get_submenu_dimensions(game_state)
+
+    # Draw the submenu background
+    cv2.rectangle(frame, (x, y), (x + width, y + height), UIConstants.DARK_GRAY, -1)
+    cv2.rectangle(frame, (x, y), (x + width, y + height), UIConstants.BLACK, 2)
+
+    # Draw the title
+    title_y = y + 30
     cv2.putText(
-        menu_frame,
+        frame,
         "About",
-        (30, 40),
+        (x + width // 2 - 40, title_y),
         cv2.FONT_HERSHEY_SIMPLEX,
         UIConstants.FONT_SCALE_LARGE,
         UIConstants.WHITE,
         UIConstants.FONT_THICKNESS,
     )
-    y_offset = 80
-    item_height = 35
-    game_state.submenu_items.clear()
+
+    # Draw the version
+    version_y = title_y + 50
     cv2.putText(
-        menu_frame,
-        "Whiffle Tracker v13.5",
-        (20, y_offset),
+        frame,
+        "Whiffle Tracker v13.7",
+        (x + 20, version_y),
         cv2.FONT_HERSHEY_SIMPLEX,
         UIConstants.FONT_SCALE_MEDIUM,
         UIConstants.WHITE,
-        1,
+        UIConstants.FONT_THICKNESS,
     )
-    y_offset += item_height
-    cv2.putText(
-        menu_frame,
-        "Developed using OpenCV & YOLOv8",
-        (20, y_offset),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        UIConstants.FONT_SCALE_SMALL,
-        UIConstants.WHITE,
-        1,
-    )
-    y_offset += item_height + 10
-
-    splash_y = y_offset
-    _draw_button(
-        menu_frame,
-        20,
-        splash_y,
-        menu_frame.shape[1] - 40,
-        item_height,
-        "Show Splash",
-        UIConstants.CV2_BLUE,
-        game_state=game_state,
-        font_scale=UIConstants.FONT_SCALE_MEDIUM,
-    )
-    game_state.submenu_items.append(
-        (
-            (20, splash_y, menu_frame.shape[1] - 40, item_height),
-            "show_splash",
-            "Show Splash",
-        )
-    )
-    y_offset += item_height + 5
-
-    back_y = y_offset + 10
-    _draw_button(
-        menu_frame,
-        20,
-        back_y,
-        menu_frame.shape[1] - 40,
-        item_height,
-        "Back",
-        UIConstants.CV2_BLUE,
-        game_state=game_state,
-        font_scale=UIConstants.FONT_SCALE_MEDIUM,
-    )
-    game_state.submenu_items.append(
-        ((20, back_y, menu_frame.shape[1] - 40, item_height), "back_to_main", "Back")
-    )
-    game_state.menu_height = back_y + item_height + 20
 
 
 # --- Edit Zones Submenu ---

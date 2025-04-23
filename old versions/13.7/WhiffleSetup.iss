@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Whiffle"
-#define MyAppVersion "13.6"
+#define MyAppVersion "13.7"
 #define MyAppPublisher "Whiffle Co"
 #define MyAppURL "https://whiffle.co/"
 #define MyAppExeName "Whiffle.exe"
@@ -64,7 +64,13 @@ Source: "Whiffle\high_score_proof\*"; DestDir: "{app}\high_score_proof"; Flags: 
 Source: "Whiffle\configs\client_secrets.json"; DestDir: "{app}\configs"; Flags: ignoreversion
 Source: "Whiffle\configs\google_credentials.json"; DestDir: "{app}\configs"; Flags: ignoreversion
 Source: "Whiffle\configs\google_credentials2.json"; DestDir: "{app}\configs"; Flags: ignoreversion
+Source: "Whiffle\configs\google_credentials_template.json"; DestDir: "{app}\configs"; Flags: ignoreversion
+Source: "Whiffle\configs\README_GOOGLE_DRIVE.md"; DestDir: "{app}\configs"; Flags: ignoreversion
 Source: "Whiffle\configs\token.pickle"; DestDir: "{app}\configs"; Flags: ignoreversion
+; Replays folder
+Source: "Whiffle\data\replays\*"; DestDir: "{app}\data\replays"; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full
+; Sessions folder
+Source: "Whiffle\data\sessions\*"; DestDir: "{app}\data\sessions"; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\assets\pinball_icon.ico"
@@ -78,3 +84,5 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 ; Create directories with write permissions
 Name: "{app}\configs"; Permissions: everyone-full
 Name: "{app}\high_score_proof"; Permissions: everyone-full
+Name: "{app}\data\replays"; Permissions: everyone-full
+Name: "{app}\data\sessions"; Permissions: everyone-full

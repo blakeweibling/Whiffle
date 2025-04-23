@@ -321,17 +321,21 @@ def _handle_input(game_state: Any) -> Optional[int]:
 
         # Handle input in GETTING_PLAYER_NAME state
         elif game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
-            player_name_key_handled = False
+            player_name_key_handled = False  # Flag for player name input handling
 
             # Initialize cursor position if not already set
             if not hasattr(game_state, "player_name_cursor_pos"):
                 init_player_name_input(game_state)
 
+            # Handle Enter key to submit the name
             if key == 13:  # Enter key
-                entered_name = getattr(
+                logger.info(
+                    f"Key pressed in username input: key={key}, raw_key={raw_key}"
+                )
+                current_input = getattr(
                     game_state, "current_player_name_input", ""
                 ).strip()
-                if not entered_name:
+                if not current_input:
                     show_notification(
                         game_state,
                         "Player name cannot be empty!",
@@ -339,64 +343,50 @@ def _handle_input(game_state: Any) -> Optional[int]:
                         duration=2.0,
                     )
                 else:
-                    # Safely update player name
-                    if hasattr(game_state, "players") and game_state.players:
-                        try:
-                            game_state.players[0].name = entered_name
+                    try:
+                        # Update player name in game state
+                        if hasattr(game_state, "players") and game_state.players:
+                            game_state.players[0].name = current_input
+                            logger.info(f"Updated player name to: {current_input}")
+                            # Move to playing state
+                            game_state.current_state = CurrentGameState.PLAYING
+                            game_state.player_name_input_active = False
                             show_notification(
-                                game_state, f"Welcome, {entered_name}!", duration=2.0
+                                game_state, f"Welcome, {current_input}!", duration=2.0
                             )
-                            game_state.player_name_input_active = (
-                                False  # Flag to stop drawing input screen
-                            )
-                            game_state.current_state = (
-                                CurrentGameState.PLAYING
-                            )  # Proceed to game
-                        except IndexError:
+                        else:
+                            logger.error("Cannot find players list in game_state")
                             show_notification(
-                                game_state, "Error: Player list invalid!", is_error=True
+                                game_state,
+                                "Error saving name!",
+                                is_error=True,
+                                duration=2.0,
                             )
-                        except Exception as e:
-                            logger.error(f"Error setting player name: {e}")
-                            show_notification(
-                                game_state, "Error starting game!", is_error=True
-                            )
-                    else:
+                    except Exception as e:
+                        logger.error(f"Error setting player name: {e}")
                         show_notification(
-                            game_state, "Error: Player list missing!", is_error=True
+                            game_state,
+                            "Error saving name!",
+                            is_error=True,
+                            duration=2.0,
                         )
                 player_name_key_handled = True
-            elif key == 27:  # Escape key (use default name)
+            # Handle Escape key to cancel name input and use default
+            elif key == 27:  # Escape key
+                logger.info("ESC pressed in username input, using default name")
                 if hasattr(game_state, "players") and game_state.players:
-                    try:
-                        game_state.players[0].name = "Player 1"  # Use default
-                        game_state.player_name_input_active = False
-                        game_state.current_state = CurrentGameState.PLAYING
-                        show_notification(
-                            game_state, "Using default name 'Player 1'", duration=2.0
-                        )
-                    except IndexError:
-                        show_notification(
-                            game_state, "Error: Player list invalid!", is_error=True
-                        )
-                    except Exception as e:
-                        logger.error(f"Error setting default player name: {e}")
-                        show_notification(
-                            game_state, "Error starting game!", is_error=True
-                        )
-                else:
+                    game_state.players[0].name = "Player 1"  # Use default
+                    game_state.player_name_input_active = False
+                    game_state.current_state = CurrentGameState.PLAYING
                     show_notification(
-                        game_state, "Error: Player list missing!", is_error=True
+                        game_state, "Using default name 'Player 1'", duration=2.0
                     )
                 player_name_key_handled = True
-            elif key == 8:  # Backspace key
+            # Handle backspace to delete characters
+            elif key == 8:  # Backspace
                 current_input = getattr(game_state, "current_player_name_input", "")
-                cursor_pos = getattr(
-                    game_state, "player_name_cursor_pos", len(current_input)
-                )
-
-                if current_input and cursor_pos > 0:
-                    # Delete character before cursor
+                cursor_pos = getattr(game_state, "player_name_cursor_pos", 0)
+                if cursor_pos > 0:
                     game_state.current_player_name_input = (
                         current_input[: cursor_pos - 1] + current_input[cursor_pos:]
                     )
@@ -996,9 +986,15 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 if (
                     game_state.current_state == CurrentGameState.PLAYING
                     and game_state.submenu_active == "edit_zones"
-                    and _process_zone_editing_event(x, y, game_state)
-                ):
-                    return key
+                ) or game_state.current_state == CurrentGameState.ZONE_EDITING:
+                    logger.debug(
+                        f"Attempting zone editing process for click at ({x}, {y}), state={game_state.current_state}"
+                    )
+                    handled = _process_zone_editing_event(x, y, game_state)
+                    if handled:
+                        logger.debug("Zone editing event was handled successfully")
+                        return key
+                    logger.debug("Zone editing event was not handled")
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 # Handle mouse release for timeline dragging
@@ -1011,10 +1007,13 @@ def _handle_input(game_state: Any) -> Optional[int]:
 
                 # Handle mouse release for zone dragging/resizing
                 if (
-                    game_state.current_state == CurrentGameState.PLAYING
-                    and game_state.submenu_active == "edit_zones"
-                    and game_state.drag_start_pos is not None
-                ):
+                    (
+                        game_state.current_state == CurrentGameState.PLAYING
+                        and game_state.submenu_active == "edit_zones"
+                    )
+                    or game_state.current_state == CurrentGameState.ZONE_EDITING
+                ) and game_state.drag_start_pos is not None:
+                    _process_zone_editing_event(0, 0, game_state, is_dragging=False)
                     game_state.drag_start_pos = None
                     game_state.original_zone_on_drag_start = None
 
@@ -1031,10 +1030,12 @@ def _handle_input(game_state: Any) -> Optional[int]:
 
                 # Handle mouse motion for zone editing
                 if (
-                    game_state.current_state == CurrentGameState.PLAYING
-                    and game_state.submenu_active == "edit_zones"
-                    and game_state.drag_start_pos is not None
-                ):
+                    (
+                        game_state.current_state == CurrentGameState.PLAYING
+                        and game_state.submenu_active == "edit_zones"
+                    )
+                    or game_state.current_state == CurrentGameState.ZONE_EDITING
+                ) and game_state.drag_start_pos is not None:
                     _process_zone_editing_event(x, y, game_state, is_dragging=True)
     except pygame.error as e:
         logger.warning(

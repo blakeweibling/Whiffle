@@ -1058,7 +1058,7 @@ class ReplayManager:
         """
         # Debug logging to verify the method is being called
         logger.info("start_recording method called in ReplayManager")
-        
+
         try:
             if self.current_replay and self.current_replay.recording:
                 logger.warning(
@@ -1080,7 +1080,9 @@ class ReplayManager:
 
             # Create new replay
             self.current_replay = Replay(
-                player_name=player_name, game_mode=game_mode, scoring_zones=scoring_zones
+                player_name=player_name,
+                game_mode=game_mode,
+                scoring_zones=scoring_zones,
             )
 
             # Start recording
