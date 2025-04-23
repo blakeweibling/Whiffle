@@ -66,10 +66,11 @@ class GameState:
 
     def __init__(self, supabase_url: str, supabase_key: str) -> None:
         logger.info("Starting GameState initialization...")
-        
+
         # Try to update loading screen if available
         try:
             from loading_screen import update_loading_progress
+
             update_loading_progress("Initializing game state...", 0.05)
         except ImportError:
             # Loading screen not available, continue without updates
@@ -92,10 +93,11 @@ class GameState:
         # Try to update loading screen
         try:
             from loading_screen import update_loading_progress
+
             update_loading_progress("Setting up data logger...", 0.05)
         except ImportError:
             pass
-            
+
         # DataLogger Initialization
         if DataLogger:
             self.data_logger: Optional[DataLogger] = DataLogger()
@@ -389,14 +391,15 @@ class GameState:
         logger.info(
             f"Initializing camera for {self.current_width}x{self.current_height}"
         )
-        
+
         # Try to update loading screen
         try:
             from loading_screen import update_loading_progress
+
             update_loading_progress("Connecting to camera...", 0.15)
         except ImportError:
             pass
-            
+
         self.camera_available = GameConstants.USE_CAMERA
         # Ensure previous capture is released if resetting
         if self.cap and self.cap.isOpened():
@@ -417,14 +420,15 @@ class GameState:
                 logger.info(
                     f"Attempting camera index {cam_index} w/ backend {cam_backend}"
                 )
-                
+
                 # Try to update loading screen
                 try:
                     from loading_screen import update_loading_progress
+
                     update_loading_progress("Opening camera...", 0.1)
                 except ImportError:
                     pass
-                
+
                 self.cap = cv2.VideoCapture(cam_index, cam_backend)
 
                 if not self.cap or not self.cap.isOpened():
@@ -437,14 +441,15 @@ class GameState:
                     logger.info(
                         f"Setting camera properties for {self.current_width}x{self.current_height}"
                     )
-                    
+
                     # Try to update loading screen
                     try:
                         from loading_screen import update_loading_progress
+
                         update_loading_progress("Configuring camera settings...", 0.1)
                     except ImportError:
                         pass
-                    
+
                     # Set desired resolution
                     prop_width_set = self.cap.set(
                         cv2.CAP_PROP_FRAME_WIDTH, self.current_width
@@ -483,14 +488,15 @@ class GameState:
         # Handle static frame loading if camera failed or isn't used
         if not self.camera_available:
             logger.warning(f"Using static frame: {GameConstants.STATIC_FRAME_FILE}")
-            
+
             # Try to update loading screen
             try:
                 from loading_screen import update_loading_progress
+
                 update_loading_progress("Loading static frame...", 0.1)
             except ImportError:
                 pass
-                
+
             try:
                 static_img = cv2.imread(GameConstants.STATIC_FRAME_FILE)
                 if static_img is None:

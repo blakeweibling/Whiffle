@@ -1026,7 +1026,9 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                             and game_state.replay_manager
                         ):
                             try:
-                                logger.info("Start recording action triggered in interaction_utils")
+                                logger.info(
+                                    "Start recording action triggered in interaction_utils"
+                                )
                                 if not game_state.replay_manager:
                                     logger.error("game_state.replay_manager is None")
                                 game_state.replay_manager.start_recording(game_state)
@@ -1038,7 +1040,9 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                                 return True
                             except Exception as e:
                                 logger.error(f"Error starting replay recording: {e}")
-                                logger.exception("Full traceback for start_recording error in interaction_utils:")
+                                logger.exception(
+                                    "Full traceback for start_recording error in interaction_utils:"
+                                )
                                 show_notification(
                                     game_state,
                                     "Error starting recording",
@@ -1046,7 +1050,9 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                                 )
                                 return True
                         else:
-                            logger.error("Cannot start recording - replay_manager not available")
+                            logger.error(
+                                "Cannot start recording - replay_manager not available"
+                            )
                             show_notification(
                                 game_state,
                                 "Cannot start recording - replay system not initialized",
@@ -1313,91 +1319,146 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                                 )
                                 logger.info(f"Selected platform: {platform}")
                         return True
-                        
+
                     # Replay playback control actions
                     elif action == "replay_toggle_play":
-                        if hasattr(game_state, "replay_playback") and game_state.replay_playback:
+                        if (
+                            hasattr(game_state, "replay_playback")
+                            and game_state.replay_playback
+                        ):
                             # Toggle play/pause
-                            game_state.replay_playback["playing"] = not game_state.replay_playback.get("playing", False)
+                            game_state.replay_playback["playing"] = (
+                                not game_state.replay_playback.get("playing", False)
+                            )
                             game_state.replay_playback["last_update_time"] = time.time()
                             game_state.menu_cache = None  # Force UI update
-                            logger.info(f"Replay playback toggled to: {'playing' if game_state.replay_playback['playing'] else 'paused'}")
+                            logger.info(
+                                f"Replay playback toggled to: {'playing' if game_state.replay_playback['playing'] else 'paused'}"
+                            )
                         return True
-                        
+
                     elif action == "replay_next_frame":
-                        if hasattr(game_state, "replay_playback") and game_state.replay_playback:
+                        if (
+                            hasattr(game_state, "replay_playback")
+                            and game_state.replay_playback
+                        ):
                             replay = game_state.replay_playback.get("current_replay")
                             if replay and hasattr(replay, "frames"):
                                 # Advance one frame
-                                current_idx = game_state.replay_playback.get("current_frame_idx", 0)
+                                current_idx = game_state.replay_playback.get(
+                                    "current_frame_idx", 0
+                                )
                                 max_idx = len(replay.frames) - 1
-                                game_state.replay_playback["current_frame_idx"] = min(max_idx, current_idx + 1)
+                                game_state.replay_playback["current_frame_idx"] = min(
+                                    max_idx, current_idx + 1
+                                )
                                 game_state.menu_cache = None  # Force UI update
-                                logger.info(f"Advanced to next frame: {game_state.replay_playback['current_frame_idx']}/{max_idx}")
+                                logger.info(
+                                    f"Advanced to next frame: {game_state.replay_playback['current_frame_idx']}/{max_idx}"
+                                )
                         return True
-                        
+
                     elif action == "replay_prev_frame":
-                        if hasattr(game_state, "replay_playback") and game_state.replay_playback:
+                        if (
+                            hasattr(game_state, "replay_playback")
+                            and game_state.replay_playback
+                        ):
                             # Go back one frame
-                            current_idx = game_state.replay_playback.get("current_frame_idx", 0)
-                            game_state.replay_playback["current_frame_idx"] = max(0, current_idx - 1)
+                            current_idx = game_state.replay_playback.get(
+                                "current_frame_idx", 0
+                            )
+                            game_state.replay_playback["current_frame_idx"] = max(
+                                0, current_idx - 1
+                            )
                             game_state.menu_cache = None  # Force UI update
-                            logger.info(f"Went back to previous frame: {game_state.replay_playback['current_frame_idx']}")
+                            logger.info(
+                                f"Went back to previous frame: {game_state.replay_playback['current_frame_idx']}"
+                            )
                         return True
-                        
+
                     elif action == "replay_rewind":
-                        if hasattr(game_state, "replay_playback") and game_state.replay_playback:
+                        if (
+                            hasattr(game_state, "replay_playback")
+                            and game_state.replay_playback
+                        ):
                             # Rewind to beginning
                             game_state.replay_playback["current_frame_idx"] = 0
                             game_state.menu_cache = None  # Force UI update
                             logger.info("Rewound replay to beginning")
                         return True
-                        
+
                     elif action == "replay_ffwd":
-                        if hasattr(game_state, "replay_playback") and game_state.replay_playback:
+                        if (
+                            hasattr(game_state, "replay_playback")
+                            and game_state.replay_playback
+                        ):
                             replay = game_state.replay_playback.get("current_replay")
                             if replay and hasattr(replay, "frames"):
                                 # Fast forward to end
-                                game_state.replay_playback["current_frame_idx"] = len(replay.frames) - 1
+                                game_state.replay_playback["current_frame_idx"] = (
+                                    len(replay.frames) - 1
+                                )
                                 game_state.menu_cache = None  # Force UI update
                                 logger.info("Fast-forwarded replay to end")
                         return True
-                        
+
                     elif action == "replay_timeline":
                         # This is handled by _process_replay_timeline_drag in game_input.py
                         # Just log that the click was processed
-                        logger.info("Timeline click detected, processing via drag handler")
+                        logger.info(
+                            "Timeline click detected, processing via drag handler"
+                        )
                         return True
-                        
+
                     elif action == "replay_slower":
-                        if hasattr(game_state, "replay_playback") and game_state.replay_playback:
+                        if (
+                            hasattr(game_state, "replay_playback")
+                            and game_state.replay_playback
+                        ):
                             from constants import ReplayConstants
+
                             # Decrease playback speed
-                            current_speed = game_state.replay_playback.get("playback_speed", ReplayConstants.DEFAULT_PLAYBACK_SPEED)
-                            new_speed = max(ReplayConstants.MIN_PLAYBACK_SPEED, 
-                                          current_speed - ReplayConstants.PLAYBACK_SPEED_INCREMENT)
+                            current_speed = game_state.replay_playback.get(
+                                "playback_speed", ReplayConstants.DEFAULT_PLAYBACK_SPEED
+                            )
+                            new_speed = max(
+                                ReplayConstants.MIN_PLAYBACK_SPEED,
+                                current_speed
+                                - ReplayConstants.PLAYBACK_SPEED_INCREMENT,
+                            )
                             game_state.replay_playback["playback_speed"] = new_speed
                             game_state.menu_cache = None  # Force UI update
                             logger.info(f"Decreased playback speed to {new_speed}x")
                         return True
-                        
+
                     elif action == "replay_faster":
-                        if hasattr(game_state, "replay_playback") and game_state.replay_playback:
+                        if (
+                            hasattr(game_state, "replay_playback")
+                            and game_state.replay_playback
+                        ):
                             from constants import ReplayConstants
+
                             # Increase playback speed
-                            current_speed = game_state.replay_playback.get("playback_speed", ReplayConstants.DEFAULT_PLAYBACK_SPEED)
-                            new_speed = min(ReplayConstants.MAX_PLAYBACK_SPEED, 
-                                          current_speed + ReplayConstants.PLAYBACK_SPEED_INCREMENT)
+                            current_speed = game_state.replay_playback.get(
+                                "playback_speed", ReplayConstants.DEFAULT_PLAYBACK_SPEED
+                            )
+                            new_speed = min(
+                                ReplayConstants.MAX_PLAYBACK_SPEED,
+                                current_speed
+                                + ReplayConstants.PLAYBACK_SPEED_INCREMENT,
+                            )
                             game_state.replay_playback["playback_speed"] = new_speed
                             game_state.menu_cache = None  # Force UI update
                             logger.info(f"Increased playback speed to {new_speed}x")
                         return True
-                        
+
                     elif action == "close_replay_playback":
                         # Return to the replay selection screen
                         game_state.submenu_active = "view_replays"
                         game_state.menu_cache = None  # Force UI update
-                        logger.info("Closed replay playback, returning to replay selection")
+                        logger.info(
+                            "Closed replay playback, returning to replay selection"
+                        )
                         return True
 
                     # Share to platform actions
@@ -2498,67 +2559,71 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                         auto_record = getattr(game_state, "auto_record_replays", False)
                         game_state.auto_record_replays = not auto_record
                         game_state.menu_cache = None  # Force menu redraw
-                        
+
                         # Save the setting so it persists between sessions
                         try:
                             save_settings(game_state)
                         except Exception as e:
                             logger.error(f"Error saving auto-record setting: {e}")
-                            
+
                         show_notification(
-                            game_state, 
-                            f"Auto recording {'enabled' if game_state.auto_record_replays else 'disabled'}"
+                            game_state,
+                            f"Auto recording {'enabled' if game_state.auto_record_replays else 'disabled'}",
                         )
-                        logger.info(f"Auto recording toggled to: {game_state.auto_record_replays}")
+                        logger.info(
+                            f"Auto recording toggled to: {game_state.auto_record_replays}"
+                        )
                         return True
-                        
+
                     # Manage replay storage
                     elif action == "manage_replay_storage":
                         # Redirect to view_replays submenu which already has deletion functionality
                         game_state.submenu_active = "view_replays"
                         game_state.menu_cache = None  # Force menu redraw
-                        
+
                         # Show notification explaining the redirection
                         show_notification(
                             game_state,
                             "Use replay browser to manage storage - select and delete replays",
-                            duration=3.0
+                            duration=3.0,
                         )
-                        
-                        logger.info("Redirecting replay storage management to replay browser")
+
+                        logger.info(
+                            "Redirecting replay storage management to replay browser"
+                        )
                         return True
-                        
+
                     # Leaderboard mode selection handlers
                     elif action == "leaderboard_classic":
                         game_state.leaderboard_mode = "classic"
                         game_state.menu_cache = None  # Force menu redraw
                         logger.info("Changed leaderboard display to Classic mode")
                         return True
-                        
+
                     elif action == "leaderboard_timed":
                         game_state.leaderboard_mode = "timed"
                         game_state.menu_cache = None  # Force menu redraw
                         logger.info("Changed leaderboard display to Timed mode")
                         return True
-                        
+
                     elif action == "leaderboard_survival":
                         game_state.leaderboard_mode = "survival"
                         game_state.menu_cache = None  # Force menu redraw
                         logger.info("Changed leaderboard display to Survival mode")
                         return True
-                        
+
                     elif action == "leaderboard_fun":
                         game_state.leaderboard_mode = "fun"
                         game_state.menu_cache = None  # Force menu redraw
-                        logger.info("Changed leaderboard display to Fun mode") 
+                        logger.info("Changed leaderboard display to Fun mode")
                         return True
-                        
+
                     elif action == "leaderboard_practice":
                         game_state.leaderboard_mode = "practice"
                         game_state.menu_cache = None  # Force menu redraw
                         logger.info("Changed leaderboard display to Practice mode")
                         return True
-                        
+
                     elif action == "leaderboard_retro":
                         game_state.leaderboard_mode = "retro"
                         game_state.menu_cache = None  # Force menu redraw
