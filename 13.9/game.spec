@@ -8,7 +8,7 @@ a = Analysis(
      'heatmap_utils.py', 'data_logger.py', 'detection.py', 'utils.py', 'ui_utils.py',
      'ui_elements.py', 'cleanup_utils.py', 'achievement.py', 'player.py', 'game_types.py',
      'game_state_utils.py', 'game_state_helpers.py', 'interaction_utils.py', 'youtube_utils.py',
-     'google_drive_utils.py', 'screenshot_utils.py', 'replay_manager.py'],
+     'google_drive_utils.py', 'screenshot_utils.py', 'replay_manager.py', 'versus_mode.py'],
     pathex=[],
     binaries=[],
     datas=[
