@@ -1,94 +1,5 @@
 [
   {
-    "player_name": "Player 1",
-    "game_mode": "classic",
-    "start_timestamp_iso": "2025-04-18T17:25:04.734011",
-    "end_timestamp_iso": "2025-04-18T17:28:33.824931",
-    "duration_seconds": 209.09091997146606,
-    "final_score": 0,
-    "score_events": [
-      {
-        "timestamp": 1745022337.344093,
-        "zone_id": 0,
-        "points": 200,
-        "ball_type": "red"
-      },
-      {
-        "timestamp": 1745022344.541966,
-        "zone_id": 7,
-        "points": 50,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1745022353.5861192,
-        "zone_id": 7,
-        "points": 100,
-        "ball_type": "red"
-      },
-      {
-        "timestamp": 1745022359.7385468,
-        "zone_id": 13,
-        "points": 150,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1745022360.5395002,
-        "zone_id": 19,
-        "points": 300,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1745022364.5375962,
-        "zone_id": 3,
-        "points": 30,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1745022367.7370315,
-        "zone_id": 8,
-        "points": 100,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1745022375.7363088,
-        "zone_id": 20,
-        "points": 1,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1745022397.3312078,
-        "zone_id": 6,
-        "points": 300,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1745022404.531762,
-        "zone_id": 8,
-        "points": 100,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1745022419.72747,
-        "zone_id": 8,
-        "points": 100,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1745022444.1223266,
-        "zone_id": 8,
-        "points": 100,
-        "ball_type": "white"
-      },
-      {
-        "timestamp": 1745022509.3085845,
-        "zone_id": 7,
-        "points": 50,
-        "ball_type": "white"
-      }
-    ],
-    "zone_definitions": []
-  },
-  {
     "player_name": "Blake W",
     "game_mode": "retro",
     "start_timestamp_iso": "2025-04-18T17:28:33.837897",
@@ -9581,6 +9492,164 @@
     "start_timestamp_iso": "2025-04-21T20:12:56.180493",
     "end_timestamp_iso": "2025-04-21T20:13:23.021896",
     "duration_seconds": 26.841403007507324,
+    "final_score": 0,
+    "score_events": [],
+    "zone_definitions": [
+      [
+        211,
+        365,
+        53,
+        48,
+        100
+      ],
+      [
+        321,
+        372,
+        51,
+        46,
+        50
+      ],
+      [
+        418,
+        358,
+        51,
+        78,
+        100
+      ],
+      [
+        518,
+        376,
+        48,
+        46,
+        30
+      ],
+      [
+        598,
+        224,
+        50,
+        49,
+        20
+      ],
+      [
+        521,
+        564,
+        63,
+        63,
+        10
+      ],
+      [
+        834,
+        455,
+        56,
+        55,
+        300
+      ],
+      [
+        813,
+        371,
+        52,
+        74,
+        50
+      ],
+      [
+        841,
+        311,
+        54,
+        50,
+        100
+      ],
+      [
+        1441,
+        242,
+        40,
+        39,
+        100
+      ],
+      [
+        942,
+        656,
+        58,
+        59,
+        30
+      ],
+      [
+        972,
+        385,
+        49,
+        50,
+        200
+      ],
+      [
+        941,
+        210,
+        47,
+        43,
+        60
+      ],
+      [
+        1347,
+        398,
+        50,
+        47,
+        150
+      ],
+      [
+        1202,
+        344,
+        73,
+        68,
+        60
+      ],
+      [
+        1218,
+        430,
+        73,
+        67,
+        80
+      ],
+      [
+        1287,
+        274,
+        43,
+        41,
+        50
+      ],
+      [
+        1345,
+        568,
+        57,
+        55,
+        60
+      ],
+      [
+        1565,
+        639,
+        58,
+        63,
+        80
+      ],
+      [
+        1516,
+        394,
+        56,
+        74,
+        300
+      ],
+      [
+        1631,
+        416,
+        141,
+        310,
+        1
+      ]
+    ]
+  },
+  {
+    "player_name": "Player 1",
+    "game_mode": "classic",
+    "start_timestamp_iso": "2025-04-23T01:59:10.997319",
+    "end_timestamp_iso": "2025-04-23T02:00:30.953790",
+    "duration_seconds": 79.95647096633911,
     "final_score": 0,
     "score_events": [],
     "zone_definitions": [
