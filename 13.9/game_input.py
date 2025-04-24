@@ -261,6 +261,35 @@ def _handle_input(game_state: Any) -> Optional[int]:
             return key  # Which is likely -1 if no key was pressed
     # --- >>> END ADDED <<< ---
 
+    # --- >>> ADDED: Handle Versus Results Dismissal <<< ---
+    # Check if versus results screen is being shown
+    if getattr(game_state, "showing_versus_results", False):
+        if key == ord("m") or key == ord("M"):
+            logger.info("Versus mode results dismissed with 'M' key")
+            # Restore the previous state if we saved it, otherwise go to MENU
+            game_state.current_state = getattr(
+                game_state, "previous_state", CurrentGameState.MENU
+            )
+            game_state.previous_state = None  # Clear the stored state
+            game_state.versus_mode_active = False
+            game_state.showing_versus_results = False
+            return key
+        # Allow ESC to also dismiss results
+        elif key == 27:  # ESC key
+            logger.info("Versus mode results dismissed with ESC key")
+            # Restore the previous state if we saved it, otherwise go to MENU
+            game_state.current_state = getattr(
+                game_state, "previous_state", CurrentGameState.MENU
+            )
+            game_state.previous_state = None  # Clear the stored state
+            game_state.versus_mode_active = False
+            game_state.showing_versus_results = False
+            return key
+        # If key was not m/M/ESC, keep showing results
+        else:
+            return key
+    # --- >>> END ADDED <<< ---
+
     # If heatmap wasn't active or wasn't dismissed by a key press, proceed with normal input handling.
     key_handled_globally = (
         False  # Flag to prevent redundant processing in different states

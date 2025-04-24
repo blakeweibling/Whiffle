@@ -62,6 +62,11 @@ class UIConstants:
     YELLOW: Tuple[int, int, int] = (0, 255, 255)
     WHITE: Tuple[int, int, int] = (255, 255, 255)
     CV2_BLUE: Tuple[int, int, int] = (255, 0, 0)
+    CV2_ORANGE: Tuple[int, int, int] = (
+        0,
+        165,
+        255,
+    )  # BGR format (Blue=0, Green=165, Red=255)
     BLACK: Tuple[int, int, int] = (0, 0, 0)
     GREY_BG: Tuple[int, int, int] = (100, 100, 100)
     SLIDER_BG: Tuple[int, int, int] = (50, 50, 50)  # Color for slider background
@@ -412,10 +417,10 @@ class DiscordConstants:
     # 3. Select 'Integrations'
     # 4. Click on 'Webhooks' and create a new webhook
     # 5. Copy the webhook URL and paste it below, replacing the placeholder
-    WEBHOOK_URL = "https://discordapp.com/api/webhooks/1363011008423268465/YUHN0-dE_AVCUS-IxZuHZt-Rybh5z8U4nKjlqCreuTWqOyINHxEE_UpYRV_b17yfoAyA"
+    WEBHOOK_URL = "https://discord.com/api/webhooks/1364797662938792048/n4OQsfGzatpAaXDuQWarK_loIMqVXfK7fd8R3TSZOwv4Hx5aFH3lau1GdpokwsbG5GSV"
 
     # Bot details (these will be displayed in Discord)
-    BOT_USERNAME = "Whiffle Replay Bot"
+    BOT_USERNAME = "Whiffle Bot"
     BOT_AVATAR_URL = "https://www.whiffle.co/images/logo.png"
 
     # Template for the replay share message

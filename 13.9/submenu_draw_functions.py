@@ -544,7 +544,15 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
 
 # --- Players Submenu ---
 def _draw_players_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
-    """Draw the Players submenu."""
+    """Draw the Players management submenu."""
+    # Initialize player editing attributes if not present to prevent AttributeError
+    if not hasattr(game_state, "editing_player_mode"):
+        game_state.editing_player_mode = None
+    if not hasattr(game_state, "editing_player_index"):
+        game_state.editing_player_index = None
+    if not hasattr(game_state, "editing_player_name_input"):
+        game_state.editing_player_name_input = None
+
     cv2.putText(
         menu_frame,
         "Manage Players",
@@ -935,7 +943,7 @@ def _draw_about_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None
     game_state.submenu_items.clear()
     cv2.putText(
         menu_frame,
-        "Whiffle Tracker v13.8",
+        "Whiffle Tracker v13.9",
         (20, y_offset),
         cv2.FONT_HERSHEY_SIMPLEX,
         UIConstants.FONT_SCALE_MEDIUM,

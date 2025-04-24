@@ -532,6 +532,33 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
             logger.info("Switched to MENU state")
             return True
 
+        # Handle versus mode End Turn button click
+        if getattr(game_state, "versus_mode_active", False) and hasattr(
+            game_state, "versus_end_turn_button"
+        ):
+            end_turn_rect = game_state.versus_end_turn_button
+            btn_x, btn_y, btn_w, btn_h = end_turn_rect
+
+            if btn_x <= x < btn_x + btn_w and btn_y <= y < btn_y + btn_h:
+                logger.info("End Turn button clicked in versus mode")
+                game_state.click_feedback_state = (end_turn_rect, time.time())
+
+                # Set game state to GAME_OVER to trigger player switch
+                game_state.current_state = CurrentGameState.GAME_OVER
+
+                # Show notification
+                from game_state_helpers import show_notification
+
+                player_name = game_state.versus_players[
+                    game_state.current_turn_player_index
+                ].name
+                show_notification(
+                    game_state, f"{player_name}'s turn ended", duration=2.0
+                )
+
+                logger.info(f"Ended turn for player {player_name}")
+                return True
+
     # Exclude GAME_OVER from this function's responsibility
     if current_state not in [
         CurrentGameState.MENU,
@@ -858,6 +885,20 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                     # This is needed to navigate to submenus
                     if action in known_submenu_nav_actions:
                         logger.info(f"Setting submenu_active to: {action}")
+
+                        # Special handling for players submenu to initialize attributes
+                        if action == "players":
+                            # Initialize player editing attributes to prevent AttributeError
+                            if not hasattr(game_state, "editing_player_mode"):
+                                game_state.editing_player_mode = None
+                            if not hasattr(game_state, "editing_player_index"):
+                                game_state.editing_player_index = None
+                            if not hasattr(game_state, "editing_player_name_input"):
+                                game_state.editing_player_name_input = None
+                            logger.info(
+                                "Initialized player editing attributes for players submenu"
+                            )
+
                         game_state.submenu_active = action
                         game_state.menu_cache = None  # Force menu redraw
                         return True
@@ -2662,6 +2703,28 @@ def _process_menu_or_modal_click(x: int, y: int, game_state: "GameState") -> boo
                                     game_state, f"Selected platform: {platform}"
                                 )
                                 logger.info(f"Selected platform: {platform}")
+                        return True
+
+                    # Handle different submenu actions
+                    elif action in submenu_draw_functions_map:
+                        # Ensure attributes are initialized when entering players submenu
+                        if action == "players":
+                            # Initialize editing attributes to prevent AttributeError
+                            if not hasattr(game_state, "editing_player_mode"):
+                                game_state.editing_player_mode = None
+                            if not hasattr(game_state, "editing_player_index"):
+                                game_state.editing_player_index = None
+                            if not hasattr(game_state, "editing_player_name_input"):
+                                game_state.editing_player_name_input = None
+                            logger.info(
+                                "Initialized player editing attributes in game_state"
+                            )
+
+                        # Set submenu active to action
+                        game_state.submenu_active = action
+                        # Clear menu cache to redraw
+                        game_state.menu_cache = None
+                        logger.info(f"Switched to submenu: {action}")
                         return True
 
 

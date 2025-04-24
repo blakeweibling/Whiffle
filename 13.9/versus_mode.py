@@ -60,7 +60,11 @@ def switch_versus_player_turn(game_state):
     """
     # Save current player's score
     current_player = game_state.current_turn_player_index
-    game_state.versus_scores[current_player] = game_state.score
+
+    # Only update the score if we're not coming from GAME_OVER state
+    # (where we've already saved the score in check_versus_mode_end)
+    if game_state.current_state != CurrentGameState.GAME_OVER:
+        game_state.versus_scores[current_player] = game_state.score
 
     # Store stats for current player
     if game_state.data_logger and hasattr(game_state, "current_session_stats"):
@@ -91,12 +95,21 @@ def check_versus_mode_end(game_state) -> bool:
         return False
 
     if game_state.current_state == CurrentGameState.GAME_OVER:
+        # Store current player's score before potentially ending the game
+        current_player = game_state.current_turn_player_index
+        game_state.versus_scores[current_player] = game_state.score
+
+        # Check which player just finished their turn
         if game_state.current_turn_player_index == 1:
-            # Both players finished, show versus results
-            show_versus_results(game_state)
+            # Second player just finished, show versus results
+            # Only show results if we're not already showing them
+            if not getattr(game_state, "showing_versus_results", False):
+                # Save the game over state before showing results
+                game_state.previous_state = game_state.current_state
+                show_versus_results(game_state)
             return True
         elif game_state.current_turn_player_index == 0:
-            # First player finished, switch to second player
+            # First player just finished, switch to second player
             switch_versus_player_turn(game_state)
             return True
 
@@ -107,6 +120,14 @@ def show_versus_results(game_state):
     """
     Display the versus mode results screen showing the winner and stats.
     """
+    # Prevent calling this function multiple times
+    if getattr(game_state, "showing_versus_results", False):
+        logger.info("Results already being shown, skipping redundant display")
+        return
+
+    logger.info("Showing versus mode results")
+    game_state.showing_versus_results = True
+
     frame = np.zeros(
         (game_state.current_height, game_state.current_width, 3), dtype=np.uint8
     )
@@ -228,13 +249,10 @@ def show_versus_results(game_state):
         cv2.LINE_AA,
     )
 
+    # Display the results screen - use a specific window name to prevent conflicts
     cv2.imshow(UIConstants.WINDOW_NAME, frame)
-    cv2.waitKey(100)  # Small delay to ensure display
+    cv2.waitKey(1)  # Very small delay to ensure display without blocking
 
-    # Wait for user input
-    while True:
-        key = cv2.waitKey(10) & 0xFF
-        if key == ord("m") or key == ord("M"):
-            game_state.current_state = CurrentGameState.MENU
-            game_state.versus_mode_active = False
-            break
+    # Important: change current state to keep game loop from redrawing
+    # We already saved the previous state before calling this function
+    game_state.current_state = CurrentGameState.MENU

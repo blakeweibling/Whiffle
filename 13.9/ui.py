@@ -619,6 +619,29 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 thickness=UIConstants.FONT_THICKNESS,
             )
 
+            # Add End Turn button for versus mode
+            if game_state.current_state == CurrentGameState.PLAYING:
+                button_width, button_height = 150, 40
+                button_x = (current_width - button_width) // 2
+                button_y = current_height - 80  # Position near bottom
+
+                # Draw the End Turn button
+                end_turn_rect = (button_x, button_y, button_width, button_height)
+                _draw_button(
+                    frame,
+                    button_x,
+                    button_y,
+                    button_width,
+                    button_height,
+                    "End Turn",
+                    UIConstants.CV2_ORANGE,  # Make it stand out
+                    game_state=game_state,
+                    font_scale=UIConstants.FONT_SCALE_MEDIUM,
+                )
+
+                # Store the button rectangle for click detection
+                game_state.versus_end_turn_button = end_turn_rect
+
         if (
             game_state.game_mode in ["timed", "survival"]
             and game_state.game_timer is not None
