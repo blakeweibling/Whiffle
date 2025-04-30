@@ -2313,24 +2313,28 @@ def _process_menu_or_modal_click(
 
                                             # --- Google Drive Sharing Implementation ---
                                             try:
-                                                # Import necessary module
-                                                from google_drive_utils import share_to_google_drive
+                                                # Import necessary module with the CORRECT function name
+                                                from google_drive_utils import upload_video_to_drive
 
                                                 logger.info(f"Attempting Google Drive upload for {video_path} with title '{title}'")
-                                                file_id, shareable_link = share_to_google_drive(
+                                                # Call the CORRECT upload function
+                                                success, result_message = upload_video_to_drive(
                                                     video_path,
                                                     title=title,
-                                                    mime_type=("image/gif" if export_format == "GIF" else "video/mp4"),
+                                                    # Mime type handling should be inside upload_video_to_drive now
                                                 )
 
-                                                if file_id and shareable_link:
+                                                if success:
+                                                    shareable_link = result_message
                                                     logger.info(f"Successfully uploaded to Google Drive: {shareable_link}")
                                                     if hasattr(game_state, "replay_sharing"):
                                                         game_state.replay_sharing["export_status"] = f"Share Link Ready: {shareable_link}"
                                                         game_state.replay_sharing["export_progress"] = 1.0
                                                     show_notification(game_state, f"Share Link created: {shareable_link}", duration=5.0)
                                                 else:
-                                                    raise Exception("Google Drive upload failed or returned None")
+                                                    # Upload function returned failure
+                                                    error_message = result_message
+                                                    raise Exception(f"Google Drive upload failed: {error_message}")
 
                                             except Exception as upload_err:
                                                 logger.error(f"Google Drive upload failed: {upload_err}")
