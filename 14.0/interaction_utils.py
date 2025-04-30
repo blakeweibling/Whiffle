@@ -2263,6 +2263,7 @@ def _process_menu_or_modal_click(
                                         )
 
                                         # Check for existing video
+                                        cached_path = None # Initialize cached_path
                                         if hasattr(
                                             game_state, "replay_sharing"
                                         ) and game_state.replay_sharing.get(
@@ -2293,11 +2294,13 @@ def _process_menu_or_modal_click(
                                                 )
                                             else:
                                                 logger.warning(
-                                                    f"Cached video not found, too small, or wrong format: {cached_path}. Regenerating..."
+                                                    f"Cached video path '{cached_path}' invalid (not found, too small, or wrong format). Regenerating..."
                                                 )
+                                                cached_path = None # Ensure cached_path is None if invalid
                                         else:
+                                            # Modified log message: No last export path found
                                             logger.warning(
-                                                f"Cached video not found, too small, or wrong format: {cached_path}. Regenerating..."
+                                                f"No cached video path found in replay_sharing state. Regenerating..."
                                             )
 
                                         # Generate new video if needed
@@ -2335,11 +2338,66 @@ def _process_menu_or_modal_click(
                                                         "export_progress"
                                                     ] = 0.5
                                                     game_state.menu_cache = None
+                                                else:
+                                                    game_state.replay_sharing[
+                                                        "export_status"
+                                                    ] = f"Error generating {export_format} file"
+                                                    game_state.replay_sharing[
+                                                        "export_progress"
+                                                    ] = 0.0
+                                                    game_state.menu_cache = None
 
+                                                    show_notification(
+                                                        game_state,
+                                                        f"Error generating {export_format} file",
+                                                        is_error=True,
+                                                    )
+                                                    return True
+
+                                        # Now proceed with sharing to Share Link
+                                        if video_path:
+                                            # Set status in UI
+                                            if hasattr(game_state, "replay_sharing"):
+                                                game_state.replay_sharing[
+                                                    "export_status"
+                                                ] = "Sharing to Share Link..."
+                                                game_state.replay_sharing[
+                                                    "export_progress"
+                                                ] = 0.7
+                                                game_state.menu_cache = None
+
+                                            show_notification(
+                                                game_state,
+                                                "Sharing to Share Link...",
+                                                duration=2.0,
+                                            )
+
+                                            # --- Google Drive Sharing Implementation ---
+                                            # This is a placeholder for Google Drive sharing implementation
+                                            # You can add your own Google Drive sharing logic here
+                                            # For example, you can use the google_drive_utils module
+                                            # to upload the video to Google Drive
+                                            # --- End Google Drive Sharing Implementation ---
+
+                                        else:
+                                            # No video path available
+                                            if hasattr(game_state, "replay_sharing"):
+                                                game_state.replay_sharing[
+                                                    "export_status"
+                                                ] = "Error: No video file available"
+                                                game_state.replay_sharing[
+                                                    "export_progress"
+                                                ] = 0.0
+                                                game_state.menu_cache = None
+
+                                            show_notification(
+                                                game_state,
+                                                "Error: No video file to share",
+                                                is_error=True,
+                                            )
+                                            return True
                                     except Exception as e:
-                                        logger.error(
-                                            f"Error sharing to Share Link: {e}"
-                                        )
+                                        logger.error(f"Error sharing to Share Link: {e}")
 
                                         # Set status in UI
                                         if hasattr(game_state, "replay_sharing"):
