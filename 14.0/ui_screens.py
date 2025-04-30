@@ -476,48 +476,43 @@ def display_heatmap_modal(
 # --- Initial Splash Screen ---
 def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional["GameState"]:
     """Display the splash screen and initialize the game state."""
-    window_created = False
     try:
         # Initialize game state
         from game_state import GameState
 
         game_state = GameState(supabase_url, supabase_key)
 
-        # Create splash window if it doesn't exist already
-        if cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:
-            cv2.namedWindow(UIConstants.WINDOW_NAME, cv2.WINDOW_NORMAL)
-            window_created = True
+        # Ensure the main window exists before proceeding
+        cv2.namedWindow(UIConstants.WINDOW_NAME, cv2.WINDOW_NORMAL)
+        window_created = True # Assume we might have just created it
 
-            # Get the current resolution dimensions
-            current_width, current_height = (
-                game_state.get_current_resolution_dimensions()
-            )
+        # Get the current resolution dimensions
+        current_width, current_height = (
+            game_state.get_current_resolution_dimensions()
+        )
 
-            # Center the window on the screen
-            try:
-                # Try to get screen resolution - this is platform-dependent
-                # For Windows, we can use GetSystemMetrics
-                import ctypes
+        # Center the window on the screen
+        try:
+            # Try to get screen resolution - this is platform-dependent
+            # For Windows, we can use GetSystemMetrics
+            import ctypes
 
-                user32 = ctypes.windll.user32
-                screen_width = user32.GetSystemMetrics(0)
-                screen_height = user32.GetSystemMetrics(1)
+            user32 = ctypes.windll.user32
+            screen_width = user32.GetSystemMetrics(0)
+            screen_height = user32.GetSystemMetrics(1)
 
-                # Calculate center position
-                x_pos = max(0, (screen_width - current_width) // 2)
-                y_pos = max(0, (screen_height - current_height) // 2)
+            # Calculate center position
+            x_pos = max(0, (screen_width - current_width) // 2)
+            y_pos = max(0, (screen_height - current_height) // 2)
 
-                # Move window to center
-                cv2.moveWindow(UIConstants.WINDOW_NAME, x_pos, y_pos)
-                logger.info(f"Centered main window at ({x_pos}, {y_pos})")
-            except Exception as e:
-                logger.error(f"Failed to center main window: {e}")
+            # Move window to center
+            cv2.moveWindow(UIConstants.WINDOW_NAME, x_pos, y_pos)
+            logger.info(f"Centered main window at ({x_pos}, {y_pos})")
+        except Exception as e:
+            logger.error(f"Failed to center main window: {e}")
 
-            # Display splash screen
-            display_modal_splash(game_state, lambda *args: None, None)  # Dummy callback
-        else:
-            # Window already exists, just make sure it's visible
-            logger.info("Window already exists, skipping splash display")
+        # Display splash screen
+        display_modal_splash(game_state, lambda *args: None, None) # Dummy callback
 
         return game_state
     except Exception as e:
