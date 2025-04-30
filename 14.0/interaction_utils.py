@@ -2335,21 +2335,7 @@ def _process_menu_or_modal_click(
                                                         "export_progress"
                                                     ] = 0.5
                                                     game_state.menu_cache = None
-                                        else:
-                                            game_state.replay_sharing[
-                                                "export_status"
-                                            ] = f"Error generating {export_format} file"
-                                            game_state.replay_sharing[
-                                                "export_progress"
-                                            ] = 0.0
-                                            game_state.menu_cache = None
 
-                                            show_notification(
-                                                game_state,
-                                                f"Error generating {export_format} file",
-                                                is_error=True,
-                                            )
-                                            return True
                                     except Exception as e:
                                         logger.error(
                                             f"Error sharing to Share Link: {e}"
