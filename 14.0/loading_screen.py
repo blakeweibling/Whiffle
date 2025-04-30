@@ -9,6 +9,7 @@ import logging
 import cv2
 import numpy as np
 from typing import Callable, Optional
+import platform  # Import the platform module
 
 # Set up logging
 logging.basicConfig(
@@ -254,7 +255,7 @@ def wrap_initialization(
     initialization_func: Callable, *args, **kwargs
 ) -> Optional[object]:
     """
-    Wrap the main initialization function with a loading screen.
+    Wrap the main initialization function with a loading screen, skipping on Linux/macOS.
 
     Args:
         initialization_func: The function to call for initialization
@@ -263,6 +264,21 @@ def wrap_initialization(
     Returns:
         The result of the initialization function
     """
+    # Check the operating system
+    current_os = platform.system()
+    if current_os == "Linux" or current_os == "Darwin":  # Darwin is macOS
+        logger.info(f"Skipping loading screen on {current_os}.")
+        print(f"Skipping loading screen on {current_os}...")
+        # Directly call the initialization function without the loading screen
+        try:
+            result = initialization_func(*args, **kwargs)
+            return result
+        except Exception as e:
+            logger.error(f"Error during direct initialization on {current_os}: {e}")
+            raise  # Re-raise the exception for proper handling
+
+    # Original logic for Windows or other OS
+    logger.info("Showing loading screen...")
     # Create and start loading screen
     loading_screen = LoadingScreen()
     loading_screen.start()
@@ -293,7 +309,7 @@ def wrap_initialization(
         return result
 
     except Exception as e:
-        logger.error(f"Error during initialization: {e}")
+        logger.error(f"Error during initialization with loading screen: {e}")
         loading_screen.loading_stage = f"Error: {str(e)}"
         time.sleep(2.0)  # Show error for a bit
         loading_screen.finish()
