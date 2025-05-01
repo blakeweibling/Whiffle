@@ -128,6 +128,7 @@ def draw_menu_window(frame: np.ndarray, game_state: GameState) -> None:
         getattr(game_state, "editing_player_mode", None),
         getattr(game_state, "editing_player_name_input", None),
         getattr(game_state, "current_player_index", 0),
+        getattr(game_state, "hover_feedback_state", None),
         (
             getattr(game_state, "edit_zones_current_page", 1)
             if game_state.submenu_active == "edit_zones"

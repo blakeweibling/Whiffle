@@ -62,6 +62,7 @@ class UIConstants:
     YELLOW: Tuple[int, int, int] = (0, 255, 255)
     WHITE: Tuple[int, int, int] = (255, 255, 255)
     CV2_BLUE: Tuple[int, int, int] = (255, 0, 0)
+    LIGHT_BLUE: Tuple[int, int, int] = (255, 191, 0)  # Light blue in BGR format
     CV2_ORANGE: Tuple[int, int, int] = (
         0,
         165,

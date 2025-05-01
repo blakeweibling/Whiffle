@@ -174,6 +174,8 @@ class GameState:
         self.click_feedback_state: Optional[Tuple[Tuple[int, int, int, int], float]] = (
             None
         )
+        # Add hover feedback state
+        self.hover_feedback_state: Optional[Tuple[int, int, int, int]] = None
 
         # Initial Player Name Input State
         self.player_name_input_active: bool = True

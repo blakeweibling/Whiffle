@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-# --- CHANGE: Updated _draw_button function ---
+# --- UPDATED: Added hover functionality to _draw_button ---
 def _draw_button(
     frame: cv2.typing.MatLike,
     x: int,
@@ -43,16 +43,22 @@ def _draw_button(
     shadow_color: Tuple[int, int, int] = UIConstants.BLACK,
     # <<< ADDED click_color PARAMETER (Optional) >>>
     click_color: Tuple[int, int, int] = UIConstants.YELLOW,  # Color when clicked
+    # <<< ADDED hover_color PARAMETER (Optional) >>>
+    hover_color: Tuple[int, int, int] = UIConstants.LIGHT_BLUE,  # Color when hovered
 ) -> None:
     """
     Draws a button with centered text, specified color, and a drop shadow.
     Highlights the button if its rectangle matches game_state.click_feedback_state
     and the click timestamp is within the feedback duration.
+    Also highlights when mouse is hovering over it if game_state.hover_feedback_state is set.
     """
     try:
-        # <<< MODIFIED LOGIC to check for click state and duration >>>
+        # <<< MODIFIED LOGIC to check for click state, hover state, and duration >>>
         button_rect = (x, y, w, h)
         is_clicked = False
+        is_hovered = False
+        
+        # Check if button is being clicked
         if (
             hasattr(game_state, "click_feedback_state")
             and game_state.click_feedback_state
@@ -64,7 +70,23 @@ def _draw_button(
                 and (time.time() - click_time) < UIConstants.CLICK_FEEDBACK_DURATION
             ):
                 is_clicked = True
-        current_color = click_color if is_clicked else color
+        
+        # Check if button is being hovered
+        if (
+            hasattr(game_state, "hover_feedback_state")
+            and game_state.hover_feedback_state
+        ):
+            hovered_rect = game_state.hover_feedback_state
+            if hovered_rect == button_rect:
+                is_hovered = True
+        
+        # Determine color - click state has precedence over hover state
+        if is_clicked:
+            current_color = click_color
+        elif is_hovered:
+            current_color = hover_color
+        else:
+            current_color = color
         # <<< END MODIFIED LOGIC >>>
 
         # Draw Drop Shadow
