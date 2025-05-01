@@ -2334,11 +2334,13 @@ def _process_menu_or_modal_click(
                                                     try:
                                                         # Use xclip on Linux
                                                         if os.uname().sysname == 'Linux':
+                                                            logger.info(f"Attempting to copy to clipboard using xclip. DISPLAY={os.environ.get('DISPLAY')}")
                                                             process = subprocess.run(
                                                                 ['xclip', '-selection', 'clipboard'],
                                                                 input=shareable_link.encode('utf-8'),
                                                                 check=True,
-                                                                capture_output=True # Capture stderr
+                                                                capture_output=True, # Capture stdout/stderr
+                                                                timeout=2 # Add a 2-second timeout
                                                             )
                                                             clipboard_success = True
                                                             logger.info("Successfully copied link to clipboard using xclip.")
@@ -2346,11 +2348,15 @@ def _process_menu_or_modal_click(
                                                             logger.warning("Clipboard copy only implemented for Linux (xclip) currently.")
                                                     except FileNotFoundError:
                                                         logger.warning("'xclip' command not found. Cannot copy to clipboard. Please install xclip.")
+                                                    except subprocess.TimeoutExpired:
+                                                        logger.error("'xclip' command timed out after 2 seconds. Clipboard copy failed.")
                                                     except subprocess.CalledProcessError as e:
                                                         logger.error(f"Failed to copy link to clipboard using xclip: {e}")
                                                         logger.error(f"xclip stderr: {e.stderr.decode('utf-8', errors='ignore')}")
+                                                        logger.error(f"xclip stdout: {e.stdout.decode('utf-8', errors='ignore')}") # Log stdout too
                                                     except Exception as clip_err:
-                                                        logger.error(f"Unexpected error copying to clipboard: {clip_err}")
+                                                        # Log the type of exception as well
+                                                        logger.error(f"Unexpected error ({type(clip_err).__name__}) copying to clipboard: {clip_err}")
                                                     # --- End clipboard copy attempt ---
 
                                                     if hasattr(game_state, "replay_sharing"):
