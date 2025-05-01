@@ -10,6 +10,7 @@ import cv2
 import json
 import requests
 from requests.exceptions import RequestException
+import subprocess # <-- Add this import
 
 # Import cleanup util
 from cleanup_utils import clean_exit
@@ -2327,10 +2328,41 @@ def _process_menu_or_modal_click(
                                                 if success:
                                                     shareable_link = result_message
                                                     logger.info(f"Successfully uploaded to Google Drive: {shareable_link}")
+
+                                                    # --- Attempt to copy link to clipboard ---
+                                                    clipboard_success = False
+                                                    try:
+                                                        # Use xclip on Linux
+                                                        if os.uname().sysname == 'Linux':
+                                                            process = subprocess.run(
+                                                                ['xclip', '-selection', 'clipboard'],
+                                                                input=shareable_link.encode('utf-8'),
+                                                                check=True,
+                                                                capture_output=True # Capture stderr
+                                                            )
+                                                            clipboard_success = True
+                                                            logger.info("Successfully copied link to clipboard using xclip.")
+                                                        else:
+                                                            logger.warning("Clipboard copy only implemented for Linux (xclip) currently.")
+                                                    except FileNotFoundError:
+                                                        logger.warning("'xclip' command not found. Cannot copy to clipboard. Please install xclip.")
+                                                    except subprocess.CalledProcessError as e:
+                                                        logger.error(f"Failed to copy link to clipboard using xclip: {e}")
+                                                        logger.error(f"xclip stderr: {e.stderr.decode('utf-8', errors='ignore')}")
+                                                    except Exception as clip_err:
+                                                        logger.error(f"Unexpected error copying to clipboard: {clip_err}")
+                                                    # --- End clipboard copy attempt ---
+
                                                     if hasattr(game_state, "replay_sharing"):
                                                         game_state.replay_sharing["export_status"] = f"Share Link Ready: {shareable_link}"
                                                         game_state.replay_sharing["export_progress"] = 1.0
-                                                    show_notification(game_state, f"Share Link created: {shareable_link}", duration=5.0)
+
+                                                    # Update notification based on clipboard success
+                                                    if clipboard_success:
+                                                        notification_message = "Share Link created and copied!"
+                                                    else:
+                                                        notification_message = f"Link created (copy manually): {shareable_link}"
+                                                    show_notification(game_state, notification_message, duration=5.0)
                                                 else:
                                                     # Upload function returned failure
                                                     error_message = result_message
