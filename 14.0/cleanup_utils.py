@@ -7,6 +7,7 @@ including session stats, is saved.
 import logging
 import sys
 from typing import Any, Optional
+import os
 
 import cv2
 import pygame
@@ -170,6 +171,18 @@ def clean_exit(
 
     except Exception as cache_error:
         logger.error(f"Error during cache clearing: {cache_error}")
+
+    # --- Delete YouTube Token ---
+    logger.debug("Attempting to delete YouTube token file...")
+    try:
+        youtube_token_path = os.path.join("configs", "youtube_token.json")
+        if os.path.exists(youtube_token_path):
+            os.remove(youtube_token_path)
+            logger.info("Successfully deleted YouTube token file.")
+        else:
+            logger.debug("YouTube token file doesn't exist, nothing to delete.")
+    except Exception as e:
+        logger.error(f"Error deleting YouTube token file: {e}")
 
     # --- Release Resources ---
     # Quit Pygame FIRST (especially mixer)

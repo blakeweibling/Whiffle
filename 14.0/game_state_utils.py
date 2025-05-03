@@ -724,6 +724,7 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
     current_state = getattr(game_state, "current_state", None)
     game_mode = getattr(game_state, "game_mode", None)
 
+    # Only decrement timer when in PLAYING state, not in MENU or PAUSED
     if (
         current_state == CurrentGameState.PLAYING
         and game_mode in ["timed", "survival"]
@@ -889,6 +890,8 @@ def reset_game(game_state: Any) -> None:
         ),
         "game_sounds_on": getattr(game_state, "game_sounds_on", True),
         "background_music_on": getattr(game_state, "background_music_on", True),
+        # Discord webhook URL
+        "discord_webhook_url": getattr(game_state, "discord_webhook_url", None),
         # Debug & UI preferences
         "debug_mode": getattr(game_state, "debug_mode", False),
         "show_debug_overlay": getattr(game_state, "show_debug_overlay", False),
@@ -1016,6 +1019,15 @@ def reset_game(game_state: Any) -> None:
                 current_player_name = current_player.name
             data_logger.start_new_session(current_player_name, game_state.game_mode)
             game_state.data_logger = data_logger
+            
+            # If the current game state is not PLAYING, pause the session timer immediately
+            current_state = getattr(game_state, "current_state", None)
+            if current_state in [CurrentGameState.MENU, CurrentGameState.PAUSED]:
+                session = data_logger.get_current_session_data()
+                if session:
+                    session.pause()
+                    logger.debug(f"Paused new session timer immediately because game state is {current_state}")
+                    
         except Exception as e:
             logger.error(f"Error starting new data logging session: {e}")
 

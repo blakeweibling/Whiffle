@@ -10,6 +10,8 @@ from googleapiclient.http import MediaFileUpload
 from oauth2client.file import Storage
 from oauth2client.client import flow_from_clientsecrets, OAuth2Credentials
 from oauth2client.tools import run_flow
+from oauth2client import tools
+import argparse
 
 from constants import YouTubeConstants
 
@@ -128,18 +130,25 @@ def generate_new_credentials(
         logger.info("Starting YouTube authentication process")
 
         # Set up a simple command line argument parser for the OAuth flow
-        import sys
-        import argparse
+        # import sys
+        # import argparse
+        #
+        # parser = argparse.ArgumentParser(add_help=False)
+        # parser.add_argument("--auth_host_name", default="localhost")
+        # parser.add_argument(
+        #     "--auth_host_port", default=[8080, 8090], type=int, nargs="*"
+        # )
+        # parser.add_argument(
+        #     "--noauth_local_webserver", action="store_true", default=False
+        # )
+        # args, _ = parser.parse_known_args()
+        # --- END REMOVED section ---
 
-        parser = argparse.ArgumentParser(add_help=False)
-        parser.add_argument("--auth_host_name", default="localhost")
-        parser.add_argument(
-            "--auth_host_port", default=[8080, 8090], type=int, nargs="*"
-        )
-        parser.add_argument(
-            "--noauth_local_webserver", action="store_true", default=False
-        )
-        args, _ = parser.parse_known_args()
+        # --- ADD default flags for run_flow ---
+        # Create default flags using tools.argparser - this includes logging_level
+        parent_parser = argparse.ArgumentParser(parents=[tools.argparser])
+        flags = parent_parser.parse_args([])
+        # --- END ADDED section ---
 
         # Create the OAuth2 flow object
         flow = flow_from_clientsecrets(
@@ -181,7 +190,8 @@ def generate_new_credentials(
             print("=====================================================\n")
 
         # Run the OAuth2 flow to get credentials
-        credentials = run_flow(flow, storage, args)
+        # Pass the default flags instead of custom args
+        credentials = run_flow(flow, storage, flags)
 
         logger.info("Successfully authenticated with YouTube API")
         return credentials

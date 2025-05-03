@@ -484,12 +484,10 @@ def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional["GameSt
 
         # Ensure the main window exists before proceeding
         cv2.namedWindow(UIConstants.WINDOW_NAME, cv2.WINDOW_NORMAL)
-        window_created = True # Assume we might have just created it
+        window_created = True  # Assume we might have just created it
 
         # Get the current resolution dimensions
-        current_width, current_height = (
-            game_state.get_current_resolution_dimensions()
-        )
+        current_width, current_height = game_state.get_current_resolution_dimensions()
 
         # Center the window on the screen
         try:
@@ -512,7 +510,7 @@ def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional["GameSt
             logger.error(f"Failed to center main window: {e}")
 
         # Display splash screen
-        display_modal_splash(game_state, lambda *args: None, None) # Dummy callback
+        display_modal_splash(game_state, lambda *args: None, None)  # Dummy callback
 
         return game_state
     except Exception as e:

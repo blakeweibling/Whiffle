@@ -9,8 +9,9 @@ import os  # Make sure os is imported at the top level
 import cv2
 import json
 import requests
+import sys
 from requests.exceptions import RequestException
-import subprocess # <-- Add this import
+import subprocess  # <-- Add this import
 
 # Import cleanup util
 from cleanup_utils import clean_exit
@@ -1686,8 +1687,14 @@ def _process_menu_or_modal_click(
                                                     f"Using previously generated video: {video_path}"
                                                 )
                                         else:
+                                            # Safely format the log message, handling potential None for cached_path
+                                            cached_path_info = (
+                                                f"path: {cached_path}"
+                                                if cached_path
+                                                else "no cached path found"
+                                            )
                                             logger.warning(
-                                                f"Cached video not found, too small, or wrong format: {cached_path}. Regenerating..."
+                                                f"Cached video invalid ({cached_path_info}). Regenerating..."
                                             )
 
                                         # If we don't have a valid cached path or it's the wrong format, generate a new one
@@ -2235,176 +2242,423 @@ def _process_menu_or_modal_click(
                                         )
                                         return True
                                 elif platform == "Share Link":
-                                    video_path = None # Initialize video_path for this attempt
+                                    video_path = (
+                                        None  # Initialize video_path for this attempt
+                                    )
                                     try:
                                         # --- 1. Check for cached video ---
                                         cached_path = None
-                                        export_format = "MP4" # Default, get from state later if needed
+                                        export_format = "MP4"  # Default, get from state later if needed
                                         if hasattr(game_state, "replay_sharing"):
-                                            export_format = game_state.replay_sharing.get("selected_format", "MP4")
-                                            cached_path = game_state.replay_sharing.get("last_export_path")
+                                            export_format = (
+                                                game_state.replay_sharing.get(
+                                                    "selected_format", "MP4"
+                                                )
+                                            )
+                                            cached_path = game_state.replay_sharing.get(
+                                                "last_export_path"
+                                            )
 
-                                        if cached_path and os.path.exists(cached_path) and os.path.getsize(cached_path) > 1000:
+                                        if (
+                                            cached_path
+                                            and os.path.exists(cached_path)
+                                            and os.path.getsize(cached_path) > 1000
+                                        ):
                                             # Check if format matches
-                                            correct_format = (export_format == "MP4" and cached_path.endswith(".mp4")) or \
-                                                             (export_format == "GIF" and cached_path.endswith(".gif"))
+                                            correct_format = (
+                                                export_format == "MP4"
+                                                and cached_path.endswith(".mp4")
+                                            ) or (
+                                                export_format == "GIF"
+                                                and cached_path.endswith(".gif")
+                                            )
                                             if correct_format:
                                                 video_path = cached_path
-                                                logger.info(f"Using previously generated video: {video_path}")
+                                                logger.info(
+                                                    f"Using previously generated video: {video_path}"
+                                                )
                                             else:
-                                                logger.warning(f"Cached video path '{cached_path}' has wrong format (expected {export_format}). Regenerating...")
+                                                logger.warning(
+                                                    f"Cached video path '{cached_path}' has wrong format (expected {export_format}). Regenerating..."
+                                                )
                                         elif cached_path:
-                                             logger.warning(f"Cached video path '{cached_path}' invalid (not found or too small). Regenerating...")
+                                            logger.warning(
+                                                f"Cached video path '{cached_path}' invalid (not found or too small). Regenerating..."
+                                            )
                                         else:
-                                             logger.warning("No cached video path found. Regenerating...")
-
+                                            logger.warning(
+                                                "No cached video path found. Regenerating..."
+                                            )
 
                                         # --- 2. Generate video if needed ---
                                         if not video_path:
                                             if hasattr(game_state, "replay_sharing"):
-                                                game_state.replay_sharing["export_status"] = f"Generating {export_format}..."
-                                                game_state.replay_sharing["export_progress"] = 0.3
+                                                game_state.replay_sharing[
+                                                    "export_status"
+                                                ] = f"Generating {export_format}..."
+                                                game_state.replay_sharing[
+                                                    "export_progress"
+                                                ] = 0.3
                                                 game_state.menu_cache = None
-                                            show_notification(game_state, f"Generating {export_format} file...", duration=2.0)
+                                            show_notification(
+                                                game_state,
+                                                f"Generating {export_format} file...",
+                                                duration=2.0,
+                                            )
 
                                             # Ensure replay_id is available
-                                            parts = action.split('_')
+                                            parts = action.split("_")
                                             if len(parts) < 4:
-                                                raise ValueError("Could not extract replay_id from action string")
+                                                raise ValueError(
+                                                    "Could not extract replay_id from action string"
+                                                )
                                             replay_id = parts[3]
 
-                                            video_path = game_state.replay_manager.generate_video(replay_id, format=export_format)
+                                            video_path = game_state.replay_manager.generate_video(
+                                                replay_id, format=export_format
+                                            )
 
                                             if not video_path:
                                                 # Generation failed
-                                                logger.error(f"Failed to generate {export_format} for replay {replay_id}")
-                                                if hasattr(game_state, "replay_sharing"):
-                                                    game_state.replay_sharing["export_status"] = f"Error generating {export_format}"
-                                                    game_state.replay_sharing["export_progress"] = 0.0
+                                                logger.error(
+                                                    f"Failed to generate {export_format} for replay {replay_id}"
+                                                )
+                                                if hasattr(
+                                                    game_state, "replay_sharing"
+                                                ):
+                                                    game_state.replay_sharing[
+                                                        "export_status"
+                                                    ] = f"Error generating {export_format}"
+                                                    game_state.replay_sharing[
+                                                        "export_progress"
+                                                    ] = 0.0
                                                     game_state.menu_cache = None
-                                                show_notification(game_state, f"Error generating {export_format} file", is_error=True)
-                                                return True # Stop processing
+                                                show_notification(
+                                                    game_state,
+                                                    f"Error generating {export_format} file",
+                                                    is_error=True,
+                                                )
+                                                return True  # Stop processing
 
                                             # Generation succeeded
                                             if hasattr(game_state, "replay_sharing"):
-                                                game_state.replay_sharing["last_export_path"] = video_path
-                                                game_state.replay_sharing["export_status"] = f"{export_format} generated"
-                                                game_state.replay_sharing["export_progress"] = 0.5 # Halfway done
+                                                game_state.replay_sharing[
+                                                    "last_export_path"
+                                                ] = video_path
+                                                game_state.replay_sharing[
+                                                    "export_status"
+                                                ] = f"{export_format} generated"
+                                                game_state.replay_sharing[
+                                                    "export_progress"
+                                                ] = 0.5  # Halfway done
                                                 game_state.menu_cache = None
-
 
                                         # --- 3. Proceed to Share Link (Google Drive) upload if video_path is valid ---
                                         if video_path:
                                             if hasattr(game_state, "replay_sharing"):
-                                                game_state.replay_sharing["export_status"] = "Sharing to Share Link..."
-                                                game_state.replay_sharing["export_progress"] = 0.7
+                                                game_state.replay_sharing[
+                                                    "export_status"
+                                                ] = "Sharing to Share Link..."
+                                                game_state.replay_sharing[
+                                                    "export_progress"
+                                                ] = 0.7
                                                 game_state.menu_cache = None
-                                            show_notification(game_state, "Sharing to Share Link...", duration=2.0)
+                                            show_notification(
+                                                game_state,
+                                                "Sharing to Share Link...",
+                                                duration=2.0,
+                                            )
 
                                             # Get player name/score for title (ensure replay_id is defined)
-                                            parts = action.split('_')
-                                            replay_id = parts[3] if len(parts) > 3 else None
-                                            if not replay_id: raise ValueError("Replay ID missing for upload") # Should not happen if video generated
+                                            parts = action.split("_")
+                                            replay_id = (
+                                                parts[3] if len(parts) > 3 else None
+                                            )
+                                            if not replay_id:
+                                                raise ValueError(
+                                                    "Replay ID missing for upload"
+                                                )  # Should not happen if video generated
 
-                                            replay = game_state.replay_manager.load_replay(replay_id)
-                                            player_name = replay.player_name if replay and hasattr(replay, "player_name") else "Player"
-                                            score = replay.frames[-1].score if replay and hasattr(replay, "frames") and replay.frames else 0
-                                            game_mode = replay.game_mode if replay and hasattr(replay, "game_mode") else "classic"
+                                            replay = (
+                                                game_state.replay_manager.load_replay(
+                                                    replay_id
+                                                )
+                                            )
+                                            player_name = (
+                                                replay.player_name
+                                                if replay
+                                                and hasattr(replay, "player_name")
+                                                else "Player"
+                                            )
+                                            score = (
+                                                replay.frames[-1].score
+                                                if replay
+                                                and hasattr(replay, "frames")
+                                                and replay.frames
+                                                else 0
+                                            )
+                                            game_mode = (
+                                                replay.game_mode
+                                                if replay
+                                                and hasattr(replay, "game_mode")
+                                                else "classic"
+                                            )
                                             title = f"Whiffle Replay ({player_name} - {game_mode.capitalize()} - Score {score})"
 
                                             # --- Google Drive Sharing Implementation ---
                                             try:
                                                 # Import necessary module with the CORRECT function name
-                                                from google_drive_utils import upload_video_to_drive
+                                                from google_drive_utils import (
+                                                    upload_video_to_drive,
+                                                )
 
-                                                logger.info(f"Attempting Google Drive upload for {video_path} with title '{title}'")
+                                                logger.info(
+                                                    f"Attempting Google Drive upload for {video_path} with title '{title}'"
+                                                )
                                                 # Call the CORRECT upload function
-                                                success, result_message = upload_video_to_drive(
-                                                    video_path,
-                                                    title=title,
-                                                    # Mime type handling should be inside upload_video_to_drive now
+                                                success, result_message = (
+                                                    upload_video_to_drive(
+                                                        video_path,
+                                                        title=title,
+                                                        # Mime type handling should be inside upload_video_to_drive now
+                                                    )
                                                 )
 
                                                 if success:
                                                     shareable_link = result_message
-                                                    logger.info(f"Successfully uploaded to Google Drive: {shareable_link}")
+                                                    logger.info(
+                                                        f"Successfully uploaded to Google Drive: {shareable_link}"
+                                                    )
 
                                                     # --- Attempt to copy link to clipboard ---
                                                     clipboard_success = False
                                                     try:
-                                                        # Use xclip on Linux
-                                                        if os.uname().sysname == 'Linux':
-                                                            logger.info(f"Attempting to copy to clipboard using xclip. DISPLAY={os.environ.get('DISPLAY')}")
+                                                        # Check system platform in a cross-platform way
+                                                        system_platform = sys.platform
+
+                                                        # Windows clipboard handling
+                                                        if system_platform == "win32":
+                                                            try:
+                                                                # Try to use win32clipboard (from pywin32)
+                                                                import win32clipboard
+
+                                                                win32clipboard.OpenClipboard()
+                                                                win32clipboard.EmptyClipboard()
+                                                                win32clipboard.SetClipboardText(
+                                                                    shareable_link,
+                                                                    win32clipboard.CF_UNICODETEXT,
+                                                                )
+                                                                win32clipboard.CloseClipboard()
+                                                                clipboard_success = True
+                                                                logger.info(
+                                                                    "Successfully copied link to clipboard using win32clipboard."
+                                                                )
+                                                            except ImportError:
+                                                                logger.warning(
+                                                                    "win32clipboard module not available. Try 'pip install pywin32'"
+                                                                )
+                                                                # Try fallback to ctypes for Windows
+                                                                try:
+                                                                    import ctypes
+
+                                                                    CF_UNICODETEXT = 13
+                                                                    GMEM_DDESHARE = (
+                                                                        0x2000
+                                                                    )
+                                                                    d = ctypes.windll.kernel32.GlobalAlloc(
+                                                                        GMEM_DDESHARE,
+                                                                        len(
+                                                                            shareable_link
+                                                                        )
+                                                                        * 2
+                                                                        + 2,
+                                                                    )
+                                                                    p = ctypes.windll.kernel32.GlobalLock(
+                                                                        d
+                                                                    )
+                                                                    ctypes.cdll.msvcrt.wcscpy(
+                                                                        ctypes.c_wchar_p(
+                                                                            p
+                                                                        ),
+                                                                        shareable_link,
+                                                                    )
+                                                                    ctypes.windll.kernel32.GlobalUnlock(
+                                                                        d
+                                                                    )
+                                                                    ctypes.windll.user32.OpenClipboard(
+                                                                        0
+                                                                    )
+                                                                    ctypes.windll.user32.EmptyClipboard()
+                                                                    ctypes.windll.user32.SetClipboardData(
+                                                                        CF_UNICODETEXT,
+                                                                        d,
+                                                                    )
+                                                                    ctypes.windll.user32.CloseClipboard()
+                                                                    clipboard_success = (
+                                                                        True
+                                                                    )
+                                                                    logger.info(
+                                                                        "Successfully copied link to clipboard using ctypes fallback."
+                                                                    )
+                                                                except (
+                                                                    Exception
+                                                                ) as ctypes_err:
+                                                                    logger.error(
+                                                                        f"Windows ctypes clipboard fallback failed: {ctypes_err}"
+                                                                    )
+                                                            except (
+                                                                Exception
+                                                            ) as win_clip_err:
+                                                                logger.error(
+                                                                    f"Windows clipboard error: {win_clip_err}"
+                                                                )
+
+                                                        # Linux clipboard handling
+                                                        elif system_platform.startswith(
+                                                            "linux"
+                                                        ):
+                                                            logger.info(
+                                                                f"Attempting to copy to clipboard using xclip. DISPLAY={os.environ.get('DISPLAY')}"
+                                                            )
                                                             process = subprocess.run(
-                                                                ['xclip', '-selection', 'clipboard'],
-                                                                input=shareable_link.encode('utf-8'),
+                                                                [
+                                                                    "xclip",
+                                                                    "-selection",
+                                                                    "clipboard",
+                                                                ],
+                                                                input=shareable_link.encode(
+                                                                    "utf-8"
+                                                                ),
                                                                 check=True,
-                                                                capture_output=True, # Capture stdout/stderr
-                                                                timeout=2 # Add a 2-second timeout
+                                                                capture_output=True,
+                                                                timeout=2,
                                                             )
                                                             clipboard_success = True
-                                                            logger.info("Successfully copied link to clipboard using xclip.")
+                                                            logger.info(
+                                                                "Successfully copied link to clipboard using xclip."
+                                                            )
                                                         else:
-                                                            logger.warning("Clipboard copy only implemented for Linux (xclip) currently.")
+                                                            logger.warning(
+                                                                f"No clipboard implementation for platform: {system_platform}"
+                                                            )
                                                     except FileNotFoundError:
-                                                        logger.warning("'xclip' command not found. Cannot copy to clipboard. Please install xclip.")
+                                                        logger.warning(
+                                                            "'xclip' command not found. Cannot copy to clipboard. Please install xclip."
+                                                        )
                                                     except subprocess.TimeoutExpired:
-                                                        logger.error("'xclip' command timed out after 2 seconds. Clipboard copy failed.")
-                                                    except subprocess.CalledProcessError as e:
-                                                        logger.error(f"Failed to copy link to clipboard using xclip: {e}")
-                                                        logger.error(f"xclip stderr: {e.stderr.decode('utf-8', errors='ignore')}")
-                                                        logger.error(f"xclip stdout: {e.stdout.decode('utf-8', errors='ignore')}") # Log stdout too
+                                                        logger.error(
+                                                            "'xclip' command timed out after 2 seconds. Clipboard copy failed."
+                                                        )
+                                                    except (
+                                                        subprocess.CalledProcessError
+                                                    ) as e:
+                                                        logger.error(
+                                                            f"Failed to copy link to clipboard using xclip: {e}"
+                                                        )
+                                                        if hasattr(e, "stderr"):
+                                                            logger.error(
+                                                                f"xclip stderr: {e.stderr.decode('utf-8', errors='ignore')}"
+                                                            )
+                                                        if hasattr(e, "stdout"):
+                                                            logger.error(
+                                                                f"xclip stdout: {e.stdout.decode('utf-8', errors='ignore')}"
+                                                            )
                                                     except Exception as clip_err:
-                                                        # Log the type of exception as well
-                                                        logger.error(f"Unexpected error ({type(clip_err).__name__}) copying to clipboard: {clip_err}")
+                                                        logger.error(
+                                                            f"Unexpected error ({type(clip_err).__name__}) copying to clipboard: {clip_err}"
+                                                        )
                                                     # --- End clipboard copy attempt ---
 
-                                                    if hasattr(game_state, "replay_sharing"):
-                                                        game_state.replay_sharing["export_status"] = f"Share Link Ready: {shareable_link}"
-                                                        game_state.replay_sharing["export_progress"] = 1.0
+                                                    if hasattr(
+                                                        game_state, "replay_sharing"
+                                                    ):
+                                                        game_state.replay_sharing[
+                                                            "export_status"
+                                                        ] = f"Share Link Ready: {shareable_link}"
+                                                        game_state.replay_sharing[
+                                                            "export_progress"
+                                                        ] = 1.0
 
                                                     # Update notification based on clipboard success
                                                     if clipboard_success:
                                                         notification_message = "Share Link created and copied!"
                                                     else:
                                                         notification_message = f"Link created (copy manually): {shareable_link}"
-                                                    show_notification(game_state, notification_message, duration=5.0)
+                                                    show_notification(
+                                                        game_state,
+                                                        notification_message,
+                                                        duration=5.0,
+                                                    )
                                                 else:
                                                     # Upload function returned failure
                                                     error_message = result_message
-                                                    raise Exception(f"Google Drive upload failed: {error_message}")
+                                                    raise Exception(
+                                                        f"Google Drive upload failed: {error_message}"
+                                                    )
 
                                             except Exception as upload_err:
-                                                logger.error(f"Google Drive upload failed: {upload_err}")
-                                                logger.error(traceback.format_exc()) # Log full traceback for upload errors
-                                                if hasattr(game_state, "replay_sharing"):
-                                                    game_state.replay_sharing["export_status"] = f"Upload Error: {str(upload_err)[:50]}..." # Show truncated error
-                                                    game_state.replay_sharing["export_progress"] = 0.0
-                                                show_notification(game_state, "Error uploading to Google Drive", is_error=True)
+                                                logger.error(
+                                                    f"Google Drive upload failed: {upload_err}"
+                                                )
+                                                logger.error(
+                                                    traceback.format_exc()
+                                                )  # Log full traceback for upload errors
+                                                if hasattr(
+                                                    game_state, "replay_sharing"
+                                                ):
+                                                    game_state.replay_sharing[
+                                                        "export_status"
+                                                    ] = f"Upload Error: {str(upload_err)[:50]}..."  # Show truncated error
+                                                    game_state.replay_sharing[
+                                                        "export_progress"
+                                                    ] = 0.0
+                                                show_notification(
+                                                    game_state,
+                                                    "Error uploading to Google Drive",
+                                                    is_error=True,
+                                                )
                                             finally:
-                                                 game_state.menu_cache = None # Update UI regardless of upload outcome
+                                                game_state.menu_cache = None  # Update UI regardless of upload outcome
                                             # --- End Google Drive Sharing Implementation ---
 
                                         else:
-                                             # This case should ideally not be reached if generation failure is handled above
-                                             logger.error(f"No video path available to share after generation attempt for replay {replay_id}")
-                                             if hasattr(game_state, "replay_sharing"):
-                                                game_state.replay_sharing["export_status"] = "Error: Video unavailable"
-                                                game_state.replay_sharing["export_progress"] = 0.0
+                                            # This case should ideally not be reached if generation failure is handled above
+                                            logger.error(
+                                                f"No video path available to share after generation attempt for replay {replay_id}"
+                                            )
+                                            if hasattr(game_state, "replay_sharing"):
+                                                game_state.replay_sharing[
+                                                    "export_status"
+                                                ] = "Error: Video unavailable"
+                                                game_state.replay_sharing[
+                                                    "export_progress"
+                                                ] = 0.0
                                                 game_state.menu_cache = None
 
-                                        return True # Action handled (successfully or with upload error)
+                                        return True  # Action handled (successfully or with upload error)
 
                                     except Exception as e:
                                         # Catch errors from the entire process (loading replay, checking cache, generating, uploading)
-                                        logger.error(f"Error processing 'Share Link' action: {e}")
-                                        logger.error(traceback.format_exc()) # Log full traceback
+                                        logger.error(
+                                            f"Error processing 'Share Link' action: {e}"
+                                        )
+                                        logger.error(
+                                            traceback.format_exc()
+                                        )  # Log full traceback
                                         if hasattr(game_state, "replay_sharing"):
-                                            game_state.replay_sharing["export_status"] = f"Error: {str(e)[:50]}..."
-                                            game_state.replay_sharing["export_progress"] = 0.0
+                                            game_state.replay_sharing[
+                                                "export_status"
+                                            ] = f"Error: {str(e)[:50]}..."
+                                            game_state.replay_sharing[
+                                                "export_progress"
+                                            ] = 0.0
                                             game_state.menu_cache = None
-                                        show_notification(game_state, "Error processing Share Link", is_error=True)
-                                        return True # Action handled (failed)
+                                        show_notification(
+                                            game_state,
+                                            "Error processing Share Link",
+                                            is_error=True,
+                                        )
+                                        return True  # Action handled (failed)
                                 elif platform == "YouTube":
                                     try:
                                         # First generate video if needed
@@ -2433,7 +2687,7 @@ def _process_menu_or_modal_click(
                                             if replay and hasattr(replay, "game_mode")
                                             else "classic"
                                         )
-
+                                        cached_path = None
                                         if hasattr(
                                             game_state, "replay_sharing"
                                         ) and game_state.replay_sharing.get(
@@ -2462,9 +2716,15 @@ def _process_menu_or_modal_click(
                                                 logger.info(
                                                     f"Using previously generated video: {video_path}"
                                                 )
-                                        else:
+                                            else:  # Corresponds to the 'if hasattr(...)' check
+                                                # Log invalid cache state specifically if cached_path was found but invalid
+                                                logger.warning(
+                                                    f"Cached video path '{cached_path}' exists but is invalid (size/format). Regenerating..."
+                                                )
+                                        else:  # Corresponds to the 'if hasattr(game_state, "replay_sharing") and game_state.replay_sharing.get("last_export_path"):' check
+                                            # Log if no cached path was found in replay_sharing at all
                                             logger.warning(
-                                                f"Cached video not found, too small, or wrong format: {cached_path}. Regenerating..."
+                                                "No cached video path found or replay_sharing missing. Regenerating..."
                                             )
 
                                         # Generate new video if needed
@@ -2546,106 +2806,106 @@ def _process_menu_or_modal_click(
                                         return True
 
                                         # Add the actual YouTube upload logic here, inside the try block if video_path is valid
-                                        if video_path:
-                                            try:
-                                                # Set status in UI
+                                    if video_path:
+                                        try:
+                                            # Set status in UI
+                                            if hasattr(game_state, "replay_sharing"):
+                                                game_state.replay_sharing[
+                                                    "export_status"
+                                                ] = "Uploading to YouTube..."
+                                                game_state.replay_sharing[
+                                                    "export_progress"
+                                                ] = 0.7
+                                                game_state.menu_cache = None
+
+                                            show_notification(
+                                                game_state,
+                                                "Uploading to YouTube...",
+                                                duration=3.0,
+                                            )
+
+                                            # Call YouTube upload function using the correct name
+                                            success, result_message = (
+                                                youtube_utils.upload_video_to_youtube(
+                                                    video_path,
+                                                    player_name=player_name,
+                                                    score=score,
+                                                    game_mode=game_mode,
+                                                    # title=f"Whiffleball Highlight: {player_name} ({score} pts - {game_mode.capitalize()})",
+                                                    # description=f"Gameplay highlight from Whiffleball. Mode: {game_mode.capitalize()}",
+                                                    # tags=[
+                                                    #     "whiffleball",
+                                                    #     "gameplay",
+                                                    #     "highlight",
+                                                    #     game_mode,
+                                                    # ],
+                                                    # privacy_status="public",  # or "private", "unlisted"
+                                                )
+                                            )
+
+                                            # Update UI based on upload result
+                                            if success:
+                                                video_url = result_message  # The function now returns the URL
                                                 if hasattr(
                                                     game_state, "replay_sharing"
                                                 ):
                                                     game_state.replay_sharing[
                                                         "export_status"
-                                                    ] = "Uploading to YouTube..."
+                                                    ] = f"YouTube: {video_url}"
                                                     game_state.replay_sharing[
                                                         "export_progress"
-                                                    ] = 0.7
-                                                    game_state.menu_cache = None
-
+                                                    ] = 1.0
                                                 show_notification(
                                                     game_state,
-                                                    "Uploading to YouTube...",
-                                                    duration=3.0,
+                                                    "Successfully uploaded to YouTube!",
+                                                    duration=5.0,
                                                 )
-
-                                                # Call YouTube upload function
-                                                video_url = youtube_utils.upload_video(
-                                                    video_path,
-                                                    title=f"Whiffleball Highlight: {player_name} ({score} pts - {game_mode.capitalize()})",
-                                                    description=f"Gameplay highlight from Whiffleball. Mode: {game_mode.capitalize()}",
-                                                    tags=[
-                                                        "whiffleball",
-                                                        "gameplay",
-                                                        "highlight",
-                                                        game_mode,
-                                                    ],
-                                                    privacy_status="public",  # or "private", "unlisted"
+                                                logger.info(
+                                                    f"Successfully uploaded video to YouTube: {video_url}"
                                                 )
-
-                                                # Update UI based on upload result
-                                                if video_url:
-                                                    if hasattr(
-                                                        game_state, "replay_sharing"
-                                                    ):
-                                                        game_state.replay_sharing[
-                                                            "export_status"
-                                                        ] = f"YouTube: {video_url}"
-                                                        game_state.replay_sharing[
-                                                            "export_progress"
-                                                        ] = 1.0
-                                                    show_notification(
-                                                        game_state,
-                                                        "Successfully uploaded to YouTube!",
-                                                        duration=5.0,
-                                                    )
-                                                    logger.info(
-                                                        f"Successfully uploaded video to YouTube: {video_url}"
-                                                    )
-                                                else:
-                                                    if hasattr(
-                                                        game_state, "replay_sharing"
-                                                    ):
-                                                        game_state.replay_sharing[
-                                                            "export_status"
-                                                        ] = "YouTube upload failed"
-                                                        game_state.replay_sharing[
-                                                            "export_progress"
-                                                        ] = 0.0
-                                                    show_notification(
-                                                        game_state,
-                                                        "Failed to upload to YouTube",
-                                                        is_error=True,
-                                                    )
-                                                    logger.error(
-                                                        "YouTube upload failed."
-                                                    )
-
-                                            except Exception as e:
-                                                logger.error(
-                                                    f"Error sharing video to YouTube: {e}"
-                                                )
-                                                logger.error(traceback.format_exc())
-
-                                                # Update UI status
+                                            else:
                                                 if hasattr(
                                                     game_state, "replay_sharing"
                                                 ):
                                                     game_state.replay_sharing[
                                                         "export_status"
-                                                    ] = f"YouTube Upload Error: {str(e)}"
+                                                    ] = "YouTube upload failed"
                                                     game_state.replay_sharing[
                                                         "export_progress"
                                                     ] = 0.0
-                                                    game_state.menu_cache = None
-
                                                 show_notification(
                                                     game_state,
-                                                    "Error sharing video to YouTube",
+                                                    "Failed to upload to YouTube",
                                                     is_error=True,
                                                 )
-                                            finally:
-                                                # Update the menu cache regardless of upload success/failure to reflect final status
+                                                logger.error("YouTube upload failed.")
+
+                                        except Exception as e:
+                                            logger.error(
+                                                f"Error sharing video to YouTube: {e}"
+                                            )
+                                            logger.error(traceback.format_exc())
+
+                                            # Update UI status
+                                            if hasattr(game_state, "replay_sharing"):
+                                                game_state.replay_sharing[
+                                                    "export_status"
+                                                ] = f"YouTube Upload Error: {str(e)}"
+                                                game_state.replay_sharing[
+                                                    "export_progress"
+                                                ] = 0.0
                                                 game_state.menu_cache = None
 
-                                        return True  # Return True because the share action was processed
+                                            show_notification(
+                                                game_state,
+                                                "Error sharing video to YouTube",
+                                                is_error=True,
+                                            )
+                                        finally:
+                                            # Update the menu cache regardless of upload success/failure to reflect final status
+                                            game_state.menu_cache = None
+
+                                    return True  # Return True because the share action was processed
                                 else:
                                     # For other platforms
                                     # Set status in UI

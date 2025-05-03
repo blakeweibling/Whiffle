@@ -57,7 +57,7 @@ def _draw_button(
         button_rect = (x, y, w, h)
         is_clicked = False
         is_hovered = False
-        
+
         # Check if button is being clicked
         if (
             hasattr(game_state, "click_feedback_state")
@@ -70,7 +70,7 @@ def _draw_button(
                 and (time.time() - click_time) < UIConstants.CLICK_FEEDBACK_DURATION
             ):
                 is_clicked = True
-        
+
         # Check if button is being hovered
         if (
             hasattr(game_state, "hover_feedback_state")
@@ -79,7 +79,7 @@ def _draw_button(
             hovered_rect = game_state.hover_feedback_state
             if hovered_rect == button_rect:
                 is_hovered = True
-        
+
         # Determine color - click state has precedence over hover state
         if is_clicked:
             current_color = click_color

@@ -216,6 +216,7 @@ def run_game_loop(game_state: GameState) -> None:
     """The main game loop."""
     _initialize_display()
     last_time = time.time()
+    previous_state = None
     if not hasattr(game_state, "frame_count"):
         game_state.frame_count = 0
     try:
@@ -228,10 +229,35 @@ def run_game_loop(game_state: GameState) -> None:
                 current_fps = 1.0 / dt
                 alpha = 0.1
                 game_state.fps = alpha * current_fps + (1 - alpha) * game_state.fps
+                
+            # Store previous state before handling input
+            previous_state = getattr(game_state, "current_state", None)
+                
             key_result = _handle_input(game_state)
             if key_result is None:
                 logger.info("Quit signaled from input handler.")
                 break
+                
+            # Check for state transitions to pause/resume session timer
+            current_state = getattr(game_state, "current_state", None)
+            if previous_state != current_state:
+                if (previous_state == CurrentGameState.PLAYING and 
+                    current_state in [CurrentGameState.MENU, CurrentGameState.PAUSED]):
+                    # Transitioning from PLAYING to MENU or PAUSED - pause timer
+                    if hasattr(game_state, "data_logger") and game_state.data_logger:
+                        session = game_state.data_logger.get_current_session_data()
+                        if session:
+                            session.pause()
+                            logger.debug(f"Paused session timer due to state change: {previous_state} -> {current_state}")
+                elif (previous_state in [CurrentGameState.MENU, CurrentGameState.PAUSED] and
+                      current_state == CurrentGameState.PLAYING):
+                    # Transitioning from MENU or PAUSED to PLAYING - resume timer
+                    if hasattr(game_state, "data_logger") and game_state.data_logger:
+                        session = game_state.data_logger.get_current_session_data()
+                        if session:
+                            session.resume()
+                            logger.debug(f"Resumed session timer due to state change: {previous_state} -> {current_state}")
+                
             try:
                 if (
                     cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE)
@@ -286,15 +312,7 @@ def run_game_loop(game_state: GameState) -> None:
                 except Exception as e:
                     logger.error(f"Error checking versus mode end conditions: {e}")
 
-            # Process detection and tracking during gameplay
-            if game_state.current_state == CurrentGameState.PLAYING:
-                run_detection_tracking = (
-                    game_state.frame_count % GameConstants.DETECTION_FRAME_INTERVAL == 0
-                )
-                if run_detection_tracking:
-                    _process_frame(draw_canvas, game_state)
-
-            # Handle replay recording if active
+            # Update replay playback if active
             replay_recording_active = getattr(game_state, "replay_recording", False)
 
             if replay_recording_active:
@@ -329,7 +347,18 @@ def run_game_loop(game_state: GameState) -> None:
                         game_state, "Replay recording error", is_error=True
                     )
 
-            update_scoring(game_state)
+            # Process detection and tracking during gameplay
+            # Only process game updates when in PLAYING state, not in MENU or PAUSED
+            if game_state.current_state == CurrentGameState.PLAYING:
+                run_detection_tracking = (
+                    game_state.frame_count % GameConstants.DETECTION_FRAME_INTERVAL == 0
+                )
+                if run_detection_tracking:
+                    _process_frame(draw_canvas, game_state)
+                
+                # Update scoring only when actively playing
+                update_scoring(game_state)
+            
             _render_frame(draw_canvas, game_state)
 
             # Trim history collections every 30 frames to prevent memory bloat

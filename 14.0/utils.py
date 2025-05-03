@@ -51,22 +51,22 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
         if current_state == CurrentGameState.MENU:
             # Store previous hover state to detect changes
             previous_hover = getattr(game_state, "hover_feedback_state", None)
-            
+
             # Reset hover state
             game_state.hover_feedback_state = None
-            
+
             # Get menu position for coordinate adjustment
             menu_x, menu_y = getattr(game_state, "menu_pos", (0, 0))
-            
+
             # Calculate mouse position relative to menu
             relative_x = x - menu_x
             relative_y = y - menu_y
-            
+
             # Check if mouse is within menu bounds
             menu_width = getattr(game_state, "menu_width", 600)
             menu_height = getattr(game_state, "menu_height", 450)
-            
-            if (0 <= relative_x < menu_width and 0 <= relative_y < menu_height):
+
+            if 0 <= relative_x < menu_width and 0 <= relative_y < menu_height:
                 # Check if hovering over any menu item
                 if hasattr(game_state, "submenu_items") and game_state.submenu_items:
                     for item_rect, action_key, label in game_state.submenu_items:
@@ -81,11 +81,11 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
                                 if previous_hover != item_rect:
                                     logger.debug(f"Hovering over menu item: {label}")
                                 break
-            
+
             # Force menu redraw if hover state changed
             if previous_hover != game_state.hover_feedback_state:
                 game_state.menu_cache = None  # Force menu redraw
-            
+
             # No need to log hover events further
             return
 

@@ -37,6 +37,10 @@ class SessionData:
         self.has_position_data: bool = (
             False  # Flag to track if we have any position data
         )
+        # Track paused time
+        self.is_paused: bool = False
+        self.pause_start_time: Optional[float] = None
+        self.total_paused_time: float = 0.0
 
     def log_score(self, zone_id: int, points: int, ball_type: str):
         """Logs a scoring event."""
@@ -72,11 +76,38 @@ class SessionData:
             f"Finalizing session. Score: {self.final_score}, Duration: {self.get_duration():.1f}s"
         )
 
+    def pause(self):
+        """Pause the session timer."""
+        if not self.is_paused:
+            self.is_paused = True
+            self.pause_start_time = time.time()
+            logger.debug("Session timer paused")
+
+    def resume(self):
+        """Resume the session timer."""
+        if self.is_paused and self.pause_start_time is not None:
+            pause_duration = time.time() - self.pause_start_time
+            self.total_paused_time += pause_duration
+            self.is_paused = False
+            self.pause_start_time = None
+            logger.debug(f"Session timer resumed. Added {pause_duration:.1f}s to paused time")
+
     def get_duration(self) -> float:
-        """Calculates the session duration in seconds."""
+        """Calculates the session duration in seconds, accounting for paused time."""
+        # Calculate the raw time difference
         if self.end_time is None:
-            return time.time() - self.start_time
-        return self.end_time - self.start_time
+            raw_duration = time.time() - self.start_time
+        else:
+            raw_duration = self.end_time - self.start_time
+        
+        # Calculate current pause duration if paused
+        current_pause_duration = 0.0
+        if self.is_paused and self.pause_start_time is not None:
+            current_pause_duration = time.time() - self.pause_start_time
+        
+        # Subtract total paused time from raw duration
+        active_duration = raw_duration - self.total_paused_time - current_pause_duration
+        return max(0.0, active_duration)  # Ensure we don't return negative values
 
     def to_dict(self) -> Dict[str, Any]:
         """Converts session data to a dictionary for saving."""

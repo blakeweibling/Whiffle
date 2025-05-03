@@ -28,6 +28,9 @@ MAX_KEYFRAMES = (
 )
 REPLAY_THUMBNAIL_SIZE = (320, 180)  # 16:9 aspect ratio thumbnail
 MAX_REPLAY_HISTORY = 50  # Maximum number of replays to keep in history
+# Keyframe resize factor - higher value = better quality but larger files
+# 1.0 = full resolution, 0.5 = half resolution, 0.25 = quarter resolution
+KEYFRAME_RESIZE_FACTOR = 0.5  # Storing at half resolution provides good balance
 
 # Default timestamps for highlight windows
 DEFAULT_HIGHLIGHT_SECONDS_BEFORE = 3.0
@@ -164,41 +167,44 @@ class Replay:
                     REPLAY_TEMP_FRAMES_DIR, f"{self.replay_id}_{frame_count}.jpg"
                 )
 
-                # Create a thumbnail version
-                if (
-                    current_frame.size == 0
-                    or current_frame.shape[0] == 0
-                    or current_frame.shape[1] == 0
-                ):
-                    logger.error(
-                        f"Invalid frame shape for keyframe: {current_frame.shape if hasattr(current_frame, 'shape') else 'unknown'}"
+                # Make a deep copy to avoid modifying the original
+                thumbnail = current_frame.copy()
+
+                # Resize using the configurable resize factor
+                try:
+                    # Calculate new dimensions based on resize factor
+                    new_width = int(self.width * KEYFRAME_RESIZE_FACTOR)
+                    new_height = int(self.height * KEYFRAME_RESIZE_FACTOR)
+
+                    # Ensure dimensions are even (required by some codecs)
+                    new_width = new_width if new_width % 2 == 0 else new_width + 1
+                    new_height = new_height if new_height % 2 == 0 else new_height + 1
+
+                    # Resize with high quality interpolation
+                    thumbnail = cv2.resize(
+                        thumbnail, (new_width, new_height), interpolation=cv2.INTER_AREA
                     )
-                else:
-                    # Make a deep copy to avoid modifying the original
-                    thumbnail = current_frame.copy()
 
-                    # Resize to a manageable size (1/4 of original)
-                    try:
-                        thumbnail = cv2.resize(
-                            thumbnail, (self.width // 4, self.height // 4)
-                        )
-
-                        # Write to file
-                        result = cv2.imwrite(keyframe_path, thumbnail)
-                        if result:
-                            # Keep track of keyframe timestamps
-                            current_time = time.time()
-                            self.keyframe_timestamps.append(current_time)
-                            if frame_count % 300 == 0:  # Log every ~10 seconds at 30fps
-                                logger.info(f"Saved keyframe at {keyframe_path}")
-                            else:
-                                logger.debug(f"Saved keyframe at {keyframe_path}")
+                    # Write to file with higher quality
+                    encode_params = [
+                        cv2.IMWRITE_JPEG_QUALITY,
+                        ReplayConstants.VIDEO_JPEG_QUALITY,
+                    ]
+                    result = cv2.imwrite(keyframe_path, thumbnail, encode_params)
+                    if result:
+                        # Keep track of keyframe timestamps
+                        current_time = time.time()
+                        self.keyframe_timestamps.append(current_time)
+                        if frame_count % 300 == 0:  # Log every ~10 seconds at 30fps
+                            logger.info(f"Saved keyframe at {keyframe_path}")
                         else:
-                            logger.error(
-                                f"Failed to write keyframe to file: {keyframe_path}"
-                            )
-                    except Exception as e:
-                        logger.error(f"Error resizing or saving keyframe: {e}")
+                            logger.debug(f"Saved keyframe at {keyframe_path}")
+                    else:
+                        logger.error(
+                            f"Failed to write keyframe to file: {keyframe_path}"
+                        )
+                except Exception as e:
+                    logger.error(f"Error resizing or saving keyframe: {e}")
             except Exception as e:
                 logger.error(f"Failed to save keyframe: {e}")
 
@@ -656,16 +662,25 @@ class Replay:
             keyframe_files.sort(key=lambda f: int(f.split(".")[0]))
             logger.info(f"Found {len(keyframe_files)} keyframes for video generation")
 
-            # Load the first keyframe to get dimensions
-            first_frame_path = os.path.join(keyframes_dir, keyframe_files[0])
-            first_frame = cv2.imread(first_frame_path)
+            # --- Get resolution from replay metadata ---
+            if hasattr(self, "resolution") and self.resolution:
+                width, height = self.resolution
+                logger.info(f"Using replay metadata resolution: {width}x{height}")
+            else:
+                # Fallback to first keyframe if metadata is missing (log warning)
+                logger.warning(
+                    "Replay resolution metadata missing, falling back to first keyframe dimensions."
+                )
+                first_frame_path = os.path.join(keyframes_dir, keyframe_files[0])
+                first_frame = cv2.imread(first_frame_path)
 
-            if first_frame is None:
-                logger.error(f"Failed to load first keyframe: {first_frame_path}")
-                return None
+                if first_frame is None:
+                    logger.error(f"Failed to load first keyframe: {first_frame_path}")
+                    return None
+                height, width = first_frame.shape[:2]
 
-            height, width = first_frame.shape[:2]
-            logger.info(f"Video dimensions: {width}x{height}")
+            logger.info(f"Video dimensions set to: {width}x{height}")
+            # --- End resolution handling ---
 
             # For GIF format, we'll collect frames and use imageio for conversion
             if format == "GIF":
@@ -689,11 +704,21 @@ class Replay:
                         frame_count = int(keyframe_file.split(".")[0])
                         img_path = os.path.join(keyframes_dir, keyframe_file)
 
-                        # Load image
+                        # Load image with best quality
                         img = cv2.imread(img_path)
                         if img is None:
                             logger.warning(f"Failed to read keyframe image: {img_path}")
                             continue
+
+                        # If the loaded image size doesn't match our target size, resize it
+                        # (This preserves quality of original keyframes when they're already at target size)
+                        img_height, img_width = img.shape[:2]
+                        if img_width != width or img_height != height:
+                            img = cv2.resize(
+                                img,
+                                (width, height),
+                                interpolation=cv2.INTER_LANCZOS4,  # High quality interpolation
+                            )
 
                         # Find the nearest frame in our data
                         nearest_frame = None
@@ -806,9 +831,26 @@ class Replay:
                     logger.error(traceback.format_exc())
                     return None
             else:
-                # Create MP4 video writer
-                fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+                # Create MP4 video writer with improved settings
+                # Use h264 codec for better quality and compatibility
+                if os.name == "nt":  # Windows
+                    fourcc = cv2.VideoWriter_fourcc(*"H264")
+                else:  # Unix/Mac
+                    # mp4v is more widely supported on non-Windows platforms
+                    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+
                 fps = ReplayConstants.REPLAY_VIDEO_FPS
+
+                # Create video writer with higher bitrate for better quality
+                video_writer = cv2.VideoWriter(
+                    output_path, fourcc, fps, (width, height), True  # isColor
+                )
+
+                if not video_writer.isOpened():
+                    # Fallback to mp4v if h264 failed on Windows
+                    if os.name == "nt":
+                        logger.warning("H264 codec failed, falling back to mp4v")
+                        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
                 video_writer = cv2.VideoWriter(
                     output_path, fourcc, fps, (width, height)
                 )
@@ -830,11 +872,21 @@ class Replay:
                     frame_count = int(keyframe_file.split(".")[0])
                     img_path = os.path.join(keyframes_dir, keyframe_file)
 
-                    # Load image
+                    # Load image with best quality
                     img = cv2.imread(img_path)
                     if img is None:
                         logger.warning(f"Failed to read keyframe image: {img_path}")
                         continue
+
+                    # If the loaded image size doesn't match our target size, resize it
+                    # (This preserves quality of original keyframes when they're already at target size)
+                    img_height, img_width = img.shape[:2]
+                    if img_width != width or img_height != height:
+                        img = cv2.resize(
+                            img,
+                            (width, height),
+                            interpolation=cv2.INTER_LANCZOS4,  # High quality interpolation
+                        )
 
                     # Find the nearest frame in our data
                     nearest_frame = None
@@ -1235,6 +1287,8 @@ class ReplayManager:
 
             # Start recording
             self.current_replay.start_recording(resolution)
+            # Explicitly set resolution on the Replay object
+            self.current_replay.width, self.current_replay.height = resolution
 
             # Add the first frame
             current_frame = getattr(game_state, "current_frame", None)

@@ -373,8 +373,10 @@ class ReplayConstants:
 
     MAX_REPLAY_HISTORY = 50  # Maximum number of replays to keep in history
     KEYFRAME_INTERVAL = 60  # Save a frame every 60 frames (2 seconds at 30fps)
-    REPLAY_VIDEO_FPS = 10  # FPS for generated replay videos
-    HIGHLIGHT_VIDEO_FPS = 15  # FPS for highlight videos
+    REPLAY_VIDEO_FPS = (
+        24  # FPS for generated replay videos (higher for smoother playback)
+    )
+    HIGHLIGHT_VIDEO_FPS = 30  # FPS for highlight videos (higher for better quality)
     DEFAULT_HIGHLIGHT_SECONDS_BEFORE = (
         3.0  # Seconds before score event to include in highlight
     )
@@ -382,6 +384,10 @@ class ReplayConstants:
         2.0  # Seconds after score event to include in highlight
     )
     REPLAY_THUMBNAIL_SIZE = (320, 180)  # Default thumbnail size (16:9 aspect ratio)
+
+    # Video quality settings
+    VIDEO_JPEG_QUALITY = 95  # JPEG quality for keyframes (0-100)
+    VIDEO_MP4_QUALITY = 95  # MP4 quality for exported videos (0-100)
 
     # The number of replays to show per page in the replay browser
     REPLAYS_PER_PAGE = 6
