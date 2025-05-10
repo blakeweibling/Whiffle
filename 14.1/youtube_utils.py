@@ -12,6 +12,8 @@ from oauth2client.client import flow_from_clientsecrets, OAuth2Credentials
 from oauth2client.tools import run_flow
 from oauth2client import tools
 import argparse
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 
 from constants import YouTubeConstants
 
@@ -129,72 +131,117 @@ def generate_new_credentials(
         # Log the authentication process
         logger.info("Starting YouTube authentication process")
 
-        # Set up a simple command line argument parser for the OAuth flow
-        # import sys
-        # import argparse
-        #
-        # parser = argparse.ArgumentParser(add_help=False)
-        # parser.add_argument("--auth_host_name", default="localhost")
-        # parser.add_argument(
-        #     "--auth_host_port", default=[8080, 8090], type=int, nargs="*"
-        # )
-        # parser.add_argument(
-        #     "--noauth_local_webserver", action="store_true", default=False
-        # )
-        # args, _ = parser.parse_known_args()
-        # --- END REMOVED section ---
-
-        # --- ADD default flags for run_flow ---
-        # Create default flags using tools.argparser - this includes logging_level
-        parent_parser = argparse.ArgumentParser(parents=[tools.argparser])
-        flags = parent_parser.parse_args([])
-        # --- END ADDED section ---
-
-        # Create the OAuth2 flow object
-        flow = flow_from_clientsecrets(
-            client_secrets_path,
-            scope=scopes,
-            message="Error loading client secrets file",
-        )
-
-        # Set the redirect URI to match what's in the client_secrets file
-        flow.redirect_uri = "http://localhost:8080/"
-
-        # Create the storage to save the credentials
-        storage = Storage(token_path)
-
-        # Show a notification about authentication
-        logger.info(
-            "Please authenticate with your Google account in the browser window that opens"
-        )
-
-        # Try to open a web browser for authentication
-        import webbrowser
-
         try:
-            # Open authentication URL in the default browser
-            auth_uri = flow.step1_get_authorize_url()
-            webbrowser.open(auth_uri, new=1, autoraise=True)
-            logger.info(f"Opening browser for authentication: {auth_uri}")
+            # Create the InstalledAppFlow
+            flow = InstalledAppFlow.from_client_secrets_file(
+                client_secrets_path, scopes
+            )
 
-            # Let the user know they need to complete the process in the browser
+            # Force the auth URL to open in the browser before starting the local server
+            auth_url = flow.authorization_url()[0]
+            logger.info(f"Opening browser with auth URL: {auth_url}")
+
+            # Use webbrowser module to open the URL
+            import webbrowser
+
+            webbrowser.open(auth_url, new=1, autoraise=True)
+
+            # Show a notification about authentication
             print("\n=====================================================")
             print("   Please complete the YouTube authentication process")
             print("   in the browser window that just opened.")
             print("=====================================================\n")
-        except Exception as browser_error:
-            logger.error(f"Failed to open browser: {browser_error}")
-            print("\n=====================================================")
-            print("   Please manually open this URL to authenticate:")
-            print(f"   {auth_uri}")
-            print("=====================================================\n")
 
-        # Run the OAuth2 flow to get credentials
-        # Pass the default flags instead of custom args
-        credentials = run_flow(flow, storage, flags)
+            # Now run the local server to capture the response
+            credentials = flow.run_local_server(port=8080, open_browser=False)
 
-        logger.info("Successfully authenticated with YouTube API")
-        return credentials
+            # Convert the credentials to the format expected by the YouTube API
+            # and save to the token path
+            creds_data = {
+                "access_token": credentials.token,
+                "refresh_token": credentials.refresh_token,
+                "token_uri": credentials.token_uri,
+                "client_id": credentials.client_id,
+                "client_secret": credentials.client_secret,
+                "scope": credentials.scopes[0],
+                "token_expiry": (
+                    credentials.expiry.isoformat() if credentials.expiry else None
+                ),
+            }
+
+            # Create a Storage instance and save the credentials
+            storage = Storage(token_path)
+            oauth_credentials = OAuth2Credentials(
+                access_token=creds_data["access_token"],
+                client_id=creds_data["client_id"],
+                client_secret=creds_data["client_secret"],
+                refresh_token=creds_data["refresh_token"],
+                token_expiry=credentials.expiry,
+                token_uri=creds_data["token_uri"],
+                user_agent=None,
+                scopes=scopes,
+            )
+            storage.put(oauth_credentials)
+
+            logger.info("Successfully authenticated with YouTube API")
+            return oauth_credentials
+
+        except Exception as flow_error:
+            # Fall back to the previous method if the new method fails
+            logger.warning(
+                f"Error with automated OAuth flow: {flow_error}. Falling back to standard flow."
+            )
+
+            # Create default flags using tools.argparser
+            parent_parser = argparse.ArgumentParser(parents=[tools.argparser])
+            flags = parent_parser.parse_args([])
+
+            # Create the OAuth2 flow object using the older method
+            flow = flow_from_clientsecrets(
+                client_secrets_path,
+                scope=scopes,
+                message="Error loading client secrets file",
+            )
+
+            # Set the redirect URI to match what's in the client_secrets file
+            flow.redirect_uri = "http://localhost:8080/"
+
+            # Create the storage to save the credentials
+            storage = Storage(token_path)
+
+            # Show a notification about authentication
+            logger.info(
+                "Please authenticate with your Google account in the browser window that opens"
+            )
+
+            # Try to open a web browser for authentication
+            import webbrowser
+
+            try:
+                # Open authentication URL in the default browser
+                auth_uri = flow.step1_get_authorize_url()
+                webbrowser.open(auth_uri, new=1, autoraise=True)
+                logger.info(f"Opening browser for authentication: {auth_uri}")
+
+                # Let the user know they need to complete the process in the browser
+                print("\n=====================================================")
+                print("   Please complete the YouTube authentication process")
+                print("   in the browser window that just opened.")
+                print("=====================================================\n")
+            except Exception as browser_error:
+                logger.error(f"Failed to open browser: {browser_error}")
+                print("\n=====================================================")
+                print("   Please manually open this URL to authenticate:")
+                print(f"   {auth_uri}")
+                print("=====================================================\n")
+
+            # Run the OAuth2 flow to get credentials
+            # Pass the default flags instead of custom args
+            credentials = run_flow(flow, storage, flags)
+
+            logger.info("Successfully authenticated with YouTube API")
+            return credentials
+
     except Exception as e:
         logger.error(f"Error during YouTube authentication: {e}")
         print("\n=====================================================")

@@ -2,16 +2,13 @@
 
 import logging
 import time
-import traceback  # Add traceback module import
-from math import ceil
-from typing import Any, Dict, Optional, Tuple, Callable
-import os  # Make sure os is imported at the top level
+import traceback
+from typing import Dict, Optional, Tuple, Callable, TYPE_CHECKING
+import os
 import cv2
-import json
 import requests
 import sys
-from requests.exceptions import RequestException
-import subprocess  # <-- Add this import
+import subprocess
 
 # Import cleanup util
 from cleanup_utils import clean_exit
@@ -23,16 +20,11 @@ from constants import (
     ScoringConstants,
     UIConstants,
     ResolutionConstants,
-    DiscordConstants,
 )
 
 # Import GameState class and CurrentGameState enum from correct locations
-from typing import TYPE_CHECKING
-
 if TYPE_CHECKING:
     from game_state import GameState
-
-    # Only import for type checking, not at runtime
     from utils import mouse_callback
 
 # Import the necessary utility functions from CORRECT locations
@@ -40,13 +32,12 @@ from game_state_helpers import (
     clear_zones,
     load_zones,
     save_score,
-    save_zones,
     set_special_hole,
     show_notification,
 )
 
-from game_state_utils import reset_game
 from game_state_utils import (
+    reset_game,
     change_music_track,
     save_settings,
     set_volume,
@@ -60,6 +51,21 @@ from game_types import CurrentGameState
 # Import submenu draw functions
 import submenu_draw_functions
 from submenus import _draw_game_mode_submenu, _draw_zone_submenu
+
+# Import Player class
+from player import Player
+
+# Import overlap check function from scoring
+from scoring import _zones_overlap
+
+# Import UI screens/modals
+from ui_screens import display_modal_splash, display_heatmap_modal
+
+# Import Google Drive and YouTube utils
+import google_drive_utils
+import youtube_utils
+
+logger = logging.getLogger(__name__)
 
 # Define submenu mapping for menu navigation
 submenu_draw_functions_map = {
@@ -78,23 +84,6 @@ submenu_draw_functions_map = {
     "replay_playback": submenu_draw_functions._draw_replay_playback_submenu,
     "replay_share": submenu_draw_functions._draw_replay_share_submenu,
 }
-
-# Import Player class
-from player import Player
-
-# Import overlap check function from scoring
-from scoring import _zones_overlap
-
-# Import UI screens/modals
-from ui_screens import display_modal_splash, display_heatmap_modal
-
-# Add Google Drive utils
-import google_drive_utils
-
-# Add YouTube utils
-import youtube_utils
-
-logger = logging.getLogger(__name__)
 
 # Mouse event handler lookup for more efficient state dispatching
 MouseEventHandlers = Dict[CurrentGameState, Dict[int, Callable]]
@@ -1253,7 +1242,7 @@ def _process_menu_or_modal_click(
 
                     # Handle replay navigation
                     elif action.startswith("select_replay_"):
-                        replay_id = action[len("select_replay_") :]
+                        replay_id = action[len("select_replay_"):]
                         logger.info(f"Selected replay: {replay_id}")
                         game_state.selected_replay_id = replay_id
                         game_state.menu_cache = None
@@ -1304,11 +1293,9 @@ def _process_menu_or_modal_click(
                             hasattr(game_state, "replay_manager")
                             and game_state.replay_manager
                         ):
-                            replay_id = action[len("play_replay_") :]
+                            replay_id = action[len("play_replay_"):]
                             try:
-                                replay = game_state.replay_manager.load_replay(
-                                    replay_id
-                                )
+                                replay = game_state.replay_manager.load_replay(replay_id)
                                 if replay:
                                     # Initialize replay playback state
                                     game_state.replay_playback = {
@@ -1339,40 +1326,27 @@ def _process_menu_or_modal_click(
 
                     # Delete replay
                     elif action.startswith("delete_replay_"):
-                        if (
-                            hasattr(game_state, "replay_manager")
-                            and game_state.replay_manager
-                        ):
-                            replay_id = action[len("delete_replay_") :]
+                        if hasattr(game_state, "replay_manager") and game_state.replay_manager:
+                            replay_id = action[len("delete_replay_"):]
                             try:
-                                success = game_state.replay_manager.delete_replay(
-                                    replay_id
-                                )
+                                success = game_state.replay_manager.delete_replay(replay_id)
                                 if success:
                                     game_state.selected_replay_id = None
                                     show_notification(game_state, "Replay deleted")
                                 else:
-                                    show_notification(
-                                        game_state,
-                                        "Error deleting replay",
-                                        is_error=True,
-                                    )
+                                    show_notification(game_state, "Error deleting replay", is_error=True)
                                 game_state.menu_cache = None
                             except Exception as e:
                                 logger.error(f"Error deleting replay: {e}")
-                                show_notification(
-                                    game_state, "Error deleting replay", is_error=True
-                                )
+                                show_notification(game_state, "Error deleting replay", is_error=True)
                         return True
 
                     # Export and share options
-                    elif action.startswith("export_video_") or action.startswith(
-                        "share_replay_"
-                    ):
+                    elif action.startswith("export_video_") or action.startswith("share_replay_"):
                         if action.startswith("export_video_"):
-                            replay_id = action[len("export_video_") :]
+                            replay_id = action[len("export_video_"):]
                         else:
-                            replay_id = action[len("share_replay_") :]
+                            replay_id = action[len("share_replay_"):]
 
                         game_state.selected_replay_id = replay_id
                         game_state.submenu_active = "replay_share"
@@ -1388,32 +1362,26 @@ def _process_menu_or_modal_click(
                     # Format selection buttons
                     elif action.startswith("select_format_"):
                         if hasattr(game_state, "replay_sharing"):
-                            format_type = action[len("select_format_") :]
+                            format_type = action[len("select_format_"):]
                             # Validate that this is a supported format
                             from constants import ReplayConstants
 
                             if format_type in ReplayConstants.EXPORT_FORMATS:
-                                game_state.replay_sharing["selected_format"] = (
-                                    format_type
-                                )
+                                game_state.replay_sharing["selected_format"] = format_type
                                 game_state.menu_cache = None  # Force UI update
-                                show_notification(
-                                    game_state, f"Selected format: {format_type}"
-                                )
+                                show_notification(game_state, f"Selected format: {format_type}")
                                 logger.info(f"Selected format: {format_type}")
                         return True
 
                     # Player management actions
                     elif action.startswith("edit_player_name_"):
                         try:
-                            player_index = int(action[len("edit_player_name_") :])
+                            player_index = int(action[len("edit_player_name_"):])
                             if 0 <= player_index < len(game_state.players):
                                 # Set up editing state
                                 game_state.editing_player_index = player_index
                                 game_state.editing_player_mode = "edit_name"
-                                game_state.editing_player_name_input = (
-                                    game_state.players[player_index].name
-                                )
+                                game_state.editing_player_name_input = game_state.players[player_index].name
                                 game_state.menu_cache = None  # Force menu redraw
                                 logger.info(f"Editing player {player_index} name")
                                 # Switch to keyboard input mode for name editing
@@ -1427,15 +1395,11 @@ def _process_menu_or_modal_click(
                     elif action == "add_player":
                         # Only allow adding if we have fewer than max players
                         if len(game_state.players) < 4:  # Max 4 players
-                            from player import Player
-
-                            # Create a new player with default name
+                            # Use the Player class that was already imported at the top
                             new_player = Player(f"Player {len(game_state.players) + 1}")
                             game_state.players.append(new_player)
                             # Start editing the new player's name
-                            game_state.editing_player_index = (
-                                len(game_state.players) - 1
-                            )
+                            game_state.editing_player_index = len(game_state.players) - 1
                             game_state.editing_player_mode = "edit_name"
                             game_state.editing_player_name_input = new_player.name
                             game_state.menu_cache = None  # Force menu redraw
@@ -1448,17 +1412,13 @@ def _process_menu_or_modal_click(
 
                     elif action.startswith("select_player_"):
                         try:
-                            player_index = int(action[len("select_player_") :])
+                            player_index = int(action[len("select_player_"):])
                             if 0 <= player_index < len(game_state.players):
                                 game_state.current_player_index = player_index
                                 game_state.menu_cache = None  # Force menu redraw
                                 player_name = game_state.players[player_index].name
-                                show_notification(
-                                    game_state, f"Selected player: {player_name}"
-                                )
-                                logger.info(
-                                    f"Selected player {player_index}: {player_name}"
-                                )
+                                show_notification(game_state, f"Selected player: {player_name}")
+                                logger.info(f"Selected player {player_index}: {player_name}")
                         except (ValueError, IndexError) as e:
                             logger.error(f"Error selecting player: {e}")
                         return True
@@ -1466,18 +1426,14 @@ def _process_menu_or_modal_click(
                     # Platform selection buttons
                     elif action.startswith("select_platform_"):
                         if hasattr(game_state, "replay_sharing"):
-                            platform = action[len("select_platform_") :]
+                            platform = action[len("select_platform_"):]
                             # Validate that this is a supported platform
                             from constants import ReplayConstants
 
                             if platform in ReplayConstants.SHARING_PLATFORMS:
-                                game_state.replay_sharing["selected_platform"] = (
-                                    platform
-                                )
+                                game_state.replay_sharing["selected_platform"] = platform
                                 game_state.menu_cache = None  # Force UI update
-                                show_notification(
-                                    game_state, f"Selected platform: {platform}"
-                                )
+                                show_notification(game_state, f"Selected platform: {platform}")
                                 logger.info(f"Selected platform: {platform}")
                         return True
 
@@ -1624,10 +1580,7 @@ def _process_menu_or_modal_click(
 
                     # Share to platform actions
                     elif action.startswith("share_to_"):
-                        if (
-                            hasattr(game_state, "replay_manager")
-                            and game_state.replay_manager
-                        ):
+                        if hasattr(game_state, "replay_manager") and game_state.replay_manager:
                             parts = action.split("_")
                             if len(parts) >= 3:
                                 platform = parts[2]
@@ -2924,18 +2877,13 @@ def _process_menu_or_modal_click(
 
                     # Generate video button
                     elif action.startswith("generate_video_"):
-                        if (
-                            hasattr(game_state, "replay_manager")
-                            and game_state.replay_manager
-                        ):
-                            replay_id = action[len("generate_video_") :]
+                        if hasattr(game_state, "replay_manager") and game_state.replay_manager:
+                            replay_id = action[len("generate_video_"):]
                             try:
                                 # Get the selected format if available
                                 export_format = "MP4"  # Default
                                 if hasattr(game_state, "replay_sharing"):
-                                    export_format = game_state.replay_sharing.get(
-                                        "selected_format", "MP4"
-                                    )
+                                    export_format = game_state.replay_sharing.get("selected_format", "MP4")
 
                                 # Set status in UI
                                 if hasattr(game_state, "replay_sharing"):
@@ -3005,10 +2953,7 @@ def _process_menu_or_modal_click(
 
                     # Highlight generation
                     elif action.startswith("export_highlight_"):
-                        if (
-                            hasattr(game_state, "replay_manager")
-                            and game_state.replay_manager
-                        ):
+                        if hasattr(game_state, "replay_manager") and game_state.replay_manager:
                             parts = action.split("_")
                             if len(parts) >= 3:
                                 replay_id = parts[2]
@@ -3171,18 +3116,14 @@ def _process_menu_or_modal_click(
                     # Platform selection buttons
                     elif action.startswith("select_platform_"):
                         if hasattr(game_state, "replay_sharing"):
-                            platform = action[len("select_platform_") :]
+                            platform = action[len("select_platform_"):]
                             # Validate that this is a supported platform
                             from constants import ReplayConstants
 
                             if platform in ReplayConstants.SHARING_PLATFORMS:
-                                game_state.replay_sharing["selected_platform"] = (
-                                    platform
-                                )
+                                game_state.replay_sharing["selected_platform"] = platform
                                 game_state.menu_cache = None  # Force UI update
-                                show_notification(
-                                    game_state, f"Selected platform: {platform}"
-                                )
+                                show_notification(game_state, f"Selected platform: {platform}")
                                 logger.info(f"Selected platform: {platform}")
                         return True
 
@@ -3211,7 +3152,7 @@ def _process_menu_or_modal_click(
                     # Zone editing actions
                     elif action.startswith("edit_zone_"):
                         try:
-                            zone_index = int(action[len("edit_zone_") :])
+                            zone_index = int(action[len("edit_zone_"):])
                             if 0 <= zone_index < len(game_state.scoring_zones):
                                 logger.info(
                                     f"Setting up zone {zone_index} for points editing"
@@ -3243,7 +3184,7 @@ def _process_menu_or_modal_click(
 
                     elif action.startswith("move_zone_"):
                         try:
-                            zone_index = int(action[len("move_zone_") :])
+                            zone_index = int(action[len("move_zone_"):])
                             if 0 <= zone_index < len(game_state.scoring_zones):
                                 logger.info(f"Setting up zone {zone_index} for moving")
                                 game_state.current_state = CurrentGameState.ZONE_EDITING
@@ -3263,7 +3204,7 @@ def _process_menu_or_modal_click(
 
                     elif action.startswith("resize_zone_"):
                         try:
-                            zone_index = int(action[len("resize_zone_") :])
+                            zone_index = int(action[len("resize_zone_"):])
                             if 0 <= zone_index < len(game_state.scoring_zones):
                                 logger.info(
                                     f"Setting up zone {zone_index} for resizing"
@@ -3287,7 +3228,7 @@ def _process_menu_or_modal_click(
 
                     elif action.startswith("delete_zone_"):
                         try:
-                            zone_index = int(action[len("delete_zone_") :])
+                            zone_index = int(action[len("delete_zone_"):])
                             if 0 <= zone_index < len(game_state.scoring_zones):
                                 logger.info(f"Deleting zone {zone_index}")
                                 # Remove the zone from the list
@@ -3395,14 +3336,9 @@ def _process_menu_or_modal_click(
 
                     # Share highlight to platform
                     elif action.startswith("share_highlight_"):
-                        if (
-                            hasattr(game_state, "replay_manager")
-                            and game_state.replay_manager
-                        ):
+                        if hasattr(game_state, "replay_manager") and game_state.replay_manager:
                             parts = action.split("_")
-                            if (
-                                len(parts) >= 5
-                            ):  # share_highlight_replayid_index_platform
+                            if len(parts) >= 5:  # share_highlight_replayid_index_platform
                                 replay_id = parts[2]
                                 highlight_index = int(parts[3])
                                 platform = parts[4]

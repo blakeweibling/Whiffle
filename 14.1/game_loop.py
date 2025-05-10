@@ -229,35 +229,43 @@ def run_game_loop(game_state: GameState) -> None:
                 current_fps = 1.0 / dt
                 alpha = 0.1
                 game_state.fps = alpha * current_fps + (1 - alpha) * game_state.fps
-                
+
             # Store previous state before handling input
             previous_state = getattr(game_state, "current_state", None)
-                
+
             key_result = _handle_input(game_state)
             if key_result is None:
                 logger.info("Quit signaled from input handler.")
                 break
-                
+
             # Check for state transitions to pause/resume session timer
             current_state = getattr(game_state, "current_state", None)
             if previous_state != current_state:
-                if (previous_state == CurrentGameState.PLAYING and 
-                    current_state in [CurrentGameState.MENU, CurrentGameState.PAUSED]):
+                if previous_state == CurrentGameState.PLAYING and current_state in [
+                    CurrentGameState.MENU,
+                    CurrentGameState.PAUSED,
+                ]:
                     # Transitioning from PLAYING to MENU or PAUSED - pause timer
                     if hasattr(game_state, "data_logger") and game_state.data_logger:
                         session = game_state.data_logger.get_current_session_data()
                         if session:
                             session.pause()
-                            logger.debug(f"Paused session timer due to state change: {previous_state} -> {current_state}")
-                elif (previous_state in [CurrentGameState.MENU, CurrentGameState.PAUSED] and
-                      current_state == CurrentGameState.PLAYING):
+                            logger.debug(
+                                f"Paused session timer due to state change: {previous_state} -> {current_state}"
+                            )
+                elif (
+                    previous_state in [CurrentGameState.MENU, CurrentGameState.PAUSED]
+                    and current_state == CurrentGameState.PLAYING
+                ):
                     # Transitioning from MENU or PAUSED to PLAYING - resume timer
                     if hasattr(game_state, "data_logger") and game_state.data_logger:
                         session = game_state.data_logger.get_current_session_data()
                         if session:
                             session.resume()
-                            logger.debug(f"Resumed session timer due to state change: {previous_state} -> {current_state}")
-                
+                            logger.debug(
+                                f"Resumed session timer due to state change: {previous_state} -> {current_state}"
+                            )
+
             try:
                 if (
                     cv2.getWindowProperty(UIConstants.WINDOW_NAME, cv2.WND_PROP_VISIBLE)
@@ -355,10 +363,10 @@ def run_game_loop(game_state: GameState) -> None:
                 )
                 if run_detection_tracking:
                     _process_frame(draw_canvas, game_state)
-                
+
                 # Update scoring only when actively playing
                 update_scoring(game_state)
-            
+
             _render_frame(draw_canvas, game_state)
 
             # Trim history collections every 30 frames to prevent memory bloat

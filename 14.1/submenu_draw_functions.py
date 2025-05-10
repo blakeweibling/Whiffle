@@ -2601,7 +2601,9 @@ def _draw_replay_share_submenu(menu_frame: np.ndarray, game_state: "GameState") 
                 action_y += 20
 
         # Action buttons
-        action_button_width = 180  # Increased from 160 to accommodate "Export Full Video" text
+        action_button_width = (
+            180  # Increased from 160 to accommodate "Export Full Video" text
+        )
         action_button_height = 35
         action_button_spacing = 30
 

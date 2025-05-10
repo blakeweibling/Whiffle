@@ -72,14 +72,26 @@ class UIConstants:
     GREY_BG: Tuple[int, int, int] = (100, 100, 100)
     SLIDER_BG: Tuple[int, int, int] = (50, 50, 50)  # Color for slider background
     SLIDER_HANDLE: Tuple[int, int, int] = (200, 200, 200)  # Color for slider handle
-    
+
     # Colorblind-friendly colors (BGR format)
     # These are selected to work well for most types of color blindness
-    CB_BLUE: Tuple[int, int, int] = (214, 122, 0)       # Dark orange in BGR (appears as distinctive blue to colorblind users)
-    CB_LIGHT_BLUE: Tuple[int, int, int] = (239, 179, 0) # Lighter orange in BGR
-    CB_HIGHLIGHT: Tuple[int, int, int] = (0, 193, 222)  # Yellow-orange in BGR (appears distinct from blues)
-    CB_SELECT: Tuple[int, int, int] = (69, 182, 255)    # Bright blue-ish color that works well for selections
-    
+    CB_BLUE: Tuple[int, int, int] = (
+        214,
+        122,
+        0,
+    )  # Dark orange in BGR (appears as distinctive blue to colorblind users)
+    CB_LIGHT_BLUE: Tuple[int, int, int] = (239, 179, 0)  # Lighter orange in BGR
+    CB_HIGHLIGHT: Tuple[int, int, int] = (
+        0,
+        193,
+        222,
+    )  # Yellow-orange in BGR (appears distinct from blues)
+    CB_SELECT: Tuple[int, int, int] = (
+        69,
+        182,
+        255,
+    )  # Bright blue-ish color that works well for selections
+
     # Default colorblind mode state
     DEFAULT_COLORBLIND_MODE: bool = False
 

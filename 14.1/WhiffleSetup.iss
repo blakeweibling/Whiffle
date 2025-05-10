@@ -56,6 +56,7 @@ Source: "Whiffle\assets\last_frame.png"; DestDir: "{app}\assets"; Flags: ignorev
 Source: "Whiffle\assets\pinball_icon.png"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "Whiffle\data\scores\whiffle_leaderboard.json"; DestDir: "{app}\data\scores"; Flags: ignoreversion
 Source: "Whiffle\data\whiffle_new_best.pt"; DestDir: "{app}\data"; Flags: ignoreversion
+Source: "Whiffle\openh264-1.8.0-win64.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; Sounds folder (including all files inside)
 Source: "Whiffle\data\sounds\*"; DestDir: "{app}\data\sounds"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; High score proof folder

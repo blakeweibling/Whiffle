@@ -196,12 +196,12 @@ def draw_menu_window(frame: np.ndarray, game_state: GameState) -> None:
             btn_x2 = game_state.menu_width - pad  # Use game_state.menu_width
             btn_y2 = pad + size
             line_pad = size // 4
-            
+
             # Choose the appropriate color based on colorblind mode
             close_button_color = UIConstants.MENU_CLOSE_BUTTON_COLOR
             if getattr(game_state, "colorblind_mode", False):
                 close_button_color = UIConstants.CB_HIGHLIGHT
-                
+
             cv2.line(
                 menu_frame,
                 (btn_x1 + line_pad, btn_y1 + line_pad),

@@ -361,7 +361,9 @@ def load_settings(game_state: Any) -> None:
                 )
 
             # Load colorblind mode toggle safely
-            loaded_colorblind_mode = settings_data.get("colorblind_mode", default_colorblind_mode)
+            loaded_colorblind_mode = settings_data.get(
+                "colorblind_mode", default_colorblind_mode
+            )
             if isinstance(loaded_colorblind_mode, bool):
                 game_state.colorblind_mode = loaded_colorblind_mode
             else:
@@ -427,7 +429,9 @@ def save_settings(game_state: Any) -> None:
         ),
         "game_sounds_on": getattr(game_state, "game_sounds_on", True),
         "background_music_on": getattr(game_state, "background_music_on", True),
-        "colorblind_mode": getattr(game_state, "colorblind_mode", UIConstants.DEFAULT_COLORBLIND_MODE),
+        "colorblind_mode": getattr(
+            game_state, "colorblind_mode", UIConstants.DEFAULT_COLORBLIND_MODE
+        ),
         # <<< ADDED: Save Discord Webhook URL >>>
         "discord_webhook_url": getattr(game_state, "discord_webhook_url", None),
         # <<< END ADDED >>>
@@ -1031,15 +1035,17 @@ def reset_game(game_state: Any) -> None:
                 current_player_name = current_player.name
             data_logger.start_new_session(current_player_name, game_state.game_mode)
             game_state.data_logger = data_logger
-            
+
             # If the current game state is not PLAYING, pause the session timer immediately
             current_state = getattr(game_state, "current_state", None)
             if current_state in [CurrentGameState.MENU, CurrentGameState.PAUSED]:
                 session = data_logger.get_current_session_data()
                 if session:
                     session.pause()
-                    logger.debug(f"Paused new session timer immediately because game state is {current_state}")
-                    
+                    logger.debug(
+                        f"Paused new session timer immediately because game state is {current_state}"
+                    )
+
         except Exception as e:
             logger.error(f"Error starting new data logging session: {e}")
 
@@ -1122,7 +1128,11 @@ def toggle_debug_mode(game_state: Any) -> None:
 
 def toggle_colorblind_mode(game_state: Any) -> None:
     """Toggle colorblind mode for improved accessibility."""
-    game_state.colorblind_mode = not getattr(game_state, "colorblind_mode", UIConstants.DEFAULT_COLORBLIND_MODE)
+    game_state.colorblind_mode = not getattr(
+        game_state, "colorblind_mode", UIConstants.DEFAULT_COLORBLIND_MODE
+    )
     logger.info(f"Colorblind Mode: {'ON' if game_state.colorblind_mode else 'OFF'}")
-    show_notification(game_state, f"Colorblind Mode: {'ON' if game_state.colorblind_mode else 'OFF'}")
+    show_notification(
+        game_state, f"Colorblind Mode: {'ON' if game_state.colorblind_mode else 'OFF'}"
+    )
     save_settings(game_state)  # Persist the toggle state

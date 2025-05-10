@@ -223,7 +223,7 @@ class GameState:
         self.debug_mode: bool = False
         self.fps: float = 0.0
         self.show_debug_overlay: bool = False
-        
+
         # Accessibility options
         self.colorblind_mode: bool = UIConstants.DEFAULT_COLORBLIND_MODE
 

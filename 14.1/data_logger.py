@@ -90,7 +90,9 @@ class SessionData:
             self.total_paused_time += pause_duration
             self.is_paused = False
             self.pause_start_time = None
-            logger.debug(f"Session timer resumed. Added {pause_duration:.1f}s to paused time")
+            logger.debug(
+                f"Session timer resumed. Added {pause_duration:.1f}s to paused time"
+            )
 
     def get_duration(self) -> float:
         """Calculates the session duration in seconds, accounting for paused time."""
@@ -99,12 +101,12 @@ class SessionData:
             raw_duration = time.time() - self.start_time
         else:
             raw_duration = self.end_time - self.start_time
-        
+
         # Calculate current pause duration if paused
         current_pause_duration = 0.0
         if self.is_paused and self.pause_start_time is not None:
             current_pause_duration = time.time() - self.pause_start_time
-        
+
         # Subtract total paused time from raw duration
         active_duration = raw_duration - self.total_paused_time - current_pause_duration
         return max(0.0, active_duration)  # Ensure we don't return negative values

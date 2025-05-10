@@ -66,7 +66,7 @@ def _draw_button(
                 color = UIConstants.CB_SELECT
             elif color == UIConstants.RED:
                 color = UIConstants.CB_HIGHLIGHT
-            
+
             # Also replace highlight colors
             if hover_color == UIConstants.LIGHT_BLUE:
                 hover_color = UIConstants.CB_LIGHT_BLUE
