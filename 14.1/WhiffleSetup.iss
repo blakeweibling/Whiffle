@@ -59,8 +59,6 @@ Source: "Whiffle\data\whiffle_new_best.pt"; DestDir: "{app}\data"; Flags: ignore
 Source: "Whiffle\openh264-1.8.0-win64.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; Sounds folder (including all files inside)
 Source: "Whiffle\data\sounds\*"; DestDir: "{app}\data\sounds"; Flags: ignoreversion recursesubdirs createallsubdirs
-; High score proof folder
-Source: "Whiffle\high_score_proof\*"; DestDir: "{app}\high_score_proof"; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full
 ; Google API configuration files
 Source: "Whiffle\configs\client_secrets.json"; DestDir: "{app}\configs"; Flags: ignoreversion
 Source: "Whiffle\configs\google_credentials.json"; DestDir: "{app}\configs"; Flags: ignoreversion
