@@ -10,6 +10,7 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 * **Ball Tracking:** Assigns unique IDs to balls and tracks their movement across frames.
 * **Scoring Zones:** Define, edit, and manage rectangular scoring zones with specific point values.
 * **Scoring Logic:** Awards points when a ball comes to rest in a scoring zone, with multipliers for special ball types and a 'Special Hole' mechanic.
+
 * **Game Modes:**
   * **Classic Mode:** First to reach 2000 points wins.
   * **Timed Mode:** 90-second time limit, first to 2000 points wins.
@@ -18,6 +19,7 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
   * **Fun Mode:** Enhanced visuals and effects for a more playful experience.
   * **Practice Mode:** Play without score limits or time pressure, ideal for skill-building.
   * **Versus Mode:** Two players compete in alternating turns; highest score wins. Includes a results screen and stats comparison.
+
 * **Replay System:**
   * Record gameplay automatically or manually.
   * Browse, play back, and manage replays in-game.
@@ -70,8 +72,8 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 
 1. **Clone the repository:**
     ```bash
-    git clone <your-repository-url>
-    cd <repository-folder>
+    git clone https://www.github.com/blakeweibling/Whiffle/
+    cd Whiffle
     ```
 
 2. **Install Dependencies:**
