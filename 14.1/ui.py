@@ -526,14 +526,36 @@ def _draw_stats_display(frame: np.ndarray, game_state: "GameState") -> None:
 # --- Main UI Drawing Function ---
 def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
     current_width, current_height = game_state.get_current_resolution_dimensions()
-    BAR_HEIGHT = 60  # Fixed height for the top bar
+    BAR_HEIGHT = 176  # Further increased height for the top bar
     BAR_COLOR = (28, 45, 82)  # #522d1c in BGR, matches menu buttons
     BAR_ALPHA = 0.9
 
-    # Draw the semi-transparent top bar
-    overlay = frame.copy()
-    cv2.rectangle(overlay, (0, 0), (current_width, BAR_HEIGHT), BAR_COLOR, -1)
-    cv2.addWeighted(overlay, BAR_ALPHA, frame, 1 - BAR_ALPHA, 0, frame)
+    # Draw the top bar image
+    try:
+        top_bar_img = cv2.imread('assets/top_bar.png', cv2.IMREAD_UNCHANGED)
+        if top_bar_img is not None:
+            # Resize to current width and BAR_HEIGHT
+            top_bar_img = cv2.resize(top_bar_img, (current_width, BAR_HEIGHT), interpolation=cv2.INTER_AREA)
+            # Overlay with alpha
+            if top_bar_img.shape[2] == 4:
+                alpha_mask = top_bar_img[:, :, 3] / 255.0
+                for c in range(3):
+                    frame[0:BAR_HEIGHT, :, c] = (
+                        alpha_mask * top_bar_img[:, :, c] +
+                        (1 - alpha_mask) * frame[0:BAR_HEIGHT, :, c]
+                    ).astype(frame.dtype)
+            else:
+                frame[0:BAR_HEIGHT, :, :] = top_bar_img
+        else:
+            # Fallback to old rectangle if image not found
+            overlay = frame.copy()
+            cv2.rectangle(overlay, (0, 0), (current_width, BAR_HEIGHT), BAR_COLOR, -1)
+            cv2.addWeighted(overlay, BAR_ALPHA, frame, 1 - BAR_ALPHA, 0, frame)
+    except Exception as e:
+        # Fallback to old rectangle on error
+        overlay = frame.copy()
+        cv2.rectangle(overlay, (0, 0), (current_width, BAR_HEIGHT), BAR_COLOR, -1)
+        cv2.addWeighted(overlay, BAR_ALPHA, frame, 1 - BAR_ALPHA, 0, frame)
 
     # Prepare text
     try:
@@ -557,20 +579,22 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
     (score_tw, score_th), _ = cv2.getTextSize(score_text, font, font_scale, font_thickness)
     (high_score_tw, high_score_th), _ = cv2.getTextSize(high_score_text, font, font_scale, font_thickness)
 
-    # Vertical centering
-    text_y = (BAR_HEIGHT + player_th) // 2 - 5
+    # Calculate different vertical positions for each text element
+    player_text_y = (BAR_HEIGHT + player_th) // 2 - 35  # Moved down 10px (was -45)
+    score_text_y = (BAR_HEIGHT + score_th) // 2 + 30    # Keeping score position
+    high_score_text_y = (BAR_HEIGHT + high_score_th) // 2 - 35  # Moved down 10px (was -45)
 
-    # Player name: left
-    player_x = 20
-    cv2.putText(frame, player_text, (player_x, text_y), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
+    # Player name: left aligned at 150px from left
+    player_x = 150
+    cv2.putText(frame, player_text, (player_x, player_text_y), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
 
-    # Score: center
+    # Score: center aligned
     score_x = (current_width - score_tw) // 2
-    cv2.putText(frame, score_text, (score_x, text_y), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
+    cv2.putText(frame, score_text, (score_x, score_text_y), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
 
-    # High score: right
-    high_score_x = current_width - high_score_tw - 20
-    cv2.putText(frame, high_score_text, (high_score_x, text_y), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
+    # High score: right aligned at 150px from right
+    high_score_x = current_width - high_score_tw - 150
+    cv2.putText(frame, high_score_text, (high_score_x, high_score_text_y), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
 
     if game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
         # Initialize cursor position if not done yet
@@ -673,7 +697,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 UIConstants.FONT_THICKNESS,
             )
             timer_x = (current_width - tw_t) // 2
-            timer_y = text_y
+            timer_y = player_text_y
             _optimized_draw_text(
                 frame,
                 timer_text,

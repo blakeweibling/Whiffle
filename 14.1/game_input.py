@@ -433,8 +433,8 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 player_name_key_handled = True
             # Handle left and right arrow keys for cursor movement
             elif (
-                is_left_arrow(key) or key == 2 or key == 75 or key == 100
-            ):  # 2,75,100 are common numpad/directional key codes
+                is_left_arrow(key) or key == 2 or key == 75
+            ):  # 2,75 are common numpad/directional key codes
                 cursor_pos = getattr(game_state, "player_name_cursor_pos", 0)
                 if cursor_pos > 0:
                     game_state.player_name_cursor_pos = cursor_pos - 1
