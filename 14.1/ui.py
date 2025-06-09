@@ -527,7 +527,7 @@ def _draw_stats_display(frame: np.ndarray, game_state: "GameState") -> None:
 def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
     current_width, current_height = game_state.get_current_resolution_dimensions()
     BAR_HEIGHT = 60  # Fixed height for the top bar
-    BAR_COLOR = (100, 100, 100)  # Semi-transparent gray (BGR)
+    BAR_COLOR = (28, 45, 82)  # #522d1c in BGR, matches menu buttons
     BAR_ALPHA = 0.9
 
     # Draw the semi-transparent top bar
@@ -601,8 +601,8 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
         return
     if game_state.current_state not in [CurrentGameState.GAME_OVER]:
         mode_text = f"Mode: {game_state.game_mode.capitalize()}"
-        mode_pos_x = 20
-        mode_pos_y = BAR_HEIGHT + 20
+        mode_pos_x = 50
+        mode_pos_y = current_height - 40
         _optimized_draw_text(
             frame,
             mode_text,
@@ -633,7 +633,10 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
 
             # Add End Turn button for versus mode
             if game_state.current_state == CurrentGameState.PLAYING:
-                button_width, button_height = 150, 40
+                button_width = int(UIConstants.MENU_BUTTON_WIDTH * 1.2)
+                button_height = int(UIConstants.MENU_BUTTON_HEIGHT * 1.2)
+                button_spacing = int(60 * 1.2)
+                button_color = (28, 45, 82)  # #522d1c in BGR
                 button_x = (current_width - button_width) // 2
                 button_y = current_height - 80  # Position near bottom
 
@@ -646,7 +649,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                     button_width,
                     button_height,
                     "End Turn",
-                    UIConstants.CV2_ORANGE,  # Make it stand out
+                    button_color,
                     game_state=game_state,
                     font_scale=UIConstants.FONT_SCALE_MEDIUM,
                 )
@@ -716,22 +719,43 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             )
         if not game_state.drawing:
             # Draw bottom bar
-            BOTTOM_BAR_HEIGHT = 160
-            BOTTOM_BAR_COLOR = (100, 100, 100)
-            BOTTOM_BAR_ALPHA = 0.7
+            BOTTOM_BAR_HEIGHT = 240
             bottom_bar_y = current_height - BOTTOM_BAR_HEIGHT
-            overlay = frame.copy()
-            cv2.rectangle(overlay, (0, bottom_bar_y), (current_width, current_height), BOTTOM_BAR_COLOR, -1)
-            cv2.addWeighted(overlay, BOTTOM_BAR_ALPHA, frame, 1 - BOTTOM_BAR_ALPHA, 0, frame)
+            try:
+                menu_bar_img = cv2.imread('assets/menu_bar.png', cv2.IMREAD_UNCHANGED)
+                if menu_bar_img is not None:
+                    # Resize to current width and bar height
+                    menu_bar_img = cv2.resize(menu_bar_img, (current_width, BOTTOM_BAR_HEIGHT), interpolation=cv2.INTER_AREA)
+                    # Overlay with alpha
+                    if menu_bar_img.shape[2] == 4:
+                        alpha_mask = menu_bar_img[:, :, 3] / 255.0
+                        for c in range(3):
+                            frame[bottom_bar_y:current_height, :, c] = (
+                                alpha_mask * menu_bar_img[:, :, c] +
+                                (1 - alpha_mask) * frame[bottom_bar_y:current_height, :, c]
+                            ).astype(frame.dtype)
+                    else:
+                        frame[bottom_bar_y:current_height, :, :] = menu_bar_img
+                else:
+                    # Fallback to old rectangle if image not found
+                    overlay = frame.copy()
+                    cv2.rectangle(overlay, (0, bottom_bar_y), (current_width, current_height), (100, 100, 100), -1)
+                    cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
+            except Exception as e:
+                # Fallback to old rectangle on error
+                overlay = frame.copy()
+                cv2.rectangle(overlay, (0, bottom_bar_y), (current_width, current_height), (100, 100, 100), -1)
+                cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
 
             # Button settings
-            button_width = UIConstants.MENU_BUTTON_WIDTH * 2
-            button_height = UIConstants.MENU_BUTTON_HEIGHT * 2
-            button_spacing = 60 * 2
+            button_width = int(UIConstants.MENU_BUTTON_WIDTH * 1.2)
+            button_height = int(UIConstants.MENU_BUTTON_HEIGHT * 1.2)
+            button_spacing = int(60 * 1.2)
+            button_color = (28, 45, 82)  # #522d1c in BGR
             num_buttons = 3
             total_width = num_buttons * button_width + 2 * button_spacing
             start_x = (current_width - total_width) // 2
-            button_y = bottom_bar_y + (BOTTOM_BAR_HEIGHT - button_height) // 2
+            button_y = bottom_bar_y + int(BOTTOM_BAR_HEIGHT * 0.60)
 
             # Draw Menu button (left)
             menu_button_rect = (
@@ -747,7 +771,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 menu_button_rect[2],
                 menu_button_rect[3],
                 "Menu",
-                UIConstants.CV2_BLUE,
+                button_color,
                 game_state=game_state,
                 font_scale=UIConstants.FONT_SCALE_LARGE,
             )
@@ -768,7 +792,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 toggle_ui_button_rect[2],
                 toggle_ui_button_rect[3],
                 toggle_ui_text,
-                UIConstants.CV2_BLUE,
+                button_color,
                 game_state=game_state,
                 font_scale=UIConstants.FONT_SCALE_LARGE,
             )
@@ -789,7 +813,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 res_button_rect[2],
                 res_button_rect[3],
                 res_button_text,
-                UIConstants.CV2_BLUE,
+                button_color,
                 game_state=game_state,
                 font_scale=UIConstants.FONT_SCALE_LARGE,
             )
