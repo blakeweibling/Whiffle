@@ -177,6 +177,9 @@ class GameState:
         # Add hover feedback state
         self.hover_feedback_state: Optional[Tuple[int, int, int, int]] = None
 
+        # Menu minimized state
+        self.menu_minimized: bool = False
+
         # Initial Player Name Input State
         self.player_name_input_active: bool = True
         self.current_player_name_input: str = ""

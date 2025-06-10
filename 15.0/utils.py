@@ -101,7 +101,15 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
 
     # Direct handling for menu and resolution button click in PLAYING state
     if current_state == CurrentGameState.PLAYING and event == cv2.EVENT_LBUTTONDOWN:
-        # Check for dynamic menu button
+        # Check for menu minimize toggle area (do this BEFORE menu button logic, and make sure it's a separate rect)
+        menu_toggle_rect = getattr(game_state, "menu_toggle_rect", None)
+        if menu_toggle_rect:
+            mx, my, mw, mh = menu_toggle_rect
+            if mx <= x < mx + mw and my <= y < my + mh:
+                game_state.menu_minimized = not getattr(game_state, "menu_minimized", False)
+                logger.info(f"Menu minimize toggled to {game_state.menu_minimized} at ({x}, {y})")
+                return
+        # Menu button retains its original function
         menu_button_rect = getattr(game_state, "menu_button_rect", None)
         if menu_button_rect:
             mx, my, mw, mh = menu_button_rect

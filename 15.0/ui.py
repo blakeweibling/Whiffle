@@ -558,38 +558,39 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
         cv2.addWeighted(overlay, BAR_ALPHA, frame, 1 - BAR_ALPHA, 0, frame)
 
     # Draw column images on both sides
-    try:
-        column_img = cv2.imread('assets/column.png', cv2.IMREAD_UNCHANGED)
-        if column_img is not None:
-            # Resize to 50px width and 800px height
-            column_img_resized = cv2.resize(column_img, (50, 800), interpolation=cv2.INTER_AREA)
-            y_offset = 99
-            left_x = 40
-            right_x = current_width - 40 - 50  # 40px from right edge, 50px wide
-            # Only draw if window is tall enough
-            if current_height >= y_offset + 800 and current_width >= 100:
-                # Draw left column
-                if column_img_resized.shape[2] == 4:  # If image has alpha channel
-                    alpha_mask = column_img_resized[:, :, 3] / 255.0
-                    for c in range(3):
-                        frame[y_offset:y_offset+800, left_x:left_x+50, c] = (
-                            alpha_mask * column_img_resized[:, :, c] +
-                            (1 - alpha_mask) * frame[y_offset:y_offset+800, left_x:left_x+50, c]
-                        ).astype(frame.dtype)
-                else:
-                    frame[y_offset:y_offset+800, left_x:left_x+50, :] = column_img_resized
-                # Draw right column
-                if column_img_resized.shape[2] == 4:
-                    alpha_mask = column_img_resized[:, :, 3] / 255.0
-                    for c in range(3):
-                        frame[y_offset:y_offset+800, right_x:right_x+50, c] = (
-                            alpha_mask * column_img_resized[:, :, c] +
-                            (1 - alpha_mask) * frame[y_offset:y_offset+800, right_x:right_x+50, c]
-                        ).astype(frame.dtype)
-                else:
-                    frame[y_offset:y_offset+800, right_x:right_x+50, :] = column_img_resized
-    except Exception as e:
-        logger.error(f"Error loading/displaying column images: {e}")
+    if not getattr(game_state, 'menu_minimized', False):
+        try:
+            column_img = cv2.imread('assets/column.png', cv2.IMREAD_UNCHANGED)
+            if column_img is not None:
+                # Resize to 50px width and 800px height
+                column_img_resized = cv2.resize(column_img, (50, 800), interpolation=cv2.INTER_AREA)
+                y_offset = 99
+                left_x = 40
+                right_x = current_width - 40 - 50  # 40px from right edge, 50px wide
+                # Only draw if window is tall enough
+                if current_height >= y_offset + 800 and current_width >= 100:
+                    # Draw left column
+                    if column_img_resized.shape[2] == 4:  # If image has alpha channel
+                        alpha_mask = column_img_resized[:, :, 3] / 255.0
+                        for c in range(3):
+                            frame[y_offset:y_offset+800, left_x:left_x+50, c] = (
+                                alpha_mask * column_img_resized[:, :, c] +
+                                (1 - alpha_mask) * frame[y_offset:y_offset+800, left_x:left_x+50, c]
+                            ).astype(frame.dtype)
+                    else:
+                        frame[y_offset:y_offset+800, left_x:left_x+50, :] = column_img_resized
+                    # Draw right column
+                    if column_img_resized.shape[2] == 4:
+                        alpha_mask = column_img_resized[:, :, 3] / 255.0
+                        for c in range(3):
+                            frame[y_offset:y_offset+800, right_x:right_x+50, c] = (
+                                alpha_mask * column_img_resized[:, :, c] +
+                                (1 - alpha_mask) * frame[y_offset:y_offset+800, right_x:right_x+50, c]
+                            ).astype(frame.dtype)
+                    else:
+                        frame[y_offset:y_offset+800, right_x:right_x+50, :] = column_img_resized
+        except Exception as e:
+            logger.error(f"Error loading/displaying column images: {e}")
 
     # Prepare text
     try:
@@ -658,18 +659,11 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             )
         return
     if game_state.current_state not in [CurrentGameState.GAME_OVER]:
+        # Draw Mode: text in the new position (right by 120px, up by 150px)
         mode_text = f"Mode: {game_state.game_mode.capitalize()}"
-        mode_pos_x = 50
-        mode_pos_y = current_height - 40
-        _optimized_draw_text(
-            frame,
-            mode_text,
-            (mode_pos_x, mode_pos_y),
-            UIConstants.FONT_SCALE_MEDIUM,
-            UIConstants.WHITE,
-            UIConstants.GREY_BG,
-            thickness=UIConstants.FONT_THICKNESS,
-        )
+        mode_x = 30 + 120  # right by 120px
+        mode_y = current_height - 60 - 150  # up by 150px
+        cv2.putText(frame, mode_text, (mode_x, mode_y), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
 
         # Display current player turn for versus mode
         if getattr(game_state, "versus_mode_active", False):
@@ -677,8 +671,8 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 game_state.current_turn_player_index
             ]
             turn_text = f"Turn: {turn_player.name}"
-            turn_pos_x = mode_pos_x + 200  # Adjust position as needed
-            turn_pos_y = mode_pos_y
+            turn_pos_x = mode_x + 200  # Adjust position as needed
+            turn_pos_y = mode_y
             _optimized_draw_text(
                 frame,
                 turn_text,
@@ -779,31 +773,32 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             # Draw bottom bar
             BOTTOM_BAR_HEIGHT = 240
             bottom_bar_y = current_height - BOTTOM_BAR_HEIGHT
-            try:
-                menu_bar_img = cv2.imread('assets/menu_bar.png', cv2.IMREAD_UNCHANGED)
-                if menu_bar_img is not None:
-                    # Resize to current width and bar height
-                    menu_bar_img = cv2.resize(menu_bar_img, (current_width, BOTTOM_BAR_HEIGHT), interpolation=cv2.INTER_AREA)
-                    # Overlay with alpha
-                    if menu_bar_img.shape[2] == 4:
-                        alpha_mask = menu_bar_img[:, :, 3] / 255.0
-                        for c in range(3):
-                            frame[bottom_bar_y:current_height, :, c] = (
-                                alpha_mask * menu_bar_img[:, :, c] +
-                                (1 - alpha_mask) * frame[bottom_bar_y:current_height, :, c]
-                            ).astype(frame.dtype)
+            if not getattr(game_state, 'menu_minimized', False):
+                try:
+                    menu_bar_img = cv2.imread('assets/menu_bar.png', cv2.IMREAD_UNCHANGED)
+                    if menu_bar_img is not None:
+                        # Resize to current width and bar height
+                        menu_bar_img = cv2.resize(menu_bar_img, (current_width, BOTTOM_BAR_HEIGHT), interpolation=cv2.INTER_AREA)
+                        # Overlay with alpha
+                        if menu_bar_img.shape[2] == 4:
+                            alpha_mask = menu_bar_img[:, :, 3] / 255.0
+                            for c in range(3):
+                                frame[bottom_bar_y:current_height, :, c] = (
+                                    alpha_mask * menu_bar_img[:, :, c] +
+                                    (1 - alpha_mask) * frame[bottom_bar_y:current_height, :, c]
+                                ).astype(frame.dtype)
+                        else:
+                            frame[bottom_bar_y:current_height, :, :] = menu_bar_img
                     else:
-                        frame[bottom_bar_y:current_height, :, :] = menu_bar_img
-                else:
-                    # Fallback to old rectangle if image not found
+                        # Fallback to old rectangle if image not found
+                        overlay = frame.copy()
+                        cv2.rectangle(overlay, (0, bottom_bar_y), (current_width, current_height), (100, 100, 100), -1)
+                        cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
+                except Exception as e:
+                    # Fallback to old rectangle on error
                     overlay = frame.copy()
                     cv2.rectangle(overlay, (0, bottom_bar_y), (current_width, current_height), (100, 100, 100), -1)
                     cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
-            except Exception as e:
-                # Fallback to old rectangle on error
-                overlay = frame.copy()
-                cv2.rectangle(overlay, (0, bottom_bar_y), (current_width, current_height), (100, 100, 100), -1)
-                cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
 
             # Button settings
             button_width = int(UIConstants.MENU_BUTTON_WIDTH * 1.2)
@@ -815,67 +810,84 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             start_x = (current_width - total_width) // 2
             button_y = bottom_bar_y + int(BOTTOM_BAR_HEIGHT * 0.60)
 
-            # Draw Menu button (left)
-            menu_button_rect = (
-                start_x,
-                button_y,
+            # --- Add invisible clickable rect for menu minimize ---
+            menu_toggle_rect = (
+                start_x + 230,
+                button_y - button_height - 70,
                 button_width,
                 button_height,
             )
-            _draw_button(
-                frame,
-                menu_button_rect[0],
-                menu_button_rect[1],
-                menu_button_rect[2],
-                menu_button_rect[3],
-                "Menu",
-                button_color,
-                game_state=game_state,
-                font_scale=UIConstants.FONT_SCALE_LARGE,
-            )
-            game_state.menu_button_rect = menu_button_rect
+            game_state.menu_toggle_rect = menu_toggle_rect
 
-            # Draw Show/Hide UI button (middle)
-            toggle_ui_text = "Hide UI" if game_state.show_scoring_zones else "Show UI"
-            toggle_ui_button_rect = (
-                start_x + button_width + button_spacing,
-                button_y,
-                button_width,
-                button_height,
-            )
-            _draw_button(
-                frame,
-                toggle_ui_button_rect[0],
-                toggle_ui_button_rect[1],
-                toggle_ui_button_rect[2],
-                toggle_ui_button_rect[3],
-                toggle_ui_text,
-                button_color,
-                game_state=game_state,
-                font_scale=UIConstants.FONT_SCALE_LARGE,
-            )
-            game_state.toggle_ui_button_rect = toggle_ui_button_rect
+            # Only draw menu buttons, bottom bar, and columns if not minimized
+            if not getattr(game_state, 'menu_minimized', False):
+                # Draw Menu button (left)
+                menu_button_rect = (
+                    start_x,
+                    button_y,
+                    button_width,
+                    button_height,
+                )
+                _draw_button(
+                    frame,
+                    menu_button_rect[0],
+                    menu_button_rect[1],
+                    menu_button_rect[2],
+                    menu_button_rect[3],
+                    "Menu",
+                    button_color,
+                    game_state=game_state,
+                    font_scale=UIConstants.FONT_SCALE_LARGE,
+                )
+                game_state.menu_button_rect = menu_button_rect
 
-            # Draw Resolution button (right)
-            res_button_rect = (
-                start_x + 2 * (button_width + button_spacing),
-                button_y,
-                button_width,
-                button_height,
-            )
-            res_button_text = game_state.current_resolution_key
-            _draw_button(
-                frame,
-                res_button_rect[0],
-                res_button_rect[1],
-                res_button_rect[2],
-                res_button_rect[3],
-                res_button_text,
-                button_color,
-                game_state=game_state,
-                font_scale=UIConstants.FONT_SCALE_LARGE,
-            )
-            game_state.resolution_button_rect = res_button_rect
+                # Draw Show/Hide UI button (middle)
+                toggle_ui_text = "Hide UI" if game_state.show_scoring_zones else "Show UI"
+                toggle_ui_button_rect = (
+                    start_x + button_width + button_spacing,
+                    button_y,
+                    button_width,
+                    button_height,
+                )
+                _draw_button(
+                    frame,
+                    toggle_ui_button_rect[0],
+                    toggle_ui_button_rect[1],
+                    toggle_ui_button_rect[2],
+                    toggle_ui_button_rect[3],
+                    toggle_ui_text,
+                    button_color,
+                    game_state=game_state,
+                    font_scale=UIConstants.FONT_SCALE_LARGE,
+                )
+                game_state.toggle_ui_button_rect = toggle_ui_button_rect
+
+                # Draw Resolution button (right)
+                res_button_rect = (
+                    start_x + 2 * (button_width + button_spacing),
+                    button_y,
+                    button_width,
+                    button_height,
+                )
+                res_button_text = game_state.current_resolution_key
+                _draw_button(
+                    frame,
+                    res_button_rect[0],
+                    res_button_rect[1],
+                    res_button_rect[2],
+                    res_button_rect[3],
+                    res_button_text,
+                    button_color,
+                    game_state=game_state,
+                    font_scale=UIConstants.FONT_SCALE_LARGE,
+                )
+                game_state.resolution_button_rect = res_button_rect
+            else:
+                # If minimized, clear the button rects so they can't be clicked
+                game_state.toggle_ui_button_rect = None
+                game_state.resolution_button_rect = None
+                game_state.menu_button_rect = None
+                # Hide columns and bottom bar by skipping their drawing (handled above)
     elif game_state.current_state == CurrentGameState.PAUSED:
         pause_text = "PAUSED"
         (tw_p, th_p), _ = cv2.getTextSize(
