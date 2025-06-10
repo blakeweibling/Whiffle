@@ -526,6 +526,76 @@ def _draw_stats_display(frame: np.ndarray, game_state: "GameState") -> None:
 # --- Main UI Drawing Function ---
 def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
     current_width, current_height = game_state.get_current_resolution_dimensions()
+    BAR_HEIGHT = 176  # Further increased height for the top bar
+    BAR_COLOR = (28, 45, 82)  # #522d1c in BGR, matches menu buttons
+    BAR_ALPHA = 0.9
+
+    # Draw the top bar image
+    try:
+        top_bar_img = cv2.imread('assets/top_bar.png', cv2.IMREAD_UNCHANGED)
+        if top_bar_img is not None:
+            # Resize to current width and BAR_HEIGHT
+            top_bar_img = cv2.resize(top_bar_img, (current_width, BAR_HEIGHT), interpolation=cv2.INTER_AREA)
+            # Overlay with alpha
+            if top_bar_img.shape[2] == 4:
+                alpha_mask = top_bar_img[:, :, 3] / 255.0
+                for c in range(3):
+                    frame[0:BAR_HEIGHT, :, c] = (
+                        alpha_mask * top_bar_img[:, :, c] +
+                        (1 - alpha_mask) * frame[0:BAR_HEIGHT, :, c]
+                    ).astype(frame.dtype)
+            else:
+                frame[0:BAR_HEIGHT, :, :] = top_bar_img
+        else:
+            # Fallback to old rectangle if image not found
+            overlay = frame.copy()
+            cv2.rectangle(overlay, (0, 0), (current_width, BAR_HEIGHT), BAR_COLOR, -1)
+            cv2.addWeighted(overlay, BAR_ALPHA, frame, 1 - BAR_ALPHA, 0, frame)
+    except Exception as e:
+        # Fallback to old rectangle on error
+        overlay = frame.copy()
+        cv2.rectangle(overlay, (0, 0), (current_width, BAR_HEIGHT), BAR_COLOR, -1)
+        cv2.addWeighted(overlay, BAR_ALPHA, frame, 1 - BAR_ALPHA, 0, frame)
+
+    # Prepare text
+    try:
+        player_name = game_state.get_current_player().name
+    except Exception:
+        player_name = "Error"
+    score = game_state.score
+    high_score = game_state.high_score
+    player_text = f"Player: {player_name}"
+    score_text = f"Score: {score}"
+    high_score_text = f"High Score: {high_score}"
+
+    # Font and color
+    font_scale = UIConstants.FONT_SCALE_LARGE
+    font_color = UIConstants.WHITE
+    font_thickness = UIConstants.FONT_THICKNESS
+    font = cv2.FONT_HERSHEY_SIMPLEX
+
+    # Calculate text sizes
+    (player_tw, player_th), _ = cv2.getTextSize(player_text, font, font_scale, font_thickness)
+    (score_tw, score_th), _ = cv2.getTextSize(score_text, font, font_scale, font_thickness)
+    (high_score_tw, high_score_th), _ = cv2.getTextSize(high_score_text, font, font_scale, font_thickness)
+
+    # Calculate different vertical positions for each text element
+    player_text_y = (BAR_HEIGHT + player_th) // 2 - 35  # Moved down 10px (was -45)
+    score_text_y = (BAR_HEIGHT + score_th) // 2 + 30    # Keeping score position
+    high_score_text_y = (BAR_HEIGHT + high_score_th) // 2 - 35  # Moved down 10px (was -45)
+
+    # Player name: left aligned at 150px from left
+    player_x = 150
+    cv2.putText(frame, player_text, (player_x, player_text_y), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
+
+    # Score: center aligned
+    score_x = (current_width - score_tw) // 2
+    cv2.putText(frame, score_text, (score_x, score_text_y), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
+
+    # High score: right aligned at 150px from right
+    high_score_x = current_width - high_score_tw - 150
+    cv2.putText(frame, high_score_text, (high_score_x, high_score_text_y), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
+
     if game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
         # Initialize cursor position if not done yet
         if not hasattr(game_state, "player_name_cursor_pos"):
@@ -554,43 +624,9 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             )
         return
     if game_state.current_state not in [CurrentGameState.GAME_OVER]:
-        try:
-            player_name = game_state.get_current_player().name
-        except Exception:
-            player_name = "Error"
-        score_text = f"Player: {player_name} Score: {game_state.score}"
-        score_pos_x = int(0.01 * current_width)
-        score_pos_y = int(0.04 * current_height)
-        _optimized_draw_text(
-            frame,
-            score_text,
-            (score_pos_x, score_pos_y),
-            UIConstants.FONT_SCALE_MEDIUM,
-            UIConstants.WHITE,
-            UIConstants.GREY_BG,
-            thickness=UIConstants.FONT_THICKNESS,
-        )
-        high_score_text = f"High Score: {game_state.high_score}"
-        (tw, th), _ = cv2.getTextSize(
-            high_score_text,
-            cv2.FONT_HERSHEY_SIMPLEX,
-            UIConstants.FONT_SCALE_MEDIUM,
-            UIConstants.FONT_THICKNESS,
-        )
-        high_score_pos_x = current_width - tw - int(0.01 * current_width)
-        high_score_pos_y = score_pos_y
-        _optimized_draw_text(
-            frame,
-            high_score_text,
-            (high_score_pos_x, high_score_pos_y),
-            UIConstants.FONT_SCALE_MEDIUM,
-            UIConstants.WHITE,
-            UIConstants.GREY_BG,
-            thickness=UIConstants.FONT_THICKNESS,
-        )
         mode_text = f"Mode: {game_state.game_mode.capitalize()}"
-        mode_pos_x = score_pos_x
-        mode_pos_y = current_height - int(0.03 * current_height)
+        mode_pos_x = 50
+        mode_pos_y = current_height - 40
         _optimized_draw_text(
             frame,
             mode_text,
@@ -621,7 +657,10 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
 
             # Add End Turn button for versus mode
             if game_state.current_state == CurrentGameState.PLAYING:
-                button_width, button_height = 150, 40
+                button_width = int(UIConstants.MENU_BUTTON_WIDTH * 1.2)
+                button_height = int(UIConstants.MENU_BUTTON_HEIGHT * 1.2)
+                button_spacing = int(60 * 1.2)
+                button_color = (28, 45, 82)  # #522d1c in BGR
                 button_x = (current_width - button_width) // 2
                 button_y = current_height - 80  # Position near bottom
 
@@ -634,7 +673,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                     button_width,
                     button_height,
                     "End Turn",
-                    UIConstants.CV2_ORANGE,  # Make it stand out
+                    button_color,
                     game_state=game_state,
                     font_scale=UIConstants.FONT_SCALE_MEDIUM,
                 )
@@ -658,7 +697,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 UIConstants.FONT_THICKNESS,
             )
             timer_x = (current_width - tw_t) // 2
-            timer_y = score_pos_y
+            timer_y = player_text_y
             _optimized_draw_text(
                 frame,
                 timer_text,
@@ -670,7 +709,11 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 alpha=0.7,
             )
     if game_state.current_state == CurrentGameState.PLAYING:
-        draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole)
+        # Only draw scoring zones if show_scoring_zones is True (default True)
+        if not hasattr(game_state, "show_scoring_zones"):
+            game_state.show_scoring_zones = True
+        if game_state.show_scoring_zones:
+            draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole)
         if game_state.drawing and game_state.temp_zone:
             x1, y1, w, h = game_state.temp_zone
             cv2.rectangle(frame, (x1, y1), (x1 + w, y1 + h), UIConstants.YELLOW, 2)
@@ -699,12 +742,92 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 alpha=0.7,
             )
         if not game_state.drawing:
-            draw_menu(frame, game_state)
+            # Draw bottom bar
+            BOTTOM_BAR_HEIGHT = 240
+            bottom_bar_y = current_height - BOTTOM_BAR_HEIGHT
+            try:
+                menu_bar_img = cv2.imread('assets/menu_bar.png', cv2.IMREAD_UNCHANGED)
+                if menu_bar_img is not None:
+                    # Resize to current width and bar height
+                    menu_bar_img = cv2.resize(menu_bar_img, (current_width, BOTTOM_BAR_HEIGHT), interpolation=cv2.INTER_AREA)
+                    # Overlay with alpha
+                    if menu_bar_img.shape[2] == 4:
+                        alpha_mask = menu_bar_img[:, :, 3] / 255.0
+                        for c in range(3):
+                            frame[bottom_bar_y:current_height, :, c] = (
+                                alpha_mask * menu_bar_img[:, :, c] +
+                                (1 - alpha_mask) * frame[bottom_bar_y:current_height, :, c]
+                            ).astype(frame.dtype)
+                    else:
+                        frame[bottom_bar_y:current_height, :, :] = menu_bar_img
+                else:
+                    # Fallback to old rectangle if image not found
+                    overlay = frame.copy()
+                    cv2.rectangle(overlay, (0, bottom_bar_y), (current_width, current_height), (100, 100, 100), -1)
+                    cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
+            except Exception as e:
+                # Fallback to old rectangle on error
+                overlay = frame.copy()
+                cv2.rectangle(overlay, (0, bottom_bar_y), (current_width, current_height), (100, 100, 100), -1)
+                cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
+
+            # Button settings
+            button_width = int(UIConstants.MENU_BUTTON_WIDTH * 1.2)
+            button_height = int(UIConstants.MENU_BUTTON_HEIGHT * 1.2)
+            button_spacing = int(60 * 1.2)
+            button_color = (28, 45, 82)  # #522d1c in BGR
+            num_buttons = 3
+            total_width = num_buttons * button_width + 2 * button_spacing
+            start_x = (current_width - total_width) // 2
+            button_y = bottom_bar_y + int(BOTTOM_BAR_HEIGHT * 0.60)
+
+            # Draw Menu button (left)
+            menu_button_rect = (
+                start_x,
+                button_y,
+                button_width,
+                button_height,
+            )
+            _draw_button(
+                frame,
+                menu_button_rect[0],
+                menu_button_rect[1],
+                menu_button_rect[2],
+                menu_button_rect[3],
+                "Menu",
+                button_color,
+                game_state=game_state,
+                font_scale=UIConstants.FONT_SCALE_LARGE,
+            )
+            game_state.menu_button_rect = menu_button_rect
+
+            # Draw Show/Hide UI button (middle)
+            toggle_ui_text = "Hide UI" if game_state.show_scoring_zones else "Show UI"
+            toggle_ui_button_rect = (
+                start_x + button_width + button_spacing,
+                button_y,
+                button_width,
+                button_height,
+            )
+            _draw_button(
+                frame,
+                toggle_ui_button_rect[0],
+                toggle_ui_button_rect[1],
+                toggle_ui_button_rect[2],
+                toggle_ui_button_rect[3],
+                toggle_ui_text,
+                button_color,
+                game_state=game_state,
+                font_scale=UIConstants.FONT_SCALE_LARGE,
+            )
+            game_state.toggle_ui_button_rect = toggle_ui_button_rect
+
+            # Draw Resolution button (right)
             res_button_rect = (
-                UIConstants.RESOLUTION_BUTTON_X,
-                UIConstants.RESOLUTION_BUTTON_Y,
-                UIConstants.RESOLUTION_BUTTON_WIDTH,
-                UIConstants.RESOLUTION_BUTTON_HEIGHT,
+                start_x + 2 * (button_width + button_spacing),
+                button_y,
+                button_width,
+                button_height,
             )
             res_button_text = game_state.current_resolution_key
             _draw_button(
@@ -714,10 +837,11 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 res_button_rect[2],
                 res_button_rect[3],
                 res_button_text,
-                UIConstants.CV2_BLUE,
+                button_color,
                 game_state=game_state,
-                font_scale=UIConstants.FONT_SCALE_SMALL,
+                font_scale=UIConstants.FONT_SCALE_LARGE,
             )
+            game_state.resolution_button_rect = res_button_rect
     elif game_state.current_state == CurrentGameState.PAUSED:
         pause_text = "PAUSED"
         (tw_p, th_p), _ = cv2.getTextSize(

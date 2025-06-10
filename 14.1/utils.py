@@ -99,25 +99,44 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
     # Convert to Pygame coordinates if needed
     # OpenCV and Pygame use the same coordinate system, but if there's scaling this would be addressed here
 
-    # Direct handling for menu button click in PLAYING state
+    # Direct handling for menu and resolution button click in PLAYING state
     if current_state == CurrentGameState.PLAYING and event == cv2.EVENT_LBUTTONDOWN:
-        menu_btn_x = UIConstants.MENU_BUTTON_X
-        menu_btn_y = UIConstants.MENU_BUTTON_Y
-        menu_btn_w = UIConstants.MENU_BUTTON_WIDTH
-        menu_btn_h = UIConstants.MENU_BUTTON_HEIGHT
-
-        # Check if click is within menu button
-        if (
-            menu_btn_x <= x < menu_btn_x + menu_btn_w
-            and menu_btn_y <= y < menu_btn_y + menu_btn_h
-        ):
-            logger.info(f"Menu button clicked via OpenCV handler at ({x}, {y})")
-            menu_button_rect = (menu_btn_x, menu_btn_y, menu_btn_w, menu_btn_h)
-            game_state.click_feedback_state = (menu_button_rect, time.time())
-            game_state.current_state = CurrentGameState.MENU
-            game_state.menu_cache = None  # Force menu redraw
-            logger.info("Switched to MENU state via OpenCV")
-            return
+        # Check for dynamic menu button
+        menu_button_rect = getattr(game_state, "menu_button_rect", None)
+        if menu_button_rect:
+            mx, my, mw, mh = menu_button_rect
+            if mx <= x < mx + mw and my <= y < my + mh:
+                logger.info(f"Menu button clicked via OpenCV handler at ({x}, {y}) [dynamic]")
+                game_state.click_feedback_state = (menu_button_rect, time.time())
+                game_state.current_state = CurrentGameState.MENU
+                game_state.menu_cache = None  # Force menu redraw
+                logger.info("Switched to MENU state via OpenCV [dynamic]")
+                return
+        # Check for dynamic resolution button
+        res_button_rect = getattr(game_state, "resolution_button_rect", None)
+        if res_button_rect:
+            rx, ry, rw, rh = res_button_rect
+            if rx <= x < rx + rw and ry <= y < ry + rh:
+                logger.info(f"Resolution button clicked via OpenCV handler at ({x}, {y}) [dynamic]")
+                # Cycle resolution (simulate the old behavior)
+                if hasattr(game_state, "cycle_resolution"):
+                    game_state.cycle_resolution()
+                else:
+                    logger.warning("No cycle_resolution method on game_state!")
+                game_state.click_feedback_state = (res_button_rect, time.time())
+                return
+        # Check for dynamic Show/Hide UI button
+        toggle_ui_button_rect = getattr(game_state, "toggle_ui_button_rect", None)
+        if toggle_ui_button_rect:
+            tx, ty, tw, th = toggle_ui_button_rect
+            if tx <= x < tx + tw and ty <= y < ty + th:
+                logger.info(f"Show/Hide UI button clicked via OpenCV handler at ({x}, {y}) [dynamic]")
+                # Toggle show_scoring_zones
+                if not hasattr(game_state, "show_scoring_zones"):
+                    game_state.show_scoring_zones = True
+                game_state.show_scoring_zones = not game_state.show_scoring_zones
+                game_state.click_feedback_state = (toggle_ui_button_rect, time.time())
+                return
 
     # Direct handling for drawing mode events
     if drawing_mode:
