@@ -530,6 +530,19 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
     BAR_COLOR = (28, 45, 82)  # #522d1c in BGR, matches menu buttons
     BAR_ALPHA = 0.9
 
+    # Draw dark grey, semi-transparent bars on left and right edges
+    bar_width = 50
+    bar_color = (40, 40, 40)  # Dark grey
+    bar_alpha = 0.9
+    # Left bar
+    overlay = frame.copy()
+    cv2.rectangle(overlay, (0, 0), (bar_width, current_height), bar_color, -1)
+    cv2.addWeighted(overlay, bar_alpha, frame, 1 - bar_alpha, 0, frame)
+    # Right bar
+    overlay = frame.copy()
+    cv2.rectangle(overlay, (current_width - bar_width, 0), (current_width, current_height), bar_color, -1)
+    cv2.addWeighted(overlay, bar_alpha, frame, 1 - bar_alpha, 0, frame)
+
     # Draw the top bar image
     try:
         top_bar_img = cv2.imread('assets/top_bar.png', cv2.IMREAD_UNCHANGED)
