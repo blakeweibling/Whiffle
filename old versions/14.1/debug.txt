@@ -1,0 +1,615 @@
+
+F:\Whiffle\14.0>py game.py
+pygame 2.6.1 (SDL 2.28.4, Python 3.10.9)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+[ WARN:0@1.258] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(DSHOW): backend is generally available but can't be used to capture by index
+[ WARN:0@1.262] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(DSHOW): backend is generally available but can't be used to capture by index
+[ WARN:0@1.266] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(DSHOW): backend is generally available but can't be used to capture by index
+[ERROR:0@1.466] global obsensor_uvc_stream_channel.cpp:158 cv::obsensor::getStreamChannelGroup Camera index out of range
+[ERROR:0@1.616] global obsensor_uvc_stream_channel.cpp:158 cv::obsensor::getStreamChannelGroup Camera index out of range
+[ERROR:0@1.619] global obsensor_uvc_stream_channel.cpp:158 cv::obsensor::getStreamChannelGroup Camera index out of range
+[ WARN:0@1.755] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(MSMF): backend is generally available but can't be used to capture by index
+[ WARN:0@1.895] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(MSMF): backend is generally available but can't be used to capture by index
+[ WARN:0@1.899] global cap.cpp:480 cv::VideoCapture::open VIDEOIO(MSMF): backend is generally available but can't be used to capture by index
+2025-05-02 21:25:26,011 - WARNING - constants - No working camera found. Falling back to static frame.
+2025-05-02 21:25:33,391 - INFO - loading_screen - Showing loading screen...
+2025-05-02 21:25:33,392 - INFO - loading_screen - Loading screen started
+Loading screen started - waiting for initialization...
+2025-05-02 21:25:33,392 - INFO - loading_screen - Loading stage: Loading configuration..., Progress: 10%
+Loading: Loading configuration... - 10%
+2025-05-02 21:25:33,423 - INFO - loading_screen - Centered loading window at (660, 340)
+2025-05-02 21:25:33,892 - INFO - loading_screen - Loading stage: Initializing game state..., Progress: 27%
+Loading: Initializing game state... - 27%
+2025-05-02 21:25:34,394 - INFO - loading_screen - Loading stage: Connecting to camera..., Progress: 50%
+Loading: Connecting to camera... - 49%
+2025-05-02 21:25:34,396 - INFO - game_state - Starting GameState initialization...
+2025-05-02 21:25:34,396 - INFO - loading_screen - Loading stage: Initializing game state..., Progress: 55%
+Loading: Initializing game state... - 54%
+2025-05-02 21:25:34,397 - INFO - loading_screen - Loading stage: Setting up data logger..., Progress: 60%
+Loading: Setting up data logger... - 59%
+2025-05-02 21:25:34,400 - INFO - data_logger - Loaded 50 historical session records.
+2025-05-02 21:25:34,400 - INFO - game_state - Initializing camera for 1920x1080
+2025-05-02 21:25:34,400 - INFO - loading_screen - Loading stage: Connecting to camera..., Progress: 75%
+Loading: Connecting to camera... - 74%
+2025-05-02 21:25:34,401 - WARNING - game_state - Using static frame: assets/last_frame.png
+2025-05-02 21:25:34,401 - INFO - loading_screen - Loading stage: Loading static frame..., Progress: 85%
+Loading: Loading static frame... - 84%
+2025-05-02 21:25:34,425 - INFO - game_state - Loaded and resized static frame to 1920x1080
+2025-05-02 21:25:34,448 - INFO - detection - YOLOv8 device preference potentially set (check Ultralytics docs).
+2025-05-02 21:25:34,448 - INFO - tracking - SciPy available - using KDTree for efficient ball tracking
+2025-05-02 21:25:34,448 - INFO - game_state - Initial music track index randomly set to: 2
+2025-05-02 21:25:34,449 - WARNING - leaderboard - SSL certificate verification is disabled for Supabase requests. This is not recommended for production environments.
+2025-05-02 21:25:34,449 - INFO - game_state - Loading settings via utils...
+2025-05-02 21:25:34,450 - INFO - game_state_utils - Loaded Discord Webhook URL from settings.
+2025-05-02 21:25:34,450 - INFO - game_state_utils - Loaded settings from configs/settings.json
+2025-05-02 21:25:34,450 - INFO - game_state - Loading initial game state (zones, high score) via utils...
+2025-05-02 21:25:34,451 - INFO - game_state_helpers - Scoring zones loaded from data/game/scoring_zones.json
+2025-05-02 21:25:34,451 - INFO - game_state_helpers - Notify: Zones Loaded
+2025-05-02 21:25:34,451 - INFO - game_state_utils - Loaded high score for mode 'classic': 162
+2025-05-02 21:25:34,451 - INFO - game_state - Initializing sounds via utils...
+2025-05-02 21:25:34,466 - INFO - game_state - Loading background music via utils...
+2025-05-02 21:25:34,466 - INFO - game_state_utils - Loading background music: data/sounds/background_music3.mp3
+2025-05-02 21:25:34,710 - INFO - game_state - Initializing achievements definitions via utils...
+2025-05-02 21:25:34,710 - INFO - game_state - Loading achievements status via utils...
+2025-05-02 21:25:34,711 - INFO - game_state_utils - Loaded status for 2 achievements from data/achievements/achievements_status.json.
+2025-05-02 21:25:34,711 - INFO - game_state - Loading HSV ranges via utils...
+2025-05-02 21:25:34,712 - INFO - game_state_utils - Loaded custom HSV ranges from configs/hsv_ranges.json
+2025-05-02 21:25:34,712 - INFO - data_logger - Starting new session for Player: Player 1, Mode: classic
+2025-05-02 21:25:34,713 - WARNING - leaderboard - SSL certificate verification is disabled for Supabase requests. This is not recommended for production environments.
+2025-05-02 21:25:34,809 - INFO - replay_manager - Loaded metadata for 4 replays
+2025-05-02 21:25:34,809 - INFO - game_state - Replay manager initialized successfully
+2025-05-02 21:25:35,360 - ERROR - screenshot_utils - Failed to create bucket 'high-score-screenshots': 400 - {"statusCode":"403","error":"Unauthorized","message":"new row violates row-level security policy"}
+2025-05-02 21:25:35,361 - WARNING - game_state - Failed to create or verify 'high-score-screenshots' bucket in Supabase Storage
+2025-05-02 21:25:35,361 - INFO - game_state - GameState initialization complete.
+2025-05-02 21:25:35,370 - INFO - ui_screens - Centered main window at (0, 0)
+2025-05-02 21:25:35,371 - INFO - ui_screens - Displaying modal splash screen...
+2025-05-02 21:25:38,440 - INFO - loading_screen - Loading stage: Loading resources..., Progress: 95%
+Loading: Loading resources... - 95%
+2025-05-02 21:25:38,941 - INFO - loading_screen - Loading stage: Setting up user interface..., Progress: 95%
+Loading: Setting up user interface... - 95%
+Loading completed! (100%)
+Loading screen closed
+2025-05-02 21:25:39,755 - INFO - loading_screen - Loading screen finished
+--- Whiffle Tracker ---
+Press 'q' to quit at any time.
+Press 'm' during gameplay to open the menu.
+2025-05-02 21:25:39,890 - INFO - game_loop - Game window initialized with initial size 1920x1080.
+2025-05-02 21:28:22,816 - INFO - game_input - Key pressed in username input: key=66, raw_key=66
+2025-05-02 21:28:23,121 - INFO - game_input - Key pressed in username input: key=108, raw_key=108
+2025-05-02 21:28:23,217 - INFO - game_input - Key pressed in username input: key=97, raw_key=97
+2025-05-02 21:28:23,359 - INFO - game_input - Key pressed in username input: key=107, raw_key=107
+2025-05-02 21:28:23,469 - INFO - game_input - Key pressed in username input: key=101, raw_key=101
+2025-05-02 21:28:23,589 - INFO - game_input - Key pressed in username input: key=32, raw_key=32
+2025-05-02 21:28:23,831 - INFO - game_input - Key pressed in username input: key=87, raw_key=87
+2025-05-02 21:28:24,103 - INFO - game_input - Key pressed in username input: key=13, raw_key=13
+2025-05-02 21:28:24,104 - INFO - game_state_helpers - Notify: Welcome, Blake W!
+
+0: 416x736 3 whites, 1 half, 58.9ms
+Speed: 2.6ms preprocess, 58.9ms inference, 77.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 2.5ms preprocess, 8.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.5ms preprocess, 8.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.6ms preprocess, 8.0ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 14.8ms
+Speed: 1.8ms preprocess, 14.8ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.6ms preprocess, 8.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.3ms
+Speed: 1.5ms preprocess, 8.3ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.4ms
+Speed: 1.6ms preprocess, 8.4ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-05-02 21:28:26,678 - INFO - scoring_logic - Ball 0(white) scored 50pts [Base:50, Mult:1.0] in Zone:20. Total:50. Zone 20 cooldown:9.0s.
+2025-05-02 21:28:26,678 - INFO - scoring_logic - Ball 2(white) scored 30pts [Base:30, Mult:1.0] in Zone:21. Total:80. Zone 21 cooldown:9.0s.
+2025-05-02 21:28:26,679 - INFO - scoring_logic - Ball 3(half) scored 15pts [Base:10, Mult:1.5] in Zone:22. Total:95. Zone 22 cooldown:9.0s.
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.3ms
+Speed: 1.5ms preprocess, 8.3ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.6ms preprocess, 8.0ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.3ms
+Speed: 1.6ms preprocess, 8.3ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 13.6ms
+Speed: 1.7ms preprocess, 13.6ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.6ms preprocess, 8.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 7.9ms
+Speed: 1.5ms preprocess, 7.9ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.6ms preprocess, 8.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.3ms
+Speed: 1.5ms preprocess, 8.3ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.6ms
+Speed: 1.5ms preprocess, 8.6ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.5ms
+Speed: 1.5ms preprocess, 8.5ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 13.8ms
+Speed: 1.7ms preprocess, 13.8ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.3ms
+Speed: 1.5ms preprocess, 8.3ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.5ms
+Speed: 1.5ms preprocess, 8.5ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.3ms
+Speed: 1.5ms preprocess, 8.3ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 7.9ms
+Speed: 1.5ms preprocess, 7.9ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.5ms preprocess, 8.0ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 15.2ms
+Speed: 1.9ms preprocess, 15.2ms inference, 2.8ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 10.3ms
+Speed: 1.6ms preprocess, 10.3ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 7.9ms
+Speed: 1.5ms preprocess, 7.9ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 15.3ms
+Speed: 1.7ms preprocess, 15.3ms inference, 2.7ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.8ms
+Speed: 1.5ms preprocess, 8.8ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.6ms preprocess, 8.0ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 7.9ms
+Speed: 1.5ms preprocess, 7.9ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.3ms
+Speed: 1.5ms preprocess, 8.3ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.5ms preprocess, 8.0ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.5ms preprocess, 8.0ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 7.8ms
+Speed: 1.7ms preprocess, 7.8ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.6ms preprocess, 8.0ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.5ms preprocess, 8.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.6ms preprocess, 8.2ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.5ms preprocess, 8.2ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.2ms
+Speed: 1.6ms preprocess, 8.2ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.3ms
+Speed: 1.6ms preprocess, 8.3ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.3ms
+Speed: 1.5ms preprocess, 8.3ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.5ms preprocess, 8.0ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.5ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.3ms
+Speed: 1.5ms preprocess, 8.3ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.0ms
+Speed: 1.5ms preprocess, 8.0ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.5ms
+Speed: 1.5ms preprocess, 8.5ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 8.1ms
+Speed: 1.6ms preprocess, 8.1ms inference, 1.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 9.7ms
+Speed: 2.0ms preprocess, 9.7ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 9.6ms
+Speed: 2.0ms preprocess, 9.6ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 9.8ms
+Speed: 2.0ms preprocess, 9.8ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 9.6ms
+Speed: 2.0ms preprocess, 9.6ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 9.5ms
+Speed: 2.3ms preprocess, 9.5ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 9.6ms
+Speed: 2.0ms preprocess, 9.6ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 9.6ms
+Speed: 2.0ms preprocess, 9.6ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 10.1ms
+Speed: 2.0ms preprocess, 10.1ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 9.6ms
+Speed: 2.0ms preprocess, 9.6ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 10.8ms
+Speed: 2.0ms preprocess, 10.8ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 9.9ms
+Speed: 2.0ms preprocess, 9.9ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 10.8ms
+Speed: 2.1ms preprocess, 10.8ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 14.7ms
+Speed: 2.1ms preprocess, 14.7ms inference, 2.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 10.4ms
+Speed: 2.0ms preprocess, 10.4ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 10.2ms
+Speed: 2.1ms preprocess, 10.2ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 11.1ms
+Speed: 2.1ms preprocess, 11.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 9.9ms
+Speed: 2.0ms preprocess, 9.9ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 14.5ms
+Speed: 2.8ms preprocess, 14.5ms inference, 2.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 10.5ms
+Speed: 2.1ms preprocess, 10.5ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 10.5ms
+Speed: 2.0ms preprocess, 10.5ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 9.4ms
+Speed: 2.4ms preprocess, 9.4ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 10.5ms
+Speed: 4.2ms preprocess, 10.5ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 11.2ms
+Speed: 2.0ms preprocess, 11.2ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 10.7ms
+Speed: 4.2ms preprocess, 10.7ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 9.5ms
+Speed: 2.3ms preprocess, 9.5ms inference, 2.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 11.0ms
+Speed: 2.1ms preprocess, 11.0ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 14.1ms
+Speed: 2.2ms preprocess, 14.1ms inference, 3.7ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 11.7ms
+Speed: 2.4ms preprocess, 11.7ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 11.7ms
+Speed: 3.1ms preprocess, 11.7ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 12.3ms
+Speed: 2.1ms preprocess, 12.3ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 13.4ms
+Speed: 2.1ms preprocess, 13.4ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 12.7ms
+Speed: 2.1ms preprocess, 12.7ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 11.7ms
+Speed: 2.3ms preprocess, 11.7ms inference, 2.4ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 11.6ms
+Speed: 2.1ms preprocess, 11.6ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 13.2ms
+Speed: 2.1ms preprocess, 13.2ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 11.7ms
+Speed: 3.3ms preprocess, 11.7ms inference, 1.8ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 12.1ms
+Speed: 2.4ms preprocess, 12.1ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 12.2ms
+Speed: 2.1ms preprocess, 12.2ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 12.4ms
+Speed: 2.1ms preprocess, 12.4ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 13.8ms
+Speed: 2.1ms preprocess, 13.8ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 12.6ms
+Speed: 2.8ms preprocess, 12.6ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 11.8ms
+Speed: 2.1ms preprocess, 11.8ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 13.8ms
+Speed: 2.0ms preprocess, 13.8ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 11.9ms
+Speed: 3.4ms preprocess, 11.9ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 13.1ms
+Speed: 2.1ms preprocess, 13.1ms inference, 1.5ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 12.5ms
+Speed: 2.4ms preprocess, 12.5ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 16.6ms
+Speed: 2.2ms preprocess, 16.6ms inference, 3.2ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 21.0ms
+Speed: 2.8ms preprocess, 21.0ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 21.3ms
+Speed: 2.8ms preprocess, 21.3ms inference, 1.6ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 21.2ms
+Speed: 3.0ms preprocess, 21.2ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 21.5ms
+Speed: 3.4ms preprocess, 21.5ms inference, 2.0ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 21.6ms
+Speed: 3.0ms preprocess, 21.6ms inference, 1.9ms postprocess per image at shape (1, 3, 416, 736)
+
+0: 416x736 3 whites, 1 half, 21.2ms
+Speed: 2.7ms preprocess, 21.2ms inference, 1.7ms postprocess per image at shape (1, 3, 416, 736)
+2025-05-02 21:28:34,594 - INFO - utils - Menu button clicked via OpenCV handler at (78, 101)
+2025-05-02 21:28:34,594 - INFO - utils - Switched to MENU state via OpenCV
+2025-05-02 21:28:35,699 - INFO - scoring_logic - Ball 1(white) scored 50pts [Base:50, Mult:1.0] in Zone:20. Total:145. Zone 20 cooldown:9.0s.
+2025-05-02 21:28:41,031 - INFO - interaction_utils - Click detected on item with action: replays at rect (680, 530, 560, 35)
+2025-05-02 21:28:41,031 - INFO - interaction_utils - Processing menu action: replays
+2025-05-02 21:28:41,032 - INFO - interaction_utils - Setting submenu_active to: replays
+2025-05-02 21:28:41,969 - INFO - interaction_utils - Click detected on item with action: view_replays at rect (680, 390, 560, 40)
+2025-05-02 21:28:41,969 - INFO - interaction_utils - Processing menu action: view_replays
+2025-05-02 21:28:44,038 - INFO - interaction_utils - Click detected on item with action: select_replay_c6f8479a-eb3a-46ec-80db-1ae8a0395021 at rect (970, 310, 160, 150)
+2025-05-02 21:28:44,038 - INFO - interaction_utils - Processing menu action: select_replay_c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:28:44,039 - INFO - interaction_utils - Selected replay: c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:28:46,149 - INFO - interaction_utils - Click detected on item with action: share_replay_c6f8479a-eb3a-46ec-80db-1ae8a0395021 at rect (840, 770, 140, 30)
+2025-05-02 21:28:46,150 - INFO - interaction_utils - Processing menu action: share_replay_c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:28:46,151 - INFO - game_state_helpers - Notify: Select export format and destination
+2025-05-02 21:28:47,553 - INFO - interaction_utils - Click detected on item with action: select_platform_Discord at rect (830, 520, 120, 30)
+2025-05-02 21:28:47,553 - INFO - interaction_utils - Processing menu action: select_platform_Discord
+2025-05-02 21:28:47,554 - INFO - game_state_helpers - Notify: Selected platform: Discord
+2025-05-02 21:28:47,554 - INFO - interaction_utils - Selected platform: Discord
+2025-05-02 21:28:48,807 - INFO - interaction_utils - Click detected on item with action: share_to_Discord_c6f8479a-eb3a-46ec-80db-1ae8a0395021 at rect (975, 640, 160, 35)
+2025-05-02 21:28:48,807 - INFO - interaction_utils - Processing menu action: share_to_Discord_c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:28:48,808 - INFO - game_state_helpers - Notify: Generating MP4 file...
+2025-05-02 21:28:48,808 - INFO - replay_manager - Loading replay from data/replays\c6f8479a-eb3a-46ec-80db-1ae8a0395021.whr
+2025-05-02 21:28:48,808 - INFO - replay_manager - Removing existing extraction directory: data/replays\c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:28:48,812 - INFO - replay_manager - Extracting replay package to data/replays\c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:28:48,914 - INFO - replay_manager - Successfully loaded replay c6f8479a-eb3a-46ec-80db-1ae8a0395021 with 565 frames, duration: 17.0s
+2025-05-02 21:28:48,915 - INFO - replay_manager - Found 9 keyframes for video generation
+2025-05-02 21:28:48,915 - WARNING - replay_manager - Replay resolution metadata missing, falling back to first keyframe dimensions.
+2025-05-02 21:28:48,924 - INFO - replay_manager - Video dimensions set to: 960x540
+OpenCV: FFMPEG: tag 0x34363248/'H264' is not supported with codec id 27 and format 'mp4 / MP4 (MPEG-4 Part 14)'
+OpenCV: FFMPEG: fallback to use tag 0x31637661/'avc1'
+
+        OpenH264 Video Codec provided by Cisco Systems, Inc.
+
+OpenCV: FFMPEG: tag 0x34363248/'H264' is not supported with codec id 27 and format 'mp4 / MP4 (MPEG-4 Part 14)'
+OpenCV: FFMPEG: fallback to use tag 0x31637661/'avc1'
+2025-05-02 21:28:49,081 - INFO - replay_manager - Generated video with 9 frames at data/replays\videos\c6f8479a-eb3a-46ec-80db-1ae8a0395021.mp4
+2025-05-02 21:28:49,082 - INFO - game_state_helpers - Notify: Sharing to Discord...
+2025-05-02 21:28:49,082 - INFO - interaction_utils - Attempting to send data/replays\videos\c6f8479a-eb3a-46ec-80db-1ae8a0395021.mp4 to Discord webhook.
+2025-05-02 21:28:49,659 - INFO - interaction_utils - Successfully posted replay MP4 to Discord.
+2025-05-02 21:28:49,659 - INFO - game_state_helpers - Notify: Successfully shared to Discord!
+2025-05-02 21:28:51,755 - INFO - interaction_utils - Click detected on item with action: select_format_GIF at rect (790, 420, 80, 30)
+2025-05-02 21:28:51,755 - INFO - interaction_utils - Processing menu action: select_format_GIF
+2025-05-02 21:28:51,756 - INFO - game_state_helpers - Notify: Selected format: GIF
+2025-05-02 21:28:51,756 - INFO - interaction_utils - Selected format: GIF
+2025-05-02 21:28:52,524 - INFO - interaction_utils - Click detected on item with action: share_to_Discord_c6f8479a-eb3a-46ec-80db-1ae8a0395021 at rect (975, 660, 160, 35)
+2025-05-02 21:28:52,524 - INFO - interaction_utils - Processing menu action: share_to_Discord_c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:28:52,525 - WARNING - interaction_utils - Cached video not found, too small, or wrong format: data/replays\videos\c6f8479a-eb3a-46ec-80db-1ae8a0395021.mp4. Regenerating...
+2025-05-02 21:28:52,526 - INFO - game_state_helpers - Notify: Generating GIF file...
+2025-05-02 21:28:52,526 - INFO - replay_manager - Loading replay from data/replays\c6f8479a-eb3a-46ec-80db-1ae8a0395021.whr
+2025-05-02 21:28:52,527 - INFO - replay_manager - Removing existing extraction directory: data/replays\c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:28:52,530 - INFO - replay_manager - Extracting replay package to data/replays\c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:28:52,558 - INFO - replay_manager - Successfully loaded replay c6f8479a-eb3a-46ec-80db-1ae8a0395021 with 565 frames, duration: 17.0s
+2025-05-02 21:28:52,558 - INFO - replay_manager - Found 9 keyframes for video generation
+2025-05-02 21:28:52,559 - WARNING - replay_manager - Replay resolution metadata missing, falling back to first keyframe dimensions.
+2025-05-02 21:28:52,568 - INFO - replay_manager - Video dimensions set to: 960x540
+2025-05-02 21:28:52,579 - INFO - replay_manager - Creating GIF from 9 keyframes
+2025-05-02 21:28:53,639 - INFO - replay_manager - Generated GIF with 9 frames at data/replays\videos\c6f8479a-eb3a-46ec-80db-1ae8a0395021.gif
+2025-05-02 21:28:53,640 - INFO - game_state_helpers - Notify: Sharing to Discord...
+2025-05-02 21:28:53,640 - INFO - interaction_utils - Attempting to send data/replays\videos\c6f8479a-eb3a-46ec-80db-1ae8a0395021.gif to Discord webhook.
+2025-05-02 21:28:54,471 - INFO - interaction_utils - Successfully posted replay GIF to Discord.
+2025-05-02 21:28:54,471 - INFO - game_state_helpers - Notify: Successfully shared to Discord!
+2025-05-02 21:28:57,628 - INFO - interaction_utils - Click detected on item with action: select_platform_Share Link at rect (690, 560, 120, 30)
+2025-05-02 21:28:57,628 - INFO - interaction_utils - Processing menu action: select_platform_Share Link
+2025-05-02 21:28:57,629 - INFO - game_state_helpers - Notify: Selected platform: Share Link
+2025-05-02 21:28:57,629 - INFO - interaction_utils - Selected platform: Share Link
+2025-05-02 21:28:58,452 - INFO - interaction_utils - Click detected on item with action: share_to_Share Link_c6f8479a-eb3a-46ec-80db-1ae8a0395021 at rect (975, 660, 160, 35)
+2025-05-02 21:28:58,452 - INFO - interaction_utils - Processing menu action: share_to_Share Link_c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:28:58,453 - INFO - interaction_utils - Using previously generated video: data/replays\videos\c6f8479a-eb3a-46ec-80db-1ae8a0395021.gif
+2025-05-02 21:28:58,453 - INFO - game_state_helpers - Notify: Sharing to Share Link...
+2025-05-02 21:28:58,454 - INFO - replay_manager - Loading replay from data/replays\c6f8479a-eb3a-46ec-80db-1ae8a0395021.whr
+2025-05-02 21:28:58,454 - INFO - replay_manager - Removing existing extraction directory: data/replays\c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:28:58,457 - INFO - replay_manager - Extracting replay package to data/replays\c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:28:58,486 - INFO - replay_manager - Successfully loaded replay c6f8479a-eb3a-46ec-80db-1ae8a0395021 with 565 frames, duration: 17.0s
+2025-05-02 21:28:58,486 - INFO - interaction_utils - Attempting Google Drive upload for data/replays\videos\c6f8479a-eb3a-46ec-80db-1ae8a0395021.gif with title 'Whiffle Replay (Blake W - Classic - Score 145)'
+2025-05-02 21:28:58,489 - INFO - googleapiclient.discovery_cache - file_cache is only supported with oauth2client<4.0.0
+2025-05-02 21:28:58,492 - INFO - google_drive_utils - Uploading data/replays\videos\c6f8479a-eb3a-46ec-80db-1ae8a0395021.gif to Google Drive...
+2025-05-02 21:29:01,258 - INFO - interaction_utils - Successfully uploaded to Google Drive: https://drive.google.com/file/d/19_sYpGt5kDSHyPfCx3IEPoIey2Uav5v3/view?usp=drivesdk
+2025-05-02 21:29:01,259 - ERROR - interaction_utils - Unexpected error (AttributeError) copying to clipboard: module 'os' has no attribute 'uname'
+2025-05-02 21:29:01,260 - INFO - game_state_helpers - Notify: Link created (copy manually): https://drive.google.com/file/d/19_sYpGt5kDSHyPfCx3IEPoIey2Uav5v3/view?usp=drivesdk
+2025-05-02 21:29:23,288 - INFO - interaction_utils - Click detected on item with action: share_to_Share Link_c6f8479a-eb3a-46ec-80db-1ae8a0395021 at rect (975, 660, 160, 35)
+2025-05-02 21:29:23,288 - INFO - interaction_utils - Processing menu action: share_to_Share Link_c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:29:23,290 - INFO - interaction_utils - Using previously generated video: data/replays\videos\c6f8479a-eb3a-46ec-80db-1ae8a0395021.gif
+2025-05-02 21:29:23,290 - INFO - game_state_helpers - Notify: Sharing to Share Link...
+2025-05-02 21:29:23,290 - INFO - replay_manager - Loading replay from data/replays\c6f8479a-eb3a-46ec-80db-1ae8a0395021.whr
+2025-05-02 21:29:23,290 - INFO - replay_manager - Removing existing extraction directory: data/replays\c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:29:23,294 - INFO - replay_manager - Extracting replay package to data/replays\c6f8479a-eb3a-46ec-80db-1ae8a0395021
+2025-05-02 21:29:23,325 - INFO - replay_manager - Successfully loaded replay c6f8479a-eb3a-46ec-80db-1ae8a0395021 with 565 frames, duration: 17.0s
+2025-05-02 21:29:23,326 - INFO - interaction_utils - Attempting Google Drive upload for data/replays\videos\c6f8479a-eb3a-46ec-80db-1ae8a0395021.gif with title 'Whiffle Replay (Blake W - Classic - Score 145)'
+2025-05-02 21:29:23,327 - INFO - googleapiclient.discovery_cache - file_cache is only supported with oauth2client<4.0.0
+2025-05-02 21:29:23,329 - INFO - google_drive_utils - Uploading data/replays\videos\c6f8479a-eb3a-46ec-80db-1ae8a0395021.gif to Google Drive...
+2025-05-02 21:29:25,526 - INFO - interaction_utils - Successfully uploaded to Google Drive: https://drive.google.com/file/d/1Uxh4lGpjT5FEdMJw99OMoMqOIUBhMlqe/view?usp=drivesdk
+2025-05-02 21:29:25,526 - ERROR - interaction_utils - Unexpected error (AttributeError) copying to clipboard: module 'os' has no attribute 'uname'
+2025-05-02 21:29:25,529 - INFO - game_state_helpers - Notify: Link created (copy manually): https://drive.google.com/file/d/1Uxh4lGpjT5FEdMJw99OMoMqOIUBhMlqe/view?usp=drivesdk
+2025-05-02 21:29:37,016 - INFO - game_loop - Window closed by user.
+2025-05-02 21:29:37,016 - INFO - game_loop - Main game loop exited. Initiating cleanup sequence.
+2025-05-02 21:29:37,019 - INFO - cleanup_utils - Initiating clean exit sequence...
+2025-05-02 21:29:37,021 - INFO - cleanup_utils - Saving score (145) for Blake W on exit...
+2025-05-02 21:29:37,023 - INFO - game_state_helpers - Saving score Blake W: 145 Mode:classic
+2025-05-02 21:29:37,099 - INFO - screenshot_utils - Saved screenshot to high_score_proof\20250502_212937_Blake_W_145_classic.png
+2025-05-02 21:29:38,580 - INFO - screenshot_utils - Successfully uploaded screenshot to Supabase: https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_212937_Blake_W_145_classic.png
+2025-05-02 21:29:38,581 - INFO - game_state_helpers - Screenshot captured and uploaded: https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_212937_Blake_W_145_classic.png
+2025-05-02 21:29:38,582 - INFO - leaderboard - Including screenshot URL with score submission: https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_212937_Blake_W_145_classic.png
+2025-05-02 21:29:38,585 - INFO - leaderboard - Saved local leaderboard to data/scores/whiffle_leaderboard.json
+2025-05-02 21:29:38,585 - INFO - leaderboard - Score queued for batch submission: Blake W - 145 (classic)
+2025-05-02 21:29:38,586 - INFO - cleanup_utils - Flushing pending leaderboard scores...
+2025-05-02 21:29:38,586 - INFO - leaderboard - Attempting to flush 1 pending score(s) to online leaderboard
+2025-05-02 21:29:38,845 - INFO - leaderboard - Supabase POST successful (status 201)
+2025-05-02 21:29:38,846 - INFO - leaderboard - Successfully submitted 1 scores to online leaderboard
+2025-05-02 21:29:38,846 - INFO - cleanup_utils - Saving zones...
+2025-05-02 21:29:38,847 - INFO - game_state_helpers - Scoring zones saved to data/game/scoring_zones.json
+2025-05-02 21:29:38,848 - INFO - game_state_helpers - Notify: Zones Saved
+2025-05-02 21:29:38,848 - INFO - cleanup_utils - Saving achievements...
+2025-05-02 21:29:38,849 - INFO - cleanup_utils - Ending current session data log...
+2025-05-02 21:29:38,850 - INFO - data_logger - Ending current session.
+2025-05-02 21:29:38,850 - INFO - data_logger - Finalizing session. Score: 145, Duration: 244.1s
+2025-05-02 21:29:38,863 - INFO - data_logger - Saved 50 historical session records to 'data/sessions/session_stats_history.json'.
+2025-05-02 21:29:38,863 - INFO - cleanup_utils - Current session data finalized and history saved.
+2025-05-02 21:29:38,905 - INFO - cleanup_utils - Clean exit sequence complete. Terminating process.
+2025-05-02 21:29:38,905 - INFO - cleanup_utils - Initiating clean exit sequence...
+2025-05-02 21:29:38,906 - INFO - cleanup_utils - Saving score (145) for Blake W on exit...
+2025-05-02 21:29:38,906 - INFO - game_state_helpers - Saving score Blake W: 145 Mode:classic
+2025-05-02 21:29:38,980 - INFO - screenshot_utils - Saved screenshot to high_score_proof\20250502_212938_Blake_W_145_classic.png
+2025-05-02 21:29:40,304 - INFO - screenshot_utils - Successfully uploaded screenshot to Supabase: https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_212938_Blake_W_145_classic.png
+2025-05-02 21:29:40,308 - INFO - game_state_helpers - Screenshot captured and uploaded: https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_212938_Blake_W_145_classic.png
+2025-05-02 21:29:40,309 - INFO - leaderboard - Including screenshot URL with score submission: https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_212938_Blake_W_145_classic.png
+2025-05-02 21:29:40,317 - INFO - leaderboard - Saved local leaderboard to data/scores/whiffle_leaderboard.json
+2025-05-02 21:29:40,317 - INFO - leaderboard - Score queued for batch submission: Blake W - 145 (classic)
+2025-05-02 21:29:40,319 - INFO - cleanup_utils - Flushing pending leaderboard scores...
+2025-05-02 21:29:40,319 - INFO - leaderboard - Attempting to flush 1 pending score(s) to online leaderboard
+2025-05-02 21:29:40,537 - INFO - leaderboard - Supabase POST successful (status 201)
+2025-05-02 21:29:40,540 - INFO - leaderboard - Successfully submitted 1 scores to online leaderboard
+2025-05-02 21:29:40,541 - INFO - cleanup_utils - Saving zones...
+2025-05-02 21:29:40,547 - INFO - game_state_helpers - Scoring zones saved to data/game/scoring_zones.json
+2025-05-02 21:29:40,548 - INFO - game_state_helpers - Notify: Zones Saved
+2025-05-02 21:29:40,550 - INFO - cleanup_utils - Saving achievements...
+2025-05-02 21:29:40,552 - INFO - cleanup_utils - Ending current session data log...
+2025-05-02 21:29:40,554 - INFO - cleanup_utils - Current session data finalized and history saved.
+2025-05-02 21:29:40,559 - INFO - cleanup_utils - Clean exit sequence complete. Terminating process.
+
+F:\Whiffle\14.0>
