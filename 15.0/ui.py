@@ -557,6 +557,40 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
         cv2.rectangle(overlay, (0, 0), (current_width, BAR_HEIGHT), BAR_COLOR, -1)
         cv2.addWeighted(overlay, BAR_ALPHA, frame, 1 - BAR_ALPHA, 0, frame)
 
+    # Draw column images on both sides
+    try:
+        column_img = cv2.imread('assets/column.png', cv2.IMREAD_UNCHANGED)
+        if column_img is not None:
+            # Resize to 50px width and 800px height
+            column_img_resized = cv2.resize(column_img, (50, 800), interpolation=cv2.INTER_AREA)
+            y_offset = 99
+            left_x = 40
+            right_x = current_width - 40 - 50  # 40px from right edge, 50px wide
+            # Only draw if window is tall enough
+            if current_height >= y_offset + 800 and current_width >= 100:
+                # Draw left column
+                if column_img_resized.shape[2] == 4:  # If image has alpha channel
+                    alpha_mask = column_img_resized[:, :, 3] / 255.0
+                    for c in range(3):
+                        frame[y_offset:y_offset+800, left_x:left_x+50, c] = (
+                            alpha_mask * column_img_resized[:, :, c] +
+                            (1 - alpha_mask) * frame[y_offset:y_offset+800, left_x:left_x+50, c]
+                        ).astype(frame.dtype)
+                else:
+                    frame[y_offset:y_offset+800, left_x:left_x+50, :] = column_img_resized
+                # Draw right column
+                if column_img_resized.shape[2] == 4:
+                    alpha_mask = column_img_resized[:, :, 3] / 255.0
+                    for c in range(3):
+                        frame[y_offset:y_offset+800, right_x:right_x+50, c] = (
+                            alpha_mask * column_img_resized[:, :, c] +
+                            (1 - alpha_mask) * frame[y_offset:y_offset+800, right_x:right_x+50, c]
+                        ).astype(frame.dtype)
+                else:
+                    frame[y_offset:y_offset+800, right_x:right_x+50, :] = column_img_resized
+    except Exception as e:
+        logger.error(f"Error loading/displaying column images: {e}")
+
     # Prepare text
     try:
         player_name = game_state.get_current_player().name
