@@ -72,8 +72,8 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 
 1. **Clone the repository:**
     ```bash
-    git clone <your-repository-url>
-    cd <repository-folder>
+    git clone https://www.github.com/blakeweibling/whiffle
+    cd Whiffle
     ```
 
 2. **Install Dependencies:**
