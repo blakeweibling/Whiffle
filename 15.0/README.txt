@@ -1,5 +1,7 @@
 # Whiffle Tracker
 
+Version: v15.0
+
 ## Description
 
 Whiffle Tracker is a computer vision-based application designed to detect, track, and score Whiffle balls using a camera feed. It features advanced ball detection, multiple game modes, a robust replay system, online and local leaderboards, achievements, and social sharing. The application uses the YOLOv8 model for ball detection and OpenCV for video processing. The game supports multiple resolutions and dynamic window sizing for optimal display.

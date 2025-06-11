@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Whiffle"
-#define MyAppVersion "14.1"
+#define MyAppVersion "15.0"
 #define MyAppPublisher "Whiffle Co"
 #define MyAppURL "https://whiffle.co/"
 #define MyAppExeName "Whiffle.exe"
@@ -52,6 +52,9 @@ Source: "Whiffle\README.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Whiffle\data\game\scoring_zones.json"; DestDir: "{app}\data\game"; Flags: ignoreversion
 Source: "Whiffle\assets\splash.png"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "Whiffle\assets\splash2.png"; DestDir: "{app}\assets"; Flags: ignoreversion
+Source: "Whiffle\assets\top_bar.png"; DestDir: "{app}\assets"; Flags: ignoreversion
+Source: "Whiffle\assets\menu_bar.png"; DestDir: "{app}\assets"; Flags: ignoreversion
+Source: "Whiffle\assets\column.png"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "Whiffle\assets\last_frame.png"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "Whiffle\assets\pinball_icon.png"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "Whiffle\data\scores\whiffle_leaderboard.json"; DestDir: "{app}\data\scores"; Flags: ignoreversion
