@@ -33,6 +33,8 @@ except ImportError:
     def clear_ui_caches():
         pass  # Stub function if import fails
 
+# Add at the top of the file after imports
+_cleanup_performed = False
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +49,12 @@ def clean_exit(
     Cleanly exit the game, saving state (scores, zones, achievements, stats),
     and releasing resources.
     """
+    global _cleanup_performed
+    if _cleanup_performed:
+        logger.debug("Cleanup already performed, skipping duplicate cleanup.")
+        return
+        
+    _cleanup_performed = True
     logger.info("Initiating clean exit sequence...")
 
     # --- Save Game State ---

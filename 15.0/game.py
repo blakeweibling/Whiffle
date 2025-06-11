@@ -4,21 +4,55 @@ Main entry point for the Whiffle Tracker project.
 Initializes the game and runs the main loop.
 """
 
-import logging
 import os
+import sys
+import logging
 import gc
 import threading
 import time
+import warnings
+import contextlib
+
+# Configure logging to filter out libpng warnings
+class LibPNGFilter(logging.Filter):
+    def filter(self, record):
+        return not record.getMessage().startswith('libpng warning: iCCP:')
+
+# Set up logging with filter
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+
+# Add filter to root logger
+root_logger = logging.getLogger()
+libpng_filter = LibPNGFilter()
+root_logger.addFilter(libpng_filter)
+
+# Also suppress warnings at the Python level
+warnings.filterwarnings("ignore", message=".*iCCP.*")
+
+# Create a context manager to suppress stderr
+@contextlib.contextmanager
+def suppress_stderr():
+    stderr = sys.stderr
+    try:
+        sys.stderr = open(os.devnull, 'w')
+        yield
+    finally:
+        sys.stderr = stderr
 
 import cv2
 import numpy as np
 import pygame  # Import pygame
 from dotenv import load_dotenv
 
-# Initialize pygame
-pygame.init()
-pygame.display.init()  # Explicitly initialize the video subsystem
-pygame.display.set_mode((1, 1), pygame.HIDDEN)  # Create a small hidden display
+# Initialize pygame with stderr suppression
+with suppress_stderr():
+    pygame.init()
+    pygame.display.init()  # Explicitly initialize the video subsystem
+    pygame.display.set_mode((1, 1), pygame.HIDDEN)  # Create a small hidden display
 
 # Updated imports: clean_exit from utils, mouse_callback from utils
 from cleanup_utils import clean_exit
@@ -33,12 +67,6 @@ from game_state_utils import save_score  # For exception handling
 from ui_screens import show_splash_screen  # Assuming this is correct
 from utils import mouse_callback  # Assuming mouse_callback remains in utils
 from loading_screen import wrap_initialization  # Import the loading screen wrapper
-
-# Set up logging
-logging.basicConfig(
-    level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
-)
-logger = logging.getLogger(__name__)
 
 
 def validate_config(supabase_url: str, supabase_key: str) -> None:
