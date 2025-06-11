@@ -15,7 +15,8 @@ def ensure_supabase_bucket_exists(
 ) -> bool:
     """
     Ensure that the specified bucket exists in Supabase Storage.
-    Will create the bucket if it doesn't exist.
+    Will check if bucket exists and return True if it does.
+    If bucket doesn't exist, will attempt to create it but continue if creation fails.
 
     Args:
         supabase_url: URL of the Supabase instance.
@@ -32,6 +33,10 @@ def ensure_supabase_bucket_exists(
             "Authorization": f"Bearer {supabase_key}",
             "Content-Type": "application/json",
         }
+        
+        # Debug log the request details (excluding the actual key)
+        logger.debug(f"Checking bucket existence with URL: {supabase_url}/storage/v1/bucket")
+        logger.debug(f"Using headers: {', '.join(headers.keys())}")
 
         # First check if bucket exists
         list_url = f"{supabase_url}/storage/v1/bucket"
@@ -42,21 +47,31 @@ def ensure_supabase_bucket_exists(
             verify=False,  # Consistent with existing code that disables verification
         )
 
+        # Debug log the response
+        logger.debug(f"List buckets response status: {response.status_code}")
+        if response.status_code != 200:
+            logger.debug(f"List buckets response body: {response.text}")
+
         if response.status_code == 200:
             buckets = response.json()
+            logger.debug(f"Found {len(buckets)} buckets in storage")
+            for bucket in buckets:
+                logger.debug(f"Found bucket: {bucket.get('name')} (public: {bucket.get('public', 'unknown')})")
+            
             if any(bucket["name"] == bucket_name for bucket in buckets):
                 logger.info(
                     f"Bucket '{bucket_name}' already exists in Supabase Storage"
                 )
                 return True
 
-        # Bucket doesn't exist, create it
+        # Bucket doesn't exist, try to create it
         create_url = f"{supabase_url}/storage/v1/bucket"
         payload = {
             "name": bucket_name,
             "public": True,  # Makes bucket publicly accessible
         }
 
+        logger.debug(f"Attempting to create bucket with payload: {payload}")
         response = requests.post(
             create_url,
             headers=headers,
@@ -65,14 +80,42 @@ def ensure_supabase_bucket_exists(
             verify=False,  # Consistent with existing code that disables verification
         )
 
+        # Debug log the create response
+        logger.debug(f"Create bucket response status: {response.status_code}")
+        if response.status_code not in (200, 201):
+            logger.debug(f"Create bucket response body: {response.text}")
+
         if response.status_code == 200 or response.status_code == 201:
             logger.info(
                 f"Successfully created bucket '{bucket_name}' in Supabase Storage"
             )
             return True
         else:
-            logger.error(
-                f"Failed to create bucket '{bucket_name}': {response.status_code} - {response.text}"
+            # If we can't create the bucket, check if it exists again (it might have been created by another process)
+            logger.debug("Create failed, checking bucket existence again...")
+            response = requests.get(
+                list_url,
+                headers=headers,
+                timeout=10,
+                verify=False,
+            )
+            
+            # Debug log the second check response
+            logger.debug(f"Second check response status: {response.status_code}")
+            if response.status_code != 200:
+                logger.debug(f"Second check response body: {response.text}")
+            
+            if response.status_code == 200:
+                buckets = response.json()
+                if any(bucket["name"] == bucket_name for bucket in buckets):
+                    logger.info(
+                        f"Bucket '{bucket_name}' exists in Supabase Storage (created by another process)"
+                    )
+                    return True
+            
+            logger.warning(
+                f"Failed to create bucket '{bucket_name}': {response.status_code} - {response.text}. "
+                "The bucket may need to be created manually in the Supabase dashboard."
             )
             return False
 

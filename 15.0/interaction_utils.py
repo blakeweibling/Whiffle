@@ -171,7 +171,8 @@ def _get_mouse_event_handlers() -> MouseEventHandlers:
 
     # Register username input handler
     handlers[CurrentGameState.GETTING_PLAYER_NAME] = {
-        cv2.EVENT_LBUTTONDOWN: username_input_handler
+        cv2.EVENT_LBUTTONDOWN: username_input_handler,
+        cv2.EVENT_MOUSEMOVE: lambda e, x, y, g: False  # Silently ignore mouse move events
     }
 
     return handlers
