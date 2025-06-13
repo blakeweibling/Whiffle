@@ -57,7 +57,7 @@ class UIConstants:
     """Constants for user interface and display settings."""
 
     # Colors in BGR format for OpenCV (Blue, Green, Red)
-    GREEN: Tuple[int, int, int] = (0, 255, 0)
+    GREEN: Tuple[int, int, int] = (0, 165, 255) # BGR format (Blue=0, Green=165, Red=255) (orange)
     RED: Tuple[int, int, int] = (0, 0, 255)
     YELLOW: Tuple[int, int, int] = (0, 255, 255)
     WHITE: Tuple[int, int, int] = (255, 255, 255)

@@ -153,8 +153,8 @@ class Leaderboard:
                 and isinstance(entry.get("mode"), str)
                 and entry.get("mode") in VALID_MODES
             ):
-
                 # Create a clean entry with only the fields expected by the API
+                # Always include screenshot_url field, set to None if not present
                 clean_entry = {
                     "player_name": entry["player_name"],
                     "score": entry["score"],
@@ -162,11 +162,8 @@ class Leaderboard:
                     "created_at": entry.get(
                         "created_at", datetime.utcnow().isoformat()
                     ),
+                    "screenshot_url": entry.get("screenshot_url")  # Will be None if not present
                 }
-
-                # Only add screenshot_url if it's present and a string
-                if isinstance(entry.get("screenshot_url"), str):
-                    clean_entry["screenshot_url"] = entry["screenshot_url"]
 
                 validated_data.append(clean_entry)
             else:

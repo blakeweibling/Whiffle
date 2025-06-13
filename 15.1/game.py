@@ -18,17 +18,47 @@ class LibPNGFilter(logging.Filter):
     def filter(self, record):
         return not record.getMessage().startswith('libpng warning: iCCP:')
 
-# Set up logging with filter
+# Filter for repetitive debug messages
+class RepetitiveDebugFilter(logging.Filter):
+    def __init__(self):
+        super().__init__()
+        self.last_messages = {}
+        self.message_count = {}
+        self.threshold = 3  # Number of times a message can repeat before being filtered
+
+    def filter(self, record):
+        msg = record.getMessage()
+        if record.levelno != logging.DEBUG:
+            return True
+            
+        # Check if this is a repetitive message
+        if msg in self.last_messages:
+            self.message_count[msg] = self.message_count.get(msg, 0) + 1
+            if self.message_count[msg] > self.threshold:
+                return False
+        else:
+            self.last_messages[msg] = time.time()
+            self.message_count[msg] = 1
+            
+        return True
+
+# Set up logging with filters
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,  # Default to INFO level
     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
-# Add filter to root logger
+# Add filters to root logger
 root_logger = logging.getLogger()
 libpng_filter = LibPNGFilter()
+repetitive_filter = RepetitiveDebugFilter()
 root_logger.addFilter(libpng_filter)
+root_logger.addFilter(repetitive_filter)
+
+# Set specific modules to DEBUG level if needed
+logging.getLogger('game_loop').setLevel(logging.DEBUG)
+logging.getLogger('ball_tracker').setLevel(logging.DEBUG)
 
 # Also suppress warnings at the Python level
 warnings.filterwarnings("ignore", message=".*iCCP.*")

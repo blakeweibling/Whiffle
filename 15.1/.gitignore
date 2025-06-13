@@ -15,3 +15,6 @@
 /packagedforinstall
 /archive
 /Output
+/UPX
+/upx
+upx.exe
