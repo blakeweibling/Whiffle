@@ -1,0 +1,2568 @@
+{
+    "survival": [
+        {
+            "player_name": "Blake W",
+            "score": 300,
+            "mode": "survival",
+            "created_at": "2025-04-10T02:19:51.507547"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 300,
+            "mode": "survival",
+            "created_at": "2025-04-10T02:20:08.130609"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 193,
+            "mode": "survival",
+            "created_at": "2025-04-10T02:38:52.831613"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 405,
+            "mode": "survival",
+            "created_at": "2025-04-10T03:29:19.752528"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 405,
+            "mode": "survival",
+            "created_at": "2025-04-10T03:34:10.162307"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 405,
+            "mode": "survival",
+            "created_at": "2025-04-10T03:34:25.011983"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1740,
+            "mode": "survival",
+            "created_at": "2025-04-15T02:55:44.122667"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 3300,
+            "mode": "survival",
+            "created_at": "2025-04-15T02:59:19.752742"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 515,
+            "mode": "survival",
+            "created_at": "2025-04-15T03:02:12.705383"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 542,
+            "mode": "survival",
+            "created_at": "2025-04-15T03:12:51.986185"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 541,
+            "mode": "survival",
+            "created_at": "2025-04-15T03:12:58.185537"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 543,
+            "mode": "survival",
+            "created_at": "2025-04-15T03:13:22.382344"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 543,
+            "mode": "survival",
+            "created_at": "2025-04-15T03:14:25.861352"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 542,
+            "mode": "survival",
+            "created_at": "2025-04-15T03:22:37.627838"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 511,
+            "mode": "survival",
+            "created_at": "2025-04-15T03:22:49.437960"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 542,
+            "mode": "survival",
+            "created_at": "2025-04-15T03:25:49.932359"
+        }
+    ],
+    "classic": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:15:07.764277"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:15:08.068553"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T18:19:03.099662"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T19:12:23.461874"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T19:13:00.289248"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T20:04:46.578130"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T20:20:40.299744"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T20:21:31.184515"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T20:36:31.880871"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "classic",
+            "created_at": "2025-04-06T21:23:42.559025"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-07T17:28:53.017132"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 240,
+            "mode": "classic",
+            "created_at": "2025-04-07T17:30:29.955129"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-07T18:09:48.507211"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T02:49:33.321457"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T02:59:02.040535"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T03:14:18.154678"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T03:25:07.658028"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T03:27:28.292326"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T03:35:31.521674"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T03:44:35.500081"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-04-08T03:45:33.266553"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 53,
+            "mode": "classic",
+            "created_at": "2025-04-08T23:46:40.087918"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 61,
+            "mode": "classic",
+            "created_at": "2025-04-08T23:58:46.940326"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 355,
+            "mode": "classic",
+            "created_at": "2025-04-09T00:07:00.135991"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 191,
+            "mode": "classic",
+            "created_at": "2025-04-09T00:10:30.671619"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 163,
+            "mode": "classic",
+            "created_at": "2025-04-09T02:30:10.212001"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 61,
+            "mode": "classic",
+            "created_at": "2025-04-09T03:15:00.509529"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 139,
+            "mode": "classic",
+            "created_at": "2025-04-09T03:34:08.344959"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 276,
+            "mode": "classic",
+            "created_at": "2025-04-09T03:37:08.406617"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 138,
+            "mode": "classic",
+            "created_at": "2025-04-10T00:24:33.247926"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 138,
+            "mode": "classic",
+            "created_at": "2025-04-10T00:26:11.358978"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 138,
+            "mode": "classic",
+            "created_at": "2025-04-10T02:18:35.457822"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 345,
+            "mode": "classic",
+            "created_at": "2025-04-10T02:37:23.673920"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 531,
+            "mode": "classic",
+            "created_at": "2025-04-10T02:44:58.692774"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 402,
+            "mode": "classic",
+            "created_at": "2025-04-10T03:26:52.033879"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 401,
+            "mode": "classic",
+            "created_at": "2025-04-10T03:31:55.033807"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 150,
+            "mode": "classic",
+            "created_at": "2025-04-14T09:52:28.335560"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 200,
+            "mode": "classic",
+            "created_at": "2025-04-14T20:36:25.395897"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 400,
+            "mode": "classic",
+            "created_at": "2025-04-14T20:41:12.451450"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 150,
+            "mode": "classic",
+            "created_at": "2025-04-14T23:38:30.650065"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 514,
+            "mode": "classic",
+            "created_at": "2025-04-14T23:40:51.552002"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 817,
+            "mode": "classic",
+            "created_at": "2025-04-15T02:40:10.307233"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 667,
+            "mode": "classic",
+            "created_at": "2025-04-15T02:48:56.769068"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 511,
+            "mode": "classic",
+            "created_at": "2025-04-15T02:52:14.254585"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 511,
+            "mode": "classic",
+            "created_at": "2025-04-15T02:53:42.649697"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 517,
+            "mode": "classic",
+            "created_at": "2025-04-15T02:57:26.320561"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 517,
+            "mode": "classic",
+            "created_at": "2025-04-15T02:58:51.895916"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 514,
+            "mode": "classic",
+            "created_at": "2025-04-15T03:08:46.050061"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 541,
+            "mode": "classic",
+            "created_at": "2025-04-15T03:13:34.232761"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 541,
+            "mode": "classic",
+            "created_at": "2025-04-15T03:14:07.771959"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 542,
+            "mode": "classic",
+            "created_at": "2025-04-15T03:22:34.434367"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 541,
+            "mode": "classic",
+            "created_at": "2025-04-15T03:25:27.536292"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 210,
+            "mode": "classic",
+            "created_at": "2025-04-15T03:54:21.535602"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 543,
+            "mode": "classic",
+            "created_at": "2025-04-15T04:07:22.911583"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 514,
+            "mode": "classic",
+            "created_at": "2025-04-15T09:38:04.836879"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 511,
+            "mode": "classic",
+            "created_at": "2025-04-15T09:39:20.619836"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 547,
+            "mode": "classic",
+            "created_at": "2025-04-15T09:41:32.243735"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 543,
+            "mode": "classic",
+            "created_at": "2025-04-15T09:44:29.222423"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 543,
+            "mode": "classic",
+            "created_at": "2025-04-15T09:57:02.815549"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 543,
+            "mode": "classic",
+            "created_at": "2025-04-15T09:58:39.250073"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 541,
+            "mode": "classic",
+            "created_at": "2025-04-15T10:00:43.639502"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 542,
+            "mode": "classic",
+            "created_at": "2025-04-15T10:02:27.025768"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 300,
+            "mode": "classic",
+            "created_at": "2025-04-16T12:54:39.864761"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 300,
+            "mode": "classic",
+            "created_at": "2025-04-16T15:39:19.416352"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 300,
+            "mode": "classic",
+            "created_at": "2025-04-16T15:39:34.732303"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 543,
+            "mode": "classic",
+            "created_at": "2025-04-17T03:03:30.592053"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 541,
+            "mode": "classic",
+            "created_at": "2025-04-17T03:04:40.748561"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 511,
+            "mode": "classic",
+            "created_at": "2025-04-17T03:06:08.635320"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 541,
+            "mode": "classic",
+            "created_at": "2025-04-17T03:07:26.121853"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 541,
+            "mode": "classic",
+            "created_at": "2025-04-17T03:24:00.516328"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 667,
+            "mode": "classic",
+            "created_at": "2025-04-17T13:17:02.824768"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 662,
+            "mode": "classic",
+            "created_at": "2025-04-17T13:19:45.868586"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 517,
+            "mode": "classic",
+            "created_at": "2025-04-17T13:22:30.288460"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 511,
+            "mode": "classic",
+            "created_at": "2025-04-17T13:26:45.830868"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 511,
+            "mode": "classic",
+            "created_at": "2025-04-17T13:28:22.341611"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 661,
+            "mode": "classic",
+            "created_at": "2025-04-17T13:41:54.350683"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 661,
+            "mode": "classic",
+            "created_at": "2025-04-17T13:45:43.467326"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 692,
+            "mode": "classic",
+            "created_at": "2025-04-17T13:57:30.566184"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 694,
+            "mode": "classic",
+            "created_at": "2025-04-17T13:58:46.097476"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 691,
+            "mode": "classic",
+            "created_at": "2025-04-17T14:03:05.825702"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 696,
+            "mode": "classic",
+            "created_at": "2025-04-17T14:17:14.436708"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 696,
+            "mode": "classic",
+            "created_at": "2025-04-17T14:18:47.363910"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 406,
+            "mode": "classic",
+            "created_at": "2025-04-17T14:47:59.873232"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 406,
+            "mode": "classic",
+            "created_at": "2025-04-17T14:49:19.400184"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1588,
+            "mode": "classic",
+            "created_at": "2025-04-17T14:55:26.784667"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1144,
+            "mode": "classic",
+            "created_at": "2025-04-17T14:57:37.060724"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1325,
+            "mode": "classic",
+            "created_at": "2025-04-17T15:13:44.846867"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1104,
+            "mode": "classic",
+            "created_at": "2025-04-17T15:17:59.365878"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 541,
+            "mode": "classic",
+            "created_at": "2025-04-17T15:19:03.097542"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 34,
+            "mode": "classic",
+            "created_at": "2025-04-18T14:33:54.220281"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 163,
+            "mode": "classic",
+            "created_at": "2025-04-18T14:34:53.288954"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 163,
+            "mode": "classic",
+            "created_at": "2025-04-18T14:39:10.059521"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 163,
+            "mode": "classic",
+            "created_at": "2025-04-18T14:41:42.682016"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 163,
+            "mode": "classic",
+            "created_at": "2025-04-18T14:45:48.756358",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_074547_Blake_W_163_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 178,
+            "mode": "classic",
+            "created_at": "2025-04-18T22:17:17.817087",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_151716_Blake_W_178_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 178,
+            "mode": "classic",
+            "created_at": "2025-04-18T22:19:28.075445",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_151927_Blake_W_178_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 398,
+            "mode": "classic",
+            "created_at": "2025-04-18T22:22:35.350232",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_152234_Blake_W_398_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 206,
+            "mode": "classic",
+            "created_at": "2025-04-18T22:24:47.980205",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_152447_Blake_W_206_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 132,
+            "mode": "classic",
+            "created_at": "2025-04-18T22:28:11.485310",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_152810_Blake_W_132_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 243,
+            "mode": "classic",
+            "created_at": "2025-04-18T22:31:31.104249",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_153129_Blake_W_243_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 242,
+            "mode": "classic",
+            "created_at": "2025-04-18T22:34:20.799614",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_153420_Blake_W_242_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 362,
+            "mode": "classic",
+            "created_at": "2025-04-18T22:39:44.405590",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_153943_Blake_W_362_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 363,
+            "mode": "classic",
+            "created_at": "2025-04-18T22:39:54.694953",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_153953_Blake_W_363_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 301,
+            "mode": "classic",
+            "created_at": "2025-04-18T23:41:20.000485",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_164118_Blake_W_301_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 440,
+            "mode": "classic",
+            "created_at": "2025-04-18T23:49:35.595376",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_164934_Blake_W_440_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 652,
+            "mode": "classic",
+            "created_at": "2025-04-18T23:53:24.712813",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_165323_Blake_W_652_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1208,
+            "mode": "classic",
+            "created_at": "2025-04-18T23:57:01.497496",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_165700_Blake_W_1208_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 908,
+            "mode": "classic",
+            "created_at": "2025-04-19T00:04:40.500372",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_170439_Blake_W_908_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 550,
+            "mode": "classic",
+            "created_at": "2025-04-19T00:08:24.549906",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_170823_Blake_W_550_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 192,
+            "mode": "classic",
+            "created_at": "2025-04-19T00:13:57.598423",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_171356_Blake_W_192_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 191,
+            "mode": "classic",
+            "created_at": "2025-04-19T00:20:22.504772",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_172021_Blake_W_191_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 192,
+            "mode": "classic",
+            "created_at": "2025-04-19T00:22:25.098544",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_172223_Blake_W_192_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 3162,
+            "mode": "classic",
+            "created_at": "2025-04-19T00:28:33.821305",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_172832_Blake_W_3162_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1002,
+            "mode": "classic",
+            "created_at": "2025-04-19T00:29:19.107747"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1002,
+            "mode": "classic",
+            "created_at": "2025-04-19T00:32:59.366911",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_173258_Blake_W_1002_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1002,
+            "mode": "classic",
+            "created_at": "2025-04-19T00:34:43.553993",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_173442_Blake_W_1002_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T01:46:52.439728",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_184651_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T03:50:49.398013",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_205048_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "BlkeW",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T03:57:25.700038",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_205724_BlkeW_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T03:58:31.894634",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_205830_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T04:03:35.054523",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_210333_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 901,
+            "mode": "classic",
+            "created_at": "2025-04-19T04:05:13.058295",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_210511_Blake_W_901_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 901,
+            "mode": "classic",
+            "created_at": "2025-04-19T04:06:12.419133",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_210610_Blake_W_901_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T04:08:19.641596",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_210818_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T04:10:58.156608",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_211056_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T04:13:42.299131",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_211340_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T04:17:47.119853",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_211744_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T04:20:38.366084",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_212036_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T04:48:47.564574",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_214846_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 901,
+            "mode": "classic",
+            "created_at": "2025-04-19T04:53:55.775549",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250418_215353_Blake_W_901_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T10:58:02.488415",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_035801_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T11:02:26.031002",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_040224_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T11:04:49.482060",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_040448_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T11:41:07.758994",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_044106_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T11:43:24.383537",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_044323_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T11:47:16.577647",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_044715_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 901,
+            "mode": "classic",
+            "created_at": "2025-04-19T12:06:44.422278",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_050643_Blake_W_901_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T12:20:29.530554",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_052027_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "BlakeW",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T12:53:55.776390",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_055354_BlakeW_1302_classic.png"
+        },
+        {
+            "player_name": "Blake E",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T12:55:03.502598",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_055502_Blake_E_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T13:00:12.784677",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_060011_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T13:29:22.699878",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_062921_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T13:31:05.726137",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_063103_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T13:35:09.146017",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_063507_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T13:41:57.455001",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_064155_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T13:47:50.783561",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_064749_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1302,
+            "mode": "classic",
+            "created_at": "2025-04-19T14:12:28.056652",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250419_071226_Blake_W_1302_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 498,
+            "mode": "classic",
+            "created_at": "2025-04-21T00:39:14.921233",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250420_173913_Blake_W_498_classic.png"
+        },
+        {
+            "player_name": "BlakeW",
+            "score": 498,
+            "mode": "classic",
+            "created_at": "2025-04-21T00:52:41.205802",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250420_175240_BlakeW_498_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 513,
+            "mode": "classic",
+            "created_at": "2025-04-21T03:03:10.309552",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250420_200308_Blake_W_513_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 2,
+            "mode": "classic",
+            "created_at": "2025-04-21T15:14:47.992299",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250421_081447_Blake_W_2_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 498,
+            "mode": "classic",
+            "created_at": "2025-04-22T03:06:02.753703",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250421_200600_Blake_W_498_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 518,
+            "mode": "classic",
+            "created_at": "2025-04-22T03:09:14.806079",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250421_200913_Blake_W_518_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 2604,
+            "mode": "classic",
+            "created_at": "2025-04-23T09:13:45.412154",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250423_021344_Blake_W_2604_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 2604,
+            "mode": "classic",
+            "created_at": "2025-04-23T09:13:47.116393",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250423_021346_Blake_W_2604_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 2,
+            "mode": "classic",
+            "created_at": "2025-04-23T20:34:27.466497",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/versus/20250423_133426_Blake_W_2_versus.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 2,
+            "mode": "classic",
+            "created_at": "2025-04-23T20:34:29.060270",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/versus/20250423_133428_Blake_W_2_versus.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 100,
+            "mode": "classic",
+            "created_at": "2025-05-01T19:10:19.227030",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250501_121018_Blake_W_100_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 100,
+            "mode": "classic",
+            "created_at": "2025-05-01T19:10:21.105582",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250501_121020_Blake_W_100_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T16:22:55.792582",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_092254_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T16:22:57.480086",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_092256_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T16:48:55.042182",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_094853_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T16:50:38.109136",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_095036_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T16:50:39.685430",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_095038_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T16:54:49.750283",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_095448_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T16:54:51.504590",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_095450_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T16:56:29.441145",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_095627_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T16:56:31.089737",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_095629_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T16:59:19.384930",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_095917_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T16:59:20.961714",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_095919_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:01:42.547494",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_100141_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:01:44.714206",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_100142_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:08:17.351206",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_100816_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:08:19.119495",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_100817_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:09:21.371300",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_100920_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:09:22.794507",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_100921_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:16:29.545204",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_101628_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:16:31.240670",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_101629_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:20:46.122424",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_102044_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:20:47.681766",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_102046_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:26:29.124449",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_102627_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:40:28.309401",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_104027_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 130,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:40:29.811384",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_104028_Blake_W_130_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:46:07.230670",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_104605_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-02T17:46:09.020881",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_104607_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-02T18:02:34.178022",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_110232_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-02T18:05:11.206737",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_110509_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-02T18:09:35.754109",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_110934_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T04:15:44.002419",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_211542_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T04:17:50.389976"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T04:19:14.126937"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T04:19:17.124963"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T04:29:38.582070",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_212937_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T04:29:40.309465",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_212938_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T04:35:00.492947",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_213459_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T04:35:02.316578",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_213500_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T04:37:55.766029",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_213754_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T04:52:10.655527",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_215209_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T04:56:56.961688",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250502_215655_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T14:37:45.474759",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250503_073744_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T14:37:47.221595",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250503_073746_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-03T14:42:34.092963",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250503_074232_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 240,
+            "mode": "classic",
+            "created_at": "2025-05-03T14:48:22.081399",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250503_074820_Blake_W_240_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 240,
+            "mode": "classic",
+            "created_at": "2025-05-03T14:48:23.788835",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250503_074822_Blake_W_240_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-05-03T15:03:25.732935",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250503_080324_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-05-03T15:08:54.544470",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250503_080853_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-05-03T15:18:26.986027",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250503_081825_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-05-03T15:35:09.381876",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250503_083508_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-05-03T15:45:00.323566",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250503_084458_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-05-04T05:42:27.723892",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250503_224226_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-05-05T02:21:27.594166",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250504_192126_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-05-05T02:23:09.100991",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250504_192306_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-07T01:13:10.052111",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250506_181308_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-07T01:13:11.776501",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250506_181310_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-09T12:02:58.161649",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250509_050256_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-10T13:41:54.156751",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250510_064152_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-10T13:41:56.342335",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250510_064154_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-10T13:47:29.245949",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250510_064727_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-22T01:00:12.675614",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250521_180011_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-05-22T01:00:15.045995",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250521_180013_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "blake w",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T15:06:58.097256",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_080657_blake_w_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T19:59:33.212082",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_125932_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T19:59:34.499311",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_125933_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:09:35.170189",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_130934_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:09:36.197496",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_130935_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:13:56.059569",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_131355_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:13:57.150540",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_131356_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:16:49.112664",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_131648_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:16:50.000077",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_131649_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:24:50.385564",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_132449_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:24:51.513329",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_132450_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:28:11.181473",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_132810_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:30:56.476646",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_133055_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:30:57.675428",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_133056_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:35:40.161110",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_133539_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T20:35:40.922555",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_133540_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:06:53.921799",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_140653_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:06:54.762795",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_140654_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:08:09.963329",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_140809_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:08:10.873963",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_140810_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:11:20.618238",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_141119_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:11:21.284507",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_141120_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:12:37.313392",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_141236_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:12:38.164191",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_141237_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:16:28.254248",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_141627_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:16:29.353633",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_141628_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:21:22.882061",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_142122_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:21:23.936410",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_142123_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:23:44.513093",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_142344_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:24:11.597932"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:24:14.267141"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:40:23.583630",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_144023_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:40:24.295367"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:46:23.128668",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_144622_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:46:24.150517",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_144623_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:49:24.503091",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_144923_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:49:25.589277",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_144924_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:51:19.098494",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_145118_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:51:19.843813",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_145119_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:53:23.527490",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_145322_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T21:53:24.284667",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_145323_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T22:02:31.231208",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_150230_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T22:02:32.941468",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_150231_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-09T22:07:18.968852",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_150718_Blake_95_classic.png"
+        },
+        {
+            "player_name": "Player 1",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-09T22:08:27.635194",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_150827_Player_1_95_classic.png"
+        },
+        {
+            "player_name": "Player 1",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-09T22:08:28.369622"
+        },
+        {
+            "player_name": "Todd Crosby 123",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T22:14:44.577050",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250609_151444_Todd_Crosby_123_145_classic.png"
+        },
+        {
+            "player_name": "Todd Crosby 123",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-09T22:14:45.099887"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T11:25:54.296898",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_042552_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T11:25:56.221263",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_042554_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T11:37:14.331038",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_043712_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T11:37:15.713849",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_043714_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T11:54:38.868555",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_045437_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T11:54:40.378520",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_045439_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T11:56:29.400840",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_045627_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T11:56:30.915793",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_045629_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T11:57:43.706365",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_045742_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T11:57:45.189400",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_045744_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T12:46:48.597698",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_054647_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T12:46:49.497729",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_054648_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:07:05.274897",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_060704_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:07:06.248874",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_060705_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:16:19.350474",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_061618_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:16:20.264621",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_061619_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:25:44.960434",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_062544_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:25:45.969726",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_062545_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:27:04.179455",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_062703_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:27:05.182887",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_062704_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:31:43.582231",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_063142_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:31:44.316673",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_063143_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:36:17.331586",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_063616_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:36:18.593848",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_063617_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:37:25.808367",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_063725_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:37:26.589699",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_063726_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:40:16.103463",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_064015_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:40:17.274444",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_064016_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:43:04.352444",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_064303_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:43:05.356806",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_064304_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:46:44.967334",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_064644_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:46:45.815355",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_064645_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:50:02.415366",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_065000_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:50:03.447602",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_065002_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:54:55.936608",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_065455_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:54:56.992897",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_065456_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T13:59:29.366081",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_065928_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:17:19.536194",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_071718_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:17:20.386427",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_071719_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:18:25.062695",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_071824_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:18:26.258550",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_071825_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:19:43.100435",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_071942_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:19:43.827717",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_071943_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "katie h",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:22:45.846932",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_072245_katie_h_145_classic.png"
+        },
+        {
+            "player_name": "katie h",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:22:46.591362",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_072246_katie_h_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:26:18.725472",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_072617_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:26:19.413610",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_072618_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:27:56.055008",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_072755_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:27:58.735633",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_072756_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:28:26.417006",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_072825_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-10T14:28:27.322946",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_072826_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T23:52:23.694928",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_165222_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T23:52:25.221122",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_165224_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-10T23:55:11.634805",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_165510_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-10T23:55:13.030553",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_165511_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-10T23:57:29.574081",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_165728_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-10T23:57:31.176165",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_165729_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T23:59:10.256763",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_165909_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-10T23:59:11.667884",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_165910_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-11T00:02:43.267725",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_170241_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-11T00:02:44.671902",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_170243_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-11T00:03:53.902189",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_170352_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-11T00:03:55.301407",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_170354_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-11T00:14:39.239739",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_171437_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-11T00:14:40.743613",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_171439_Blake_W_95_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-11T00:29:00.310306",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_172859_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-11T00:30:25.781638",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250610_173024_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-13T15:29:43.757520",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250613_082942_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "classic",
+            "created_at": "2025-06-13T15:43:12.882429",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250613_084311_Blake_W_145_classic.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "classic",
+            "created_at": "2025-06-13T15:47:59.071844",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20250613_084757_Blake_W_95_classic.png"
+        }
+    ],
+    "practice": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "practice",
+            "created_at": "2025-04-06T19:14:01.015090"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1447,
+            "mode": "practice",
+            "created_at": "2025-04-17T14:56:56.368253"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 111,
+            "mode": "practice",
+            "created_at": "2025-04-18T14:34:08.302628"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 163,
+            "mode": "practice",
+            "created_at": "2025-04-18T14:39:52.398061"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 362,
+            "mode": "practice",
+            "created_at": "2025-04-18T22:39:49.696644",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/practice/20250418_153948_Blake_W_362_practice.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 654,
+            "mode": "practice",
+            "created_at": "2025-04-18T23:53:33.646953",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/practice/20250418_165332_Blake_W_654_practice.png"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "practice",
+            "created_at": "2025-05-03T04:15:55.092987"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 95,
+            "mode": "practice",
+            "created_at": "2025-06-09T21:23:50.601484"
+        }
+    ],
+    "retro": [
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T18:19:21.204571"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T19:13:35.996049"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 10,
+            "mode": "retro",
+            "created_at": "2025-04-06T20:05:14.038028"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 78,
+            "mode": "retro",
+            "created_at": "2025-04-10T00:25:43.047000"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 4,
+            "mode": "retro",
+            "created_at": "2025-04-15T03:27:01.960234"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 4,
+            "mode": "retro",
+            "created_at": "2025-04-15T03:28:50.607834"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 2,
+            "mode": "retro",
+            "created_at": "2025-04-15T03:29:59.902385"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 126,
+            "mode": "retro",
+            "created_at": "2025-04-15T03:31:58.950894"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 192,
+            "mode": "retro",
+            "created_at": "2025-04-19T00:14:18.599434"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 191,
+            "mode": "retro",
+            "created_at": "2025-04-19T00:14:43.798586"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 367,
+            "mode": "retro",
+            "created_at": "2025-04-19T00:17:16.119772"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 252,
+            "mode": "retro",
+            "created_at": "2025-04-19T00:20:45.928432"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 1011,
+            "mode": "retro",
+            "created_at": "2025-04-19T00:28:44.139862"
+        }
+    ],
+    "fun": [
+        {
+            "player_name": "Blake W",
+            "score": 137,
+            "mode": "fun",
+            "created_at": "2025-04-10T02:19:03.052517"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 512,
+            "mode": "fun",
+            "created_at": "2025-04-15T03:02:29.723857"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 194,
+            "mode": "fun",
+            "created_at": "2025-04-19T00:22:54.067160"
+        }
+    ],
+    "timed": [
+        {
+            "player_name": "Blake W",
+            "score": 145,
+            "mode": "timed",
+            "created_at": "2025-04-09T00:00:40.482301"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 138,
+            "mode": "timed",
+            "created_at": "2025-04-09T03:37:50.900846"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 455,
+            "mode": "timed",
+            "created_at": "2025-04-10T02:46:54.983109"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 455,
+            "mode": "timed",
+            "created_at": "2025-04-10T02:47:21.640135"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 31,
+            "mode": "timed",
+            "created_at": "2025-04-15T03:02:35.956326"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 541,
+            "mode": "timed",
+            "created_at": "2025-04-15T03:08:53.468428"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 541,
+            "mode": "timed",
+            "created_at": "2025-04-15T03:12:42.393843"
+        },
+        {
+            "player_name": "Blake W",
+            "score": 191,
+            "mode": "timed",
+            "created_at": "2025-04-19T00:14:32.595908"
+        }
+    ]
+}
