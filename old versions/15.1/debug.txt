@@ -1,0 +1,523 @@
+
+2025-06-13 09:07:12,812 - DEBUG - data_logger - Session timer paused
+2025-06-13 09:07:12,812 - DEBUG - game_loop - Paused session timer due to state change: CurrentGameState.PLAYING -> CurrentGameState.MENU
+2025-06-13 09:07:12,846 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:12,847 - DEBUG - menu - Redrawing menu. Cache key mismatch or dimensions changed. New HxW: 580x600
+2025-06-13 09:07:12,850 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:12,853 - DEBUG - utils - No specific handler for LEFT_UP event in state CurrentGameState.MENU
+2025-06-13 09:07:12,897 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:12,897 - DEBUG - menu - Redrawing menu. Cache key mismatch or dimensions changed. New HxW: 580x600
+2025-06-13 09:07:12,900 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:12,948 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:12,948 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,012 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,013 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,062 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,062 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,109 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,109 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,155 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,156 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,205 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,206 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,254 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,255 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,303 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,304 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,308 - DEBUG - utils - Hovering over menu item: FAQ
+2025-06-13 09:07:13,353 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,354 - DEBUG - menu - Redrawing menu. Cache key mismatch or dimensions changed. New HxW: 580x600
+2025-06-13 09:07:13,357 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,360 - DEBUG - utils - Hovering over menu item: Achievements
+2025-06-13 09:07:13,404 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,404 - DEBUG - menu - Redrawing menu. Cache key mismatch or dimensions changed. New HxW: 580x600
+2025-06-13 09:07:13,407 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,461 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,461 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,514 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,515 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,564 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,564 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,617 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,618 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,673 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,674 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,723 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,724 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,775 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,776 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,827 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,828 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,877 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,877 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,928 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,929 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:13,981 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:13,981 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,032 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,032 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,079 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,080 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,132 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,133 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,182 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,183 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,231 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,232 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,280 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,281 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,330 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,331 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,380 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,381 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,431 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,432 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,485 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,486 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,534 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,534 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,588 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,588 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,642 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,643 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,692 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,693 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,741 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,741 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,793 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,794 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,841 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,842 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,891 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,892 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:14,938 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:14,939 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,002 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,003 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,049 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,049 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,095 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,095 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,141 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,142 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,188 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,188 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,235 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,235 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,283 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,284 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,330 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,330 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,378 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,379 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,425 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,426 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,479 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,480 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,533 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,534 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,582 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,583 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,630 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,630 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,678 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,678 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,727 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,728 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,775 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,776 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,824 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,825 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,872 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,873 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,920 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,921 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:15,968 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:15,969 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,015 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,016 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,062 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,063 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,110 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,111 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,158 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,158 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,209 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,210 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,256 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,257 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,305 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,305 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,354 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,355 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,402 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,403 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,452 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,452 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,499 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,500 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,546 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,547 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,596 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,596 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,643 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,643 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,690 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,690 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,737 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,738 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,785 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,786 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,833 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,834 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,882 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,883 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,929 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,930 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:16,995 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:16,996 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,041 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,042 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,087 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,088 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,133 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,134 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,178 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,178 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,223 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,223 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,269 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,270 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,316 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,316 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,362 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,363 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,409 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,409 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,458 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,458 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,505 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,506 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,552 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,553 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,601 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,602 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,649 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,650 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,701 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,701 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,749 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,750 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,797 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,797 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,844 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,844 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,892 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,892 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:17,939 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:17,940 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,003 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,004 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,049 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,050 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,095 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,096 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,141 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,141 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,187 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,187 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,232 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,232 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,277 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,277 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,322 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,322 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,368 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,369 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,416 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,416 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,463 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,464 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,512 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,512 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,561 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,561 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,608 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,608 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,655 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,655 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,704 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,704 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,751 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,751 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,799 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,800 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,849 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,849 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,897 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,898 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:18,946 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:18,947 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,013 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,013 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,059 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,059 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,105 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,106 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,155 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,155 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,201 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,202 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,247 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,247 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,293 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,294 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,338 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,339 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,388 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,389 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,437 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,438 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,484 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,485 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,534 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,535 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,581 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,582 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,629 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,630 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,676 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,677 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,724 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,725 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,773 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,774 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,822 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,823 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,869 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,870 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,918 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,919 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:19,966 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:19,967 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,015 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,015 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,064 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,064 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,113 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,113 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,160 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,160 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,207 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,207 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,254 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,255 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,301 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,302 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,349 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,350 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,396 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,397 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,447 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,448 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,496 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,497 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,544 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,545 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,593 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,594 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,641 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,642 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,689 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,690 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,737 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,737 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,785 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,786 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,833 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,834 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,880 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,881 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,929 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,930 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:20,993 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:20,993 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,039 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,039 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,084 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,085 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,130 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,131 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,175 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,176 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,220 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,221 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,266 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,267 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,311 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,312 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,357 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,358 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,404 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,405 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,451 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,452 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,501 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,501 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,549 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,549 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,596 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,597 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,643 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,644 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,690 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,691 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,737 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,738 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,785 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,786 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,833 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,834 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,882 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,882 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,930 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,931 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:21,996 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:21,997 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,042 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,043 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,087 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,088 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,132 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,133 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,178 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,179 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,224 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,224 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,267 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,268 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,314 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,315 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,361 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,362 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,408 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,409 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,457 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,457 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,505 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,506 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,556 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,556 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,603 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,604 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,650 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,651 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,697 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,698 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,745 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,745 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,794 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,795 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,841 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,842 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,890 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,890 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:22,939 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:22,940 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,001 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,002 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,048 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,049 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,093 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,094 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,139 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,140 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,183 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,184 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,229 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,229 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,275 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,276 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,321 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,321 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,368 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,368 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,417 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,417 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,464 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,465 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,512 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,513 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,559 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,560 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,609 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,609 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,656 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,657 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,704 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,704 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,751 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,751 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,797 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,798 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,847 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,847 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,851 - DEBUG - utils - Hovering over menu item: Leaderboard
+2025-06-13 09:07:23,894 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,895 - DEBUG - menu - Redrawing menu. Cache key mismatch or dimensions changed. New HxW: 580x600
+2025-06-13 09:07:23,898 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,901 - DEBUG - utils - Hovering over menu item: Replays
+2025-06-13 09:07:23,945 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:23,945 - DEBUG - menu - Redrawing menu. Cache key mismatch or dimensions changed. New HxW: 580x600
+2025-06-13 09:07:23,948 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:23,951 - DEBUG - utils - Hovering over menu item: Players
+2025-06-13 09:07:24,011 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,011 - DEBUG - menu - Redrawing menu. Cache key mismatch or dimensions changed. New HxW: 580x600
+2025-06-13 09:07:24,014 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,017 - DEBUG - utils - Hovering over menu item: Manage Zones
+2025-06-13 09:07:24,058 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,058 - DEBUG - menu - Redrawing menu. Cache key mismatch or dimensions changed. New HxW: 580x600
+2025-06-13 09:07:24,062 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,107 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,108 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,154 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,155 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,199 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,199 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,245 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,245 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,292 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,292 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,306 - DEBUG - utils - Hovering over menu item: Game Mode
+2025-06-13 09:07:24,337 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,337 - DEBUG - menu - Redrawing menu. Cache key mismatch or dimensions changed. New HxW: 580x600
+2025-06-13 09:07:24,340 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,343 - DEBUG - utils - Hovering over menu item: Settings
+2025-06-13 09:07:24,387 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,387 - DEBUG - menu - Redrawing menu. Cache key mismatch or dimensions changed. New HxW: 580x600
+2025-06-13 09:07:24,390 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,395 - DEBUG - utils - Hovering over menu item: Resume
+2025-06-13 09:07:24,439 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,439 - DEBUG - menu - Redrawing menu. Cache key mismatch or dimensions changed. New HxW: 580x600
+2025-06-13 09:07:24,442 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,489 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,489 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,539 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,540 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,587 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,588 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,635 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,636 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,682 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,683 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,729 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,730 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,777 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,777 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,825 - DEBUG - menu - Calculated main menu height: 580
+2025-06-13 09:07:24,826 - DEBUG - stats_calculator - Calculated stats: Duration=18.2s, Score=0, Rate=0.0/min, TopZones=[(20, 100), (21, 30), (22, 15)]
+2025-06-13 09:07:24,829 - DEBUG - utils - OpenCV mouse event: LEFT_DOWN at (975, 355)
+2025-06-13 09:07:24,829 - DEBUG - interaction_utils - _process_menu_or_modal_click called with coords (975, 355) in state CurrentGameState.MENU
+2025-06-13 09:07:24,830 - DEBUG - interaction_utils - Menu click: processing at coordinates (975, 355) in state CurrentGameState.MENU
+2025-06-13 09:07:24,830 - DEBUG - interaction_utils - Menu position: 660, 250
+2025-06-13 09:07:24,830 - DEBUG - interaction
