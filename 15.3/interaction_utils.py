@@ -30,6 +30,7 @@ if TYPE_CHECKING:
 # Import the necessary utility functions from CORRECT locations
 from game_state_helpers import (
     clear_zones,
+    save_zones,
     load_zones,
     save_score,
     set_special_hole,
@@ -122,7 +123,7 @@ def _get_mouse_event_handlers() -> MouseEventHandlers:
                     try:
                         game_state.players[0].name = "Player 1"  # Use default
                         game_state.player_name_input_active = False
-                        game_state.current_state = CurrentGameState.PLAYING
+                        game_state.current_state = CurrentGameState.GETTING_PLAYFIELD
                         show_notification(
                             game_state, "Using default name 'Player 1'", duration=2.0
                         )
@@ -173,6 +174,11 @@ def _get_mouse_event_handlers() -> MouseEventHandlers:
     handlers[CurrentGameState.GETTING_PLAYER_NAME] = {
         cv2.EVENT_LBUTTONDOWN: username_input_handler,
         cv2.EVENT_MOUSEMOVE: lambda e, x, y, g: False  # Silently ignore mouse move events
+    }
+    # Register playfield selection handler (keyboard-only for now)
+    handlers[CurrentGameState.GETTING_PLAYFIELD] = {
+        cv2.EVENT_LBUTTONDOWN: lambda e, x, y, g: False,
+        cv2.EVENT_MOUSEMOVE: lambda e, x, y, g: False,
     }
 
     return handlers
@@ -340,7 +346,16 @@ def _process_zone_editing_event(
                 else:
                     logger.error("Cannot revert zone edit, original state was None.")
             else:
-                game_state.special_hole = set_special_hole(game_state.scoring_zones)
+                if hasattr(game_state, "is_fivestar_playfield"):
+                    is_fivestar = game_state.is_fivestar_playfield()
+                else:
+                    is_fivestar = (
+                        getattr(game_state, "playfield_type", "whiffle") == "fivestar"
+                    )
+                if is_fivestar:
+                    game_state.special_hole = None
+                else:
+                    game_state.special_hole = set_special_hole(game_state.scoring_zones)
                 show_notification(
                     game_state, f"Zone {zone_idx+1} updated", duration=1.5
                 )
@@ -403,9 +418,19 @@ def _process_drawing_event(event: int, x: int, y: int, game_state: "GameState") 
                         new_zone[:4], getattr(game_state, "scoring_zones", [])
                     ):
                         game_state.scoring_zones.append(new_zone)
-                        game_state.special_hole = set_special_hole(
-                            game_state.scoring_zones
-                        )
+                        if hasattr(game_state, "is_fivestar_playfield"):
+                            is_fivestar = game_state.is_fivestar_playfield()
+                        else:
+                            is_fivestar = (
+                                getattr(game_state, "playfield_type", "whiffle")
+                                == "fivestar"
+                            )
+                        if is_fivestar:
+                            game_state.special_hole = None
+                        else:
+                            game_state.special_hole = set_special_hole(
+                                game_state.scoring_zones
+                            )
                         show_notification(game_state, f"Zone Added ({points} pts)")
                         logger.info(f"Added zone: {new_zone}")
                     else:
@@ -534,8 +559,6 @@ def _process_menu_or_modal_click(
                         game_state.scoring_zones[zone_index] = (x, y, w, h, points)
 
                         # Save zones to persist changes
-                        from game_state_helpers import save_zones
-
                         save_zones(game_state)
 
                         # Reset editing state
@@ -579,7 +602,7 @@ def _process_menu_or_modal_click(
                         try:
                             game_state.players[0].name = "Player 1"  # Use default
                             game_state.player_name_input_active = False
-                            game_state.current_state = CurrentGameState.PLAYING
+                            game_state.current_state = CurrentGameState.GETTING_PLAYFIELD
                             show_notification(
                                 game_state,
                                 "Using default name 'Player 1'",
@@ -3281,12 +3304,20 @@ def _process_menu_or_modal_click(
                                 # Remove the zone from the list
                                 del game_state.scoring_zones[zone_index]
                                 # Update special hole after zone deletion
-                                game_state.special_hole = set_special_hole(
-                                    game_state.scoring_zones
-                                )
+                                if hasattr(game_state, "is_fivestar_playfield"):
+                                    is_fivestar = game_state.is_fivestar_playfield()
+                                else:
+                                    is_fivestar = (
+                                        getattr(game_state, "playfield_type", "whiffle")
+                                        == "fivestar"
+                                    )
+                                if is_fivestar:
+                                    game_state.special_hole = None
+                                else:
+                                    game_state.special_hole = set_special_hole(
+                                        game_state.scoring_zones
+                                    )
                                 # Save zones to persist changes
-                                from game_state_helpers import save_zones
-
                                 save_zones(game_state)
                                 # Refresh the menu display
                                 game_state.menu_cache = None
@@ -3352,8 +3383,6 @@ def _process_menu_or_modal_click(
                                     )
 
                                     # Save zones to persist changes
-                                    from game_state_helpers import save_zones
-
                                     save_zones(game_state)
 
                                     # Reset editing state

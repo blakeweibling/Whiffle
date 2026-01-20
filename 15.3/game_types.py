@@ -8,6 +8,7 @@ from enum import Enum, auto
 
 class CurrentGameState(Enum):
     GETTING_PLAYER_NAME = auto()
+    GETTING_PLAYFIELD = auto()
     PLAYING = auto()
     MENU = auto()
     ZONE_EDITING = auto()

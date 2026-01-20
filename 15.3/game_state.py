@@ -129,8 +129,13 @@ class GameState:
         self.special_hole: Optional[Tuple[int, int, int, int, int]] = None
         self.drawing_points_input: str = ""
 
+        # Playfield / Model selection
+        self.playfield_type: str = "whiffle"
+        self.model_path: str = GameConstants.WHIFFLE_MODEL_PATH
+        self.zones_file_path: str = GameConstants.ZONES_FILE
+
         # Detection & Tracking
-        self.detector = BallDetector()
+        self.detector = BallDetector(self.model_path)
         self.tracker = BallTracker()
         self.tracked_balls: List[Tuple[int, int, float, int, int, str]] = []
         self.next_ball_id: int = 0
@@ -348,6 +353,77 @@ class GameState:
             )
 
         logger.info("GameState initialization complete.")
+
+    def set_playfield(self, playfield: str) -> bool:
+        """Set playfield type and load the appropriate detection model."""
+        playfield_key = (playfield or "").strip().lower()
+        model_map = {
+            "whiffle": GameConstants.WHIFFLE_MODEL_PATH,
+            "fivestar": GameConstants.FIVESTAR_MODEL_PATH,
+            "five star": GameConstants.FIVESTAR_MODEL_PATH,
+        }
+        zones_map = {
+            "whiffle": GameConstants.ZONES_FILE,
+            "fivestar": GameConstants.FIVESTAR_ZONES_FILE,
+            "five star": GameConstants.FIVESTAR_ZONES_FILE,
+        }
+        if playfield_key not in model_map:
+            logger.warning(f"Unknown playfield selection: {playfield}")
+            show_notification(self, "Unknown playfield selection", is_error=True)
+            return False
+
+        model_path = model_map[playfield_key]
+        if not os.path.exists(model_path):
+            logger.error(f"Model file not found: {model_path}")
+            show_notification(
+                self,
+                f"Model not found: {model_path}",
+                is_error=True,
+                duration=3.0,
+            )
+            return False
+
+        try:
+            self.playfield_type = "fivestar" if "five" in playfield_key else "whiffle"
+            self.model_path = model_path
+            self.zones_file_path = zones_map[playfield_key]
+            if self.is_fivestar_playfield():
+                self.special_hole = None
+            self.detector = BallDetector(self.model_path)
+            try:
+                from game_state_helpers import load_zones
+
+                load_zones(self, zones_file_path=self.zones_file_path)
+            except Exception as e:
+                logger.error(f"Failed to load zones for {self.playfield_type}: {e}")
+                show_notification(
+                    self, "Failed to load scoring zones", is_error=True, duration=2.5
+                )
+            show_notification(
+                self,
+                f"Loaded {self.playfield_type} model",
+                duration=2.0,
+            )
+            return True
+        except Exception as e:
+            logger.error(f"Failed to load model {model_path}: {e}")
+            show_notification(self, "Failed to load model", is_error=True)
+            return False
+
+    def is_fivestar_playfield(self) -> bool:
+        """Return True when the active playfield is Five Star."""
+        playfield_type = getattr(self, "playfield_type", "whiffle")
+        model_path = os.path.normpath(
+            getattr(self, "model_path", GameConstants.WHIFFLE_MODEL_PATH)
+        )
+        zones_path = os.path.normpath(
+            getattr(self, "zones_file_path", GameConstants.ZONES_FILE)
+        )
+        return (
+            playfield_type == "fivestar"
+            or model_path == os.path.normpath(GameConstants.FIVESTAR_MODEL_PATH)
+            or zones_path == os.path.normpath(GameConstants.FIVESTAR_ZONES_FILE)
+        )
 
     # Helper to get current dimensions
     def get_current_resolution_dimensions(self) -> tuple[int, int]:
@@ -577,7 +653,10 @@ class GameState:
                 )
 
         self.scoring_zones = scaled_zones
-        self.special_hole = set_special_hole(self.scoring_zones)
+        if self.is_fivestar_playfield():
+            self.special_hole = None
+        else:
+            self.special_hole = set_special_hole(self.scoring_zones)
         logger.info(f"Scaled {len(self.scoring_zones)} zones successfully.")
 
     # Resolution Change Method

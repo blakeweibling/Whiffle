@@ -162,8 +162,10 @@ class Leaderboard:
                     "created_at": entry.get(
                         "created_at", datetime.utcnow().isoformat()
                     ),
-                    "screenshot_url": entry.get("screenshot_url")  # Will be None if not present
+                    "screenshot_url": entry.get("screenshot_url"),
                 }
+                if entry.get("playfield_type") in {"whiffle", "fivestar"}:
+                    clean_entry["playfield_type"] = entry["playfield_type"]
 
                 validated_data.append(clean_entry)
             else:
@@ -274,6 +276,7 @@ class Leaderboard:
         score: int,
         mode: str,
         screenshot_url: Optional[str] = None,
+        playfield_type: Optional[str] = None,
     ) -> bool:
         """
         Queue a score for batch submission to the leaderboard, both online and locally.
@@ -282,6 +285,7 @@ class Leaderboard:
             score: Player's score.
             mode: Game mode (must be in VALID_MODES).
             screenshot_url: Optional URL to a screenshot of the game.
+            playfield_type: Optional playfield type ("whiffle" or "fivestar").
 
         Returns:
             bool: True (score is queued for submission).
@@ -307,6 +311,8 @@ class Leaderboard:
             logger.info(
                 f"Including screenshot URL with score submission: {screenshot_url}"
             )
+        if playfield_type:
+            score_entry["playfield_type"] = playfield_type
 
         # --- UPDATED: Ensure mode key exists before appending ---
         if mode not in self.local_scores:
@@ -318,7 +324,7 @@ class Leaderboard:
         # Queue for batch submission (Change 4)
         self.pending_scores.append(score_entry)
         logger.info(
-            f"Score queued for batch submission: {player_name} - {score} ({mode})"
+            f"Score queued for batch submission: {player_name} - {score} ({mode}, {playfield_type or 'unspecified'})"
         )
         return True  # Assume success for now
 

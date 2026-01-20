@@ -149,6 +149,11 @@ def save_score(game_state: Any, player_name: str, mode: Optional[str] = None) ->
     score_to_save = final_score
     game_state.final_score = final_score  # Set the final_score attribute
     current_mode = mode or game_state.game_mode
+    if hasattr(game_state, "is_fivestar_playfield"):
+        is_fivestar = game_state.is_fivestar_playfield()
+    else:
+        is_fivestar = getattr(game_state, "playfield_type", "whiffle") == "fivestar"
+    playfield_type = "fivestar" if is_fivestar else "whiffle"
 
     # Variable to hold screenshot URL
     screenshot_url = None
@@ -207,11 +212,18 @@ def save_score(game_state: Any, player_name: str, mode: Optional[str] = None) ->
                 # If we have a screenshot URL, include it in the score submission
                 if screenshot_url:
                     game_state.leaderboard.submit_score(
-                        player_name, score_to_save, current_mode, screenshot_url
+                        player_name,
+                        score_to_save,
+                        current_mode,
+                        screenshot_url,
+                        playfield_type=playfield_type,
                     )
                 else:
                     game_state.leaderboard.submit_score(
-                        player_name, score_to_save, current_mode
+                        player_name,
+                        score_to_save,
+                        current_mode,
+                        playfield_type=playfield_type,
                     )
             except Exception as e:
                 logger.error(f"Leaderboard submit error: {e}")
@@ -254,13 +266,16 @@ def set_special_hole(
 # --- Zone Management Helpers (Moved from menu.py) ---
 
 
-def save_zones(game_state: Any) -> None:
+def save_zones(game_state: Any, zones_file_path: Optional[str] = None) -> None:
     """Save the current scoring zones to a JSON file."""
     # (Code moved from menu.py)
     try:
-        with open(GameConstants.ZONES_FILE, "w") as f:
+        zones_file = zones_file_path or getattr(
+            game_state, "zones_file_path", GameConstants.ZONES_FILE
+        )
+        with open(zones_file, "w") as f:
             json.dump(game_state.scoring_zones, f, indent=4)
-        logger.info(f"Scoring zones saved to {GameConstants.ZONES_FILE}")
+        logger.info(f"Scoring zones saved to {zones_file}")
         show_notification(game_state, "Zones Saved")  # Uses helper
     except IOError as e:
         logger.error(f"Error saving scoring zones: {e}")
@@ -269,10 +284,12 @@ def save_zones(game_state: Any) -> None:
         )  # Uses helper
 
 
-def load_zones(game_state: Any) -> None:
+def load_zones(game_state: Any, zones_file_path: Optional[str] = None) -> None:
     """Load scoring zones from a JSON file."""
     # (Code moved from menu.py)
-    zones_file_path = GameConstants.ZONES_FILE
+    zones_file_path = zones_file_path or getattr(
+        game_state, "zones_file_path", GameConstants.ZONES_FILE
+    )
     if os.path.exists(zones_file_path):
         try:
             if os.path.getsize(zones_file_path) == 0:
@@ -298,9 +315,18 @@ def load_zones(game_state: Any) -> None:
                 ]
                 logger.info(f"Scoring zones loaded from {zones_file_path}")
                 show_notification(game_state, "Zones Loaded")  # Uses helper
-                game_state.special_hole = set_special_hole(
-                    game_state.scoring_zones
-                )  # Calls helper above
+                if hasattr(game_state, "is_fivestar_playfield"):
+                    is_fivestar = game_state.is_fivestar_playfield()
+                else:
+                    is_fivestar = (
+                        getattr(game_state, "playfield_type", "whiffle") == "fivestar"
+                    )
+                if is_fivestar:
+                    game_state.special_hole = None
+                else:
+                    game_state.special_hole = set_special_hole(
+                        game_state.scoring_zones
+                    )  # Calls helper above
             else:
                 logger.error(f"Invalid format in {zones_file_path}.")
                 show_notification(
@@ -321,12 +347,14 @@ def load_zones(game_state: Any) -> None:
         game_state.special_hole = None
 
 
-def clear_zones(game_state: Any) -> None:
+def clear_zones(game_state: Any, zones_file_path: Optional[str] = None) -> None:
     """Clear all scoring zones and remove the file."""
     # (Code moved from menu.py)
     game_state.scoring_zones.clear()
     game_state.special_hole = None
-    zones_file_path = GameConstants.ZONES_FILE
+    zones_file_path = zones_file_path or getattr(
+        game_state, "zones_file_path", GameConstants.ZONES_FILE
+    )
     if os.path.exists(zones_file_path):
         try:
             os.remove(zones_file_path)

@@ -806,3 +806,87 @@ def _draw_player_name_input(frame: np.ndarray, game_state: "GameState") -> None:
     except Exception as e:
         logger.error(f"Error in player name input: {e}")
         return
+
+
+def _draw_playfield_selection(frame: np.ndarray, game_state: "GameState") -> None:
+    """Draw the playfield selection interface."""
+    try:
+        current_width, current_height = game_state.get_current_resolution_dimensions()
+
+        overlay = frame.copy()
+        cv2.rectangle(
+            overlay, (0, 0), (current_width, current_height), (10, 10, 10), -1
+        )
+        cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
+
+        popup_width, popup_height = 700, 320
+        popup_x = (current_width - popup_width) // 2
+        popup_y = (current_height - popup_height) // 2
+
+        cv2.rectangle(
+            frame,
+            (popup_x, popup_y),
+            (popup_x + popup_width, popup_y + popup_height),
+            (170, 130, 100),
+            -1,
+        )
+        cv2.rectangle(
+            frame,
+            (popup_x, popup_y),
+            (popup_x + popup_width, popup_y + popup_height),
+            UIConstants.WHITE,
+            2,
+        )
+
+        title = "Select Playfield"
+        (tw, th), _ = cv2.getTextSize(
+            title,
+            cv2.FONT_HERSHEY_SIMPLEX,
+            UIConstants.FONT_SCALE_LARGE,
+            UIConstants.FONT_THICKNESS + 1,
+        )
+        title_x = popup_x + (popup_width - tw) // 2
+        title_y = popup_y + 45
+        cv2.putText(
+            frame,
+            title,
+            (title_x, title_y),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            UIConstants.FONT_SCALE_LARGE,
+            UIConstants.WHITE,
+            UIConstants.FONT_THICKNESS + 1,
+        )
+
+        option_1 = "1) Whiffle"
+        option_2 = "2) Five Star"
+        option_y_start = popup_y + 120
+        line_gap = 60
+        for idx, text in enumerate([option_1, option_2]):
+            cv2.putText(
+                frame,
+                text,
+                (popup_x + 80, option_y_start + idx * line_gap),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                UIConstants.FONT_SCALE_MEDIUM,
+                UIConstants.WHITE,
+                UIConstants.FONT_THICKNESS + 1,
+            )
+
+        hint = "Press 1 or 2 (Enter = Whiffle)"
+        (hw, _), _ = cv2.getTextSize(
+            hint,
+            cv2.FONT_HERSHEY_SIMPLEX,
+            UIConstants.FONT_SCALE_SMALL,
+            UIConstants.FONT_THICKNESS,
+        )
+        cv2.putText(
+            frame,
+            hint,
+            (popup_x + (popup_width - hw) // 2, popup_y + popup_height - 30),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            UIConstants.FONT_SCALE_SMALL,
+            UIConstants.WHITE,
+            UIConstants.FONT_THICKNESS,
+        )
+    except Exception as e:
+        logger.error(f"Error drawing playfield selection: {e}")

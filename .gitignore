@@ -2,6 +2,7 @@
 dist/
 build/
 runs/
+my_dataset/
 
 # Python cache directories
 __pycache__/

@@ -258,6 +258,7 @@ class GameConstants:
     DETECTION_FRAME_INTERVAL: int = _assert_positive(2, "DETECTION_FRAME_INTERVAL")
 
     ZONES_FILE: str = "data/game/scoring_zones.json"
+    FIVESTAR_ZONES_FILE: str = "data/game/fivestar_scoring_zones.json"
     ACHIEVEMENTS_FILE: str = "data/achievements/achievements_status.json"
     HSV_RANGES_FILE: str = "configs/hsv_ranges.json"
     HIGH_SCORE_FILE: str = "data/scores/high_scores.json"
@@ -267,6 +268,8 @@ class GameConstants:
     SOUND_EFFECTS_PATH: str = "data/sounds/"
     # Replay files location
     REPLAY_DIR: str = "data/replays"
+    WHIFFLE_MODEL_PATH: str = "data/whiffle_new_best.pt"
+    FIVESTAR_MODEL_PATH: str = "data/whiffle_new_best_fivestar.pt"
 
     SPLASH_DURATION: float = _assert_non_negative(2.0, "SPLASH_DURATION")
     FADE_DURATION: float = _assert_non_negative(1.0, "FADE_DURATION")
@@ -377,7 +380,7 @@ class ScoringConstants:
     """Constants for scoring logic."""
 
     DEFAULT_POINTS: int = _assert_positive(100, "DEFAULT_POINTS")
-    MAX_POINTS: int = _assert_positive(999, "MAX_POINTS")
+    MAX_POINTS: int = _assert_positive(2000, "MAX_POINTS")
     MIN_ZONE_SIZE: int = _assert_positive(10, "MIN_ZONE_SIZE")
 
 

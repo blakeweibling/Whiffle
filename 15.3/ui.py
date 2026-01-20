@@ -35,6 +35,7 @@ from ui_elements import _draw_debug_overlay
 from ui_screens import (
     _draw_game_over_screen,
     _draw_player_name_input,
+    _draw_playfield_selection,
 )
 
 try:
@@ -771,6 +772,22 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
 
         _draw_player_name_input(frame, game_state)
 
+        if getattr(game_state, "debug_mode", False):
+            fps = getattr(game_state, "fps", 0)
+            state_text = str(game_state.current_state).split(".")[-1]
+            debug_text = f"FPS:{fps:.1f}|State:{state_text}"
+            _optimized_draw_text(
+                frame,
+                debug_text,
+                (10, current_height - 10),
+                UIConstants.FONT_SCALE_SMALL,
+                UIConstants.YELLOW,
+                UIConstants.BLACK,
+                alpha=0.7,
+            )
+        return
+    if game_state.current_state == CurrentGameState.GETTING_PLAYFIELD:
+        _draw_playfield_selection(frame, game_state)
         if getattr(game_state, "debug_mode", False):
             fps = getattr(game_state, "fps", 0)
             state_text = str(game_state.current_state).split(".")[-1]

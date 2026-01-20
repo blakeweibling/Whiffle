@@ -618,10 +618,17 @@ def load_initial_state(game_state: Any):
         logger.error("Could not import load_zones from game_state_helpers.")
         game_state.scoring_zones = []  # Default to empty zones
 
-    # Set special hole based on loaded zones
-    game_state.special_hole = set_special_hole(
-        getattr(game_state, "scoring_zones", [])  # Use getattr for safety
-    )
+    # Set special hole based on loaded zones (disabled for Five Star)
+    if hasattr(game_state, "is_fivestar_playfield"):
+        is_fivestar = game_state.is_fivestar_playfield()
+    else:
+        is_fivestar = getattr(game_state, "playfield_type", "whiffle") == "fivestar"
+    if is_fivestar:
+        game_state.special_hole = None
+    else:
+        game_state.special_hole = set_special_hole(
+            getattr(game_state, "scoring_zones", [])  # Use getattr for safety
+        )
 
     # Load high score for the current game mode
     try:

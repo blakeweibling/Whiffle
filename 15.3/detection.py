@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 
-from constants import DetectionConstants, GameSpecificConstants  #
+from constants import DetectionConstants, GameSpecificConstants, GameConstants  #
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -26,9 +26,10 @@ EXCLUDED_POSITIONS: List[Tuple[int, int]] = GameSpecificConstants.EXCLUDED_POSIT
 
 class BallDetector:
 
-    def __init__(self):
-        # Load the trained YOLOv8 model (Unchanged)
-        self.model = YOLO("data/whiffle_new_best.pt")
+    def __init__(self, model_path: Optional[str] = None):
+        # Load the trained YOLOv8 model
+        resolved_model_path = model_path or GameConstants.WHIFFLE_MODEL_PATH
+        self.model = YOLO(resolved_model_path)
         self.class_names = ["silver", "gold"]
         self.state_names = ["on_playfield", "in_hole"]
 

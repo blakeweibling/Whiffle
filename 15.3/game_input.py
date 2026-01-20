@@ -301,6 +301,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
         if game_state.current_state not in [
             CurrentGameState.CONFIRM_QUIT,
             CurrentGameState.GETTING_PLAYER_NAME,
+            CurrentGameState.GETTING_PLAYFIELD,
         ]:
             # Store the state we were in before prompting for quit
             game_state.previous_state_before_quit_confirm = game_state.current_state
@@ -379,8 +380,8 @@ def _handle_input(game_state: Any) -> Optional[int]:
                                 False  # Flag to stop drawing input screen
                             )
                             game_state.current_state = (
-                                CurrentGameState.PLAYING
-                            )  # Proceed to game
+                                CurrentGameState.GETTING_PLAYFIELD
+                            )  # Proceed to playfield selection
                         except IndexError:
                             show_notification(
                                 game_state, "Error: Player list invalid!", is_error=True
@@ -400,7 +401,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     try:
                         game_state.players[0].name = "Player 1"  # Use default
                         game_state.player_name_input_active = False
-                        game_state.current_state = CurrentGameState.PLAYING
+                        game_state.current_state = CurrentGameState.GETTING_PLAYFIELD
                         show_notification(
                             game_state, "Using default name 'Player 1'", duration=2.0
                         )
@@ -494,6 +495,24 @@ def _handle_input(game_state: Any) -> Optional[int]:
 
             if player_name_key_handled:
                 key_handled_globally = True
+        # Handle input in GETTING_PLAYFIELD state
+        elif game_state.current_state == CurrentGameState.GETTING_PLAYFIELD:
+            selection_key_handled = False
+            if key in [ord("1"), ord("w"), ord("W"), 13]:  # 1/W/Enter = Whiffle
+                if game_state.set_playfield("whiffle"):
+                    game_state.current_state = CurrentGameState.PLAYING
+                selection_key_handled = True
+            elif key in [ord("2"), ord("f"), ord("F")]:  # 2/F = Five Star
+                if game_state.set_playfield("fivestar"):
+                    game_state.current_state = CurrentGameState.PLAYING
+                selection_key_handled = True
+            elif key == 27:  # Escape key defaults to Whiffle
+                if game_state.set_playfield("whiffle"):
+                    game_state.current_state = CurrentGameState.PLAYING
+                selection_key_handled = True
+
+            if selection_key_handled:
+                return key
 
         # Handle input in MENU state
         elif game_state.current_state == CurrentGameState.MENU:
@@ -920,7 +939,18 @@ def _handle_input(game_state: Any) -> Optional[int]:
                         game_state.original_zone_on_drag_start
                     )
                     # Recalculate special hole in case the reverted zone was it
-                    game_state.special_hole = set_special_hole(game_state.scoring_zones)
+                    if hasattr(game_state, "is_fivestar_playfield"):
+                        is_fivestar = game_state.is_fivestar_playfield()
+                    else:
+                        is_fivestar = (
+                            getattr(game_state, "playfield_type", "whiffle") == "fivestar"
+                        )
+                    if is_fivestar:
+                        game_state.special_hole = None
+                    else:
+                        game_state.special_hole = set_special_hole(
+                            game_state.scoring_zones
+                        )
 
                 # Reset all interactive editing state variables
                 game_state.zone_editing_action = None
