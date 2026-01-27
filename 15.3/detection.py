@@ -28,26 +28,58 @@ class BallDetector:
 
     def __init__(self, model_path: Optional[str] = None):
         # Load the trained YOLOv8 model
-        resolved_model_path = model_path or GameConstants.WHIFFLE_MODEL_PATH
-        self.model = YOLO(resolved_model_path)
+        self.model_path = model_path or GameConstants.WHIFFLE_MODEL_PATH
+        self.model = YOLO(self.model_path)
         
-        # Try to get class names from the model, fall back to default if not available
-        if hasattr(self.model, 'names') and self.model.names:
-            # Convert model names dict to list (YOLO models typically have names as dict {0: 'class0', 1: 'class1', ...})
-            if isinstance(self.model.names, dict):
-                max_index = max(self.model.names.keys()) if self.model.names else -1
-                self.class_names = [self.model.names.get(i, f"class_{i}") for i in range(max_index + 1)]
-            elif isinstance(self.model.names, list):
-                self.class_names = self.model.names
-            else:
-                self.class_names = ["silver", "gold"]
-                logger.warning(f"Model names format not recognized, using default: {self.class_names}")
-        else:
-            self.class_names = ["silver", "gold"]
-            logger.info(f"Using default class names: {self.class_names}")
+        # Extract class names directly from the model file
+        self.class_names = self._extract_class_names_from_model()
         
-        logger.info(f"BallDetector initialized with class names: {self.class_names}")
+        logger.info(f"BallDetector initialized with model: {self.model_path}")
+        logger.info(f"Extracted class names from model: {self.class_names}")
         self.state_names = ["on_playfield", "in_hole"]
+    
+    def _extract_class_names_from_model(self) -> List[str]:
+        """
+        Extract class names from the YOLO model file.
+        Returns a list of class names in order (index 0, 1, 2, etc.)
+        """
+        try:
+            # YOLO models store class names in the model.names attribute
+            # It can be a dict {0: 'class0', 1: 'class1', ...} or a list
+            if hasattr(self.model, 'names') and self.model.names:
+                if isinstance(self.model.names, dict):
+                    # Convert dict to ordered list
+                    max_index = max(self.model.names.keys()) if self.model.names else -1
+                    class_names = [self.model.names.get(i, f"class_{i}") for i in range(max_index + 1)]
+                    logger.debug(f"Extracted class names from model dict: {class_names}")
+                    return class_names
+                elif isinstance(self.model.names, list):
+                    logger.debug(f"Extracted class names from model list: {self.model.names}")
+                    return self.model.names
+                else:
+                    logger.warning(f"Model names format not recognized: {type(self.model.names)}")
+            
+            # Try alternative: check model metadata or model.yaml
+            if hasattr(self.model, 'model') and hasattr(self.model.model, 'names'):
+                names = self.model.model.names
+                if isinstance(names, dict):
+                    max_index = max(names.keys()) if names else -1
+                    class_names = [names.get(i, f"class_{i}") for i in range(max_index + 1)]
+                    logger.debug(f"Extracted class names from model.model.names: {class_names}")
+                    return class_names
+                elif isinstance(names, list):
+                    logger.debug(f"Extracted class names from model.model.names list: {names}")
+                    return names
+            
+            # If we can't extract from model, log warning and return empty list
+            # The detection code should handle this gracefully
+            logger.warning(f"Could not extract class names from model at {self.model_path}")
+            logger.warning("Model may not have class names embedded. Detection may fail.")
+            return []
+            
+        except Exception as e:
+            logger.error(f"Error extracting class names from model: {e}")
+            return []
 
         # Attempt to use OpenCL for YOLOv8 inference (Unchanged)
         try:
@@ -114,53 +146,13 @@ class BallDetector:
     ]:
         """
         Detect balls in the frame using YOLOv8 and infer their state.
-        For whiffle mode: detects red, white, and half-red balls.
-        For fivestar mode: detects silver and gold balls.
+        Class names are extracted from the model file (.pt) automatically.
         Uses internal scaling for inference and scales results back.
         """
-        # Determine playfield type to use appropriate class names
-        is_whiffle = True  # Default to whiffle
-        if hasattr(game_state, 'is_fivestar_playfield'):
-            is_whiffle = not game_state.is_fivestar_playfield()
-        elif hasattr(game_state, 'playfield_type'):
-            is_whiffle = getattr(game_state, 'playfield_type', 'whiffle') != 'fivestar'
-        
-        # Update class names based on playfield type
-        if is_whiffle:
-            # For whiffle mode, expect red, white, and half-red balls
-            # Try to get from model, otherwise use expected names
-            if hasattr(self.model, 'names') and self.model.names:
-                if isinstance(self.model.names, dict):
-                    max_index = max(self.model.names.keys()) if self.model.names else -1
-                    model_class_names = [self.model.names.get(i, f"class_{i}") for i in range(max_index + 1)]
-                elif isinstance(self.model.names, list):
-                    model_class_names = self.model.names
-                else:
-                    model_class_names = []
-                
-                # Use model's class names if available, otherwise use defaults
-                if model_class_names:
-                    self.class_names = model_class_names
-                    logger.debug(f"Using model class names for whiffle mode: {self.class_names}")
-                else:
-                    # Expected class names for whiffle: red, white, half-red (or variations)
-                    self.class_names = ["red", "white", "half-red"]
-            else:
-                # Expected class names for whiffle: red, white, half-red (or variations)
-                self.class_names = ["red", "white", "half-red"]
-        else:
-            # For fivestar mode, use silver and gold
-            if hasattr(self.model, 'names') and self.model.names:
-                if isinstance(self.model.names, dict):
-                    max_index = max(self.model.names.keys()) if self.model.names else -1
-                    model_class_names = [self.model.names.get(i, f"class_{i}") for i in range(max_index + 1)]
-                elif isinstance(self.model.names, list):
-                    model_class_names = self.model.names
-                else:
-                    model_class_names = ["silver", "gold"]
-                self.class_names = model_class_names if model_class_names else ["silver", "gold"]
-            else:
-                self.class_names = ["silver", "gold"]
+        # Class names are already extracted from model in __init__, no need to update here
+        if not self.class_names:
+            logger.error("No class names available from model. Detection may fail.")
+            return [], []
         # Downscale the frame for YOLO inference (Unchanged)
         inference_scale = 0.5
         inference_frame = cv2.resize(
@@ -225,47 +217,50 @@ class BallDetector:
                         f"Detected {ball_type} ball at ({x_center:.0f}, {y_center:.0f}) with radius={radius:.1f}, confidence={score:.2f}"
                     )  #
 
-                # Append to respective lists based on ball type
-                # For whiffle mode: red and white -> silver_balls, half-red -> gold_balls
-                # For fivestar mode: silver -> silver_balls, gold -> gold_balls
+                # Append to respective lists based on ball type from model
+                # Map ball types to return lists dynamically based on model's class names
                 ball_type_lower = ball_type.lower()
-                if is_whiffle:
-                    # Whiffle mode: map red, white, half-red to return lists
-                    if ball_type_lower in ["red", "white"]:
+                
+                # Determine which list to add to based on the ball type name
+                # Common patterns: first class(es) go to silver_balls, last class(es) go to gold_balls
+                # This works for both whiffle (red/white -> silver, half-red -> gold) 
+                # and fivestar (silver -> silver, gold -> gold)
+                if len(self.class_names) == 2:
+                    # Two classes: first -> silver_balls, second -> gold_balls
+                    if cls_int == 0:
                         silver_balls.append((int(x_center), int(y_center), radius))
-                    elif ball_type_lower in ["half-red", "half_red", "half", "halfred"]:
+                    elif cls_int == 1:
                         gold_balls.append((int(x_center), int(y_center), radius))
                     else:
-                        # Default: put unknown types in silver_balls
-                        logger.debug(f"Unknown whiffle ball type '{ball_type}', adding to silver_balls")
+                        logger.warning(f"Unexpected class index {cls_int} for 2-class model")
+                        silver_balls.append((int(x_center), int(y_center), radius))
+                elif len(self.class_names) == 3:
+                    # Three classes: first two -> silver_balls, third -> gold_balls
+                    # (e.g., whiffle: red, white -> silver_balls; half-red -> gold_balls)
+                    if cls_int in [0, 1]:
+                        silver_balls.append((int(x_center), int(y_center), radius))
+                    elif cls_int == 2:
+                        gold_balls.append((int(x_center), int(y_center), radius))
+                    else:
+                        logger.warning(f"Unexpected class index {cls_int} for 3-class model")
                         silver_balls.append((int(x_center), int(y_center), radius))
                 else:
-                    # Fivestar mode: map silver and gold
-                    if ball_type_lower == "silver":
+                    # Generic mapping: split classes roughly in half
+                    # First half -> silver_balls, second half -> gold_balls
+                    mid_point = len(self.class_names) // 2
+                    if cls_int < mid_point:
                         silver_balls.append((int(x_center), int(y_center), radius))
-                    elif ball_type_lower == "gold":
-                        gold_balls.append((int(x_center), int(y_center), radius))
                     else:
-                        # Default: put unknown types in silver_balls
-                        logger.debug(f"Unknown fivestar ball type '{ball_type}', adding to silver_balls")
-                        silver_balls.append((int(x_center), int(y_center), radius))
+                        gold_balls.append((int(x_center), int(y_center), radius))
 
         # Debug frame drawing
         if debug_mode:
             debug_frame = frame.copy()
-            if is_whiffle:
-                # Whiffle mode: red/white balls in silver_balls (use red/white colors)
-                for x, y, radius in silver_balls:
-                    cv2.circle(debug_frame, (x, y), int(radius), (0, 0, 255), 2)  # Red color for red/white balls
-                # Half-red balls in gold_balls (use orange/red-orange color)
-                for x, y, radius in gold_balls:
-                    cv2.circle(debug_frame, (x, y), int(radius), (0, 100, 255), 2)  # Orange-red color for half-red
-            else:
-                # Fivestar mode: silver and gold
-                for x, y, radius in silver_balls:
-                    cv2.circle(debug_frame, (x, y), int(radius), (192, 192, 192), 2)  # Silver color
-                for x, y, radius in gold_balls:
-                    cv2.circle(debug_frame, (x, y), int(radius), (0, 215, 255), 2)  # Gold color
+            # Use different colors for different ball types based on class names
+            for x, y, radius in silver_balls:
+                cv2.circle(debug_frame, (x, y), int(radius), (0, 0, 255), 2)  # Red color
+            for x, y, radius in gold_balls:
+                cv2.circle(debug_frame, (x, y), int(radius), (0, 215, 255), 2)  # Gold/Orange color
             cv2.imshow("Ball Detection", debug_frame)
 
         return silver_balls, gold_balls
