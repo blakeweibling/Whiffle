@@ -254,10 +254,15 @@ def update_scoring(game_state: Any) -> None:
                 current_score_pts = base_pts
 
             score_multiplier = 1.0
-            if b_type == "gold":
+            # Check ball type and set multiplier accordingly
+            b_type_lower = b_type.lower() if b_type else ""
+            if b_type_lower in ["gold", "red"]:
                 score_multiplier = 2.0
-            elif b_type == "silver":
+            elif b_type_lower in ["half-red", "half_red", "half", "halfred"]:
+                score_multiplier = 1.5
+            elif b_type_lower in ["silver", "white"]:
                 score_multiplier = 1.0
+            # Default to 1.0 for unknown types
             points_to_add = int(current_score_pts * score_multiplier)
 
             # --- Update Score & State ---

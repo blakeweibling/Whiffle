@@ -155,8 +155,25 @@ def _process_frame(frame: np.ndarray, game_state: GameState) -> None:
     except Exception as e:
         logger.exception(f"Ball detection error: {e}")
         return
-    new_balls_silver_fmt = [(int(x), int(y), float(r)) for x, y, r in silver_balls]
-    new_balls_gold_fmt = [(int(x), int(y), float(r)) for x, y, r in gold_balls]
+    # Extract ball type information if available (new format includes type as 4th element)
+    # Format: (x, y, r) or (x, y, r, ball_type)
+    new_balls_silver_fmt = []
+    for ball in silver_balls:
+        if len(ball) == 4:
+            x, y, r, ball_type = ball
+            new_balls_silver_fmt.append((int(x), int(y), float(r), ball_type))
+        else:
+            x, y, r = ball
+            new_balls_silver_fmt.append((int(x), int(y), float(r)))
+    
+    new_balls_gold_fmt = []
+    for ball in gold_balls:
+        if len(ball) == 4:
+            x, y, r, ball_type = ball
+            new_balls_gold_fmt.append((int(x), int(y), float(r), ball_type))
+        else:
+            x, y, r = ball
+            new_balls_gold_fmt.append((int(x), int(y), float(r)))
     try:
         if hasattr(game_state, "tracker") and game_state.tracker:
             tracked_detected_balls_tuples, next_id = game_state.tracker.track_balls(

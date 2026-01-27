@@ -51,7 +51,7 @@ from game_types import CurrentGameState
 
 # Import submenu draw functions
 import submenu_draw_functions
-from submenus import _draw_game_mode_submenu, _draw_zone_submenu
+from submenus import _draw_game_mode_submenu, _draw_zone_submenu, _draw_layout_submenu
 
 # Import Player class
 from player import Player
@@ -78,6 +78,7 @@ submenu_draw_functions_map = {
     "achievements": submenu_draw_functions._draw_achievements_submenu,
     "leaderboard": submenu_draw_functions._draw_leaderboard_submenu,
     "game_mode": _draw_game_mode_submenu,
+    "layout": _draw_layout_submenu,
     "manage_zones": _draw_zone_submenu,
     "edit_zones": submenu_draw_functions._draw_edit_zones_submenu,
     "replays": submenu_draw_functions._draw_replays_submenu,
@@ -1181,6 +1182,67 @@ def _process_menu_or_modal_click(
                             show_notification(
                                 game_state, f"Mode changed to {new_mode.capitalize()}"
                             )
+                        return True
+
+                    # Layout selection
+                    elif action.startswith("set_layout_"):
+                        new_layout = action.split("set_layout_")[-1]
+                        valid_layouts = {"whiffle", "fivestar"}
+                        if new_layout in valid_layouts:
+                            current_playfield = getattr(game_state, "playfield_type", "whiffle")
+                            # Convert fivestar to "five star" for set_playfield if needed
+                            layout_key = "five star" if new_layout == "fivestar" else new_layout
+                            
+                            if current_playfield != new_layout:
+                                try:
+                                    success = game_state.set_playfield(layout_key)
+                                    if success:
+                                        # Reset score when changing layout
+                                        game_state.score = 0
+                                        game_state.final_score = 0
+                                        
+                                        # Reset player score if there's a current player
+                                        try:
+                                            current_player = game_state.get_current_player()
+                                            if current_player:
+                                                current_player.score = 0
+                                        except Exception as e:
+                                            logger.debug(f"Could not reset player score: {e}")
+                                        
+                                        # Reset XP when changing layout
+                                        try:
+                                            from xp_system import xp_system
+                                            xp_system.clear_all_xp()
+                                            
+                                            # Refresh player XP data after clearing
+                                            try:
+                                                current_player = game_state.get_current_player()
+                                                if current_player and hasattr(current_player, "refresh_xp"):
+                                                    current_player.refresh_xp()
+                                            except Exception as e:
+                                                logger.debug(f"Could not refresh player XP: {e}")
+                                        except Exception as e:
+                                            logger.error(f"Error clearing XP on layout change: {e}")
+                                        
+                                        game_state.menu_cache = None
+                                        layout_display = "Five star" if new_layout == "fivestar" else "Whiffle"
+                                        show_notification(
+                                            game_state, f"Layout changed to {layout_display}"
+                                        )
+                                        logger.info(f"Switched to layout: {new_layout}, score reset to 0")
+                                    else:
+                                        show_notification(
+                                            game_state,
+                                            "Failed to change layout",
+                                            is_error=True,
+                                        )
+                                except Exception as e:
+                                    logger.error(f"Error changing layout: {e}")
+                                    show_notification(
+                                        game_state,
+                                        "Error changing layout",
+                                        is_error=True,
+                                    )
                         return True
 
                     # Replay system actions

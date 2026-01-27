@@ -308,6 +308,7 @@ class MenuConstants:
         ("Resume", "resume"),
         ("Settings", "settings"),
         ("Game Mode", "game_mode"),
+        ("Layout", "layout"),
         ("Manage Zones", "manage_zones"),
         ("Players", "players"),
         ("Replays", "replays"),

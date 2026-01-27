@@ -217,49 +217,47 @@ class BallDetector:
                         f"Detected {ball_type} ball at ({x_center:.0f}, {y_center:.0f}) with radius={radius:.1f}, confidence={score:.2f}"
                     )  #
 
-                # Append to respective lists based on ball type from model
+                # Append to respective lists with ball type information
+                # Store as (x, y, radius, ball_type) to preserve the actual type name
                 # Map ball types to return lists dynamically based on model's class names
-                ball_type_lower = ball_type.lower()
-                
-                # Determine which list to add to based on the ball type name
-                # Common patterns: first class(es) go to silver_balls, last class(es) go to gold_balls
-                # This works for both whiffle (red/white -> silver, half-red -> gold) 
-                # and fivestar (silver -> silver, gold -> gold)
                 if len(self.class_names) == 2:
                     # Two classes: first -> silver_balls, second -> gold_balls
                     if cls_int == 0:
-                        silver_balls.append((int(x_center), int(y_center), radius))
+                        silver_balls.append((int(x_center), int(y_center), radius, ball_type))
                     elif cls_int == 1:
-                        gold_balls.append((int(x_center), int(y_center), radius))
+                        gold_balls.append((int(x_center), int(y_center), radius, ball_type))
                     else:
                         logger.warning(f"Unexpected class index {cls_int} for 2-class model")
-                        silver_balls.append((int(x_center), int(y_center), radius))
+                        silver_balls.append((int(x_center), int(y_center), radius, ball_type))
                 elif len(self.class_names) == 3:
                     # Three classes: first two -> silver_balls, third -> gold_balls
                     # (e.g., whiffle: red, white -> silver_balls; half-red -> gold_balls)
                     if cls_int in [0, 1]:
-                        silver_balls.append((int(x_center), int(y_center), radius))
+                        silver_balls.append((int(x_center), int(y_center), radius, ball_type))
                     elif cls_int == 2:
-                        gold_balls.append((int(x_center), int(y_center), radius))
+                        gold_balls.append((int(x_center), int(y_center), radius, ball_type))
                     else:
                         logger.warning(f"Unexpected class index {cls_int} for 3-class model")
-                        silver_balls.append((int(x_center), int(y_center), radius))
+                        silver_balls.append((int(x_center), int(y_center), radius, ball_type))
                 else:
                     # Generic mapping: split classes roughly in half
                     # First half -> silver_balls, second half -> gold_balls
                     mid_point = len(self.class_names) // 2
                     if cls_int < mid_point:
-                        silver_balls.append((int(x_center), int(y_center), radius))
+                        silver_balls.append((int(x_center), int(y_center), radius, ball_type))
                     else:
-                        gold_balls.append((int(x_center), int(y_center), radius))
+                        gold_balls.append((int(x_center), int(y_center), radius, ball_type))
 
         # Debug frame drawing
         if debug_mode:
             debug_frame = frame.copy()
             # Use different colors for different ball types based on class names
-            for x, y, radius in silver_balls:
+            # Handle both old format (x, y, r) and new format (x, y, r, type)
+            for ball in silver_balls:
+                x, y, radius = ball[:3]  # Get first 3 elements
                 cv2.circle(debug_frame, (x, y), int(radius), (0, 0, 255), 2)  # Red color
-            for x, y, radius in gold_balls:
+            for ball in gold_balls:
+                x, y, radius = ball[:3]  # Get first 3 elements
                 cv2.circle(debug_frame, (x, y), int(radius), (0, 215, 255), 2)  # Gold/Orange color
             cv2.imshow("Ball Detection", debug_frame)
 
