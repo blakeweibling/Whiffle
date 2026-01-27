@@ -40,6 +40,7 @@ from game_types import CurrentGameState
 from leaderboard import Leaderboard
 from player import Player
 from tracking import BallTracker
+from xp_system import xp_system
 
 # Import the replay manager
 from replay_manager import ReplayManager
@@ -66,6 +67,14 @@ class GameState:
 
     def __init__(self, supabase_url: str, supabase_key: str) -> None:
         logger.info("Starting GameState initialization...")
+
+        # Clear XP data at the start of each application session
+        try:
+            from xp_system import xp_system
+            xp_system.clear_all_xp()
+            logger.info("Cleared player XP data at application startup.")
+        except Exception as e:
+            logger.error(f"Error clearing XP data at startup: {e}")
 
         # Try to update loading screen if available
         try:
@@ -404,6 +413,9 @@ class GameState:
                 f"Loaded {self.playfield_type} model",
                 duration=2.0,
             )
+            # Reload static frame if camera is not available (to use correct image for playfield type)
+            if not self.camera_available:
+                self._load_static_frame()
             return True
         except Exception as e:
             logger.error(f"Failed to load model {model_path}: {e}")
@@ -424,6 +436,40 @@ class GameState:
             or model_path == os.path.normpath(GameConstants.FIVESTAR_MODEL_PATH)
             or zones_path == os.path.normpath(GameConstants.FIVESTAR_ZONES_FILE)
         )
+
+    def get_static_frame_file(self) -> str:
+        """Get the appropriate static frame file based on current playfield type."""
+        if self.is_fivestar_playfield():
+            return GameConstants.STATIC_FIVESTAR_FRAME_FILE
+        return GameConstants.STATIC_FRAME_FILE
+
+    def _load_static_frame(self) -> None:
+        """Load the appropriate static frame based on current playfield type."""
+        static_frame_file = self.get_static_frame_file()
+        logger.warning(f"Using static frame: {static_frame_file}")
+
+        # Try to update loading screen
+        try:
+            from loading_screen import update_loading_progress
+
+            update_loading_progress("Loading static frame...", 0.1)
+        except ImportError:
+            pass
+
+        try:
+            static_img = cv2.imread(static_frame_file)
+            if static_img is None:
+                raise FileNotFoundError(f"Static frame file not found or invalid: {static_frame_file}")
+            # Resize static frame to current target resolution
+            self.static_frame = cv2.resize(
+                static_img, (self.current_width, self.current_height)
+            )
+            logger.info(
+                f"Loaded and resized static frame to {self.current_width}x{self.current_height}"
+            )
+        except Exception as e:
+            logger.exception(f"Static frame loading or resizing failed: {e}")
+            self.static_frame = None
 
     # Helper to get current dimensions
     def get_current_resolution_dimensions(self) -> tuple[int, int]:
@@ -578,30 +624,7 @@ class GameState:
 
         # Handle static frame loading if camera failed or isn't used
         if not self.camera_available:
-            logger.warning(f"Using static frame: {GameConstants.STATIC_FRAME_FILE}")
-
-            # Try to update loading screen
-            try:
-                from loading_screen import update_loading_progress
-
-                update_loading_progress("Loading static frame...", 0.1)
-            except ImportError:
-                pass
-
-            try:
-                static_img = cv2.imread(GameConstants.STATIC_FRAME_FILE)
-                if static_img is None:
-                    raise FileNotFoundError("Static frame file not found or invalid.")
-                # Resize static frame to current target resolution
-                self.static_frame = cv2.resize(
-                    static_img, (self.current_width, self.current_height)
-                )
-                logger.info(
-                    f"Loaded and resized static frame to {self.current_width}x{self.current_height}"
-                )
-            except Exception as e:
-                logger.exception(f"Static frame loading or resizing failed: {e}")
-                self.static_frame = None
+            self._load_static_frame()
 
         # Handle case where neither camera nor static frame worked
         if not self.camera_available and self.static_frame is None:
@@ -812,6 +835,9 @@ class GameState:
 
     def reset_game(self, player_name: str = "Player", game_mode: str = "Classic"):
         """Reset the game state to initial values."""
+        # Clear all XP data at the start of each game session
+        xp_system.clear_all_xp()
+        
         # Reset game state variables
         self.score = 0
         self.final_score = 0
@@ -834,6 +860,8 @@ class GameState:
             for i, player in enumerate(self.players):
                 if player.name == player_name:
                     self.current_player_index = i
+                    # Refresh XP data after clearing (will be level 1, 0 XP)
+                    player.refresh_xp()
                     found = True
                     break
             if not found:

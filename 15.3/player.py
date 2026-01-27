@@ -62,3 +62,7 @@ class Player:
     def increment_games_played(self) -> None:
         """Increment the number of games played."""
         self.games_played += 1
+    
+    def refresh_xp(self) -> None:
+        """Refresh player's XP data from the XP system."""
+        self.level, self.xp, self.next_level_xp = xp_system.get_player_level(self.name)

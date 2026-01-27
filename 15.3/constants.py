@@ -233,6 +233,7 @@ class GameConstants:
     CAMERA_INDEX = 0  # Default camera (built-in webcam)
     CAMERA_BACKEND = cv2.CAP_DSHOW  # Default backend (DirectShow for Windows)
     STATIC_FRAME_FILE = "assets/last_frame.png"  # Default static image if no camera
+    STATIC_FIVESTAR_FRAME_FILE = "assets/static_fivestar.png"  # Static image for fivestar mode if no camera
     FRAME_RATE = 30  # Target frame rate
     DEBUG_MODE = False  # Debug mode flag
     DETECTION_FRAME_INTERVAL = 2  # Process every Nth frame for detection

@@ -867,6 +867,13 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
 def reset_game(game_state: Any) -> None:
     """Reset game state for a new game, while preserving player and leaderboard."""
     logger.info("Resetting game for new round.")
+    
+    # Clear all XP data at the start of each game session
+    try:
+        from xp_system import xp_system
+        xp_system.clear_all_xp()
+    except Exception as e:
+        logger.error(f"Error clearing XP data: {e}")
 
     # Preserve objects that should survive reset
     preserved_objects = {
@@ -930,6 +937,9 @@ def reset_game(game_state: Any) -> None:
                 current_player.games_played += 1  # Increment games played count
             if hasattr(current_player, "score"):
                 current_player.score = 0  # Reset score for new game
+            # Refresh XP data after clearing (will be level 1, 0 XP)
+            if hasattr(current_player, "refresh_xp"):
+                current_player.refresh_xp()
     except Exception as player_e:
         logger.error(f"Error updating player stats during reset: {player_e}")
 

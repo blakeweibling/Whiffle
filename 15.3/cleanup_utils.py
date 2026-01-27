@@ -148,6 +148,15 @@ def clean_exit(
                 )
             # --- >>> END ADDED <<< ---
 
+            # --- Clear XP Data on Exit ---
+            logger.info("Clearing player XP data on exit...")
+            try:
+                from xp_system import xp_system
+                xp_system.clear_all_xp()
+                logger.info("Player XP data cleared successfully.")
+            except Exception as e:
+                logger.error(f"Error clearing XP data on exit: {e}")
+
         except Exception as e:
             # Catch any broad errors during the state saving phase
             logger.exception(f"Error during game state saving/flushing on exit: {e}")

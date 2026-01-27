@@ -30,7 +30,23 @@ class BallDetector:
         # Load the trained YOLOv8 model
         resolved_model_path = model_path or GameConstants.WHIFFLE_MODEL_PATH
         self.model = YOLO(resolved_model_path)
-        self.class_names = ["silver", "gold"]
+        
+        # Try to get class names from the model, fall back to default if not available
+        if hasattr(self.model, 'names') and self.model.names:
+            # Convert model names dict to list (YOLO models typically have names as dict {0: 'class0', 1: 'class1', ...})
+            if isinstance(self.model.names, dict):
+                max_index = max(self.model.names.keys()) if self.model.names else -1
+                self.class_names = [self.model.names.get(i, f"class_{i}") for i in range(max_index + 1)]
+            elif isinstance(self.model.names, list):
+                self.class_names = self.model.names
+            else:
+                self.class_names = ["silver", "gold"]
+                logger.warning(f"Model names format not recognized, using default: {self.class_names}")
+        else:
+            self.class_names = ["silver", "gold"]
+            logger.info(f"Using default class names: {self.class_names}")
+        
+        logger.info(f"BallDetector initialized with class names: {self.class_names}")
         self.state_names = ["on_playfield", "in_hole"]
 
         # Attempt to use OpenCL for YOLOv8 inference (Unchanged)
@@ -93,13 +109,58 @@ class BallDetector:
         hsv_frame: Optional[np.ndarray] = None,  #
         debug_mode: bool = False,  #
     ) -> Tuple[
-        List[Tuple[int, int, float]],  # silver_balls
-        List[Tuple[int, int, float]],  # gold_balls
+        List[Tuple[int, int, float]],  # silver_balls (or red/white balls in whiffle mode)
+        List[Tuple[int, int, float]],  # gold_balls (or half-red balls in whiffle mode)
     ]:
         """
-        Detect silver and gold balls in the frame using YOLOv8 and infer their state.
+        Detect balls in the frame using YOLOv8 and infer their state.
+        For whiffle mode: detects red, white, and half-red balls.
+        For fivestar mode: detects silver and gold balls.
         Uses internal scaling for inference and scales results back.
         """
+        # Determine playfield type to use appropriate class names
+        is_whiffle = True  # Default to whiffle
+        if hasattr(game_state, 'is_fivestar_playfield'):
+            is_whiffle = not game_state.is_fivestar_playfield()
+        elif hasattr(game_state, 'playfield_type'):
+            is_whiffle = getattr(game_state, 'playfield_type', 'whiffle') != 'fivestar'
+        
+        # Update class names based on playfield type
+        if is_whiffle:
+            # For whiffle mode, expect red, white, and half-red balls
+            # Try to get from model, otherwise use expected names
+            if hasattr(self.model, 'names') and self.model.names:
+                if isinstance(self.model.names, dict):
+                    max_index = max(self.model.names.keys()) if self.model.names else -1
+                    model_class_names = [self.model.names.get(i, f"class_{i}") for i in range(max_index + 1)]
+                elif isinstance(self.model.names, list):
+                    model_class_names = self.model.names
+                else:
+                    model_class_names = []
+                
+                # Use model's class names if available, otherwise use defaults
+                if model_class_names:
+                    self.class_names = model_class_names
+                    logger.debug(f"Using model class names for whiffle mode: {self.class_names}")
+                else:
+                    # Expected class names for whiffle: red, white, half-red (or variations)
+                    self.class_names = ["red", "white", "half-red"]
+            else:
+                # Expected class names for whiffle: red, white, half-red (or variations)
+                self.class_names = ["red", "white", "half-red"]
+        else:
+            # For fivestar mode, use silver and gold
+            if hasattr(self.model, 'names') and self.model.names:
+                if isinstance(self.model.names, dict):
+                    max_index = max(self.model.names.keys()) if self.model.names else -1
+                    model_class_names = [self.model.names.get(i, f"class_{i}") for i in range(max_index + 1)]
+                elif isinstance(self.model.names, list):
+                    model_class_names = self.model.names
+                else:
+                    model_class_names = ["silver", "gold"]
+                self.class_names = model_class_names if model_class_names else ["silver", "gold"]
+            else:
+                self.class_names = ["silver", "gold"]
         # Downscale the frame for YOLO inference (Unchanged)
         inference_scale = 0.5
         inference_frame = cv2.resize(
@@ -149,26 +210,62 @@ class BallDetector:
                         )  #
                     continue
 
-                # Assign ball type (Unchanged)
-                ball_type = self.class_names[int(cls)]
+                # Assign ball type with bounds checking
+                cls_int = int(cls)
+                if cls_int < 0 or cls_int >= len(self.class_names):
+                    logger.warning(
+                        f"Invalid class index {cls_int} detected (expected 0-{len(self.class_names)-1}). "
+                        f"Model has {len(self.class_names)} classes: {self.class_names}. Skipping detection."
+                    )
+                    continue
+                
+                ball_type = self.class_names[cls_int]
                 if debug_mode:
                     logger.debug(
                         f"Detected {ball_type} ball at ({x_center:.0f}, {y_center:.0f}) with radius={radius:.1f}, confidence={score:.2f}"
                     )  #
 
-                # Append to respective lists
-                if ball_type == "silver":
-                    silver_balls.append((int(x_center), int(y_center), radius))
-                elif ball_type == "gold":
-                    gold_balls.append((int(x_center), int(y_center), radius))
+                # Append to respective lists based on ball type
+                # For whiffle mode: red and white -> silver_balls, half-red -> gold_balls
+                # For fivestar mode: silver -> silver_balls, gold -> gold_balls
+                ball_type_lower = ball_type.lower()
+                if is_whiffle:
+                    # Whiffle mode: map red, white, half-red to return lists
+                    if ball_type_lower in ["red", "white"]:
+                        silver_balls.append((int(x_center), int(y_center), radius))
+                    elif ball_type_lower in ["half-red", "half_red", "half", "halfred"]:
+                        gold_balls.append((int(x_center), int(y_center), radius))
+                    else:
+                        # Default: put unknown types in silver_balls
+                        logger.debug(f"Unknown whiffle ball type '{ball_type}', adding to silver_balls")
+                        silver_balls.append((int(x_center), int(y_center), radius))
+                else:
+                    # Fivestar mode: map silver and gold
+                    if ball_type_lower == "silver":
+                        silver_balls.append((int(x_center), int(y_center), radius))
+                    elif ball_type_lower == "gold":
+                        gold_balls.append((int(x_center), int(y_center), radius))
+                    else:
+                        # Default: put unknown types in silver_balls
+                        logger.debug(f"Unknown fivestar ball type '{ball_type}', adding to silver_balls")
+                        silver_balls.append((int(x_center), int(y_center), radius))
 
         # Debug frame drawing
         if debug_mode:
             debug_frame = frame.copy()
-            for x, y, radius in silver_balls:
-                cv2.circle(debug_frame, (x, y), int(radius), (192, 192, 192), 2)  # Silver color
-            for x, y, radius in gold_balls:
-                cv2.circle(debug_frame, (x, y), int(radius), (0, 215, 255), 2)  # Gold color
+            if is_whiffle:
+                # Whiffle mode: red/white balls in silver_balls (use red/white colors)
+                for x, y, radius in silver_balls:
+                    cv2.circle(debug_frame, (x, y), int(radius), (0, 0, 255), 2)  # Red color for red/white balls
+                # Half-red balls in gold_balls (use orange/red-orange color)
+                for x, y, radius in gold_balls:
+                    cv2.circle(debug_frame, (x, y), int(radius), (0, 100, 255), 2)  # Orange-red color for half-red
+            else:
+                # Fivestar mode: silver and gold
+                for x, y, radius in silver_balls:
+                    cv2.circle(debug_frame, (x, y), int(radius), (192, 192, 192), 2)  # Silver color
+                for x, y, radius in gold_balls:
+                    cv2.circle(debug_frame, (x, y), int(radius), (0, 215, 255), 2)  # Gold color
             cv2.imshow("Ball Detection", debug_frame)
 
         return silver_balls, gold_balls
