@@ -1129,7 +1129,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             button_width,
             button_height,
             "Yes (Y)",
-            UIConstants.GREEN,
+            UIConstants.CV2_BLUE,
             game_state=game_state,
             font_scale=UIConstants.FONT_SCALE_MEDIUM,
         )
@@ -1141,7 +1141,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             button_width,
             button_height,
             "No (N)",
-            UIConstants.RED,
+            UIConstants.CV2_BLUE,
             game_state=game_state,
             font_scale=UIConstants.FONT_SCALE_MEDIUM,
         )

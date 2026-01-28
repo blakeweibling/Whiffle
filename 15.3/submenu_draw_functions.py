@@ -752,9 +752,23 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
     game_state.menu_height = back_y + item_height + 20
 
 
-# --- Achievements Submenu ---
+# --- Achievements Submenu (scrollable) ---
+ACHIEVEMENTS_MENU_HEIGHT = 500
+ACHIEVEMENTS_LIST_TOP = 80
+ACHIEVEMENTS_LIST_VISIBLE_HEIGHT = 340  # space for list before back button
+ACHIEVEMENTS_BACK_BUTTON_Y = 435
+ACHIEVEMENTS_SCROLL_STEP = 50
+
+
 def _draw_achievements_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
-    """Draw the Achievements submenu."""
+    """Draw the Achievements submenu with scrollable list."""
+    menu_h, menu_w = menu_frame.shape[:2]
+    game_state.submenu_items.clear()
+
+    # Initialize scroll offset when not set
+    if not hasattr(game_state, "achievements_scroll_offset"):
+        game_state.achievements_scroll_offset = 0
+
     cv2.putText(
         menu_frame,
         "Achievements",
@@ -764,36 +778,43 @@ def _draw_achievements_submenu(menu_frame: np.ndarray, game_state: "GameState") 
         UIConstants.WHITE,
         UIConstants.FONT_THICKNESS,
     )
-    y_offset = 80
     item_height = 25
-    game_state.submenu_items.clear()
     unlocked_count = sum(1 for ach in game_state.achievements if ach.unlocked)
     total_count = len(game_state.achievements)
     status_text = f"Unlocked: {unlocked_count} / {total_count}"
     cv2.putText(
         menu_frame,
         status_text,
-        (20, y_offset - 20),
+        (20, ACHIEVEMENTS_LIST_TOP - 20),
         cv2.FONT_HERSHEY_SIMPLEX,
         UIConstants.FONT_SCALE_MEDIUM,
         UIConstants.YELLOW,
         1,
     )
 
+    list_bottom = ACHIEVEMENTS_LIST_TOP + ACHIEVEMENTS_LIST_VISIBLE_HEIGHT
+
     if not game_state.achievements:
         cv2.putText(
             menu_frame,
             "No achievements defined.",
-            (20, y_offset + 20),
+            (20, ACHIEVEMENTS_LIST_TOP + 20),
             cv2.FONT_HERSHEY_SIMPLEX,
             UIConstants.FONT_SCALE_MEDIUM,
             UIConstants.WHITE,
             1,
         )
-        y_offset += item_height + 5
+        total_content_height = 30
     else:
+        # Compute total content height and draw only visible lines
+        total_content_height = 0
+        scroll = getattr(game_state, "achievements_scroll_offset", 0)
+
         for achievement in game_state.achievements:
-            text = f"- {achievement.name}: {achievement.description}"
+            layout_suffix = ""
+            if achievement.unlocked and getattr(achievement, "unlocked_layout", None):
+                layout_suffix = " (Five Star)" if achievement.unlocked_layout == "fivestar" else " (Whiffle)"
+            text = f"- {achievement.name}{layout_suffix}: {achievement.description}"
             color = UIConstants.GREEN if achievement.unlocked else UIConstants.WHITE
             max_len = 55
             if len(text) > max_len:
@@ -803,47 +824,90 @@ def _draw_achievements_submenu(menu_frame: np.ndarray, game_state: "GameState") 
             else:
                 line1 = text
                 line2 = None
+
+            line_height = item_height + (item_height + 2 if line2 else 2)
+            content_y_start = total_content_height
+            content_y_end = total_content_height + line_height
+            total_content_height = content_y_end
+
+            # Only draw if this block is visible in the scroll window
+            screen_y1 = ACHIEVEMENTS_LIST_TOP + content_y_start - scroll
+            screen_y2 = ACHIEVEMENTS_LIST_TOP + content_y_end - scroll
+            if screen_y2 <= ACHIEVEMENTS_LIST_TOP or screen_y1 >= list_bottom:
+                continue
+
             cv2.putText(
                 menu_frame,
                 line1,
-                (20, y_offset + item_height),
+                (20, screen_y1 + item_height),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 UIConstants.FONT_SCALE_SMALL,
                 color,
                 1,
             )
-            y_offset += item_height
             if line2:
                 cv2.putText(
                     menu_frame,
                     line2,
-                    (20, y_offset + item_height),
+                    (20, screen_y1 + item_height + item_height),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     UIConstants.FONT_SCALE_SMALL,
                     color,
                     1,
                 )
-                y_offset += item_height + 2
-            else:
-                y_offset += 2
 
-    back_y = y_offset + 10
-    item_height = 35
+        max_scroll = max(0, total_content_height - ACHIEVEMENTS_LIST_VISIBLE_HEIGHT)
+        game_state.achievements_scroll_offset = max(0, min(scroll, max_scroll))
+
+        # Scroll indicator on the right: thin track + thumb when content overflows
+        if max_scroll > 0:
+            track_margin = 12
+            track_width = 6
+            track_x = menu_w - track_margin - track_width
+            track_y1 = ACHIEVEMENTS_LIST_TOP
+            track_y2 = list_bottom
+            track_height = track_y2 - track_y1
+            # Track (subtle line)
+            cv2.rectangle(
+                menu_frame,
+                (track_x, track_y1),
+                (track_x + track_width, track_y2),
+                (80, 80, 80),
+                -1,
+            )
+            # Thumb: height proportional to visible/total, position to scroll offset
+            visible_ratio = ACHIEVEMENTS_LIST_VISIBLE_HEIGHT / total_content_height
+            thumb_height = max(24, int(track_height * visible_ratio))
+            thumb_range = track_height - thumb_height
+            thumb_y = track_y1 + int(
+                (game_state.achievements_scroll_offset / max_scroll) * thumb_range
+            )
+            cv2.rectangle(
+                menu_frame,
+                (track_x, thumb_y),
+                (track_x + track_width, thumb_y + thumb_height),
+                (140, 140, 140),
+                -1,
+            )
+
+    # Back button at fixed position
+    back_button_height = 35
     _draw_button(
         menu_frame,
         20,
-        back_y,
-        menu_frame.shape[1] - 40,
-        item_height,
+        ACHIEVEMENTS_BACK_BUTTON_Y,
+        menu_w - 40,
+        back_button_height,
         "Back",
         UIConstants.CV2_BLUE,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
     )
     game_state.submenu_items.append(
-        ((20, back_y, menu_frame.shape[1] - 40, item_height), "back_to_main", "Back")
+        ((20, ACHIEVEMENTS_BACK_BUTTON_Y, menu_w - 40, back_button_height), "back_to_main", "Back")
     )
-    game_state.menu_height = back_y + item_height + 20
+
+    game_state.menu_height = ACHIEVEMENTS_MENU_HEIGHT
 
 
 # --- Help Submenu ---
@@ -985,7 +1049,7 @@ def _draw_about_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None
     game_state.submenu_items.clear()
     cv2.putText(
         menu_frame,
-        "Whiffle Tracker v15.1",
+        "Whiffle Tracker v15.3",
         (20, y_offset),
         cv2.FONT_HERSHEY_SIMPLEX,
         UIConstants.FONT_SCALE_MEDIUM,

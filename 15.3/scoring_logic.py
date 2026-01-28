@@ -250,6 +250,9 @@ def update_scoring(game_state: Any) -> None:
                         game_state, "Special Hole Hit! Score will double!", duration=3.0
                     )
                 game_state.special_hole_hit_this_session = True
+                game_state.special_hole_hits_this_session = (
+                    getattr(game_state, "special_hole_hits_this_session", 0) + 1
+                )
             else:
                 current_score_pts = base_pts
 
@@ -264,6 +267,17 @@ def update_scoring(game_state: Any) -> None:
                 score_multiplier = 1.0
             # Default to 1.0 for unknown types
             points_to_add = int(current_score_pts * score_multiplier)
+
+            # Achievement tracking: multiplier points and ball-type flags
+            if score_multiplier > 1.0:
+                game_state.points_from_multiplier_balls_this_game = (
+                    getattr(game_state, "points_from_multiplier_balls_this_game", 0)
+                    + points_to_add
+                )
+            if b_type_lower in ["gold", "red"]:
+                game_state.scored_red_ball_this_session = True
+            elif b_type_lower in ["half-red", "half_red", "half", "halfred"]:
+                game_state.scored_half_red_this_session = True
 
             # --- Update Score & State ---
             game_state.score += points_to_add
@@ -392,25 +406,30 @@ def update_scoring(game_state: Any) -> None:
                     f"Created explosion at ({explosion_center_x}, {explosion_center_y}) for score in zone {zone_idx}"
                 )
 
-            # Check Timed Mode Win Condition
+            # Check Win Condition (classic, timed, survival) — do not trigger GAME_OVER;
+            # game over is only for timed mode when time runs out (see game_state_utils).
             if (
-                game_state.game_mode == "timed"
+                game_state.game_mode in ["classic", "timed", "survival"]
                 and game_state.score >= game_state.win_score
                 and game_state.current_state != CurrentGameState.GAME_OVER
             ):
                 game_state.win_condition_met = True
-                game_state.current_state = CurrentGameState.GAME_OVER
                 logger.info(
                     f"Win condition met! Score {game_state.score} >= {game_state.win_score}"
                 )
-                # Save score using utility function
+                try:
+                    from game_state_utils import record_game_completed
+
+                    record_game_completed(game_state)
+                except Exception as rec_e:
+                    logger.warning(f"record_game_completed error: {rec_e}")
                 try:
                     player_name = "Unknown"
                     if hasattr(game_state, "get_current_player"):
                         player = game_state.get_current_player()
                         if player and hasattr(player, "name"):
                             player_name = player.name
-                    save_score(game_state, player_name)  # Pass player name
+                    save_score(game_state, player_name)
                 except Exception as e:
                     logger.error(f"Error saving score on win condition: {e}")
 

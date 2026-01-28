@@ -161,7 +161,18 @@ class GameState:
         self.ball_positions_history: Dict[int, List[Tuple[int, int]]] = {}
         self.ball_zone_history: Dict[int, List[Optional[int]]] = {}
         self.special_hole_hit_this_session: bool = False
+        self.special_hole_hits_this_session: int = 0  # Count for Hole Hunter achievement
         self.zone_cooldown: Dict[int, float] = {}
+        # Achievement tracking (persistent or session)
+        self.has_edited_zone_points: bool = False
+        self.has_viewed_heatmap: bool = False
+        self.has_paused_and_resumed: bool = False
+        self.has_uploaded_screenshot: bool = False
+        self.has_shared_replay: bool = False
+        self.has_exported_highlight: bool = False
+        self.scored_red_ball_this_session: bool = False
+        self.scored_half_red_this_session: bool = False
+        self.points_from_multiplier_balls_this_game: int = 0
 
         # Menu State Variables
         self.submenu_active: Optional[str] = None
@@ -193,6 +204,9 @@ class GameState:
 
         # Menu minimized state
         self.menu_minimized: bool = False
+
+        # UI visibility for scoring zones: start hidden by default
+        self.show_scoring_zones: bool = False
 
         # Initial Player Name Input State
         self.player_name_input_active: bool = True
@@ -396,18 +410,32 @@ class GameState:
             self.playfield_type = "fivestar" if "five" in playfield_key else "whiffle"
             self.model_path = model_path
             self.zones_file_path = zones_map[playfield_key]
-            if self.is_fivestar_playfield():
-                self.special_hole = None
+            
+            # Clear old zones before loading new ones to prevent stale data
+            self.scoring_zones = []
+            self.special_hole = None
+            
+            # Reload detector with new model (this also extracts class names from the new model)
             self.detector = BallDetector(self.model_path)
+            logger.info(f"Reloaded detector with model: {self.model_path}")
+            
+            # Load zones for the new layout
             try:
                 from game_state_helpers import load_zones
 
                 load_zones(self, zones_file_path=self.zones_file_path)
+                logger.info(f"Loaded zones from {self.zones_file_path} for {self.playfield_type} layout")
             except Exception as e:
                 logger.error(f"Failed to load zones for {self.playfield_type}: {e}")
                 show_notification(
                     self, "Failed to load scoring zones", is_error=True, duration=2.5
                 )
+            
+            # Set special hole for Whiffle (Five Star doesn't have one)
+            if not self.is_fivestar_playfield():
+                from game_state_helpers import set_special_hole
+                self.special_hole = set_special_hole(self.scoring_zones)
+            
             show_notification(
                 self,
                 f"Loaded {self.playfield_type} model",
@@ -872,3 +900,9 @@ class GameState:
         if self.data_logger:
             self.data_logger.start_new_session(player_name, game_mode)
             self.current_session_stats = None
+
+        # Reload achievements for the (potentially) new current player so they are per-player
+        try:
+            load_achievements(self, GameConstants.ACHIEVEMENTS_FILE)
+        except Exception as e:
+            logger.error(f"Error loading achievements during reset_game: {e}")

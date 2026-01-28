@@ -2,124 +2,123 @@
 
 ## Description
 
-Whiffle Tracker is a computer vision-based application designed to detect, track, and score Whiffle balls using a camera feed. It features advanced ball detection, multiple game modes, a robust replay system, online and local leaderboards, achievements, and social sharing. The application uses the YOLOv8 model for ball detection and OpenCV for video processing. The game supports multiple resolutions and dynamic window sizing for optimal display.
+Whiffle Tracker is a computer vision-based application designed to detect, track, and score Whiffle balls using a camera feed. It features advanced ball detection, multiple game modes and layouts (Whiffle and Five Star), a robust replay system, online and local leaderboards, per-player achievements, and social sharing. The application uses YOLOv8 models for ball detection and OpenCV for video processing. The game supports multiple resolutions and dynamic window sizing for optimal display.
 
 ## Features
 
-* **Ball Detection:** Detects white, red, and half-red/half-white Whiffle balls using a YOLOv8 model.
+* **Ball Detection:** Detects white, red, and half-red/half-white Whiffle balls using YOLOv8 (separate models for Whiffle and Five Star layouts).
 * **Ball Tracking:** Assigns unique IDs to balls and tracks their movement across frames.
 * **Scoring Zones:** Define, edit, and manage rectangular scoring zones with specific point values.
-* **Scoring Logic:** Awards points when a ball comes to rest in a scoring zone, with multipliers for special ball types and a 'Special Hole' mechanic.
+* **Scoring Logic:** Awards points when a ball comes to rest in a scoring zone, with multipliers for special ball types and a "Special Hole" mechanic.
+* **Layouts:**
+  * **Whiffle:** Standard playfield; win score 2000 in classic/timed/survival.
+  * **Five Star:** Alternate playfield; win score 5000. Uses dedicated zones (`data/game/fivestar_scoring_zones.json`) and model (`data/whiffle_new_best_fivestar.pt`). Static image (`assets/static_fivestar.png`) when no camera.
 * **Game Modes:**
-  * **Classic Mode:** First to reach 2000 points wins.
-  * **Timed Mode:** 90-second time limit, first to 2000 points wins.
-  * **Survival Mode:** Starts with 45 seconds, gain 10 seconds per score, first to 2000 points wins.
-  * **Retro Mode:** Classic gameplay style with retro visuals and effects.
-  * **Fun Mode:** Enhanced visuals and effects for a more playful experience.
-  * **Practice Mode:** Play without score limits or time pressure, ideal for skill-building.
-  * **Versus Mode:** Two players compete in alternating turns; highest score wins. Includes a results screen and stats comparison.
-* **Replay System:**
-  * Record gameplay automatically or manually.
-  * Browse, play back, and manage replays in-game.
-  * Share replays to YouTube, Google Drive, and Discord.
-  * Replay storage management and highlight extraction.
-* **Player Management:** Supports multiple players, with name editing and selection.
-* **Leaderboard:** Submits scores to an online Supabase leaderboard and maintains a local fallback.
-* **Achievements:** Tracks and notifies users about unlocked achievements.
-* **Menu System:** Interactive menus for settings, zone management, game modes, players, leaderboard, achievements, help, and about sections.
-* **Resolution Support:** Dynamic window sizing with support for multiple resolutions (1080p, 720p).
-* **Configuration:** Uses environment variables (`.env` file) for Supabase credentials and optional camera configuration.
-* **Session Logging & Statistics:** Tracks detailed gameplay statistics and session data for heatmaps and analysis.
-* **Setup Script:** Includes a `setup.py` for building an executable using `cx_Freeze`.
-* **Video Recording:** Capture gameplay videos of high scores and highlights.
-* **Social Integration:** Upload gameplay videos and replays to YouTube, Google Drive, and Discord.
-* **Screenshot Utility:** Take and save screenshots during gameplay.
-* **Score Verification:** Submit screenshot proof with high scores.
-* **Statistics & Heatmaps:** Track and visualize gameplay statistics and ball movement heatmaps.
-* **Loading Screen:** User-friendly loading screen during initialization.
+  * **Classic Mode:** First to reach the layout win score (2000 Whiffle / 5000 Five Star) wins. No game-over screen; win is recorded and game continues.
+  * **Timed Mode:** 90-second time limit. **Game over only when time runs out** (not when reaching win score).
+  * **Survival Mode:** Starts with 45 seconds, gain 10 seconds per score; same win score rules. No game-over screen on time expiry (only timed mode shows game over).
+  * **Retro Mode:** Classic gameplay with retro visuals and effects.
+  * **Fun Mode:** Enhanced visuals and effects.
+  * **Practice Mode:** Play without score limits or time pressure.
+  * **Versus Mode:** Two players alternate turns; highest score wins, with results screen and stats comparison.
+* **Replay System:** Record, browse, play back, and manage replays; share to YouTube, Google Drive, and Discord; highlight extraction and storage management.
+* **Player Management:** Multiple players with name editing and selection. Achievements and play history are stored **per player** (`data/achievements/achievements_status.json`, `data/achievements/play_dates.json`).
+* **Leaderboard:** Online Supabase leaderboard with local fallback.
+* **Achievements:** Per-player achievement tracking. Achievements list is **scrollable with the mouse wheel**; a scroll indicator appears on the side when there are more achievements than fit on screen. Unlocked achievements show the layout they were earned in (Whiffle or Five Star). Includes Victory Lap, Legend (3000 pts), Lucky Shot, Hole Hunter (special hole 2 times in one game), Architect, Tinkerer, Dual Threat, Against the Clock, Survivor, Mode Hopper, Triple Crown, Regular, Dedicated, Week Warrior, Recorded, Show Off, Highlight Reel, On the Board, Proof, Analyst, Inclusive, Take a Breather, Red Hot, Split Decision, Multiplier Master, and more.
+* **High-Score Proof:** Screenshots for score verification; only the **last 5** proof images are kept (`high_score_proof` folder).
+* **Menu System:** Interactive menus for settings, zone management, game modes, layouts, players, leaderboard, achievements (scrollable, mouse wheel), help, and about.
+* **Resolution Support:** Dynamic window sizing (e.g. 1080p, 720p).
+* **Configuration:** `.env` for Supabase; `configs/` for HSV, settings, Google credentials.
+* **Session Logging & Statistics:** Session stats, heatmaps, and data logging.
+* **Building:** **PyInstaller** (`game.spec`) produces a minimal "Whiffle" folder (onedir). See `BUILD_WHIFFLE.md`. **Inno Setup** (`WhiffleSetup.iss`) builds the installer (version 15.3).
+* **Video Recording, Social Integration, Screenshot Utility:** Capture and share gameplay; upload to YouTube, Google Drive, Discord; score verification with screenshots.
+* **Loading Screen:** Loading screen during initialization.
+* **XP System:** Player XP and leveling (`xp_system.py`, `player_xp.json`).
 
 ## Key Files & Modules
 
-* `game.py`: Main entry point for the application.
-* `constants.py`: Defines game constants, colors, file paths, and configurations.
-* `game_state.py`: Manages the overall state of the game (scores, zones, players, modes, etc.).
-* `game_loop.py`: Contains the main game loop logic (frame capture, processing, rendering, input).
-* `game_input.py`: Handles keyboard input for different game states.
-* `detection.py`: Implements ball detection using YOLOv8.
-* `tracking.py`: Implements ball tracking logic.
-* `scoring.py`, `scoring_logic.py`: Handles scoring zone definition, checks, and scoring logic.
-* `leaderboard.py`: Manages online (Supabase) and local leaderboards.
-* `player.py`: Defines the `Player` class.
-* `achievement.py`: Defines the `Achievement` class.
-* `menu.py`, `submenus.py`, `menu_utils.py`, `submenu_draw_functions.py`: Handle menu rendering and logic.
-* `ui.py`, `ui_elements.py`, `ui_screens.py`, `ui_utils.py`: Manage UI drawing for different game states and elements.
-* `utils.py`: Contains utility functions, including the main mouse callback.
-* `cleanup_utils.py`: Provides the `clean_exit` function for resource cleanup.
-* `game_state_utils.py`, `game_state_helpers.py`: Utility functions for `GameState` initialization and state management.
-* `youtube_utils.py`: Handles YouTube video uploads.
-* `google_drive_utils.py`: Manages Google Drive integration for file sharing.
-* `screenshot_utils.py`: Handles screen capture functionality.
-* `heatmap_utils.py`: Generates heatmaps of gameplay.
-* `stats_calculator.py`: Calculates and tracks gameplay statistics.
-* `replay_manager.py`: Manages gameplay recording, replay features, and sharing.
-* `versus_mode.py`: Implements Versus Mode logic.
-* `data_logger.py`: Handles session logging and advanced statistics.
-* `loading_screen.py`: Provides a loading screen during initialization.
+| File | Purpose |
+|------|---------|
+| `game.py` | Main entry point |
+| `constants.py` | Game constants, file paths (e.g. `FIVESTAR_ZONES_FILE`, `FIVESTAR_MODEL_PATH`), win scores |
+| `game_state.py` | Game state (scores, zones, players, modes, layouts, `win_score`) |
+| `game_loop.py` | Main loop (frame capture, processing, input) |
+| `game_input.py` | Keyboard and pygame input |
+| `utils.py` | Mouse callback (including OpenCV mouse wheel for achievements submenu) |
+| `detection.py` | YOLOv8 ball detection (Whiffle and Five Star models) |
+| `tracking.py` | Ball tracking |
+| `scoring.py`, `scoring_logic.py` | Zone checks and scoring; win condition sets `win_condition_met` and saves score but does **not** trigger game over |
+| `game_state_utils.py` | `update_scoring`, `update_timers_and_state` (timer expiry → GAME_OVER only in timed mode), `reset_game` (win_score by layout), achievements load/save per player, `record_game_completed`, play_dates for Week Warrior |
+| `game_state_helpers.py` | Notifications, sound, zone save/load, screenshot upload |
+| `achievement.py` | Achievement definitions and check; `unlocked_layout` (Whiffle/Five Star) for display |
+| `leaderboard.py` | Supabase and local leaderboards |
+| `player.py` | Player class; XP integration (`xp_system`) |
+| `menu.py`, `submenus.py`, `menu_utils.py`, `submenu_draw_functions.py` | Menu and submenu drawing; achievements submenu scroll (mouse wheel, scroll indicator) |
+| `interaction_utils.py` | Menu/modal clicks and actions |
+| `ui.py`, `ui_elements.py`, `ui_screens.py`, `ui_utils.py` | UI and game-over screen |
+| `cleanup_utils.py` | `clean_exit` |
+| `youtube_utils.py`, `google_drive_utils.py` | YouTube and Google Drive |
+| `screenshot_utils.py` | Screenshots and high_score_proof purge (keep last 5) |
+| `heatmap_utils.py`, `stats_calculator.py`, `data_logger.py` | Heatmaps, stats, logging |
+| `replay_manager.py`, `versus_mode.py` | Replays and versus mode |
+| `loading_screen.py` | Loading screen wrapper |
+| `xp_system.py` | Player XP and levels |
+
+## Data & Config Files
+
+* `data/achievements/achievements_status.json` — Per-player achievement state (unlocked, layout)
+* `data/achievements/play_dates.json` — Per-player play dates (e.g. Week Warrior)
+* `data/game/scoring_zones.json` — Whiffle zones
+* `data/game/fivestar_scoring_zones.json`, `scoring_zones_fivestar.json` — Five Star zones
+* `data/whiffle_new_best.pt` — Whiffle YOLO model
+* `data/whiffle_new_best_fivestar.pt` — Five Star YOLO model
+* `data/scores/` — `high_scores.json`, `whiffle_leaderboard.json`
+* `data/sounds/` — Sound and music files
+* `configs/` — `hsv_ranges.json`, `settings.json`, Google credentials, `token.pickle`
+* `assets/` — Splash, `game_over`, `static_fivestar`, menu/top bar images, `pinball_icon`
 
 ## Installation & Setup
 
-1. **Clone the repository:**
-    ```bash
-    git clone <your-repository-url>
-    cd <repository-folder>
-    ```
+1. **Clone and install:**
+   * Python 3.10 or higher required.
+   ```bash
+   git clone <your-repository-url>
+   cd <repository-folder>
+   pip install -r requirements.txt
+   ```
 
-2. **Install Dependencies:**
-    * Python 3.10 or higher is required.
-    * Install the required libraries:
-    ```bash
-    pip install -r requirements.txt
-    ```
+2. **Supabase:** Create `.env` with `SUPABASE_URL` and `SUPABASE_KEY`. Ensure table `whifflescores` with columns `player_name`, `score`, `mode`, `created_at`.
 
-3. **Configure Supabase:**
-    * Create a `.env` file in the root directory.
-    * Add your Supabase URL and Key:
-        ```env
-        SUPABASE_URL=https://your-supabase-url.supabase.co
-        SUPABASE_KEY=your-supabase-anon-key
-        ```
-    * Ensure your Supabase project has a table named `whifflescores` with columns: `player_name` (text), `score` (integer), `mode` (text), and `created_at` (timestamp).
+3. **Google APIs (optional):** `configs/client_secrets.json` for YouTube; `configs/google_credentials.json` for Drive.
 
-4. **Configure Google APIs (Optional):**
-    * For YouTube uploads: Place your `client_secrets.json` file in the `configs/` directory.
-    * For Google Drive integration: Place your Google API credentials in `configs/google_credentials.json`.
+4. **Discord (optional):** Add `discord_webhook_url` to `configs/settings.json`.
 
-5. **Configure Discord Integration (Optional):**
-    * To enable Discord replay sharing, add your Discord webhook URL to `configs/settings.json`:
-        ```json
-        {
-          "discord_webhook_url": "https://discord.com/api/webhooks/your-webhook-id"
-        }
-        ```
+5. **YOLO models:** `data/whiffle_new_best.pt` (Whiffle); `data/whiffle_new_best_fivestar.pt` (Five Star).
 
-6. **YOLO Model:** Ensure the YOLO model file (`data/whiffle_new_best.pt`) is present in the data directory.
-
-7. **Assets:** Ensure all required asset files (images like `assets/splash.png`, `assets/game_over.png`, sound files in the `data/sounds/` directory) are present.
+6. **Assets:** Include all assets (splash, game_over, static_fivestar, etc.) and `data/sounds/`.
 
 ## How to Run
 
-Execute the main game script from the root directory:
+From the project root:
 
 ```bash
 python game.py
 ```
 
+## Building the Whiffle Folder (for Installer)
+
+```bash
+pyinstaller game.spec
+```
+
+Output: `dist/Whiffle/` with `Whiffle.exe` and dependencies. Use this folder as the "Whiffle" source for `WhiffleSetup.iss` (Inno Setup). See `BUILD_WHIFFLE.md` for size-reduction options and openh264 DLL.
+
 ## Game Controls
 
-* Press 'q' to quit at any time
-* Press 'm' during gameplay to open the menu
-* Use the resolution button to switch between different display resolutions
-* Use the mouse to interact with menus and edit scoring zones
-* In Versus Mode, use the on-screen button to end your turn
-* In Replay menus, use the mouse to browse, play, and manage replays
-* Additional controls may be available in specific modes (see in-game help)
+* **q** — Quit
+* **m** — Open menu during gameplay
+* **Resolution button** — Switch display resolution
+* **Mouse** — Menus, zone editing, replay browsing
+* **Mouse wheel** — Scroll the Achievements submenu (when in Achievements)
+* **Versus Mode** — On-screen button to end turn
+* Additional controls in specific modes (see in-game help)

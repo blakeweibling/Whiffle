@@ -38,6 +38,23 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
     game_state = param
     current_state = game_state.current_state
 
+    # Mouse wheel: achievements submenu scroll (OpenCV window has focus, not pygame)
+    event_mousewheel = getattr(cv2, "EVENT_MOUSEWHEEL", 10)
+    if event == event_mousewheel:
+        if (
+            current_state == CurrentGameState.MENU
+            and getattr(game_state, "submenu_active", None) == "achievements"
+        ):
+            scroll = getattr(game_state, "achievements_scroll_offset", 0)
+            step = 50
+            # flags: positive = scroll up, negative = scroll down (when available)
+            if flags > 0:
+                game_state.achievements_scroll_offset = max(0, scroll - step)
+            elif flags < 0:
+                game_state.achievements_scroll_offset = scroll + step
+            game_state.menu_cache = None
+            return
+
     # Check for drawing mode which needs to handle all mouse events
     drawing_mode = current_state == CurrentGameState.PLAYING and getattr(
         game_state, "drawing", False

@@ -12,6 +12,9 @@ class Player:
         self.score = 0
         self.games_played = 0
         self.total_score = 0
+        self.modes_played = set()  # e.g. {"classic", "timed"}
+        self.modes_won = set()
+        self.layouts_played = set()  # e.g. {"whiffle", "fivestar"}
         self.consecutive_scores = 0
         self.consecutive_double_balls = 0
         self.last_zone = None

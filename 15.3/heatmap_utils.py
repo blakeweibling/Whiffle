@@ -70,11 +70,11 @@ def generate_heatmap(
     valid_points_added = 0  #
     for x, y in all_positions:  #
         if 0 <= x < width and 0 <= y < height:  #
-            # Using circle for slightly larger point, adjust radius or use direct pixel access if needed
+            # Use a larger radius so heatmap points are very prominent
             cv2.circle(
                 heatmap_raw,
                 (int(x), int(y)),
-                radius=1,
+                radius=7,  # was 4
                 color=(HEATMAP_POINT_INTENSITY,),
                 thickness=-1,
             )  # Use int(x), int(y)

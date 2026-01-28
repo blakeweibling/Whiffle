@@ -46,6 +46,7 @@ from game_state_utils import (
     toggle_debug_mode,
     toggle_colorblind_mode,
     toggle_game_sounds,
+    load_achievements,
 )
 from game_types import CurrentGameState
 
@@ -561,6 +562,7 @@ def _process_menu_or_modal_click(
 
                         # Save zones to persist changes
                         save_zones(game_state)
+                        game_state.has_edited_zone_points = True
 
                         # Reset editing state
                         game_state.editing_zone_mode = None
@@ -1524,6 +1526,15 @@ def _process_menu_or_modal_click(
                             player_index = int(action[len("select_player_") :])
                             if 0 <= player_index < len(game_state.players):
                                 game_state.current_player_index = player_index
+                                # Reload per-player achievements for the newly selected player
+                                try:
+                                    load_achievements(
+                                        game_state, GameConstants.ACHIEVEMENTS_FILE
+                                    )
+                                except Exception as ach_e:
+                                    logger.error(
+                                        f"Error loading achievements for selected player: {ach_e}"
+                                    )
                                 game_state.menu_cache = None  # Force menu redraw
                                 player_name = game_state.players[player_index].name
                                 show_notification(
@@ -1941,6 +1952,7 @@ def _process_menu_or_modal_click(
                                                 ] = 1.0
                                                 game_state.menu_cache = None
 
+                                            game_state.has_shared_replay = True
                                             show_notification(
                                                 game_state,
                                                 f"Saved to: {os.path.basename(save_path)}",
@@ -2185,6 +2197,7 @@ def _process_menu_or_modal_click(
                                                         game_state.replay_sharing[
                                                             "export_progress"
                                                         ] = 1.0
+                                                    game_state.has_shared_replay = True
                                                     show_notification(
                                                         game_state,
                                                         "Successfully shared to Discord!",
@@ -2647,6 +2660,7 @@ def _process_menu_or_modal_click(
                                                             "export_progress"
                                                         ] = 1.0
 
+                                                    game_state.has_shared_replay = True
                                                     # Update notification based on clipboard success
                                                     if clipboard_success:
                                                         notification_message = "Share Link created and copied!"
@@ -2913,6 +2927,7 @@ def _process_menu_or_modal_click(
 
                                             # Update UI based on upload result
                                             if success:
+                                                game_state.has_shared_replay = True
                                                 video_url = result_message  # The function now returns the URL
                                                 if hasattr(
                                                     game_state, "replay_sharing"
@@ -3026,6 +3041,7 @@ def _process_menu_or_modal_click(
                                 )
 
                                 if video_path:
+                                    game_state.has_exported_highlight = True
                                     # Set status in UI
                                     if hasattr(game_state, "replay_sharing"):
                                         game_state.replay_sharing["export_status"] = (
@@ -3108,6 +3124,7 @@ def _process_menu_or_modal_click(
                                         )
                                     )
                                     if video_path:
+                                        game_state.has_exported_highlight = True
                                         # Set status in UI
                                         if hasattr(game_state, "replay_sharing"):
                                             game_state.replay_sharing[
@@ -3446,6 +3463,7 @@ def _process_menu_or_modal_click(
 
                                     # Save zones to persist changes
                                     save_zones(game_state)
+                                    game_state.has_edited_zone_points = True
 
                                     # Reset editing state
                                     game_state.editing_zone_mode = None

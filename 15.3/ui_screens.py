@@ -379,6 +379,8 @@ def display_heatmap_modal(
         # Set heatmap display flag
         if hasattr(game_state, "show_heatmap"):
             game_state.show_heatmap = True
+        if hasattr(game_state, "has_viewed_heatmap"):
+            game_state.has_viewed_heatmap = True
 
         logger.info("Entering heatmap display loop...")
         while True:
@@ -417,10 +419,23 @@ def display_heatmap_modal(
                         (current_height, current_width, 3), dtype=np.uint8
                     )
 
-                # Blend heatmap with background
-                heatmap_alpha = 0.2
+                # Apply a light blue tint to the playfield so the heatmap stands out more
+                try:
+                    # Light blue tint in BGR
+                    tint_color = (255, 200, 150)
+                    tint_overlay = np.full_like(background_frame, tint_color)
+                    tint_alpha = 0.35  # How strong the tint is
+                    tinted_background = cv2.addWeighted(
+                        tint_overlay, tint_alpha, background_frame, 1.0 - tint_alpha, 0
+                    )
+                except Exception:
+                    # Fallback to original background if tinting fails
+                    tinted_background = background_frame
+
+                # Blend heatmap with tinted background
+                heatmap_alpha = 0.3  # Slightly stronger than before so points pop more
                 blended_frame = cv2.addWeighted(
-                    heatmap, heatmap_alpha, background_frame, 1.0 - heatmap_alpha, 0
+                    heatmap, heatmap_alpha, tinted_background, 1.0 - heatmap_alpha, 0
                 )
 
                 # Add instruction text

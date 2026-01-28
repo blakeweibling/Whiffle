@@ -252,6 +252,7 @@ class GameConstants:
     SURVIVAL_MODE_TIME_GAIN_PER_SCORE = 10.0  # Time added per score in survival
     SURVIVAL_MODE_WIN_SCORE = 2000  # Score to win in survival mode
     CLASSIC_MODE_WIN_SCORE = 2000  # Score to win in classic mode
+    FIVESTAR_WIN_SCORE = 5000  # Score to win when playing Five Star layout (more achievable)
 
     # ... rest of the constants
     FRAME_RATE: int = _assert_positive(30, "FRAME_RATE")

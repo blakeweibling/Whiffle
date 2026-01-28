@@ -871,6 +871,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
         elif game_state.current_state == CurrentGameState.PAUSED:
             if key == ord("p"):  # 'p' resumes from pause
                 game_state.current_state = CurrentGameState.PLAYING
+                game_state.has_paused_and_resumed = True
                 show_notification(game_state, "Resuming...", duration=1.0)
                 key_handled_globally = True
             elif key == 27:  # Escape (in PAUSED state) -> Go to CONFIRM_QUIT
@@ -1012,6 +1013,20 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     game_state,
                 )
                 return None  # Signal exit to main loop
+
+            elif event.type == pygame.MOUSEWHEEL:
+                # Achievements submenu: scroll with mouse wheel
+                if (
+                    game_state.current_state == CurrentGameState.MENU
+                    and getattr(game_state, "submenu_active", None) == "achievements"
+                ):
+                    scroll = getattr(game_state, "achievements_scroll_offset", 0)
+                    step = 50
+                    game_state.achievements_scroll_offset = max(
+                        0, scroll - int(event.y) * step
+                    )
+                    game_state.menu_cache = None
+                    return key
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()

@@ -3,7 +3,7 @@ Achievement management for the Whiffle Tracker project.
 Defines the Achievement class to manage achievements.
 """
 
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 
 class Achievement:
@@ -15,6 +15,7 @@ class Achievement:
         self.description = description
         self.condition = condition
         self.unlocked = False
+        self.unlocked_layout: Optional[str] = None  # "whiffle" or "fivestar" when unlocked
 
     def check(self, game_state: Any) -> bool:
         """Check if the achievement condition is met."""
