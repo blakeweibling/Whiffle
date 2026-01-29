@@ -95,6 +95,20 @@
             "score": 542,
             "mode": "survival",
             "created_at": "2025-04-15T03:25:49.932359"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2101,
+            "mode": "survival",
+            "created_at": "2026-01-29T15:39:04.614863",
+            "playfield_type": "whiffle"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2101,
+            "mode": "survival",
+            "created_at": "2026-01-29T15:39:21.186977",
+            "playfield_type": "whiffle"
         }
     ],
     "classic": [
@@ -2998,6 +3012,198 @@
             "created_at": "2026-01-28T16:43:23.758454",
             "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260128_084322_Blake_145_classic.png",
             "playfield_type": "whiffle"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2100,
+            "mode": "classic",
+            "created_at": "2026-01-29T14:54:24.126138",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_065423_Blake_2100_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2200,
+            "mode": "classic",
+            "created_at": "2026-01-29T14:55:05.410558",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_065504_Blake_2200_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2100,
+            "mode": "classic",
+            "created_at": "2026-01-29T14:55:45.028726",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_065544_Blake_2100_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2101,
+            "mode": "classic",
+            "created_at": "2026-01-29T14:56:02.294101",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_065601_Blake_2101_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2102,
+            "mode": "classic",
+            "created_at": "2026-01-29T14:56:11.066041",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_065610_Blake_2102_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2103,
+            "mode": "classic",
+            "created_at": "2026-01-29T14:56:20.274290",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_065619_Blake_2103_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2104,
+            "mode": "classic",
+            "created_at": "2026-01-29T14:56:29.251169",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_065628_Blake_2104_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2105,
+            "mode": "classic",
+            "created_at": "2026-01-29T14:56:38.249487",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_065637_Blake_2105_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2106,
+            "mode": "classic",
+            "created_at": "2026-01-29T14:56:47.366927",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_065646_Blake_2106_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 195,
+            "mode": "classic",
+            "created_at": "2026-01-29T14:57:31.190961",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_065730_Blake_195_classic.png",
+            "playfield_type": "whiffle"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2101,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:26:22.882726",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_072622_Blake_2101_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2102,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:26:31.684615",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_072631_Blake_2102_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2103,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:26:41.213646",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_072640_Blake_2103_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2104,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:26:49.884348",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_072649_Blake_2104_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2105,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:26:58.987598",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_072658_Blake_2105_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2106,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:27:08.028911",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_072707_Blake_2106_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2106,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:27:26.534264",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_072726_Blake_2106_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2101,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:35:01.126697",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_073500_Blake_2101_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2102,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:35:10.209658",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_073509_Blake_2102_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2103,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:35:19.292726",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_073518_Blake_2103_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2104,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:35:28.217283",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_073527_Blake_2104_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2105,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:35:38.332035",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_073537_Blake_2105_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2106,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:35:47.409999",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_073546_Blake_2106_classic.png",
+            "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2106,
+            "mode": "classic",
+            "created_at": "2026-01-29T15:38:25.693456",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260129_073824_Blake_2106_classic.png",
+            "playfield_type": "fivestar"
         }
     ],
     "practice": [
@@ -3218,6 +3424,41 @@
             "score": 191,
             "mode": "timed",
             "created_at": "2025-04-19T00:14:32.595908"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2101,
+            "mode": "timed",
+            "created_at": "2026-01-29T15:38:28.460723",
+            "playfield_type": "whiffle"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2102,
+            "mode": "timed",
+            "created_at": "2026-01-29T15:38:37.523576",
+            "playfield_type": "whiffle"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2103,
+            "mode": "timed",
+            "created_at": "2026-01-29T15:38:46.538740",
+            "playfield_type": "whiffle"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2104,
+            "mode": "timed",
+            "created_at": "2026-01-29T15:38:55.561152",
+            "playfield_type": "whiffle"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2104,
+            "mode": "timed",
+            "created_at": "2026-01-29T15:39:01.879915",
+            "playfield_type": "whiffle"
         }
     ]
 }
