@@ -62,6 +62,22 @@ class XPSystem:
         except Exception as e:
             logger.error(f"Error saving player XP data: {e}")
     
+    def clear_all_xp(self) -> None:
+        """Clear all player XP data, resetting all players to level 1 with 0 XP."""
+        self.player_data = {}
+        try:
+            # Explicitly write empty JSON object to ensure file is cleared
+            with open('player_xp.json', 'w') as f:
+                json.dump({}, f, indent=4)
+            logger.info("Cleared all player XP data - all players reset to level 1")
+        except Exception as e:
+            logger.error(f"Error clearing XP data file: {e}")
+            # Fallback: try save_player_data
+            try:
+                self.save_player_data()
+            except Exception as e2:
+                logger.error(f"Error in fallback save during clear: {e2}")
+    
     def get_player_level(self, player_name: str) -> Tuple[int, int, int]:
         """Get player's current level, XP, and XP needed for next level."""
         if player_name not in self.player_data:

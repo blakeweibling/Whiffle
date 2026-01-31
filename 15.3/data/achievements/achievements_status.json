@@ -1,14 +1,128 @@
 {
-    "First Score": {
-        "unlocked": true
-    },
-    "High Roller": {
-        "unlocked": true
-    },
-    "Zone Master": {
-        "unlocked": true
-    },
-    "Marathon": {
-        "unlocked": false
+    "Blake": {
+        "First Score": {
+            "unlocked": true,
+            "layout": "fivestar"
+        },
+        "Half Grand": {
+            "unlocked": true,
+            "layout": "fivestar"
+        },
+        "High Roller": {
+            "unlocked": true,
+            "layout": "fivestar"
+        },
+        "Victory Lap": {
+            "unlocked": true,
+            "layout": "fivestar"
+        },
+        "Legend": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Lucky Shot": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Hole Hunter": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Zone Master": {
+            "unlocked": true,
+            "layout": "whiffle"
+        },
+        "Architect": {
+            "unlocked": true,
+            "layout": "whiffle"
+        },
+        "Tinkerer": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Dual Threat": {
+            "unlocked": true,
+            "layout": "whiffle"
+        },
+        "Against the Clock": {
+            "unlocked": true,
+            "layout": "whiffle"
+        },
+        "Survivor": {
+            "unlocked": true,
+            "layout": "whiffle"
+        },
+        "Mode Hopper": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Triple Crown": {
+            "unlocked": true,
+            "layout": "whiffle"
+        },
+        "Marathon": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Regular": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Dedicated": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Identity Crisis": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Week Warrior": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Recorded": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Show Off": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Highlight Reel": {
+            "unlocked": false,
+            "layout": null
+        },
+        "On the Board": {
+            "unlocked": true,
+            "layout": "whiffle"
+        },
+        "Proof": {
+            "unlocked": true,
+            "layout": "fivestar"
+        },
+        "Analyst": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Inclusive": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Take a Breather": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Red Hot": {
+            "unlocked": true,
+            "layout": "fivestar"
+        },
+        "Split Decision": {
+            "unlocked": false,
+            "layout": null
+        },
+        "Multiplier Master": {
+            "unlocked": false,
+            "layout": null
+        }
     }
 }

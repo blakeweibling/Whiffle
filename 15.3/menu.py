@@ -159,6 +159,11 @@ def draw_menu_window(frame: np.ndarray, game_state: GameState) -> None:
             if game_state.submenu_active == "leaderboard"
             else None
         ),
+        (
+            getattr(game_state, "achievements_scroll_offset", 0)
+            if game_state.submenu_active == "achievements"
+            else None
+        ),
     ]
     cache_key = tuple(filter(lambda x: x is not None, cache_key_parts))
 

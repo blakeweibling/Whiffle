@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Whiffle"
-#define MyAppVersion "15.1"
+#define MyAppVersion "15.3"
 #define MyAppPublisher "Whiffle Co"
 #define MyAppURL "https://whiffle.co/"
 #define MyAppExeName "Whiffle.exe"
@@ -36,47 +36,39 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-; Main executable
-Source: "Whiffle\Whiffle.exe"; DestDir: "{app}"; Flags: ignoreversion
-; Icon file for shortcuts
-Source: "Whiffle\assets\pinball_icon.ico"; DestDir: "{app}\assets"; Flags: ignoreversion
-; Other files in the root directory
-Source: "Whiffle\.env"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\data\achievements\achievements.json"; DestDir: "{app}\data\achievements"; Flags: ignoreversion
-Source: "Whiffle\data\achievements\achievements_status.json"; DestDir: "{app}\data\achievements"; Flags: ignoreversion
-Source: "Whiffle\assets\game_over.png"; DestDir: "{app}\assets"; Flags: ignoreversion
-Source: "Whiffle\data\scores\high_scores.json"; DestDir: "{app}\data\scores"; Flags: ignoreversion
-Source: "Whiffle\configs\hsv_ranges.json"; DestDir: "{app}\configs"; Flags: ignoreversion
-Source: "Whiffle\configs\settings.json"; DestDir: "{app}\configs"; Flags: ignoreversion
-Source: "Whiffle\README.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Whiffle\data\game\scoring_zones.json"; DestDir: "{app}\data\game"; Flags: ignoreversion
-Source: "Whiffle\assets\splash.png"; DestDir: "{app}\assets"; Flags: ignoreversion
-Source: "Whiffle\assets\splash2.png"; DestDir: "{app}\assets"; Flags: ignoreversion
-Source: "Whiffle\assets\menu_bar.png"; DestDir: "{app}\assets"; Flags: ignoreversion
-Source: "Whiffle\assets\top_bar.png"; DestDir: "{app}\assets"; Flags: ignoreversion
-Source: "Whiffle\assets\column.png"; DestDir: "{app}\assets"; Flags: ignoreversion
-Source: "Whiffle\assets\last_frame.png"; DestDir: "{app}\assets"; Flags: ignoreversion
-Source: "Whiffle\assets\pinball_icon.png"; DestDir: "{app}\assets"; Flags: ignoreversion
-Source: "Whiffle\data\scores\whiffle_leaderboard.json"; DestDir: "{app}\data\scores"; Flags: ignoreversion
-Source: "Whiffle\data\whiffle_new_best.pt"; DestDir: "{app}\data"; Flags: ignoreversion
-Source: "Whiffle\openh264-1.8.0-win64.dll"; DestDir: "{app}"; Flags: ignoreversion
-; Sounds folder (including all files inside)
-Source: "Whiffle\data\sounds\*"; DestDir: "{app}\data\sounds"; Flags: ignoreversion recursesubdirs createallsubdirs
-; Google API configuration files
-Source: "Whiffle\configs\client_secrets.json"; DestDir: "{app}\configs"; Flags: ignoreversion
-Source: "Whiffle\configs\google_credentials.json"; DestDir: "{app}\configs"; Flags: ignoreversion
-Source: "Whiffle\configs\google_credentials2.json"; DestDir: "{app}\configs"; Flags: ignoreversion
-Source: "Whiffle\configs\token.pickle"; DestDir: "{app}\configs"; Flags: ignoreversion
+; Copy entire PyInstaller output: Whiffle.exe + _internal (Python runtime, DLLs, torch, ultralytics, bundled data).
+; The app will not run without _internal. Use the "Whiffle" folder from dist\Whiffle after "pyinstaller game.spec".
+Source: "Whiffle\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\assets\pinball_icon.ico"
+; Icon is under _internal when using PyInstaller default onedir layout
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\_internal\assets\pinball_icon.ico"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\assets\pinball_icon.ico"; Tasks: desktopicon
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\_internal\assets\pinball_icon.ico"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[Code]
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  ResultCode: Integer;
+  AppDir: String;
+begin
+  if CurStep = ssPostInstall then
+  begin
+    AppDir := ExpandConstant('{app}');
+    { Grant Users full control on the entire Whiffle install dir so the app can save configs, scores, zones, etc. }
+    if Exec(ExpandConstant('{sys}\icacls.exe'), '"' + AppDir + '" /grant Users:(OI)(CI)F /T', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+    begin
+      if ResultCode <> 0 then
+        Log('icacls returned ' + IntToStr(ResultCode) + ' for ' + AppDir);
+    end
+    else
+      Log('Failed to run icacls for ' + AppDir);
+  end;
+end;
+
 [Dirs]
-; Create directories with write permissions
-Name: "{app}\configs"; Permissions: everyone-full
-Name: "{app}\high_score_proof"; Permissions: everyone-full
+; Ensure top-level app dir exists (icacls in [Code] above makes it and everything below it read/write for Users)
+Name: "{app}"; Permissions: everyone-full

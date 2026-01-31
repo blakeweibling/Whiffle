@@ -10,6 +10,40 @@ from typing import Dict, Any, Optional, Tuple
 logger = logging.getLogger(__name__)
 
 
+def _purge_old_screenshots(directory: str, keep: int = 5) -> None:
+    """
+    Keep only the most recent `keep` files in the given directory.
+    Older files beyond this count will be deleted.
+    """
+    try:
+        if not os.path.exists(directory):
+            return
+
+        # List all files (ignore subdirectories just in case)
+        files = [
+            os.path.join(directory, f)
+            for f in os.listdir(directory)
+            if os.path.isfile(os.path.join(directory, f))
+        ]
+
+        # Nothing or already within limit
+        if len(files) <= keep:
+            return
+
+        # Sort by modification time, newest first
+        files.sort(key=os.path.getmtime, reverse=True)
+
+        # Delete everything beyond the `keep` most recent
+        for old_file in files[keep:]:
+            try:
+                os.remove(old_file)
+                logger.info(f"Deleted old high score proof screenshot: {old_file}")
+            except Exception as e:
+                logger.warning(f"Failed to delete old screenshot {old_file}: {e}")
+    except Exception as e:
+        logger.warning(f"Error while purging old screenshots in {directory}: {e}")
+
+
 def ensure_supabase_bucket_exists(
     supabase_url: str, supabase_key: str, bucket_name: str
 ) -> bool:
@@ -186,6 +220,10 @@ def save_screenshot_locally(
         # Save the screenshot
         cv2.imwrite(file_path, screenshot)
         logger.info(f"Saved screenshot to {file_path}")
+
+        # Purge older screenshots so the directory only holds the most recent ones
+        _purge_old_screenshots(directory, keep=5)
+
         return file_path
     except Exception as e:
         logger.error(f"Error saving screenshot: {e}")

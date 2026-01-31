@@ -197,6 +197,7 @@ def save_score(game_state: Any, player_name: str, mode: Optional[str] = None) ->
                     game_state.supabase_key,
                 )
                 if screenshot_url:
+                    game_state.has_uploaded_screenshot = True
                     logger.info(f"Screenshot captured and uploaded: {screenshot_url}")
                 else:
                     logger.warning("Failed to capture or upload screenshot")

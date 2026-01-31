@@ -13,7 +13,7 @@ from datetime import datetime
 
 # Assuming constants.py will define these later
 STATS_HISTORY_FILE = "data/sessions/session_stats_history.json"
-MAX_HISTORY_ENTRIES = 50  # Limit the number of past sessions stored
+MAX_HISTORY_ENTRIES = 10  # Keep only the last N sessions to limit file size
 
 logger = logging.getLogger(__name__)
 
@@ -201,12 +201,24 @@ class DataLogger:
         return self.historical_stats
 
     def _load_historical_stats(self) -> List[Dict[str, Any]]:
-        """Loads historical session data from the JSON file."""
+        """Loads historical session data from the JSON file, keeping only the last MAX_HISTORY_ENTRIES."""
         if os.path.exists(STATS_HISTORY_FILE):
             try:
                 with open(STATS_HISTORY_FILE, "r") as f:
                     data = json.load(f)
                     if isinstance(data, list):
+                        # Purge oldest: keep only the last MAX_HISTORY_ENTRIES sessions
+                        if len(data) > MAX_HISTORY_ENTRIES:
+                            data = data[-MAX_HISTORY_ENTRIES:]
+                            logger.info(
+                                f"Trimmed history to last {MAX_HISTORY_ENTRIES} sessions. Saving purged file."
+                            )
+                            # Write back trimmed data so the file size is reduced immediately
+                            try:
+                                with open(STATS_HISTORY_FILE, "w") as wf:
+                                    json.dump(data, wf, indent=2)
+                            except IOError as e:
+                                logger.warning(f"Could not write trimmed history to disk: {e}")
                         logger.info(f"Loaded {len(data)} historical session records.")
                         return data
                     else:

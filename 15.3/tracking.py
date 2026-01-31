@@ -340,8 +340,24 @@ class BallTracker:
             ], next_ball_id
 
         # Repackage balls with type information
-        silver_balls_with_type = [(x, y, r, "silver") for x, y, r in silver_balls]
-        gold_balls_with_type = [(x, y, r, "gold") for x, y, r in gold_balls]
+        # Handle both old format (x, y, r) and new format (x, y, r, ball_type)
+        silver_balls_with_type = []
+        for ball in silver_balls:
+            if len(ball) == 4:
+                x, y, r, ball_type = ball
+                silver_balls_with_type.append((x, y, r, ball_type))
+            else:
+                x, y, r = ball
+                silver_balls_with_type.append((x, y, r, "silver"))  # Fallback to "silver" for old format
+        
+        gold_balls_with_type = []
+        for ball in gold_balls:
+            if len(ball) == 4:
+                x, y, r, ball_type = ball
+                gold_balls_with_type.append((x, y, r, ball_type))
+            else:
+                x, y, r = ball
+                gold_balls_with_type.append((x, y, r, "gold"))  # Fallback to "gold" for old format
 
         # Combine all balls with type information
         all_balls = silver_balls_with_type + gold_balls_with_type

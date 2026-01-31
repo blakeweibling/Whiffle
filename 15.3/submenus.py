@@ -99,6 +99,83 @@ def _draw_game_mode_submenu(menu_frame: np.ndarray, game_state: GameState) -> No
     game_state.menu_height = back_y + item_height + 20
 
 
+def _draw_layout_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
+    """Draw the Layout selection submenu."""
+    cv2.putText(
+        menu_frame,
+        "Select Layout",
+        (30, 40),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        UIConstants.FONT_SCALE_LARGE,
+        UIConstants.WHITE,
+        UIConstants.FONT_THICKNESS,
+    )
+
+    layouts = ["whiffle", "fivestar"]
+    y_offset = 80
+    item_height = 35
+    game_state.submenu_items.clear()
+
+    for layout in layouts:
+        # Display name: capitalize and format nicely
+        if layout == "fivestar":
+            label = "Five star"
+        else:
+            label = layout.capitalize()
+        
+        # Get current playfield type
+        current_playfield = getattr(game_state, "playfield_type", "whiffle")
+        is_current = (
+            (layout == "fivestar" and current_playfield == "fivestar") or
+            (layout == "whiffle" and current_playfield == "whiffle")
+        )
+        
+        # Use green for currently selected layout, normal color for others
+        color = UIConstants.GREEN if is_current else UIConstants.CV2_BLUE
+        action_key = f"set_layout_{layout}"
+
+        _draw_button(
+            menu_frame,
+            20,
+            y_offset,
+            menu_frame.shape[1] - 40,
+            item_height,
+            label,
+            color,
+            game_state=game_state,
+            font_scale=UIConstants.FONT_SCALE_MEDIUM,
+        )
+        game_state.submenu_items.append(
+            (
+                (20, y_offset, menu_frame.shape[1] - 40, item_height),
+                action_key,
+                label,
+            )
+        )
+        y_offset += item_height + 5
+
+    back_y = y_offset + 10
+    _draw_button(
+        menu_frame,
+        20,
+        back_y,
+        menu_frame.shape[1] - 40,
+        item_height,
+        "Back",
+        UIConstants.CV2_BLUE,
+        game_state=game_state,
+        font_scale=UIConstants.FONT_SCALE_MEDIUM,
+    )
+    game_state.submenu_items.append(
+        (
+            (20, back_y, menu_frame.shape[1] - 40, item_height),
+            "back_to_main",
+            "Back",
+        )
+    )
+    game_state.menu_height = back_y + item_height + 20
+
+
 def _draw_zone_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
     """Draw the Manage Zones submenu."""
     cv2.putText(
@@ -145,6 +222,7 @@ def _draw_zone_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
 submenu_draw_functions_map = {
     "settings": _draw_settings_submenu,
     "game_mode": _draw_game_mode_submenu,
+    "layout": _draw_layout_submenu,
     "manage_zones": _draw_zone_submenu,
     "edit_zones": _draw_edit_zones_submenu,
     "leaderboard": _draw_leaderboard_submenu,

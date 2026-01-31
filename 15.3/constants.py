@@ -233,6 +233,7 @@ class GameConstants:
     CAMERA_INDEX = 0  # Default camera (built-in webcam)
     CAMERA_BACKEND = cv2.CAP_DSHOW  # Default backend (DirectShow for Windows)
     STATIC_FRAME_FILE = "assets/last_frame.png"  # Default static image if no camera
+    STATIC_FIVESTAR_FRAME_FILE = "assets/static_fivestar.png"  # Static image for fivestar mode if no camera
     FRAME_RATE = 30  # Target frame rate
     DEBUG_MODE = False  # Debug mode flag
     DETECTION_FRAME_INTERVAL = 2  # Process every Nth frame for detection
@@ -251,6 +252,7 @@ class GameConstants:
     SURVIVAL_MODE_TIME_GAIN_PER_SCORE = 10.0  # Time added per score in survival
     SURVIVAL_MODE_WIN_SCORE = 2000  # Score to win in survival mode
     CLASSIC_MODE_WIN_SCORE = 2000  # Score to win in classic mode
+    FIVESTAR_WIN_SCORE = 5000  # Score to win when playing Five Star layout (more achievable)
 
     # ... rest of the constants
     FRAME_RATE: int = _assert_positive(30, "FRAME_RATE")
@@ -307,6 +309,7 @@ class MenuConstants:
         ("Resume", "resume"),
         ("Settings", "settings"),
         ("Game Mode", "game_mode"),
+        ("Layout", "layout"),
         ("Manage Zones", "manage_zones"),
         ("Players", "players"),
         ("Replays", "replays"),

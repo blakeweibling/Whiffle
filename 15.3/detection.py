@@ -28,10 +28,58 @@ class BallDetector:
 
     def __init__(self, model_path: Optional[str] = None):
         # Load the trained YOLOv8 model
-        resolved_model_path = model_path or GameConstants.WHIFFLE_MODEL_PATH
-        self.model = YOLO(resolved_model_path)
-        self.class_names = ["silver", "gold"]
+        self.model_path = model_path or GameConstants.WHIFFLE_MODEL_PATH
+        self.model = YOLO(self.model_path)
+        
+        # Extract class names directly from the model file
+        self.class_names = self._extract_class_names_from_model()
+        
+        logger.info(f"BallDetector initialized with model: {self.model_path}")
+        logger.info(f"Extracted class names from model: {self.class_names}")
         self.state_names = ["on_playfield", "in_hole"]
+    
+    def _extract_class_names_from_model(self) -> List[str]:
+        """
+        Extract class names from the YOLO model file.
+        Returns a list of class names in order (index 0, 1, 2, etc.)
+        """
+        try:
+            # YOLO models store class names in the model.names attribute
+            # It can be a dict {0: 'class0', 1: 'class1', ...} or a list
+            if hasattr(self.model, 'names') and self.model.names:
+                if isinstance(self.model.names, dict):
+                    # Convert dict to ordered list
+                    max_index = max(self.model.names.keys()) if self.model.names else -1
+                    class_names = [self.model.names.get(i, f"class_{i}") for i in range(max_index + 1)]
+                    logger.debug(f"Extracted class names from model dict: {class_names}")
+                    return class_names
+                elif isinstance(self.model.names, list):
+                    logger.debug(f"Extracted class names from model list: {self.model.names}")
+                    return self.model.names
+                else:
+                    logger.warning(f"Model names format not recognized: {type(self.model.names)}")
+            
+            # Try alternative: check model metadata or model.yaml
+            if hasattr(self.model, 'model') and hasattr(self.model.model, 'names'):
+                names = self.model.model.names
+                if isinstance(names, dict):
+                    max_index = max(names.keys()) if names else -1
+                    class_names = [names.get(i, f"class_{i}") for i in range(max_index + 1)]
+                    logger.debug(f"Extracted class names from model.model.names: {class_names}")
+                    return class_names
+                elif isinstance(names, list):
+                    logger.debug(f"Extracted class names from model.model.names list: {names}")
+                    return names
+            
+            # If we can't extract from model, log warning and return empty list
+            # The detection code should handle this gracefully
+            logger.warning(f"Could not extract class names from model at {self.model_path}")
+            logger.warning("Model may not have class names embedded. Detection may fail.")
+            return []
+            
+        except Exception as e:
+            logger.error(f"Error extracting class names from model: {e}")
+            return []
 
         # Attempt to use OpenCL for YOLOv8 inference (Unchanged)
         try:
@@ -93,13 +141,18 @@ class BallDetector:
         hsv_frame: Optional[np.ndarray] = None,  #
         debug_mode: bool = False,  #
     ) -> Tuple[
-        List[Tuple[int, int, float]],  # silver_balls
-        List[Tuple[int, int, float]],  # gold_balls
+        List[Tuple[int, int, float]],  # silver_balls (or red/white balls in whiffle mode)
+        List[Tuple[int, int, float]],  # gold_balls (or half-red balls in whiffle mode)
     ]:
         """
-        Detect silver and gold balls in the frame using YOLOv8 and infer their state.
+        Detect balls in the frame using YOLOv8 and infer their state.
+        Class names are extracted from the model file (.pt) automatically.
         Uses internal scaling for inference and scales results back.
         """
+        # Class names are already extracted from model in __init__, no need to update here
+        if not self.class_names:
+            logger.error("No class names available from model. Detection may fail.")
+            return [], []
         # Downscale the frame for YOLO inference (Unchanged)
         inference_scale = 0.5
         inference_frame = cv2.resize(
@@ -149,26 +202,63 @@ class BallDetector:
                         )  #
                     continue
 
-                # Assign ball type (Unchanged)
-                ball_type = self.class_names[int(cls)]
+                # Assign ball type with bounds checking
+                cls_int = int(cls)
+                if cls_int < 0 or cls_int >= len(self.class_names):
+                    logger.warning(
+                        f"Invalid class index {cls_int} detected (expected 0-{len(self.class_names)-1}). "
+                        f"Model has {len(self.class_names)} classes: {self.class_names}. Skipping detection."
+                    )
+                    continue
+                
+                ball_type = self.class_names[cls_int]
                 if debug_mode:
                     logger.debug(
                         f"Detected {ball_type} ball at ({x_center:.0f}, {y_center:.0f}) with radius={radius:.1f}, confidence={score:.2f}"
                     )  #
 
-                # Append to respective lists
-                if ball_type == "silver":
-                    silver_balls.append((int(x_center), int(y_center), radius))
-                elif ball_type == "gold":
-                    gold_balls.append((int(x_center), int(y_center), radius))
+                # Append to respective lists with ball type information
+                # Store as (x, y, radius, ball_type) to preserve the actual type name
+                # Map ball types to return lists dynamically based on model's class names
+                if len(self.class_names) == 2:
+                    # Two classes: first -> silver_balls, second -> gold_balls
+                    if cls_int == 0:
+                        silver_balls.append((int(x_center), int(y_center), radius, ball_type))
+                    elif cls_int == 1:
+                        gold_balls.append((int(x_center), int(y_center), radius, ball_type))
+                    else:
+                        logger.warning(f"Unexpected class index {cls_int} for 2-class model")
+                        silver_balls.append((int(x_center), int(y_center), radius, ball_type))
+                elif len(self.class_names) == 3:
+                    # Three classes: first two -> silver_balls, third -> gold_balls
+                    # (e.g., whiffle: red, white -> silver_balls; half-red -> gold_balls)
+                    if cls_int in [0, 1]:
+                        silver_balls.append((int(x_center), int(y_center), radius, ball_type))
+                    elif cls_int == 2:
+                        gold_balls.append((int(x_center), int(y_center), radius, ball_type))
+                    else:
+                        logger.warning(f"Unexpected class index {cls_int} for 3-class model")
+                        silver_balls.append((int(x_center), int(y_center), radius, ball_type))
+                else:
+                    # Generic mapping: split classes roughly in half
+                    # First half -> silver_balls, second half -> gold_balls
+                    mid_point = len(self.class_names) // 2
+                    if cls_int < mid_point:
+                        silver_balls.append((int(x_center), int(y_center), radius, ball_type))
+                    else:
+                        gold_balls.append((int(x_center), int(y_center), radius, ball_type))
 
         # Debug frame drawing
         if debug_mode:
             debug_frame = frame.copy()
-            for x, y, radius in silver_balls:
-                cv2.circle(debug_frame, (x, y), int(radius), (192, 192, 192), 2)  # Silver color
-            for x, y, radius in gold_balls:
-                cv2.circle(debug_frame, (x, y), int(radius), (0, 215, 255), 2)  # Gold color
+            # Use different colors for different ball types based on class names
+            # Handle both old format (x, y, r) and new format (x, y, r, type)
+            for ball in silver_balls:
+                x, y, radius = ball[:3]  # Get first 3 elements
+                cv2.circle(debug_frame, (x, y), int(radius), (0, 0, 255), 2)  # Red color
+            for ball in gold_balls:
+                x, y, radius = ball[:3]  # Get first 3 elements
+                cv2.circle(debug_frame, (x, y), int(radius), (0, 215, 255), 2)  # Gold/Orange color
             cv2.imshow("Ball Detection", debug_frame)
 
         return silver_balls, gold_balls

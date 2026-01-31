@@ -8,7 +8,10 @@ import json
 import logging
 import os
 import time
+from datetime import date
 from typing import Any, Dict, List, Optional, Tuple
+
+PLAY_DATES_FILE = "data/achievements/play_dates.json"
 
 import numpy as np
 import pygame  # Add pygame import
@@ -32,6 +35,30 @@ except ImportError:
     DataLogger = None
 
 logger = logging.getLogger(__name__)
+
+
+def _get_current_player_name(game_state: Any) -> str:
+    """
+    Safely get the current player's name from game_state.
+    Falls back to 'Player 1' if anything goes wrong.
+    """
+    try:
+        # Prefer explicit helper if available
+        if hasattr(game_state, "get_current_player"):
+            player = game_state.get_current_player()
+            if player is not None and hasattr(player, "name"):
+                return str(player.name)
+
+        # Fallback to players list + current_player_index
+        if hasattr(game_state, "players") and getattr(game_state, "players", None):
+            players = game_state.players
+            index = getattr(game_state, "current_player_index", 0)
+            if 0 <= index < len(players) and hasattr(players[index], "name"):
+                return str(players[index].name)
+    except Exception as e:
+        logger.warning(f"Error determining current player name for achievements: {e}")
+
+    return "Player 1"
 
 
 # --- Functions Remaining in game_state_utils (Initialization, Load/Save, Volume etc.) ---
@@ -77,15 +104,21 @@ def initialize_sounds() -> (
 
 def initialize_achievements() -> List[Achievement]:
     """Initialize the list of achievements."""
-    # Example achievements (adjust as needed)
     return [
+        # --- Scoring ---
         Achievement(
             "First Score",
             "Score first points",
-            # Lambda functions now access score via player object
             lambda gs: hasattr(gs, "players")
             and gs.players
             and gs.players[gs.current_player_index].score >= 100,
+        ),
+        Achievement(
+            "Half Grand",
+            "Score 500 points",
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and gs.players[gs.current_player_index].score >= 500,
         ),
         Achievement(
             "High Roller",
@@ -95,8 +128,88 @@ def initialize_achievements() -> List[Achievement]:
             and gs.players[gs.current_player_index].score >= 1000,
         ),
         Achievement(
-            "Zone Master", "Create 5 zones", lambda gs: len(gs.scoring_zones) >= 5
+            "Victory Lap",
+            "Reach 2000 (win score) in classic, timed, or survival",
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and gs.players[gs.current_player_index].score >= getattr(gs, "win_score", 2000)
+            and getattr(gs, "game_mode", "") in ["classic", "timed", "survival"],
         ),
+        Achievement(
+            "Legend",
+            "Score 3000 points in one game",
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and gs.players[gs.current_player_index].score >= 3000,
+        ),
+        Achievement(
+            "Lucky Shot",
+            "Score in the special hole once",
+            lambda gs: getattr(gs, "special_hole_hit_this_session", False),
+        ),
+        Achievement(
+            "Hole Hunter",
+            "Score in the special hole 2 times in one game",
+            lambda gs: getattr(gs, "special_hole_hits_this_session", 0) >= 2,
+        ),
+        # --- Zones & setup ---
+        Achievement(
+            "Zone Master",
+            "Create 5 zones",
+            lambda gs: len(gs.scoring_zones) >= 5,
+        ),
+        Achievement(
+            "Architect",
+            "Create 10 zones",
+            lambda gs: len(gs.scoring_zones) >= 10,
+        ),
+        Achievement(
+            "Tinkerer",
+            "Edit points on any zone",
+            lambda gs: getattr(gs, "has_edited_zone_points", False),
+        ),
+        Achievement(
+            "Dual Threat",
+            "Play in both Whiffle and Five Star layouts",
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and hasattr(gs.players[gs.current_player_index], "layouts_played")
+            and len(gs.players[gs.current_player_index].layouts_played) >= 2,
+        ),
+        # --- Game modes ---
+        Achievement(
+            "Against the Clock",
+            "Reach 2000 in timed mode",
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and hasattr(gs.players[gs.current_player_index], "modes_won")
+            and "timed" in gs.players[gs.current_player_index].modes_won,
+        ),
+        Achievement(
+            "Survivor",
+            "Reach 2000 in survival mode",
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and hasattr(gs.players[gs.current_player_index], "modes_won")
+            and "survival" in gs.players[gs.current_player_index].modes_won,
+        ),
+        Achievement(
+            "Mode Hopper",
+            "Play all 6 game modes",
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and hasattr(gs.players[gs.current_player_index], "modes_played")
+            and len(gs.players[gs.current_player_index].modes_played) >= 6,
+        ),
+        Achievement(
+            "Triple Crown",
+            "Win in 3 different modes",
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and hasattr(gs.players[gs.current_player_index], "modes_won")
+            and len(gs.players[gs.current_player_index].modes_won) >= 3,
+        ),
+        # --- Persistence ---
         Achievement(
             "Marathon",
             "Play 10 games",
@@ -105,8 +218,171 @@ def initialize_achievements() -> List[Achievement]:
             and hasattr(gs.players[gs.current_player_index], "games_played")
             and gs.players[gs.current_player_index].games_played >= 10,
         ),
-        # Add more achievements here
+        Achievement(
+            "Regular",
+            "Play 25 games",
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and hasattr(gs.players[gs.current_player_index], "games_played")
+            and gs.players[gs.current_player_index].games_played >= 25,
+        ),
+        Achievement(
+            "Dedicated",
+            "Play 50 games",
+            lambda gs: hasattr(gs, "players")
+            and gs.players
+            and hasattr(gs.players[gs.current_player_index], "games_played")
+            and gs.players[gs.current_player_index].games_played >= 50,
+        ),
+        Achievement(
+            "Identity Crisis",
+            "Play as 5 different player names",
+            lambda gs: hasattr(gs, "players") and len(gs.players) >= 5,
+        ),
+        Achievement(
+            "Week Warrior",
+            "Play on 7 different calendar days",
+            lambda gs: _week_warrior_check(gs),
+        ),
+        # --- Replays & sharing ---
+        Achievement(
+            "Recorded",
+            "Save at least one replay",
+            lambda gs: (
+                hasattr(gs, "replay_manager")
+                and gs.replay_manager is not None
+                and any(
+                    r.get("player_name") == _get_current_player_name(gs)
+                    for r in gs.replay_manager.get_all_replays()
+                )
+            ),
+        ),
+        Achievement(
+            "Show Off",
+            "Share a replay (Discord, YouTube, Local, or Share Link)",
+            lambda gs: getattr(gs, "has_shared_replay", False),
+        ),
+        Achievement(
+            "Highlight Reel",
+            "Export a highlight clip from a replay",
+            lambda gs: getattr(gs, "has_exported_highlight", False),
+        ),
+        # --- Misc ---
+        Achievement(
+            "On the Board",
+            "Appear on any leaderboard",
+            lambda gs: (
+                hasattr(gs, "leaderboard")
+                and gs.leaderboard is not None
+                and hasattr(gs, "get_current_player")
+                and gs.get_current_player() is not None
+                and any(
+                    gs.get_current_player().name == e.get("player_name")
+                    for mode in ["classic", "timed", "survival", "fun", "practice", "retro"]
+                    for e in (gs.leaderboard.get_top_scores(mode=mode, limit=100)[0])
+                )
+            ),
+        ),
+        Achievement(
+            "Proof",
+            "Upload a high-score screenshot once",
+            lambda gs: getattr(gs, "has_uploaded_screenshot", False),
+        ),
+        Achievement(
+            "Analyst",
+            "View the heatmap after a session",
+            lambda gs: getattr(gs, "has_viewed_heatmap", False),
+        ),
+        Achievement(
+            "Inclusive",
+            "Turn on colorblind mode",
+            lambda gs: getattr(gs, "colorblind_mode", False),
+        ),
+        Achievement(
+            "Take a Breather",
+            "Pause and resume a game",
+            lambda gs: getattr(gs, "has_paused_and_resumed", False),
+        ),
+        # --- Whiffle ball types ---
+        Achievement(
+            "Red Hot",
+            "Score with a red (2x) ball",
+            lambda gs: getattr(gs, "scored_red_ball_this_session", False),
+        ),
+        Achievement(
+            "Split Decision",
+            "Score with a half-red (1.5x) ball",
+            lambda gs: getattr(gs, "scored_half_red_this_session", False),
+        ),
+        Achievement(
+            "Multiplier Master",
+            "Earn 500 points from 2x/1.5x balls in one game",
+            lambda gs: getattr(gs, "points_from_multiplier_balls_this_game", 0) >= 500,
+        ),
     ]
+
+
+def _week_warrior_check(game_state: Any) -> bool:
+    """True if current player has played on 7+ different calendar days."""
+    try:
+        if not os.path.exists(PLAY_DATES_FILE) or os.path.getsize(PLAY_DATES_FILE) == 0:
+            return False
+        with open(PLAY_DATES_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if not isinstance(data, dict):
+            return False
+        name = _get_current_player_name(game_state)
+        dates = data.get(name, [])
+        return len(set(dates)) >= 7
+    except Exception:
+        return False
+
+
+def record_game_completed(game_state: Any) -> None:
+    """
+    Call when a game ends (GAME_OVER). Updates current player's modes_played,
+    modes_won, layouts_played, and appends today to play_dates for Week Warrior.
+    """
+    try:
+        player = (
+            game_state.get_current_player()
+            if hasattr(game_state, "get_current_player")
+            else None
+        )
+        if not player or not hasattr(player, "modes_played"):
+            return
+        game_mode = getattr(game_state, "game_mode", None)
+        playfield_type = getattr(game_state, "playfield_type", "whiffle")
+        win_condition_met = getattr(game_state, "win_condition_met", False)
+
+        player.modes_played.add(game_mode)
+        player.layouts_played.add(playfield_type)
+        if win_condition_met:
+            player.modes_won.add(game_mode)
+
+        # Append today for Week Warrior achievement
+        player_name = player.name
+        try:
+            data = {}
+            if os.path.exists(PLAY_DATES_FILE) and os.path.getsize(PLAY_DATES_FILE) > 0:
+                with open(PLAY_DATES_FILE, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+            if not isinstance(data, dict):
+                data = {}
+            dates = data.get(player_name, [])
+            if not isinstance(dates, list):
+                dates = []
+            today_str = date.today().isoformat()
+            if today_str not in dates:
+                dates.append(today_str)
+            data[player_name] = dates
+            os.makedirs(os.path.dirname(PLAY_DATES_FILE), exist_ok=True)
+            with open(PLAY_DATES_FILE, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            logger.warning(f"Could not update play_dates for Week Warrior: {e}")
+    except Exception as e:
+        logger.warning(f"Error in record_game_completed: {e}")
 
 
 def load_achievements(game_state: Any, filename: str) -> None:
@@ -127,19 +403,42 @@ def load_achievements(game_state: Any, filename: str) -> None:
                 )
                 return  # Reset or handle error? For now, just return.
 
+            # Determine if file is legacy (global) or per-player structure
+            achievement_names = {
+                a.name for a in game_state.achievements if hasattr(a, "name")
+            }
+            is_legacy_format = any(key in achievement_names for key in data.keys())
+
+            player_name = _get_current_player_name(game_state)
+            if is_legacy_format:
+                # Legacy format: top-level keys are achievement names
+                # Treat this as the current player's data only
+                player_data = data
+                logger.info(
+                    f"Loaded legacy achievements format for player '{player_name}'. "
+                    "It will be converted to per-player format on next save."
+                )
+            else:
+                # New per-player format: top-level keys are player names
+                player_data = data.get(player_name, {})
+
             loaded_count = 0
             # Ensure achievement objects exist before trying to update them
             if isinstance(game_state.achievements, list):
                 for achievement in game_state.achievements:
-                    if hasattr(achievement, "name") and achievement.name in data:
-                        achievement_data = data.get(achievement.name, {})
+                    if (
+                        hasattr(achievement, "name")
+                        and achievement.name in player_data
+                    ):
+                        achievement_data = player_data.get(achievement.name, {})
                         if isinstance(achievement_data, dict) and achievement_data.get(
                             "unlocked"
                         ):
                             achievement.unlocked = True
+                            achievement.unlocked_layout = achievement_data.get("layout")
                             loaded_count += 1
                 logger.info(
-                    f"Loaded status for {loaded_count} achievements from {achievements_file}."
+                    f"Loaded status for {loaded_count} achievements from {achievements_file} for player '{player_name}'."
                 )
             else:
                 logger.error(
@@ -172,15 +471,59 @@ def save_achievements(game_state: Any, filename: str) -> None:
         return
     achievements_file = filename
     try:
-        # Create data dictionary safely checking for attributes
-        data = {
-            a.name: {"unlocked": a.unlocked}
+        # Load existing data so we can preserve other players' achievements
+        data: Dict[str, Any] = {}
+        if os.path.exists(achievements_file) and os.path.getsize(achievements_file) > 0:
+            try:
+                with open(achievements_file, "r", encoding="utf-8") as f:
+                    loaded = json.load(f)
+                if isinstance(loaded, dict):
+                    data = loaded
+                else:
+                    logger.warning(
+                        f"Existing achievements file {achievements_file} is not a dict. "
+                        "Overwriting with new per-player structure."
+                    )
+            except (IOError, json.JSONDecodeError) as e:
+                logger.warning(
+                    f"Could not read existing achievements file {achievements_file}: {e}. "
+                    "Recreating file."
+                )
+
+        # Detect and convert legacy (global) structure if necessary
+        achievement_names = {
+            a.name for a in game_state.achievements if hasattr(a, "name")
+        }
+        is_legacy_format = any(key in achievement_names for key in data.keys())
+
+        player_name = _get_current_player_name(game_state)
+
+        if is_legacy_format:
+            # Wrap legacy data under the current player's name
+            logger.info(
+                f"Converting legacy achievements file to per-player format for player '{player_name}'."
+            )
+            data = {player_name: data}
+
+        # Build current player's achievement status (include layout for display)
+        player_achievements = {
+            a.name: {
+                "unlocked": a.unlocked,
+                "layout": getattr(a, "unlocked_layout", None),
+            }
             for a in game_state.achievements
             if hasattr(a, "name") and hasattr(a, "unlocked")
         }
+
+        # Update / insert this player's achievements into the file-wide dict
+        data[player_name] = player_achievements
+
+        # Write back to disk
         with open(achievements_file, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4)
-        logger.debug(f"Saved achievements status to {achievements_file}.")
+        logger.debug(
+            f"Saved achievements status for player '{player_name}' to {achievements_file}."
+        )
     except IOError as e:
         logger.error(f"Failed to save achievements file {achievements_file}: {e}")
     except Exception as e:
@@ -687,6 +1030,7 @@ def check_achievements(game_state: Any) -> None:
                 condition_met = ach.check(game_state)
                 if condition_met:
                     ach.unlocked = True
+                    ach.unlocked_layout = getattr(game_state, "playfield_type", "whiffle")
                     logger.info(f"Achieved: {ach.name} - {ach.description}")
                     # Use helper for notification
                     show_notification(game_state, f"Unlocked: {ach.name}", duration=5.0)
@@ -765,15 +1109,19 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
         # Decrement timer
         game_state.game_timer -= dt
 
-        # Check if timer expired
+        # Check if timer expired — only trigger GAME_OVER in timed mode when time runs out
         if game_state.game_timer <= 0:
             game_state.game_timer = 0  # Clamp to zero
-            if current_state != CurrentGameState.GAME_OVER:
+            if (
+                game_mode == "timed"
+                and current_state != CurrentGameState.GAME_OVER
+            ):
                 logger.info(
-                    f"Timer expired in {game_mode} mode. Switching to GAME_OVER."
+                    "Timer expired in timed mode. Switching to GAME_OVER."
                 )
                 game_state.current_state = CurrentGameState.GAME_OVER
                 game_state.win_condition_met = False  # Timer expired is not a win
+                record_game_completed(game_state)
 
                 # Save score when timer runs out
                 try:
@@ -867,6 +1215,13 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
 def reset_game(game_state: Any) -> None:
     """Reset game state for a new game, while preserving player and leaderboard."""
     logger.info("Resetting game for new round.")
+    
+    # Clear all XP data at the start of each game session
+    try:
+        from xp_system import xp_system
+        xp_system.clear_all_xp()
+    except Exception as e:
+        logger.error(f"Error clearing XP data: {e}")
 
     # Preserve objects that should survive reset
     preserved_objects = {
@@ -930,6 +1285,9 @@ def reset_game(game_state: Any) -> None:
                 current_player.games_played += 1  # Increment games played count
             if hasattr(current_player, "score"):
                 current_player.score = 0  # Reset score for new game
+            # Refresh XP data after clearing (will be level 1, 0 XP)
+            if hasattr(current_player, "refresh_xp"):
+                current_player.refresh_xp()
     except Exception as player_e:
         logger.error(f"Error updating player stats during reset: {player_e}")
 
@@ -956,16 +1314,18 @@ def reset_game(game_state: Any) -> None:
     active_trails = {}
     active_explosions = []
 
-    # Reset game timer based on mode
+    # Reset game timer and win score based on mode and layout (Five Star uses higher win score)
+    is_fivestar = getattr(game_state, "playfield_type", "whiffle") == "fivestar"
+    fivestar_win = getattr(GameConstants, "FIVESTAR_WIN_SCORE", 5000)
     timer = None
     if preserved_objects["game_mode"] == "timed":
         timer = GameConstants.TIMED_MODE_DURATION
-        game_state.win_score = GameConstants.TIMED_MODE_WIN_SCORE
+        game_state.win_score = fivestar_win if is_fivestar else GameConstants.TIMED_MODE_WIN_SCORE
     elif preserved_objects["game_mode"] == "survival":
         timer = GameConstants.SURVIVAL_MODE_START_TIME
-        game_state.win_score = GameConstants.SURVIVAL_MODE_WIN_SCORE
+        game_state.win_score = fivestar_win if is_fivestar else GameConstants.SURVIVAL_MODE_WIN_SCORE
     else:
-        game_state.win_score = GameConstants.CLASSIC_MODE_WIN_SCORE
+        game_state.win_score = fivestar_win if is_fivestar else GameConstants.CLASSIC_MODE_WIN_SCORE
 
     # Set all non-preserved attributes to defaults
     for attr_name in list(vars(game_state).keys()):
@@ -1008,6 +1368,10 @@ def reset_game(game_state: Any) -> None:
     game_state.low_time_warning_played = False
     game_state.fps = 0.0  # Initialize fps counter
     game_state.special_hole_hit_this_session = False
+    game_state.special_hole_hits_this_session = 0
+    game_state.points_from_multiplier_balls_this_game = 0
+    game_state.scored_red_ball_this_session = False
+    game_state.scored_half_red_this_session = False
     game_state.current_session_stats = None
 
     # Initialize notification attributes
