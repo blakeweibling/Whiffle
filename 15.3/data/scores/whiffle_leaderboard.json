@@ -2712,6 +2712,14 @@
             "created_at": "2026-01-20T00:28:03.388444",
             "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260119_162802_Blake_2100_classic.png",
             "playfield_type": "fivestar"
+        },
+        {
+            "player_name": "Blake",
+            "score": 2,
+            "mode": "classic",
+            "created_at": "2026-01-23T18:22:32.486639",
+            "screenshot_url": "https://jtkbujumrobglftzokcs.supabase.co/storage/v1/object/public/high-score-screenshots/high-scores/classic/20260123_102231_Blake_2_classic.png",
+            "playfield_type": "whiffle"
         }
     ],
     "practice": [
@@ -2782,6 +2790,13 @@
             "score": 200,
             "mode": "practice",
             "created_at": "2026-01-19T23:55:59.695337"
+        },
+        {
+            "player_name": "Blake",
+            "score": 204,
+            "mode": "practice",
+            "created_at": "2026-01-23T18:35:45.956536",
+            "playfield_type": "whiffle"
         }
     ],
     "retro": [
