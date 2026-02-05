@@ -1,4 +1,4 @@
-# Whiffle Tracker
+# Whiffle Tracker — v15.3
 
 ## Description
 
@@ -10,7 +10,7 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 * **Ball Tracking:** Assigns unique IDs to balls and tracks their movement across frames.
 * **Scoring Zones:** Define, edit, and manage rectangular scoring zones with specific point values.
 * **Scoring Logic:** Awards points when a ball comes to rest in a scoring zone, with multipliers for special ball types and a "Special Hole" mechanic.
-* **Layouts:**
+* **Layouts:** Switch between Whiffle and Five Star from the menu (Layout). When you change layout, the correct YOLO model and scoring zones are reloaded so scoring stays correct after switching back.
   * **Whiffle:** Standard playfield; win score 2000 in classic/timed/survival.
   * **Five Star:** Alternate playfield; win score 5000. Uses dedicated zones (`data/game/fivestar_scoring_zones.json`) and model (`data/whiffle_new_best_fivestar.pt`). Static image (`assets/static_fivestar.png`) when no camera.
 * **Game Modes:**
@@ -30,7 +30,7 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 * **Resolution Support:** Dynamic window sizing (e.g. 1080p, 720p).
 * **Configuration:** `.env` for Supabase; `configs/` for HSV, settings, Google credentials.
 * **Session Logging & Statistics:** Session stats, heatmaps, and data logging.
-* **Building:** **PyInstaller** (`game.spec`) produces a minimal "Whiffle" folder (onedir). See `BUILD_WHIFFLE.md`. **Inno Setup** (`WhiffleSetup.iss`) builds the installer (version 15.3).
+* **Building:** **PyInstaller** (`game.spec`) produces a minimal "Whiffle" folder (onedir) with `Whiffle.exe` and `_internal` (Python runtime, torch, ultralytics, PIL, matplotlib, bundled data). See `BUILD_WHIFFLE.md`. **Inno Setup** (`WhiffleSetup.iss` v15.3) copies the entire folder and runs `icacls` so the install directory is read/write for saving configs, scores, and zones.
 * **Video Recording, Social Integration, Screenshot Utility:** Capture and share gameplay; upload to YouTube, Google Drive, Discord; score verification with screenshots.
 * **Loading Screen:** Loading screen during initialization.
 * **XP System:** Player XP and leveling (`xp_system.py`, `player_xp.json`).
@@ -41,7 +41,7 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 |------|---------|
 | `game.py` | Main entry point |
 | `constants.py` | Game constants, file paths (e.g. `FIVESTAR_ZONES_FILE`, `FIVESTAR_MODEL_PATH`), win scores |
-| `game_state.py` | Game state (scores, zones, players, modes, layouts, `win_score`) |
+| `game_state.py` | Game state (scores, zones, players, modes, layouts, `win_score`); `set_playfield()` reloads detector and zones when switching layouts |
 | `game_loop.py` | Main loop (frame capture, processing, input) |
 | `game_input.py` | Keyboard and pygame input |
 | `utils.py` | Mouse callback (including OpenCV mouse wheel for achievements submenu) |
@@ -108,10 +108,10 @@ python game.py
 ## Building the Whiffle Folder (for Installer)
 
 ```bash
-pyinstaller game.spec
+pyinstaller game.spec --clean
 ```
 
-Output: `dist/Whiffle/` with `Whiffle.exe` and dependencies. Use this folder as the "Whiffle" source for `WhiffleSetup.iss` (Inno Setup). See `BUILD_WHIFFLE.md` for size-reduction options and openh264 DLL.
+Output: `dist/Whiffle/` with `Whiffle.exe` and `_internal/` (all dependencies). Use this entire folder as the "Whiffle" source for `WhiffleSetup.iss`; the installer copies everything including `_internal` and sets read/write permissions on the install dir. See `BUILD_WHIFFLE.md` for size-reduction options and openh264 DLL.
 
 ## Game Controls
 
@@ -122,3 +122,12 @@ Output: `dist/Whiffle/` with `Whiffle.exe` and dependencies. Use this folder as 
 * **Mouse wheel** — Scroll the Achievements submenu (when in Achievements)
 * **Versus Mode** — On-screen button to end turn
 * Additional controls in specific modes (see in-game help)
+
+## Changes in v15.3
+
+* **Layout switching:** When switching between Whiffle and Five Star, the correct `.pt` model and scoring zones are reloaded; zones are cleared first so scoring is correct after switching back.
+* **Game over:** Only triggered in Timed mode when time runs out; reaching win score no longer shows game over (win is still recorded and saved).
+* **Achievements:** Per-player storage; scrollable list with mouse wheel (OpenCV); layout label (Whiffle/Five Star) on unlocked achievements; Hole Hunter requires 2 special-hole scores; Legend at 3000 pts.
+* **High-score proof:** Only the last 5 screenshots are kept in `high_score_proof`.
+* **PyInstaller:** Onedir build (`Whiffle.exe` + `_internal`); hiddenimports for PIL, matplotlib, ultralytics, torch; openh264 DLL optional.
+* **Inno Setup:** Single recursive copy of `dist/Whiffle` (including `_internal`); post-install `icacls` grants Users full control on install dir for saving configs, scores, zones; icon paths use `_internal\assets\pinball_icon.ico`.
