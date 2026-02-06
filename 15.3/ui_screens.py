@@ -212,14 +212,13 @@ def _draw_game_over_screen(frame: np.ndarray, game_state: "GameState") -> None:
     )
 
     # Store rects for direct click checking in mouse_callback
-    if hasattr(game_state, "game_over_buttons"):
-        game_state.game_over_buttons = {
-            "play_again": play_again_rect,
-            "main_menu": menu_rect,
-            "heatmap": heatmap_rect,
-        }
-    else:
-        logger.warning("game_state missing 'game_over_buttons' attribute.")
+    if not hasattr(game_state, "game_over_buttons"):
+        game_state.game_over_buttons = {}
+    game_state.game_over_buttons = {
+        "play_again": play_again_rect,
+        "main_menu": menu_rect,
+        "heatmap": heatmap_rect,
+    }
 
 
 # --- Modal Dismissal Callback ---

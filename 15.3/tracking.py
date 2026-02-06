@@ -163,9 +163,6 @@ def _is_scored_recently(
     for (sx, sy), _ in scored_positions.items():
         dist_squared = (new_x - sx) ** 2 + (new_y - sy) ** 2
         if dist_squared < threshold**2:
-            logger.debug(
-                f"Position ({new_x}, {new_y}) matches scored position ({sx}, {sy})"
-            )
             return True
     return False
 

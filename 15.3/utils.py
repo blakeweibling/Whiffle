@@ -181,6 +181,14 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
         game_state.show_heatmap = False
         return
 
+    # Handle direct game over clicks
+    if current_state == CurrentGameState.GAME_OVER and event == cv2.EVENT_LBUTTONDOWN:
+        from interaction_utils import _process_game_over_click
+
+        if _process_game_over_click(x, y, game_state, mouse_callback):
+            logger.debug("Game over click handled.")
+            return
+
     # Handle direct menu or modal clicks
     if (
         current_state in [CurrentGameState.MENU, CurrentGameState.CONFIRM_QUIT]

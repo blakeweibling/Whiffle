@@ -164,7 +164,7 @@ class BallDetector:
         )  #
 
         # Detect balls using YOLOv8 (Unchanged)
-        results = self.model(inference_frame, conf=0.5, iou=0.5)
+        results = self.model(inference_frame, conf=0.5, iou=0.5, verbose=False)
 
         # Separate balls by type
         silver_balls = []

@@ -858,27 +858,39 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             and game_state.game_timer is not None
             and game_state.current_state not in [CurrentGameState.GAME_OVER]
         ):
-            timer_text = f"Time: {int(max(0, game_state.game_timer))}"
-            time_color = (
-                UIConstants.RED if game_state.game_timer <= 10 else UIConstants.WHITE
-            )
-            (tw_t, th_t), _ = cv2.getTextSize(
-                timer_text,
-                cv2.FONT_HERSHEY_SIMPLEX,
-                UIConstants.FONT_SCALE_MEDIUM,
-                UIConstants.FONT_THICKNESS,
-            )
-            timer_x = (current_width - tw_t) // 2
-            timer_y = player_text_y
-            _optimized_draw_text(
+            time_left = int(max(0, game_state.game_timer))
+            timer_text = f"Time: {time_left}"
+            if time_left <= 10:
+                time_color = UIConstants.RED
+            elif time_left <= 20:
+                time_color = UIConstants.CV2_ORANGE
+            else:
+                time_color = UIConstants.WHITE
+
+            timer_x = int(current_width * 0.08)
+            timer_y = int(current_height * 0.14)
+            font_scale = UIConstants.FONT_SCALE_LARGE
+            font_thickness = UIConstants.FONT_THICKNESS + 2
+
+            cv2.putText(
                 frame,
                 timer_text,
                 (timer_x, timer_y),
-                UIConstants.FONT_SCALE_MEDIUM,
-                time_color,
+                cv2.FONT_HERSHEY_DUPLEX,
+                font_scale,
                 UIConstants.BLACK,
-                thickness=UIConstants.FONT_THICKNESS,
-                alpha=0.7,
+                font_thickness + 2,
+                cv2.LINE_AA,
+            )
+            cv2.putText(
+                frame,
+                timer_text,
+                (timer_x, timer_y),
+                cv2.FONT_HERSHEY_DUPLEX,
+                font_scale,
+                time_color,
+                font_thickness,
+                cv2.LINE_AA,
             )
     if game_state.current_state == CurrentGameState.PLAYING:
         # Only draw scoring zones if show_scoring_zones is True (default True)

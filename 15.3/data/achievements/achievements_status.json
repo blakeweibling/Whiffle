@@ -2,19 +2,19 @@
     "Blake": {
         "First Score": {
             "unlocked": true,
-            "layout": "fivestar"
+            "layout": "whiffle"
         },
         "Half Grand": {
-            "unlocked": true,
-            "layout": "fivestar"
+            "unlocked": false,
+            "layout": null
         },
         "High Roller": {
-            "unlocked": true,
-            "layout": "fivestar"
+            "unlocked": false,
+            "layout": null
         },
         "Victory Lap": {
-            "unlocked": true,
-            "layout": "fivestar"
+            "unlocked": false,
+            "layout": null
         },
         "Legend": {
             "unlocked": false,
@@ -41,24 +41,24 @@
             "layout": null
         },
         "Dual Threat": {
-            "unlocked": true,
-            "layout": "whiffle"
+            "unlocked": false,
+            "layout": null
         },
         "Against the Clock": {
-            "unlocked": true,
-            "layout": "whiffle"
+            "unlocked": false,
+            "layout": null
         },
         "Survivor": {
-            "unlocked": true,
-            "layout": "whiffle"
+            "unlocked": false,
+            "layout": null
         },
         "Mode Hopper": {
             "unlocked": false,
             "layout": null
         },
         "Triple Crown": {
-            "unlocked": true,
-            "layout": "whiffle"
+            "unlocked": false,
+            "layout": null
         },
         "Marathon": {
             "unlocked": false,
@@ -97,8 +97,8 @@
             "layout": "whiffle"
         },
         "Proof": {
-            "unlocked": true,
-            "layout": "fivestar"
+            "unlocked": false,
+            "layout": null
         },
         "Analyst": {
             "unlocked": false,
@@ -113,12 +113,12 @@
             "layout": null
         },
         "Red Hot": {
-            "unlocked": true,
-            "layout": "fivestar"
-        },
-        "Split Decision": {
             "unlocked": false,
             "layout": null
+        },
+        "Split Decision": {
+            "unlocked": true,
+            "layout": "whiffle"
         },
         "Multiplier Master": {
             "unlocked": false,

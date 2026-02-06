@@ -1109,15 +1109,15 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
         # Decrement timer
         game_state.game_timer -= dt
 
-        # Check if timer expired — only trigger GAME_OVER in timed mode when time runs out
+        # Check if timer expired — trigger GAME_OVER for timed and survival modes
         if game_state.game_timer <= 0:
             game_state.game_timer = 0  # Clamp to zero
             if (
-                game_mode == "timed"
+                game_mode in ["timed", "survival"]
                 and current_state != CurrentGameState.GAME_OVER
             ):
                 logger.info(
-                    "Timer expired in timed mode. Switching to GAME_OVER."
+                    f"Timer expired in {game_mode} mode. Switching to GAME_OVER."
                 )
                 game_state.current_state = CurrentGameState.GAME_OVER
                 game_state.win_condition_met = False  # Timer expired is not a win

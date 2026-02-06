@@ -414,6 +414,8 @@ class GameState:
             # Clear old zones before loading new ones to prevent stale data
             self.scoring_zones = []
             self.special_hole = None
+            # Reset scoring/tracking state when switching playfields
+            self._reset_scoring_state_for_layout_change()
             
             # Reload detector with new model (this also extracts class names from the new model)
             self.detector = BallDetector(self.model_path)
@@ -449,6 +451,29 @@ class GameState:
             logger.error(f"Failed to load model {model_path}: {e}")
             show_notification(self, "Failed to load model", is_error=True)
             return False
+
+    def _reset_scoring_state_for_layout_change(self) -> None:
+        """Clear scoring/tracking state so layout switches don't carry over scores."""
+        self.tracked_balls = []
+        self.next_ball_id = 0
+        self.frame_count = 0
+        self.scored_balls = []
+        self.scored_positions = {}
+        self.balls_in_zone = {}
+        self.ball_scored_zones = {}
+        self.ball_states = {}
+        self.previous_ball_states = {}
+        self.ball_positions_history = {}
+        self.ball_zone_history = {}
+        self.zone_cooldown = {}
+        self.special_hole_hit_this_session = False
+        self.special_hole_hits_this_session = 0
+        self.points_from_multiplier_balls_this_game = 0
+        self.scored_red_ball_this_session = False
+        self.scored_half_red_this_session = False
+        self.active_trails = {}
+        self.active_explosions = []
+        self.tracker = BallTracker()
 
     def is_fivestar_playfield(self) -> bool:
         """Return True when the active playfield is Five Star."""

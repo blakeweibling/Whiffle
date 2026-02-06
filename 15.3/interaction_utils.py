@@ -490,6 +490,37 @@ def _process_game_over_click(
         logger.warning("Missing game_over_buttons dictionary in game_state")
         return False
 
+    # Ensure button rects exist (fallback if UI didn't populate them)
+    if not game_state.game_over_buttons:
+        try:
+            current_width, current_height = game_state.get_current_resolution_dimensions()
+            button_width, button_height, button_spacing = (200, 50, 30)
+            button_y = current_height - int(0.1 * current_height) - button_height
+            total_button_width = button_width * 3 + button_spacing * 2
+            start_x = (current_width - total_button_width) // 2
+            play_again_rect = (start_x, button_y, button_width, button_height)
+            menu_rect = (
+                start_x + button_width + button_spacing,
+                button_y,
+                button_width,
+                button_height,
+            )
+            heatmap_rect = (
+                start_x + (button_width + button_spacing) * 2,
+                button_y,
+                button_width,
+                button_height,
+            )
+            game_state.game_over_buttons = {
+                "play_again": play_again_rect,
+                "main_menu": menu_rect,
+                "heatmap": heatmap_rect,
+            }
+            logger.debug("Game over button rects rebuilt for click handling.")
+        except Exception as e:
+            logger.error(f"Failed to rebuild game over button rects: {e}")
+            return False
+
     # Check for heatmap button click
     if "heatmap" in game_state.game_over_buttons:
         heatmap_button_rect = game_state.game_over_buttons["heatmap"]
@@ -1191,60 +1222,77 @@ def _process_menu_or_modal_click(
                         new_layout = action.split("set_layout_")[-1]
                         valid_layouts = {"whiffle", "fivestar"}
                         if new_layout in valid_layouts:
-                            current_playfield = getattr(game_state, "playfield_type", "whiffle")
                             # Convert fivestar to "five star" for set_playfield if needed
-                            layout_key = "five star" if new_layout == "fivestar" else new_layout
-                            
-                            if current_playfield != new_layout:
-                                try:
-                                    success = game_state.set_playfield(layout_key)
-                                    if success:
-                                        # Reset score when changing layout
-                                        game_state.score = 0
-                                        game_state.final_score = 0
-                                        
-                                        # Reset player score if there's a current player
-                                        try:
-                                            current_player = game_state.get_current_player()
-                                            if current_player:
-                                                current_player.score = 0
-                                        except Exception as e:
-                                            logger.debug(f"Could not reset player score: {e}")
-                                        
-                                        # Reset XP when changing layout
-                                        try:
-                                            from xp_system import xp_system
-                                            xp_system.clear_all_xp()
-                                            
-                                            # Refresh player XP data after clearing
-                                            try:
-                                                current_player = game_state.get_current_player()
-                                                if current_player and hasattr(current_player, "refresh_xp"):
-                                                    current_player.refresh_xp()
-                                            except Exception as e:
-                                                logger.debug(f"Could not refresh player XP: {e}")
-                                        except Exception as e:
-                                            logger.error(f"Error clearing XP on layout change: {e}")
-                                        
-                                        game_state.menu_cache = None
-                                        layout_display = "Five star" if new_layout == "fivestar" else "Whiffle"
-                                        show_notification(
-                                            game_state, f"Layout changed to {layout_display}"
+                            layout_key = (
+                                "five star" if new_layout == "fivestar" else new_layout
+                            )
+
+                            try:
+                                success = game_state.set_playfield(layout_key)
+                                if success:
+                                    # Reset score when changing layout
+                                    game_state.score = 0
+                                    game_state.final_score = 0
+
+                                    # Reset player score if there's a current player
+                                    try:
+                                        current_player = game_state.get_current_player()
+                                        if current_player:
+                                            current_player.score = 0
+                                    except Exception as e:
+                                        logger.debug(
+                                            f"Could not reset player score: {e}"
                                         )
-                                        logger.info(f"Switched to layout: {new_layout}, score reset to 0")
-                                    else:
-                                        show_notification(
-                                            game_state,
-                                            "Failed to change layout",
-                                            is_error=True,
+
+                                    # Reset XP when changing layout
+                                    try:
+                                        from xp_system import xp_system
+
+                                        xp_system.clear_all_xp()
+
+                                        # Refresh player XP data after clearing
+                                        try:
+                                            current_player = (
+                                                game_state.get_current_player()
+                                            )
+                                            if current_player and hasattr(
+                                                current_player, "refresh_xp"
+                                            ):
+                                                current_player.refresh_xp()
+                                        except Exception as e:
+                                            logger.debug(
+                                                f"Could not refresh player XP: {e}"
+                                            )
+                                    except Exception as e:
+                                        logger.error(
+                                            f"Error clearing XP on layout change: {e}"
                                         )
-                                except Exception as e:
-                                    logger.error(f"Error changing layout: {e}")
+
+                                    game_state.menu_cache = None
+                                    layout_display = (
+                                        "Five star"
+                                        if new_layout == "fivestar"
+                                        else "Whiffle"
+                                    )
+                                    show_notification(
+                                        game_state, f"Layout changed to {layout_display}"
+                                    )
+                                    logger.info(
+                                        f"Switched to layout: {new_layout}, score reset to 0"
+                                    )
+                                else:
                                     show_notification(
                                         game_state,
-                                        "Error changing layout",
+                                        "Failed to change layout",
                                         is_error=True,
                                     )
+                            except Exception as e:
+                                logger.error(f"Error changing layout: {e}")
+                                show_notification(
+                                    game_state,
+                                    "Error changing layout",
+                                    is_error=True,
+                                )
                         return True
 
                     # Replay system actions
