@@ -10,10 +10,16 @@ into classes for organization and can be partially configured via environment va
 import logging
 import os
 import string  # Import string for player name characters
+import sys
 from typing import Dict, List, Optional, Tuple
 
 import cv2
 import numpy as np
+
+
+def _is_linux() -> bool:
+    """Returns True when running on Linux (including Raspberry Pi)."""
+    return sys.platform in ("linux", "linux2")
 
 # Set up logging
 logging.basicConfig(
@@ -162,22 +168,83 @@ class UIConstants:
 
 
 class CameraConfig:
-    """Configuration for camera index and backend selection."""
+    """Configuration for camera index and backend selection.
+    Platform-aware: uses CAP_ANY on Linux/Raspberry Pi, DirectShow on Windows.
+    On Linux with no camera, fails fast to avoid OpenCV error spam and segfaults.
+    """
 
-    # --- (Content of CameraConfig remains unchanged) ---
-    CAMERA_INDICES: List[int] = [0, 1, -1]
+    # Windows: try multiple indices with DirectShow. Linux: try only 0 with CAP_ANY.
+    CAMERA_INDICES_WINDOWS: List[int] = [0, 1, -1]
+    CAMERA_INDICES_LINUX: List[int] = [0]  # Fail fast - avoid retry storm and segfault
+
     CAMERA_BACKENDS: Dict[str, int] = {
         "default": cv2.CAP_ANY,
+        "v4l2": getattr(cv2, "CAP_V4L2", cv2.CAP_ANY),
         "dshow": cv2.CAP_DSHOW,
         "msmf": cv2.CAP_MSMF,
     }
-    DEFAULT_BACKEND: str = "dshow"
+    # Linux-safe backends only (dshow, msmf are Windows-only and can cause issues)
+    LINUX_BACKENDS: List[str] = ["default", "v4l2"]
+    DEFAULT_BACKEND_WINDOWS: str = "dshow"
+    DEFAULT_BACKEND_LINUX: str = "default"
+
+    @staticmethod
+    def _default_backend() -> str:
+        return (
+            CameraConfig.DEFAULT_BACKEND_LINUX
+            if _is_linux()
+            else CameraConfig.DEFAULT_BACKEND_WINDOWS
+        )
+
+    @staticmethod
+    def _indices_to_try(preferred_index: Optional[int]) -> List[int]:
+        base = [preferred_index] if preferred_index is not None else (
+            CameraConfig.CAMERA_INDICES_LINUX
+            if _is_linux()
+            else CameraConfig.CAMERA_INDICES_WINDOWS
+        )
+        return base
+
+    @staticmethod
+    def _fallback_backends() -> List[str]:
+        """On Linux, only try Linux-safe backends. Skip Windows-only dshow/msmf."""
+        if _is_linux():
+            return [
+                b for b in CameraConfig.LINUX_BACKENDS
+                if b != CameraConfig._default_backend()
+            ]
+        return [
+            name for name in CameraConfig.CAMERA_BACKENDS.keys()
+            if name != CameraConfig._default_backend()
+        ]
+
+    @staticmethod
+    def _try_open_camera(index: int, backend: int) -> Optional[Tuple[int, int, bool]]:
+        """Try to open camera; return (index, backend, True) if OK, else None.
+        Safely releases capture on failure to reduce segfault risk.
+        """
+        cap = None
+        try:
+            cap = cv2.VideoCapture(index, backend)
+            if cap and cap.isOpened():
+                ret, _ = cap.read()
+                if ret:
+                    return (index, backend, True)
+        except Exception:
+            pass
+        finally:
+            if cap is not None:
+                try:
+                    cap.release()
+                except Exception:
+                    pass
+        return None
 
     @staticmethod
     def get_camera_config() -> Tuple[Optional[int], Optional[int], bool]:
-        # (Implementation unchanged)
         env_index = os.getenv("WHIFFLE_CAMERA_INDEX")
-        env_backend = os.getenv("WHIFFLE_CAMERA_BACKEND", CameraConfig.DEFAULT_BACKEND)
+        default_backend = CameraConfig._default_backend()
+        env_backend = os.getenv("WHIFFLE_CAMERA_BACKEND", default_backend)
         preferred_index = None
         if env_index is not None:
             try:
@@ -187,40 +254,38 @@ class CameraConfig:
             except ValueError:
                 preferred_index = None
         if env_backend not in CameraConfig.CAMERA_BACKENDS:
-            env_backend = CameraConfig.DEFAULT_BACKEND
-        indices_to_try = (
-            [preferred_index]
-            if preferred_index is not None
-            else CameraConfig.CAMERA_INDICES
-        )
+            env_backend = default_backend
+        indices_to_try = CameraConfig._indices_to_try(preferred_index)
         backend = CameraConfig.CAMERA_BACKENDS[env_backend]
-        backend_name = env_backend
-        for index in indices_to_try:
-            # logger.info(f"Trying camera index {index} with backend {backend_name} ({backend})...")
-            cap = cv2.VideoCapture(index, backend)
-            if cap.isOpened():
-                ret, _ = cap.read()
-                if ret:
-                    cap.release()
-                    return index, backend, True
-            cap.release()
-        if env_backend == CameraConfig.DEFAULT_BACKEND:
-            other_backends = [
-                name
-                for name in CameraConfig.CAMERA_BACKENDS.keys()
-                if name != CameraConfig.DEFAULT_BACKEND
-            ]
-            for backend_name in other_backends:
-                backend = CameraConfig.CAMERA_BACKENDS[backend_name]
+
+        def _probe():
+            for index in indices_to_try:
+                result = CameraConfig._try_open_camera(index, backend)
+                if result is not None:
+                    return result
+            for backend_name_fb in CameraConfig._fallback_backends():
+                backend_fb = CameraConfig.CAMERA_BACKENDS[backend_name_fb]
                 for index in indices_to_try:
-                    # logger.info(f"Trying camera index {index} with fallback backend {backend_name} ({backend})...")
-                    cap = cv2.VideoCapture(index, backend)
-                    if cap.isOpened():
-                        ret, _ = cap.read()
-                        if ret:
-                            cap.release()
-                            return index, backend, True
-                    cap.release()
+                    result = CameraConfig._try_open_camera(index, backend_fb)
+                    if result is not None:
+                        return result
+            return None
+
+        if _is_linux():
+            # On Linux, suppress OpenCV/FFmpeg/V4L2 stderr spam when no camera
+            with open(os.devnull, "w") as dn:
+                old_stderr = sys.stderr
+                try:
+                    sys.stderr = dn
+                    result = _probe()
+                finally:
+                    sys.stderr = old_stderr
+        else:
+            result = _probe()
+
+        if result is not None:
+            return result
+
         logger.warning("No working camera found. Falling back to static frame.")
         return None, None, False
 
