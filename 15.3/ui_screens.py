@@ -503,23 +503,22 @@ def show_splash_screen(supabase_url: str, supabase_key: str) -> Optional["GameSt
         # Get the current resolution dimensions
         current_width, current_height = game_state.get_current_resolution_dimensions()
 
-        # Center the window on the screen
+        # Center the window on the screen (Windows only - windll is not available on Linux)
         try:
-            # Try to get screen resolution - this is platform-dependent
-            # For Windows, we can use GetSystemMetrics
-            import ctypes
+            import sys
 
-            user32 = ctypes.windll.user32
-            screen_width = user32.GetSystemMetrics(0)
-            screen_height = user32.GetSystemMetrics(1)
+            if sys.platform == "win32":
+                import ctypes
 
-            # Calculate center position
-            x_pos = max(0, (screen_width - current_width) // 2)
-            y_pos = max(0, (screen_height - current_height) // 2)
-
-            # Move window to center
-            cv2.moveWindow(UIConstants.WINDOW_NAME, x_pos, y_pos)
-            logger.info(f"Centered main window at ({x_pos}, {y_pos})")
+                user32 = ctypes.windll.user32
+                screen_width = user32.GetSystemMetrics(0)
+                screen_height = user32.GetSystemMetrics(1)
+                x_pos = max(0, (screen_width - current_width) // 2)
+                y_pos = max(0, (screen_height - current_height) // 2)
+                cv2.moveWindow(UIConstants.WINDOW_NAME, x_pos, y_pos)
+                logger.info(f"Centered main window at ({x_pos}, {y_pos})")
+            else:
+                logger.debug("Window centering skipped on non-Windows (windll not available).")
         except Exception as e:
             logger.error(f"Failed to center main window: {e}")
 

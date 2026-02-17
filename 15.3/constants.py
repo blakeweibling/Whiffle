@@ -272,14 +272,17 @@ class CameraConfig:
             return None
 
         if _is_linux():
-            # On Linux, suppress OpenCV/FFmpeg/V4L2 stderr spam when no camera
+            # On Linux, suppress OpenCV/FFmpeg/V4L2 stderr spam when no camera.
+            # OpenCV writes to fd 2 directly, so we must redirect at fd level.
             with open(os.devnull, "w") as dn:
-                old_stderr = sys.stderr
+                devnull_fd = dn.fileno()
+                old_stderr_fd = os.dup(2)
                 try:
-                    sys.stderr = dn
+                    os.dup2(devnull_fd, 2)
                     result = _probe()
                 finally:
-                    sys.stderr = old_stderr
+                    os.dup2(old_stderr_fd, 2)
+                    os.close(old_stderr_fd)
         else:
             result = _probe()
 

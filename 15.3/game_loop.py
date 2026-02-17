@@ -288,6 +288,14 @@ def run_game_loop(game_state: GameState) -> None:
                 ):
                     logger.info("Window closed by user.")
                     break
+            except cv2.error as e:
+                # On Linux/Qt, "NULL guiReceiver" occurs when window is closed - treat as normal exit
+                err_msg = str(e).lower()
+                if "null" in err_msg or "guiReceiver" in err_msg or "create a window" in err_msg:
+                    logger.info("Window closed by user (Qt backend).")
+                else:
+                    logger.error(f"Window property check error: {e}.")
+                break
             except Exception as e:
                 logger.error(f"Window property check error: {e}.")
                 break
