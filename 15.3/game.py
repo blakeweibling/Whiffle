@@ -109,12 +109,21 @@ def validate_config(supabase_url: str, supabase_key: str) -> None:
         raise ValueError("Invalid Supabase key")
 
 
+def _get_app_dir():
+    """Return the directory containing the app (for .env/config). When frozen (installer/exe), use exe dir."""
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(os.path.abspath(sys.executable))
+    return os.path.dirname(os.path.abspath(__file__))
+
+
 def initialize_game_state():
     """
     Initialize the game state with proper configuration.
     This function encapsulates the initialization process to be wrapped by the loading screen.
     """
-    load_dotenv()
+    app_dir = _get_app_dir()
+    env_path = os.path.join(app_dir, ".env")
+    load_dotenv(env_path)
     supabase_url = os.getenv("SUPABASE_URL")  # Get URL from env
     supabase_key = os.getenv("SUPABASE_KEY")  # Get Key from env
 
