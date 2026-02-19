@@ -869,19 +869,19 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
 
             timer_x = int(current_width * 0.08)
             timer_y = int(current_height * 0.14)
-            font_scale = 2.2
-            font_thickness = 5
+            font_scale = 1.4
+            font_thickness = 3
 
             (tw_t, th_t), _ = cv2.getTextSize(
                 timer_text, cv2.FONT_HERSHEY_DUPLEX, font_scale, font_thickness
             )
-            pad_t = 20
+            pad_t = 14
             rx1 = max(0, timer_x - pad_t)
             ry1 = max(0, timer_y - th_t - pad_t // 2)
             rx2 = min(current_width, timer_x + tw_t + pad_t)
             ry2 = min(current_height, timer_y + pad_t)
             cv2.rectangle(frame, (rx1, ry1), (rx2, ry2), (40, 40, 40), -1)
-            cv2.rectangle(frame, (rx1, ry1), (rx2, ry2), (70, 70, 70), 3)
+            cv2.rectangle(frame, (rx1, ry1), (rx2, ry2), (70, 70, 70), 2)
 
             cv2.putText(
                 frame,
@@ -890,7 +890,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 cv2.FONT_HERSHEY_DUPLEX,
                 font_scale,
                 UIConstants.BLACK,
-                font_thickness + 3,
+                font_thickness + 2,
                 cv2.LINE_AA,
             )
             cv2.putText(
