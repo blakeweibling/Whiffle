@@ -193,6 +193,8 @@ class GameState:
         self.original_zone_on_drag_start: Optional[Tuple[int, int, int, int, int]] = (
             None
         )
+        self.move_all_zones: bool = False
+        self.original_zones_on_drag_start: Optional[List[Tuple[int, int, int, int, int]]] = None
         self.editing_player_index: Optional[int] = None
         self.editing_player_mode: Optional[str] = None
         self.editing_player_name_input: Optional[str] = None
@@ -296,6 +298,7 @@ class GameState:
         # --- Init Calls Using Utility Functions ---
         logger.info("Loading settings via utils...")
         load_settings(self)
+        self.current_player_name_input = getattr(self, "last_player_name", "") or ""
 
         logger.info("Loading initial game state (zones, high score) via utils...")
         load_initial_state(self)

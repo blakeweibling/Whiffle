@@ -719,6 +719,7 @@ def load_settings(game_state: Any) -> None:
                 not game_state.discord_webhook_url
                 or game_state.discord_webhook_url == "YOUR_WEBHOOK_URL_HERE"
             ):
+
                 logger.warning(
                     "Discord Webhook URL not found or not configured in settings.json."
                 )
@@ -727,6 +728,8 @@ def load_settings(game_state: Any) -> None:
                 )
             else:
                 logger.info("Loaded Discord Webhook URL from settings.")
+            # Remember last player name for pre-fill
+            game_state.last_player_name = settings_data.get("last_player_name", "") or ""
             # <<< END ADDED >>>
 
             logger.info(f"Loaded settings from {settings_file}")
@@ -739,6 +742,7 @@ def load_settings(game_state: Any) -> None:
             game_state.game_sounds_on = default_sound_on
             game_state.background_music_on = default_music_on
             game_state.discord_webhook_url = None  # Default to None if file not found
+            game_state.last_player_name = ""
     except (IOError, json.JSONDecodeError) as e:
         logger.error(f"Failed load settings from {settings_file}: {e}. Using defaults.")
         game_state.current_sound_volume = default_sound_vol
@@ -746,6 +750,7 @@ def load_settings(game_state: Any) -> None:
         game_state.game_sounds_on = default_sound_on
         game_state.background_music_on = default_music_on
         game_state.discord_webhook_url = None  # Default to None on error
+        game_state.last_player_name = ""
     except Exception as e:
         logger.exception(f"Unexpected error loading settings: {e}. Using defaults.")
         game_state.current_sound_volume = default_sound_vol
@@ -753,6 +758,7 @@ def load_settings(game_state: Any) -> None:
         game_state.game_sounds_on = default_sound_on
         game_state.background_music_on = default_music_on
         game_state.discord_webhook_url = None  # Default to None on error
+        game_state.last_player_name = ""
 
 
 def save_settings(game_state: Any) -> None:
@@ -773,6 +779,7 @@ def save_settings(game_state: Any) -> None:
         ),
         # <<< ADDED: Save Discord Webhook URL >>>
         "discord_webhook_url": getattr(game_state, "discord_webhook_url", None),
+        "last_player_name": getattr(game_state, "last_player_name", "") or "",
         # <<< END ADDED >>>
     }
     try:
@@ -1226,6 +1233,7 @@ def reset_game(game_state: Any) -> None:
     # Preserve objects that should survive reset
     preserved_objects = {
         "leaderboard": getattr(game_state, "leaderboard", None),
+        "leaderboard_mode": getattr(game_state, "leaderboard_mode", "classic"),
         "players": getattr(game_state, "players", None),
         "current_player_index": getattr(game_state, "current_player_index", 0),
         "scoring_zones": getattr(game_state, "scoring_zones", []),
@@ -1434,6 +1442,8 @@ def _reset_all_menu_editing_states(game_state: Any) -> None:
         "zone_editing_action": None,
         "drag_start_pos": None,
         "original_zone_on_drag_start": None,
+        "move_all_zones": False,
+        "original_zones_on_drag_start": None,
         "edit_zones_current_page": 1,
         "menu_cache": None,
         "click_feedback_state": None,  # Reset click feedback too

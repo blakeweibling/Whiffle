@@ -872,6 +872,17 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             font_scale = UIConstants.FONT_SCALE_LARGE
             font_thickness = UIConstants.FONT_THICKNESS + 2
 
+            (tw_t, th_t), _ = cv2.getTextSize(
+                timer_text, cv2.FONT_HERSHEY_DUPLEX, font_scale, font_thickness
+            )
+            pad_t = 12
+            rx1 = max(0, timer_x - pad_t)
+            ry1 = max(0, timer_y - th_t - pad_t // 2)
+            rx2 = min(current_width, timer_x + tw_t + pad_t)
+            ry2 = min(current_height, timer_y + pad_t)
+            cv2.rectangle(frame, (rx1, ry1), (rx2, ry2), (60, 60, 60), -1)
+            cv2.rectangle(frame, (rx1, ry1), (rx2, ry2), (90, 90, 90), 2)
+
             cv2.putText(
                 frame,
                 timer_text,
@@ -1023,19 +1034,42 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
         _draw_xp_bar(frame, game_state)
     elif game_state.current_state == CurrentGameState.PAUSED:
         pause_text = "PAUSED"
+        font_scale_pause = 4.0
+        thickness_pause = 6
         (tw_p, th_p), _ = cv2.getTextSize(
-            pause_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_XLARGE, 3
+            pause_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale_pause, thickness_pause
         )
-        pause_x = (current_width - tw_p) // 2
-        pause_y = current_height // 2
+        pad = 40
+        cx = (current_width - tw_p) // 2
+        cy = current_height // 2
+        x1 = max(0, cx - pad)
+        y1 = max(0, cy - th_p - pad)
+        x2 = min(current_width, cx + tw_p + pad)
+        y2 = min(current_height, cy + pad)
+        overlay = frame.copy()
+        cv2.rectangle(overlay, (x1, y1), (x2, y2), (0, 0, 0), -1)
+        cv2.addWeighted(overlay, 0.6, frame, 0.4, 0, frame)
         _optimized_draw_text(
             frame,
             pause_text,
-            (pause_x, pause_y),
-            UIConstants.FONT_SCALE_XLARGE,
+            (cx, cy + th_p // 2),
+            font_scale_pause,
             UIConstants.YELLOW,
             UIConstants.BLACK,
-            thickness=3,
+            thickness=thickness_pause,
+        )
+        sub_text = "Press P to resume"
+        (tw2, th2), _ = cv2.getTextSize(
+            sub_text, cv2.FONT_HERSHEY_SIMPLEX, 0.8, 2
+        )
+        _optimized_draw_text(
+            frame,
+            sub_text,
+            ((current_width - tw2) // 2, cy + th_p + 50),
+            0.8,
+            UIConstants.WHITE,
+            UIConstants.BLACK,
+            thickness=2,
         )
         draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole)
         _draw_stats_display(frame, game_state)
@@ -1047,7 +1081,17 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
         _draw_stats_display(frame, game_state)
     elif game_state.current_state == CurrentGameState.ZONE_EDITING:
         draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole)
-        if (
+        if getattr(game_state, "move_all_zones", False):
+            # Move-all mode: no single-zone handles; show hint
+            hint = "Drag to move all zones | Esc to cancel"
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            (tw, th), _ = cv2.getTextSize(hint, font, 0.5, 1)
+            cx = (frame.shape[1] - tw) // 2
+            cv2.rectangle(frame, (cx - 5, 12), (cx + tw + 5, 12 + th + 8), (0, 0, 0), -1)
+            cv2.putText(
+                frame, hint, (cx, 30), font, 0.5, UIConstants.WHITE, 1, cv2.LINE_AA
+            )
+        elif (
             game_state.selected_zone_for_edit is not None
             and 0 <= game_state.selected_zone_for_edit < len(game_state.scoring_zones)
         ):
@@ -1062,7 +1106,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             )
             _draw_zone_edit_handles(frame, (zx, zy, zw, zh))
         # --- [FIX 5th time] Correctly formatted else/try/except block ---
-        else:
+        elif not getattr(game_state, "move_all_zones", False):
             logger.warning(
                 "In ZONE_EDITING state but selected_zone_for_edit is invalid. Reverting state."
             )

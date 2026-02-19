@@ -376,6 +376,7 @@ class MenuConstants:
     MAIN_MENU_ITEMS: List[Tuple[str, str]] = [
         ("New Game", "new_game"),
         ("Resume", "resume"),
+        ("Restart Round", "restart_round"),
         ("Settings", "settings"),
         ("Game Mode", "game_mode"),
         ("Layout", "layout"),

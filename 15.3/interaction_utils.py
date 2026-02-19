@@ -190,6 +190,20 @@ def _get_mouse_event_handlers() -> MouseEventHandlers:
 EVENT_HANDLERS = _get_mouse_event_handlers()
 
 
+# --- Helper: Reset score after zone edit so scoring stays accurate ---
+def _reset_score_after_zone_edit(game_state: "GameState") -> None:
+    """Reset game and current player score after zones are moved/resized."""
+    game_state.score = 0
+    game_state.final_score = 0
+    if hasattr(game_state, "get_current_player"):
+        try:
+            player = game_state.get_current_player()
+            if player is not None and hasattr(player, "score"):
+                player.score = 0
+        except Exception as e:
+            logger.debug(f"Could not reset player score after zone edit: {e}")
+
+
 # --- Helper: Find which handle/area of a zone is clicked ---
 def _get_zone_click_location(
     x: int, y: int, zone_rect: Tuple[int, int, int, int]
@@ -215,10 +229,72 @@ def _process_zone_editing_event(
     event: int, x: int, y: int, game_state: "GameState", is_dragging: bool = False
 ) -> bool:
     handled = False
+    zones = getattr(game_state, "scoring_zones", [])
+    move_all = getattr(game_state, "move_all_zones", False)
+
+    # --- Move All Zones: click anywhere to start drag, same delta applied to every zone ---
+    if move_all and zones:
+        if is_dragging:
+            event = cv2.EVENT_MOUSEMOVE
+        if event == cv2.EVENT_LBUTTONDOWN:
+            game_state.zone_editing_action = "move"
+            game_state.drag_start_pos = (x, y)
+            game_state.original_zones_on_drag_start = [tuple(z) for z in zones]
+            logger.debug("Move-all zones: drag started.")
+            return True
+        if event == cv2.EVENT_MOUSEMOVE:
+            if getattr(game_state, "drag_start_pos", None) and getattr(
+                game_state, "original_zones_on_drag_start", None
+            ):
+                drag_x_start, drag_y_start = game_state.drag_start_pos
+                dx, dy = x - drag_x_start, y - drag_y_start
+                orig_list = game_state.original_zones_on_drag_start
+                for i, (ox, oy, ow, oh, op) in enumerate(orig_list):
+                    game_state.scoring_zones[i] = (ox + dx, oy + dy, ow, oh, op)
+                return True
+        if event == cv2.EVENT_LBUTTONUP:
+            if getattr(game_state, "drag_start_pos", None) and getattr(
+                game_state, "original_zones_on_drag_start", None
+            ):
+                min_size = getattr(ScoringConstants, "MIN_ZONE_SIZE", 10)
+                valid = True
+                for z in game_state.scoring_zones:
+                    if z[2] < min_size or z[3] < min_size:
+                        valid = False
+                        break
+                if valid:
+                    for i, z in enumerate(game_state.scoring_zones):
+                        others = [
+                            game_state.scoring_zones[j]
+                            for j in range(len(game_state.scoring_zones))
+                            if j != i
+                        ]
+                        if _zones_overlap(z[:4], others):
+                            valid = False
+                            break
+                if not valid:
+                    show_notification(
+                        game_state,
+                        "Move causes overlap or invalid size. Reverted.",
+                        is_error=True,
+                        duration=3.0,
+                    )
+                    game_state.scoring_zones[:] = list(game_state.original_zones_on_drag_start)
+                else:
+                    if hasattr(game_state, "is_fivestar_playfield") and game_state.is_fivestar_playfield():
+                        game_state.special_hole = None
+                    else:
+                        game_state.special_hole = set_special_hole(game_state.scoring_zones)
+                    show_notification(game_state, "All zones moved", duration=1.5)
+                    _reset_score_after_zone_edit(game_state)
+                game_state.zone_editing_action = None
+                game_state.drag_start_pos = None
+                game_state.original_zones_on_drag_start = None
+                return True
+        return False
+
     zone_idx = getattr(game_state, "selected_zone_for_edit", None)
-    if zone_idx is None or not (
-        0 <= zone_idx < len(getattr(game_state, "scoring_zones", []))
-    ):
+    if zone_idx is None or not (0 <= zone_idx < len(zones)):
         if game_state.current_state == CurrentGameState.ZONE_EDITING:
             logger.warning(
                 "Zone editing event processed with invalid/no selected zone index. Reverting state."
@@ -361,6 +437,7 @@ def _process_zone_editing_event(
                 show_notification(
                     game_state, f"Zone {zone_idx+1} updated", duration=1.5
                 )
+                _reset_score_after_zone_edit(game_state)
             game_state.zone_editing_action = None
             game_state.drag_start_pos = None
             game_state.original_zone_on_drag_start = None
@@ -467,6 +544,9 @@ def _reset_all_menu_editing_states(game_state: "GameState") -> None:
         "zone_editing_action": None,
         "drag_start_pos": None,
         "original_zone_on_drag_start": None,
+        "move_all_zones": False,
+        "original_zones_on_drag_start": None,
+        "confirm_clear_zones": False,
         "edit_zones_current_page": 1,
         "menu_cache": None,
         "click_feedback_state": None,
@@ -549,7 +629,11 @@ def _process_game_over_click(
             if hasattr(game_state, "leaderboard") and game_state.leaderboard:
                 if hasattr(game_state.leaderboard, "flush_pending_scores"):
                     try:
-                        game_state.leaderboard.flush_pending_scores()
+                        n = game_state.leaderboard.flush_pending_scores()
+                        if n > 0:
+                            show_notification(
+                                game_state, "Score submitted to leaderboard", duration=2.0
+                            )
                     except Exception as e:
                         logger.error(f"Error flushing leaderboard on Play Again: {e}")
             reset_game(game_state)
@@ -1028,6 +1112,7 @@ def _process_menu_or_modal_click(
                 non_nav_actions = {
                     "new_game",
                     "resume",
+                    "restart_round",
                     "quit",
                     "back_to_main",
                     "back_to_manage_zones",
@@ -1061,6 +1146,7 @@ def _process_menu_or_modal_click(
 
                         game_state.submenu_active = action
                         game_state.menu_cache = None  # Force menu redraw
+                        game_state.confirm_clear_zones = False  # Clear any pending clear confirmation
                         return True
 
                     if action == "quit":
@@ -1075,7 +1161,13 @@ def _process_menu_or_modal_click(
                         if hasattr(game_state, "leaderboard") and game_state.leaderboard:
                             if hasattr(game_state.leaderboard, "flush_pending_scores"):
                                 try:
-                                    game_state.leaderboard.flush_pending_scores()
+                                    n = game_state.leaderboard.flush_pending_scores()
+                                    if n > 0:
+                                        show_notification(
+                                            game_state,
+                                            "Score submitted to leaderboard",
+                                            duration=2.0,
+                                        )
                                 except Exception as e:
                                     logger.error(f"Error flushing leaderboard on New Game: {e}")
                         # Reset score and all game state so the new game starts clean
@@ -1085,8 +1177,12 @@ def _process_menu_or_modal_click(
                         game_state.menu_cache = None
                         game_state.current_state = CurrentGameState.GETTING_PLAYER_NAME
                         game_state.player_name_input_active = True
-                        game_state.current_player_name_input = ""
-                        game_state.player_name_cursor_pos = 0
+                        game_state.current_player_name_input = (
+                            getattr(game_state, "last_player_name", "") or ""
+                        )
+                        game_state.player_name_cursor_pos = len(
+                            game_state.current_player_name_input
+                        )
                         _reset_all_menu_editing_states(game_state)
                         logger.info("New Game: returning to player name and board type flow.")
                         return True
@@ -1147,6 +1243,27 @@ def _process_menu_or_modal_click(
                         game_state.submenu_active = None
                         _reset_all_menu_editing_states(game_state)
                         return True
+                    elif action == "restart_round":
+                        if hasattr(game_state, "leaderboard") and game_state.leaderboard:
+                            if hasattr(game_state.leaderboard, "flush_pending_scores"):
+                                try:
+                                    n = game_state.leaderboard.flush_pending_scores()
+                                    if n > 0:
+                                        show_notification(
+                                            game_state,
+                                            "Score submitted to leaderboard",
+                                            duration=2.0,
+                                        )
+                                except Exception as e:
+                                    logger.error(
+                                        f"Error flushing leaderboard on Restart Round: {e}"
+                                    )
+                        reset_game(game_state)
+                        game_state.current_state = CurrentGameState.PLAYING
+                        game_state.submenu_active = None
+                        _reset_all_menu_editing_states(game_state)
+                        show_notification(game_state, "Round restarted", duration=1.5)
+                        return True
                     elif action == "back_to_main":
                         logger.info("Returning to main menu")
                         _reset_all_menu_editing_states(game_state)
@@ -1167,8 +1284,18 @@ def _process_menu_or_modal_click(
 
                     # Zone management actions
                     elif action == "clear_zones":
-                        clear_zones(game_state)
-                        _reset_all_menu_editing_states(game_state)
+                        if getattr(game_state, "confirm_clear_zones", False):
+                            clear_zones(game_state)
+                            game_state.confirm_clear_zones = False
+                            _reset_all_menu_editing_states(game_state)
+                            return True
+                        game_state.confirm_clear_zones = True
+                        show_notification(
+                            game_state,
+                            "Click Clear All Zones again to confirm. This cannot be undone.",
+                            duration=4.0,
+                        )
+                        game_state.menu_cache = None
                         return True
 
                     elif action == "save_zones":
@@ -1217,7 +1344,13 @@ def _process_menu_or_modal_click(
                             if hasattr(game_state, "leaderboard") and game_state.leaderboard:
                                 if hasattr(game_state.leaderboard, "flush_pending_scores"):
                                     try:
-                                        game_state.leaderboard.flush_pending_scores()
+                                        n = game_state.leaderboard.flush_pending_scores()
+                                        if n > 0:
+                                            show_notification(
+                                                game_state,
+                                                "Score submitted to leaderboard",
+                                                duration=2.0,
+                                            )
                                     except Exception as e:
                                         logger.error(f"Error flushing leaderboard on mode change: {e}")
                             game_state.game_mode = new_mode
@@ -3414,11 +3547,28 @@ def _process_menu_or_modal_click(
                             )
                         return True
 
+                    elif action == "move_all_zones":
+                        if game_state.scoring_zones:
+                            logger.info("Entering move-all-zones mode")
+                            game_state.move_all_zones = True
+                            game_state.current_state = CurrentGameState.ZONE_EDITING
+                            game_state.selected_zone_for_edit = None
+                            game_state.zone_editing_action = None
+                            game_state.previous_state = CurrentGameState.MENU
+                            show_notification(
+                                game_state,
+                                "Click and drag on video to move all zones. Esc to cancel.",
+                                duration=3.0,
+                            )
+                            return True
+                        return True
+
                     elif action.startswith("move_zone_"):
                         try:
                             zone_index = int(action[len("move_zone_") :])
                             if 0 <= zone_index < len(game_state.scoring_zones):
                                 logger.info(f"Setting up zone {zone_index} for moving")
+                                game_state.move_all_zones = False
                                 game_state.current_state = CurrentGameState.ZONE_EDITING
                                 game_state.selected_zone_for_edit = zone_index
                                 game_state.zone_editing_action = "move"
@@ -3441,6 +3591,7 @@ def _process_menu_or_modal_click(
                                 logger.info(
                                     f"Setting up zone {zone_index} for resizing"
                                 )
+                                game_state.move_all_zones = False
                                 game_state.current_state = CurrentGameState.ZONE_EDITING
                                 game_state.selected_zone_for_edit = zone_index
                                 game_state.zone_editing_action = "resize"

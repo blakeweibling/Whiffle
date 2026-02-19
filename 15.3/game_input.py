@@ -779,14 +779,20 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     # If in main menu, backspace does nothing (or could resume?) - current behavior: nothing
                     # else: game_state.current_state = CurrentGameState.PLAYING ...
                     key_handled_globally = True
-                elif key == 27:  # Escape always resumes from menu
-                    game_state.current_state = CurrentGameState.PLAYING
-                    # Reset any lingering menu/edit state
+                elif key == 27:  # Escape: back one menu level, or confirm quit from main menu
                     from interaction_utils import _reset_all_menu_editing_states
 
-                    _reset_all_menu_editing_states(game_state)
-                    game_state.submenu_active = None
-                    key_handled_globally = True
+                    submenu = getattr(game_state, "submenu_active", None)
+                    if submenu is not None:
+                        game_state.submenu_active = None
+                        _reset_all_menu_editing_states(game_state)
+                        game_state.menu_cache = None
+                        key_handled_globally = True
+                    else:
+                        game_state.previous_state_before_quit_confirm = CurrentGameState.MENU
+                        game_state.current_state = CurrentGameState.CONFIRM_QUIT
+                        _reset_all_menu_editing_states(game_state)
+                        key_handled_globally = True
 
         # Handle input in PLAYING state
         elif game_state.current_state == CurrentGameState.PLAYING:
@@ -887,7 +893,13 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 if hasattr(game_state, "leaderboard") and game_state.leaderboard:
                     if hasattr(game_state.leaderboard, "flush_pending_scores"):
                         try:
-                            game_state.leaderboard.flush_pending_scores()
+                            n = game_state.leaderboard.flush_pending_scores()
+                            if n > 0:
+                                show_notification(
+                                    game_state,
+                                    "Score submitted to leaderboard",
+                                    duration=2.0,
+                                )
                         except Exception as e:
                             logger.error(f"Error flushing leaderboard on new game: {e}")
                 reset_game(game_state)  # Resets score, timer, logger session, etc.
@@ -933,8 +945,22 @@ def _handle_input(game_state: Any) -> Optional[int]:
         elif game_state.current_state == CurrentGameState.ZONE_EDITING:
             if key == 27:  # Escape cancels interactive editing
                 logger.debug("Escape pressed during interactive zone edit. Cancelling.")
-                # Revert potentially modified zone if dragging was in progress
-                if (
+                # Revert if "move all" drag was in progress
+                if getattr(game_state, "move_all_zones", False) and getattr(
+                    game_state, "original_zones_on_drag_start", None
+                ):
+                    game_state.scoring_zones[:] = list(
+                        game_state.original_zones_on_drag_start
+                    )
+                    if hasattr(game_state, "is_fivestar_playfield") and game_state.is_fivestar_playfield():
+                        game_state.special_hole = None
+                    else:
+                        game_state.special_hole = set_special_hole(
+                            game_state.scoring_zones
+                        )
+                    game_state.original_zones_on_drag_start = None
+                # Revert single-zone drag if in progress
+                elif (
                     getattr(game_state, "drag_start_pos", None)
                     and getattr(game_state, "original_zone_on_drag_start", None)
                     and getattr(game_state, "selected_zone_for_edit", None) is not None
@@ -942,11 +968,9 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     <= game_state.selected_zone_for_edit
                     < len(getattr(game_state, "scoring_zones", []))
                 ):
-                    # Revert to original zone state before drag started
                     game_state.scoring_zones[game_state.selected_zone_for_edit] = (
                         game_state.original_zone_on_drag_start
                     )
-                    # Recalculate special hole in case the reverted zone was it
                     if hasattr(game_state, "is_fivestar_playfield"):
                         is_fivestar = game_state.is_fivestar_playfield()
                     else:
@@ -965,6 +989,8 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 game_state.drag_start_pos = None
                 game_state.selected_zone_for_edit = None
                 game_state.original_zone_on_drag_start = None
+                game_state.move_all_zones = False
+                game_state.original_zones_on_drag_start = None
 
                 # Return to previous state (likely MENU)
                 try:

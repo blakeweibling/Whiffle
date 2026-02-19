@@ -328,39 +328,45 @@ class Leaderboard:
         )
         return True  # Assume success for now
 
-    def flush_pending_scores(self, retries: int = 3, delay: float = 1) -> None:
+    def flush_pending_scores(self, retries: int = 3, delay: float = 1) -> int:
         """
         Submit all queued scores to Supabase in a batch.
         Args:
             retries: Number of retry attempts on failure.
             delay: Delay in seconds between retries.
+        Returns:
+            Number of scores successfully submitted (0 if none or on failure).
         """
         if not self.pending_scores:
             logger.debug("No pending scores to flush")
-            return
+            return 0
 
         # Make a copy of the scores to avoid modifying during iteration
         scores_to_submit = self.pending_scores.copy()
+        count = len(scores_to_submit)
 
         try:
             logger.info(
-                f"Attempting to flush {len(scores_to_submit)} pending score(s) to online leaderboard"
+                f"Attempting to flush {count} pending score(s) to online leaderboard"
             )
             self._post_supabase(scores_to_submit, retries, delay)
             logger.info(
-                f"Successfully submitted {len(scores_to_submit)} scores to online leaderboard"
+                f"Successfully submitted {count} scores to online leaderboard"
             )
             self.pending_scores.clear()
+            return count
         except requests.RequestException as e:
             logger.warning(f"Failed to submit scores to online leaderboard: {e}")
             # We keep the scores in pending_scores for possible future submission
             logger.warning(
                 f"Failed to submit {len(self.pending_scores)} scores to online leaderboard, keeping in queue"
             )
+            return 0
         except Exception as e:
             # Catch any other exceptions to ensure game can still exit gracefully
             logger.error(f"Unexpected error when flushing scores: {e}")
             # Don't clear pending_scores, but don't let the exception propagate either
+            return 0
 
     def get_top_scores(
         self, mode: str, limit: int = 5

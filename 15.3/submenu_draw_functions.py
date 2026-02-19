@@ -330,7 +330,7 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
     y_offset = 80
     item_height = 25
     game_state.submenu_items.clear()
-    display_mode = game_state.leaderboard_mode.capitalize()
+    display_mode = getattr(game_state, "leaderboard_mode", "classic").capitalize()
     cv2.putText(
         menu_frame,
         f"Mode: {display_mode}",
@@ -343,7 +343,7 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
     scores, is_online = ([], False)
     if hasattr(game_state, "leaderboard") and game_state.leaderboard:
         scores, is_online = game_state.leaderboard.get_top_scores(
-            limit=10, mode=game_state.leaderboard_mode
+            limit=10, mode=getattr(game_state, "leaderboard_mode", "classic")
         )
     status_text = "Online" if is_online else "Local (Offline)"
     status_color = UIConstants.GREEN if is_online else UIConstants.YELLOW
@@ -417,7 +417,7 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
     # First row buttons
     classic_color = (
         UIConstants.GREEN
-        if game_state.leaderboard_mode == "classic"
+        if getattr(game_state, "leaderboard_mode", "classic") == "classic"
         else UIConstants.CV2_BLUE
     )
     _draw_button(
@@ -441,7 +441,7 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
 
     timed_color = (
         UIConstants.GREEN
-        if game_state.leaderboard_mode == "timed"
+        if getattr(game_state, "leaderboard_mode", "classic") == "timed"
         else UIConstants.CV2_BLUE
     )
     _draw_button(
@@ -465,7 +465,7 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
 
     survival_color = (
         UIConstants.GREEN
-        if game_state.leaderboard_mode == "survival"
+        if getattr(game_state, "leaderboard_mode", "classic") == "survival"
         else UIConstants.CV2_BLUE
     )
     _draw_button(
@@ -490,7 +490,7 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
     # Second row buttons
     fun_color = (
         UIConstants.GREEN
-        if game_state.leaderboard_mode == "fun"
+        if getattr(game_state, "leaderboard_mode", "classic") == "fun"
         else UIConstants.CV2_BLUE
     )
     _draw_button(
@@ -514,7 +514,7 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
 
     practice_color = (
         UIConstants.GREEN
-        if game_state.leaderboard_mode == "practice"
+        if getattr(game_state, "leaderboard_mode", "classic") == "practice"
         else UIConstants.CV2_BLUE
     )
     _draw_button(
@@ -538,7 +538,7 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
 
     retro_color = (
         UIConstants.GREEN
-        if game_state.leaderboard_mode == "retro"
+        if getattr(game_state, "leaderboard_mode", "classic") == "retro"
         else UIConstants.CV2_BLUE
     )
     _draw_button(
@@ -1127,6 +1127,35 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: "GameState") ->
     actions_width = (button_width * num_buttons) + (button_spacing * (num_buttons - 1))
     list_width = menu_frame.shape[1] - 40 - actions_width - button_spacing
     game_state.submenu_items.clear()
+
+    # Move All Zones button (only when zones exist)
+    if game_state.scoring_zones:
+        move_all_btn_h = 32
+        move_all_color = (
+            UIConstants.ZONE_EDIT_MOVE_COLOR
+            if getattr(game_state, "move_all_zones", False)
+            else UIConstants.CV2_BLUE
+        )
+        _draw_button(
+            menu_frame,
+            20,
+            y_offset,
+            menu_frame.shape[1] - 40,
+            move_all_btn_h,
+            "Move All Zones",
+            move_all_color,
+            game_state=game_state,
+            font_scale=UIConstants.FONT_SCALE_SMALL,
+        )
+        game_state.submenu_items.append(
+            (
+                (20, y_offset, menu_frame.shape[1] - 40, move_all_btn_h),
+                "move_all_zones",
+                "Move All Zones",
+            )
+        )
+        y_offset += move_all_btn_h + 8
+
     items_per_page = game_state.edit_zones_items_per_page
     total_zones = len(game_state.scoring_zones)
     total_pages = max(1, ceil(total_zones / items_per_page))
