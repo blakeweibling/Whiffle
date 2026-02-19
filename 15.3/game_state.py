@@ -438,6 +438,9 @@ class GameState:
                 from game_state_helpers import set_special_hole
                 self.special_hole = set_special_hole(self.scoring_zones)
             
+            # Default to hiding scoring zones when loading a layout (same as Whiffle initial load)
+            self.show_scoring_zones = False
+            
             show_notification(
                 self,
                 f"Loaded {self.playfield_type} model",

@@ -156,9 +156,9 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
             tx, ty, tw, th = toggle_ui_button_rect
             if tx <= x < tx + tw and ty <= y < ty + th:
                 logger.info(f"Show/Hide UI button clicked via OpenCV handler at ({x}, {y}) [dynamic]")
-                # Toggle show_scoring_zones
+                # Toggle show_scoring_zones (default off; user turns on via Show UI)
                 if not hasattr(game_state, "show_scoring_zones"):
-                    game_state.show_scoring_zones = True
+                    game_state.show_scoring_zones = False
                 game_state.show_scoring_zones = not game_state.show_scoring_zones
                 game_state.click_feedback_state = (toggle_ui_button_rect, time.time())
                 return

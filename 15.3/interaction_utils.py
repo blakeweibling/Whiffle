@@ -1026,6 +1026,7 @@ def _process_menu_or_modal_click(
                     if isinstance(item[1], str)
                 }
                 non_nav_actions = {
+                    "new_game",
                     "resume",
                     "quit",
                     "back_to_main",
@@ -1068,6 +1069,26 @@ def _process_menu_or_modal_click(
                         )
                         game_state.current_state = CurrentGameState.CONFIRM_QUIT
                         _reset_all_menu_editing_states(game_state)
+                        return True
+                    elif action == "new_game":
+                        # Flush pending leaderboard scores before starting new game flow
+                        if hasattr(game_state, "leaderboard") and game_state.leaderboard:
+                            if hasattr(game_state.leaderboard, "flush_pending_scores"):
+                                try:
+                                    game_state.leaderboard.flush_pending_scores()
+                                except Exception as e:
+                                    logger.error(f"Error flushing leaderboard on New Game: {e}")
+                        # Reset score and all game state so the new game starts clean
+                        reset_game(game_state)
+                        # Then show player name + board type flow instead of going straight to PLAYING
+                        game_state.submenu_active = None
+                        game_state.menu_cache = None
+                        game_state.current_state = CurrentGameState.GETTING_PLAYER_NAME
+                        game_state.player_name_input_active = True
+                        game_state.current_player_name_input = ""
+                        game_state.player_name_cursor_pos = 0
+                        _reset_all_menu_editing_states(game_state)
+                        logger.info("New Game: returning to player name and board type flow.")
                         return True
                     elif action == "toggle_game_sounds":
                         toggle_game_sounds(game_state)

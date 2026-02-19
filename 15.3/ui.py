@@ -893,9 +893,9 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 cv2.LINE_AA,
             )
     if game_state.current_state == CurrentGameState.PLAYING:
-        # Only draw scoring zones if show_scoring_zones is True (default True)
+        # Only draw scoring zones if show_scoring_zones is True (default False; user turns on via Show UI)
         if not hasattr(game_state, "show_scoring_zones"):
-            game_state.show_scoring_zones = True
+            game_state.show_scoring_zones = False
         if game_state.show_scoring_zones:
             draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole)
         if game_state.drawing and game_state.temp_zone:
