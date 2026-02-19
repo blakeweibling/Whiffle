@@ -29,7 +29,7 @@ from game_state_helpers import (
     load_zones,
     clear_zones,
 )
-from game_state_utils import reset_game  # Import reset_game
+from game_state_utils import reset_game, save_settings  # Import reset_game, save_settings
 
 # Import GameState enum from the NEW location
 from game_types import CurrentGameState  # Correct location
@@ -373,6 +373,8 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     if hasattr(game_state, "players") and game_state.players:
                         try:
                             game_state.players[0].name = entered_name
+                            game_state.last_player_name = entered_name
+                            save_settings(game_state)
                             show_notification(
                                 game_state, f"Welcome, {entered_name}!", duration=2.0
                             )
@@ -400,6 +402,8 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 if hasattr(game_state, "players") and game_state.players:
                     try:
                         game_state.players[0].name = "Player 1"  # Use default
+                        game_state.last_player_name = "Player 1"
+                        save_settings(game_state)
                         game_state.player_name_input_active = False
                         game_state.current_state = CurrentGameState.GETTING_PLAYFIELD
                         show_notification(

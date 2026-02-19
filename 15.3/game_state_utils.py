@@ -1234,6 +1234,7 @@ def reset_game(game_state: Any) -> None:
     preserved_objects = {
         "leaderboard": getattr(game_state, "leaderboard", None),
         "leaderboard_mode": getattr(game_state, "leaderboard_mode", "classic"),
+        "last_player_name": getattr(game_state, "last_player_name", "") or "",
         "players": getattr(game_state, "players", None),
         "current_player_index": getattr(game_state, "current_player_index", 0),
         "scoring_zones": getattr(game_state, "scoring_zones", []),

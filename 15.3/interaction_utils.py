@@ -124,6 +124,8 @@ def _get_mouse_event_handlers() -> MouseEventHandlers:
                 if hasattr(game_state, "players") and game_state.players:
                     try:
                         game_state.players[0].name = "Player 1"  # Use default
+                        game_state.last_player_name = "Player 1"
+                        save_settings(game_state)
                         game_state.player_name_input_active = False
                         game_state.current_state = CurrentGameState.GETTING_PLAYFIELD
                         show_notification(
@@ -726,6 +728,8 @@ def _process_menu_or_modal_click(
                     if hasattr(game_state, "players") and game_state.players:
                         try:
                             game_state.players[0].name = "Player 1"  # Use default
+                            game_state.last_player_name = "Player 1"
+                            save_settings(game_state)
                             game_state.player_name_input_active = False
                             game_state.current_state = CurrentGameState.GETTING_PLAYFIELD
                             show_notification(
