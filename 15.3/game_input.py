@@ -883,6 +883,13 @@ def _handle_input(game_state: Any) -> Optional[int]:
         # Handle input in GAME_OVER state
         elif game_state.current_state == CurrentGameState.GAME_OVER:
             if key == ord("n"):  # 'n' starts new game
+                # Upload pending scores (screenshot + score) to leaderboard before starting new game
+                if hasattr(game_state, "leaderboard") and game_state.leaderboard:
+                    if hasattr(game_state.leaderboard, "flush_pending_scores"):
+                        try:
+                            game_state.leaderboard.flush_pending_scores()
+                        except Exception as e:
+                            logger.error(f"Error flushing leaderboard on new game: {e}")
                 reset_game(game_state)  # Resets score, timer, logger session, etc.
                 game_state.current_state = (
                     CurrentGameState.PLAYING

@@ -545,6 +545,13 @@ def _process_game_over_click(
         if bx <= x < bx + bw and by <= y < by + bh:
             logger.info("Play Again button clicked.")
             game_state.click_feedback_state = (play_again_rect, time.time())
+            # Upload pending scores (screenshot + score) to leaderboard before starting new game
+            if hasattr(game_state, "leaderboard") and game_state.leaderboard:
+                if hasattr(game_state.leaderboard, "flush_pending_scores"):
+                    try:
+                        game_state.leaderboard.flush_pending_scores()
+                    except Exception as e:
+                        logger.error(f"Error flushing leaderboard on Play Again: {e}")
             reset_game(game_state)
             game_state.current_state = CurrentGameState.PLAYING
             return True
@@ -1185,6 +1192,13 @@ def _process_menu_or_modal_click(
                                 logger.error(
                                     f"Error saving score before mode change: {e}"
                                 )
+                            # Upload pending scores (screenshot + score) to leaderboard when changing mode
+                            if hasattr(game_state, "leaderboard") and game_state.leaderboard:
+                                if hasattr(game_state.leaderboard, "flush_pending_scores"):
+                                    try:
+                                        game_state.leaderboard.flush_pending_scores()
+                                    except Exception as e:
+                                        logger.error(f"Error flushing leaderboard on mode change: {e}")
                             game_state.game_mode = new_mode
                             game_state.menu_cache = None
                             logger.info(f"Switched to mode: {new_mode}")
