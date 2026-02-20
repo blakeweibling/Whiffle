@@ -742,6 +742,18 @@ class GameState:
         logger.info(f"Scaled {len(self.scoring_zones)} zones successfully.")
 
     # Resolution Change Method
+    def cycle_resolution(self) -> None:
+        """Cycle to the next resolution (1080p <-> 720p)."""
+        keys = list(ResolutionConstants.RESOLUTIONS.keys())
+        if not keys:
+            return
+        try:
+            idx = keys.index(self.current_resolution_key)
+            next_key = keys[(idx + 1) % len(keys)]
+            self.set_resolution(next_key)
+        except ValueError:
+            self.set_resolution(keys[0])
+
     def set_resolution(self, new_resolution_key: str):
         """Changes the game resolution, re-initializes camera, and scales zones."""
         if new_resolution_key not in ResolutionConstants.RESOLUTIONS:

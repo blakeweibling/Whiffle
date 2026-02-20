@@ -356,6 +356,17 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
         status_color,
         1,
     )
+    if not is_online:
+        offline_hint = "Scores from local storage. Connect for online."
+        cv2.putText(
+            menu_frame,
+            offline_hint,
+            (20, 55),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.35,
+            (180, 180, 180),
+            1,
+        )
 
     if not scores:
         cv2.putText(
@@ -933,6 +944,10 @@ def _draw_help_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
         "  'b' : Toggle Debug Overlay",
         "  'p' : Pause/Resume Game",
         "  'q' / ESC: Quit Game",
+        "  'n' : New game (at Game Over)",
+        "  'h' : View heatmap (at Game Over)",
+        "  '1'/'2'/'W'/'F' : Playfield selection",
+        "  N/ESC/Q : Cancel quit confirmation",
         "  BACKSPACE: Go back in menu",
         "",
         "Gameplay:",
@@ -1762,7 +1777,7 @@ def _draw_replay_browser_submenu(
                     roi[:h, :w] = thumbnail[:h, :w]
                 except Exception as e:
                     # Just log and continue if thumbnail can't be displayed
-                    print(f"Error displaying thumbnail: {e}")
+                    logger.error(f"Error displaying thumbnail: {e}")
 
         # Draw replay info below thumbnail
         title_y = y + thumb_height + 15
@@ -2127,7 +2142,7 @@ def _draw_replay_playback_submenu(
                         nearest_keyframe_idx
                     )
         except Exception as e:
-            print(f"Error getting keyframe: {e}")
+            logger.error(f"Error getting keyframe: {e}")
 
     # Draw current keyframe or placeholder
     if current_keyframe is not None:
@@ -2769,7 +2784,7 @@ def _draw_replay_share_submenu(menu_frame: np.ndarray, game_state: "GameState") 
                     if replay_obj and replay_obj.highlight_segments:
                         highlights = replay_obj.highlight_segments
             except Exception as e:
-                print(f"Error loading highlights: {e}")
+                logger.error(f"Error loading highlights: {e}")
 
             for i, highlight in enumerate(
                 highlights[:3]

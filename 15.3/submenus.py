@@ -247,8 +247,7 @@ def draw_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
     if draw_func:
         game_state.menu_height = 450  # Default height
         game_state.submenu_items.clear()
-        # The specific draw_func (e.g., _draw_settings_submenu) is responsible
-        # for calling _draw_button with game_state. We will update those functions next.
+        # The draw_func (e.g., _draw_settings_submenu) calls _draw_button with game_state.
         draw_func(menu_frame, game_state)
     else:
         if game_state.submenu_active is not None:

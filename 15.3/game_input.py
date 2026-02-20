@@ -207,7 +207,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                         == CurrentGameState.GETTING_PLAYER_NAME
                     ):
                         # For simplicity, always treat key=0 as LEFT arrow (most commonly needed for editing)
-                        logger.info(
+                        logger.debug(
                             f"Detected potential arrow key: key=0, raw_key={raw_key}, treating as LEFT arrow"
                         )
 
@@ -219,7 +219,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                         # Always treat as LEFT ARROW for consistency and because it's more commonly needed
                         if cursor_pos > 0:
                             game_state.player_name_cursor_pos = cursor_pos - 1
-                            logger.info(
+                            logger.debug(
                                 f"Simulated left arrow, moved cursor to {cursor_pos-1}"
                             )
 
@@ -228,7 +228,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     getattr(game_state, "current_state", None)
                     == CurrentGameState.GETTING_PLAYER_NAME
                 ):
-                    logger.info(
+                    logger.debug(
                         f"Key pressed in username input: key={key}, raw_key={raw_key}"
                     )
                 else:
@@ -443,7 +443,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 cursor_pos = getattr(game_state, "player_name_cursor_pos", 0)
                 if cursor_pos > 0:
                     game_state.player_name_cursor_pos = cursor_pos - 1
-                    logger.info(
+                    logger.debug(
                         f"Left arrow detected (key={key}), moved cursor to {cursor_pos-1}"
                     )
                 player_name_key_handled = True
@@ -454,7 +454,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 cursor_pos = getattr(game_state, "player_name_cursor_pos", 0)
                 if cursor_pos < len(current_input):
                     game_state.player_name_cursor_pos = cursor_pos + 1
-                    logger.info(
+                    logger.debug(
                         f"Right arrow detected (key={key}), moved cursor to {cursor_pos+1}"
                     )
                 player_name_key_handled = True

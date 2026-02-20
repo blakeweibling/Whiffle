@@ -220,6 +220,24 @@ def _draw_game_over_screen(frame: np.ndarray, game_state: "GameState") -> None:
         "heatmap": heatmap_rect,
     }
 
+    # ESC to quit hint
+    hint_text = "ESC to quit"
+    (hw, _), _ = cv2.getTextSize(
+        hint_text, cv2.FONT_HERSHEY_SIMPLEX, UIConstants.FONT_SCALE_SMALL, 1
+    )
+    hint_x = (current_width - hw) // 2
+    hint_y = button_y + button_height + 28
+    cv2.putText(
+        frame,
+        hint_text,
+        (hint_x, hint_y),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        UIConstants.FONT_SCALE_SMALL,
+        (180, 180, 180),
+        1,
+        cv2.LINE_AA,
+    )
+
 
 # --- Modal Dismissal Callback ---
 def _modal_mouse_callback(event: int, x: int, y: int, flags: int, param: dict) -> None:
@@ -282,7 +300,23 @@ def display_modal_splash(
             UIConstants.FONT_THICKNESS,
         )
 
-    # Add instruction text at the bottom
+    # Add tip and instruction text at the bottom
+    tip_text = "Tip: Define zones in Menu > Manage Zones"
+    (tw_tip, th_tip), _ = cv2.getTextSize(
+        tip_text, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1
+    )
+    tip_x = (target_width - tw_tip) // 2
+    tip_y = target_height - 75
+    cv2.putText(
+        display_frame,
+        tip_text,
+        (tip_x, tip_y),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.5,
+        (180, 180, 180),
+        1,
+        cv2.LINE_AA,
+    )
     instruction = "Click or press any key to continue"
     (tw, th), _ = cv2.getTextSize(
         instruction,
@@ -885,7 +919,7 @@ def _draw_playfield_selection(frame: np.ndarray, game_state: "GameState") -> Non
                 UIConstants.FONT_THICKNESS + 1,
             )
 
-        hint = "Press 1 or 2 (Enter = Whiffle)"
+        hint = "1/W/Enter = Whiffle | 2/F = Five Star | ESC = Whiffle"
         (hw, _), _ = cv2.getTextSize(
             hint,
             cv2.FONT_HERSHEY_SIMPLEX,

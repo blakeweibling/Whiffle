@@ -45,31 +45,7 @@ def draw_balls(frame: np.ndarray, game_state: GameState) -> None:
             logger.warning("game_state missing 'active_trails' attribute.")
     # --- END RE-ENABLE ---
 
-    # --- Draw Current Ball Positions ---
-    # --- SECTION REMOVED/COMMENTED OUT - NO LONGER DRAWING FILLED CIRCLES ---
-    # if hasattr(game_state, 'tracked_balls'):
-    #     for ball_data in game_state.tracked_balls:
-    #         try:
-    #             if len(ball_data) >= 6:
-    #                 x, y, radius, ball_id, age, ball_type = ball_data
-    #                 center = (int(x), int(y))
-    #                 draw_radius = int(radius * BALL_RADIUS_FACTOR)
-    #                 color = BALL_COLORS.get(ball_type, UIConstants.YELLOW)
-    #
-    #                 # *** THIS LINE IS REMOVED/COMMENTED OUT ***
-    #                 # cv2.circle(frame, center, draw_radius, color, -1)
-    #                 # *** END REMOVAL ***
-    #
-    #             else:
-    #                 logger.warning(f"Skipping ball draw for malformed data: {ball_data}")
-    #
-    #         except (IndexError, ValueError, TypeError) as e:
-    #             logger.warning(f"Error processing ball data for drawing: {ball_data}. Error: {e}")
-    #         except Exception as e:
-    #             logger.error(f"Unexpected error drawing ball {ball_data}: {e}")
-    # else:
-    #     logger.debug("No tracked_balls attribute found in game_state for drawing.")
-    # --- END SECTION REMOVAL ---
+    # Ball positions are drawn via the debug overlay; no filled circles here.
 
 
 def _draw_debug_overlay(frame: np.ndarray, game_state: GameState) -> None:

@@ -188,7 +188,6 @@ class LoadingScreen:
         self.thread.daemon = True  # Thread will exit when main program exits
         self.thread.start()
         logger.info("Loading screen started")
-        print("Loading screen started - waiting for initialization...")
 
         # Set this instance as the global loading screen
         global _global_loading_screen
@@ -199,7 +198,6 @@ class LoadingScreen:
         self.loading_stage = stage_text
         self.progress = min(0.95, self.progress + progress_increment)
         logger.info(f"Loading stage: {stage_text}, Progress: {self.progress:.0%}")
-        print(f"Loading: {stage_text} - {int(self.progress * 100)}%")
 
     def finish(self):
         """Complete the loading process and close the loading screen."""
@@ -209,7 +207,6 @@ class LoadingScreen:
         # Set progress to 100% for visual feedback
         self.progress = 1.0
         self.loading_stage = "Ready!"
-        print("Loading completed! (100%)")
 
         # Show the final 100% frame briefly
         final_frame = self._create_loading_frame()
@@ -220,10 +217,8 @@ class LoadingScreen:
 
                 # Close the loading window
                 cv2.destroyWindow(self.window_name)
-                print("Loading screen closed")
         except cv2.error as e:
             logger.error(f"Error in loading screen finish: {e}")
-            print(f"Error closing loading screen: {e}")
 
         # Stop the update thread
         self.running = False
@@ -267,7 +262,6 @@ def wrap_initialization(
     current_os = platform.system()
     if current_os == "Linux" or current_os == "Darwin":  # Darwin is macOS
         logger.info(f"Skipping loading screen on {current_os}.")
-        print(f"Skipping loading screen on {current_os}...")
         # Directly call the initialization function without the loading screen
         try:
             result = initialization_func(*args, **kwargs)

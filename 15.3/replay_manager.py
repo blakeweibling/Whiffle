@@ -441,8 +441,8 @@ class Replay:
             if os.path.exists(replay_file):
                 try:
                     os.remove(replay_file)
-                except:
-                    pass
+                except OSError:
+                    pass  # Ignore if file in use or missing
 
             # Create fresh archive
             logger.info(f"Creating archive from {replay_dir}")
@@ -1244,8 +1244,8 @@ class ReplayManager:
                 try:
                     os.remove(temp_zip)
                     shutil.rmtree(temp_dir, ignore_errors=True)
-                except:
-                    pass
+                except OSError:
+                    pass  # Best-effort cleanup
 
             except Exception as e:
                 logger.error(f"Error loading replay metadata for {replay_file}: {e}")
@@ -1653,7 +1653,7 @@ class ReplayManager:
                 with zipfile.ZipFile(temp_zip, "r") as zip_ref:
                     try:
                         zip_ref.extract("thumbnail.jpg", extract_dir)
-                    except:
+                    except KeyError:
                         logger.warning(f"No thumbnail in replay {replay_id}")
                         return None
 
@@ -1756,7 +1756,7 @@ class ReplayManager:
                 try:
                     highlight_index = int(share_method.split("_")[1])
                     return self.extract_highlight(replay_id, highlight_index)
-                except:
+                except (ValueError, IndexError):
                     logger.error(
                         f"Invalid highlight index in share method: {share_method}"
                     )

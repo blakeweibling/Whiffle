@@ -56,9 +56,11 @@ repetitive_filter = RepetitiveDebugFilter()
 root_logger.addFilter(libpng_filter)
 root_logger.addFilter(repetitive_filter)
 
-# Set specific modules to DEBUG level if needed
-logging.getLogger('game_loop').setLevel(logging.DEBUG)
-logging.getLogger('ball_tracker').setLevel(logging.DEBUG)
+# Set specific modules to DEBUG level only when WHIFFLE_DEBUG=1 (reduces log noise)
+_debug_enabled = os.getenv("WHIFFLE_DEBUG", "").lower() in ("1", "true", "yes")
+if _debug_enabled:
+    logging.getLogger("game_loop").setLevel(logging.DEBUG)
+    logging.getLogger("ball_tracker").setLevel(logging.DEBUG)
 
 # Also suppress warnings at the Python level
 warnings.filterwarnings("ignore", message=".*iCCP.*")
@@ -204,9 +206,10 @@ def main() -> None:
             # clean_exit(...)
             # return
 
-        print("--- Whiffle Tracker ---")
-        print("Press 'q' to quit at any time.")
-        print("Press 'm' during gameplay to open the menu.")
+        if _debug_enabled:
+            logger.debug("--- Whiffle Tracker ---")
+            logger.debug("Press 'q' to quit at any time.")
+            logger.debug("Press 'm' during gameplay to open the menu.")
 
         # --- Initial Frame Display ---
         # Ensure game_state has camera/frame attributes before accessing
@@ -322,13 +325,13 @@ def main() -> None:
             # Last resort cleanup attempt focused on OpenCV only
             try:
                 cv2.destroyAllWindows()
-            except:
-                pass
+            except Exception:
+                pass  # Best-effort cleanup during shutdown
             if hasattr(game_state, "cap") and game_state.cap:
                 try:
                     game_state.cap.release()
-                except:
-                    pass
+                except Exception:
+                    pass  # Best-effort cleanup during shutdown
 
         # Force garbage collection
         gc.collect()

@@ -79,6 +79,24 @@ def _draw_menu_content(menu_frame: np.ndarray, game_state: GameState) -> None:
             game_state.submenu_items.append((item_rect, action_key, label))
             y_offset += item_height + 5
 
+        # Footer hint: ESC or BACKSPACE to close
+        footer_text = "ESC or BACKSPACE to close"
+        (fw, _), _ = cv2.getTextSize(
+            footer_text, cv2.FONT_HERSHEY_SIMPLEX, 0.4, 1
+        )
+        footer_x = (game_state.menu_width - fw) // 2
+        footer_y = menu_frame.shape[0] - 15
+        cv2.putText(
+            menu_frame,
+            footer_text,
+            (footer_x, footer_y),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.4,
+            (150, 150, 150),
+            1,
+            cv2.LINE_AA,
+        )
+
 
 def draw_menu_window(frame: np.ndarray, game_state: GameState) -> None:
     """Draw the menu as an overlay, using caching."""

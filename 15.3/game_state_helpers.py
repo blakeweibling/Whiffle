@@ -55,7 +55,6 @@ def is_ball_zone_stable(
     debug_mode: bool = False,
 ) -> bool:
     """Check if a ball has been consistently in the same zone (or None)."""
-    # (Code unchanged)
     if ball_id not in ball_zone_history:
         ball_zone_history[ball_id] = []
     current_zone_id = id(current_zone) if current_zone else None
@@ -76,7 +75,6 @@ def is_ball_zone_stable(
 
 def play_sound(game_state: Any, sound: Optional[pygame.mixer.Sound]) -> None:
     """Play sound effect if enabled and sound exists."""
-    # (Code unchanged)
     if game_state.game_sounds_on and sound:
         try:
             sound.play()
@@ -88,7 +86,6 @@ def show_notification(
     game_state: Any, text: str, duration: float = 2.0, is_error: bool = False
 ) -> None:
     """Display a notification message by updating game_state attributes."""
-    # (Code unchanged)
     game_state.notification_text = text
     game_state.notification_timer = duration
     game_state.notification_color = UIConstants.RED if is_error else UIConstants.GREEN
@@ -98,7 +95,6 @@ def show_notification(
 
 def save_high_score(game_state: Any):
     """Saves high score data for all modes based on game_state."""
-    # (Code unchanged)
     data = {}
     high_score_file = GameConstants.HIGH_SCORE_FILE
     try:
@@ -140,7 +136,6 @@ def save_high_score(game_state: Any):
 
 def save_score(game_state: Any, player_name: str, mode: Optional[str] = None) -> None:
     """Checks bonus, submits to leaderboard, updates high score file."""
-    # (Code unchanged)
     final_score = game_state.score
     doubled = False
     if game_state.special_hole_hit_this_session:
@@ -248,7 +243,6 @@ def set_special_hole(
     scoring_zones: List[Tuple[int, int, int, int, int]],
 ) -> Optional[Tuple[int, int, int, int, int]]:
     """Identify the leftmost scoring zone as the special hole."""
-    # (Code unchanged)
     if not scoring_zones:
         return None
     try:
@@ -264,12 +258,11 @@ def set_special_hole(
         return None
 
 
-# --- Zone Management Helpers (Moved from menu.py) ---
+# --- Zone Management Helpers ---
 
 
 def save_zones(game_state: Any, zones_file_path: Optional[str] = None) -> None:
     """Save the current scoring zones to a JSON file."""
-    # (Code moved from menu.py)
     try:
         zones_file = zones_file_path or getattr(
             game_state, "zones_file_path", GameConstants.ZONES_FILE
@@ -287,7 +280,6 @@ def save_zones(game_state: Any, zones_file_path: Optional[str] = None) -> None:
 
 def load_zones(game_state: Any, zones_file_path: Optional[str] = None) -> None:
     """Load scoring zones from a JSON file."""
-    # (Code moved from menu.py)
     zones_file_path = zones_file_path or getattr(
         game_state, "zones_file_path", GameConstants.ZONES_FILE
     )
@@ -346,11 +338,15 @@ def load_zones(game_state: Any, zones_file_path: Optional[str] = None) -> None:
         logger.warning(f"Scoring zones file '{zones_file_path}' not found.")
         game_state.scoring_zones = []
         game_state.special_hole = None
+        show_notification(
+            game_state,
+            "No zones file found. Define zones in Menu > Manage Zones.",
+            duration=3.0,
+        )
 
 
 def clear_zones(game_state: Any, zones_file_path: Optional[str] = None) -> None:
     """Clear all scoring zones and remove the file."""
-    # (Code moved from menu.py)
     game_state.scoring_zones.clear()
     game_state.special_hole = None
     zones_file_path = zones_file_path or getattr(
@@ -370,7 +366,6 @@ def clear_zones(game_state: Any, zones_file_path: Optional[str] = None) -> None:
 
 
 def flush_scoring_zones(game_state: Any) -> None:
-    """Writes current scoring zones to disk (used by clean_exit)."""
-    # (Code moved from menu.py)
+    """Write current scoring zones to disk. Called during clean exit."""
     logger.debug("Flushing scoring zones (calling save_zones)...")
     save_zones(game_state)  # Calls helper above

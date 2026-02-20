@@ -945,9 +945,9 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             button_width = int(UIConstants.MENU_BUTTON_WIDTH * 1.2)
             button_height = int(UIConstants.MENU_BUTTON_HEIGHT * 1.2)
             button_spacing = int(60 * 1.2)
+            res_button_width = int(button_width * 1.7)  # Wider for "1080p (click)" text
             button_color = (28, 45, 82)  # #522d1c in BGR
-            num_buttons = 3
-            total_width = num_buttons * button_width + 2 * button_spacing
+            total_width = 2 * button_width + res_button_width + 2 * button_spacing
             start_x = (current_width - total_width) // 2
             button_y = bottom_bar_y + int(BOTTOM_BAR_HEIGHT * 0.60)
 
@@ -1003,14 +1003,14 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 )
                 game_state.toggle_ui_button_rect = toggle_ui_button_rect
 
-                # Draw Resolution button (right)
+                # Draw Resolution button (right, wider to fit "1080p (click)")
                 res_button_rect = (
                     start_x + 2 * (button_width + button_spacing),
                     button_y,
-                    button_width,
+                    res_button_width,
                     button_height,
                 )
-                res_button_text = game_state.current_resolution_key
+                res_button_text = f"{game_state.current_resolution_key} (click)"
                 _draw_button(
                     frame,
                     res_button_rect[0],
@@ -1058,7 +1058,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             UIConstants.BLACK,
             thickness=thickness_pause,
         )
-        sub_text = "Press P to resume"
+        sub_text = "Press P to resume | ESC to quit"
         (tw2, th2), _ = cv2.getTextSize(
             sub_text, cv2.FONT_HERSHEY_SIMPLEX, 0.8, 2
         )
@@ -1208,6 +1208,22 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
         game_state.menu_pos = (0, 0)
         game_state.menu_width = current_width
         game_state.menu_height = current_height
+        # Hint for cancel keys (below buttons)
+        hint_text = "ESC or N to cancel"
+        hint_font = cv2.FONT_HERSHEY_SIMPLEX
+        (hw, _), _ = cv2.getTextSize(hint_text, hint_font, 0.4, 1)
+        hint_x = dialog_x + (dialog_width - hw) // 2
+        hint_y = button_y + button_height + 12
+        cv2.putText(
+            frame,
+            hint_text,
+            (hint_x, hint_y),
+            hint_font,
+            0.4,
+            (180, 180, 180),
+            1,
+            cv2.LINE_AA,
+        )
     if game_state.game_mode in ["fun", "retro"]:
         if hasattr(game_state, "active_explosions") and isinstance(
             game_state.active_explosions, list

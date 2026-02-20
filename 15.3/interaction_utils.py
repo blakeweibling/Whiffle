@@ -549,6 +549,7 @@ def _reset_all_menu_editing_states(game_state: "GameState") -> None:
         "move_all_zones": False,
         "original_zones_on_drag_start": None,
         "confirm_clear_zones": False,
+        "confirm_delete_replay_id": None,
         "edit_zones_current_page": 1,
         "menu_cache": None,
         "click_feedback_state": None,
@@ -1044,6 +1045,7 @@ def _process_menu_or_modal_click(
                             game_state.current_sound_volume = new_volume
                             set_volume(game_state)
                             save_settings(game_state)
+                            show_notification(game_state, "Settings saved", duration=1.5)
                             game_state.menu_cache = None
                             volume_adjusted = True
                             logger.debug(f"Adjusted sound volume to {new_volume:.2f}")
@@ -1070,6 +1072,7 @@ def _process_menu_or_modal_click(
                             game_state.current_music_volume = new_volume
                             set_volume(game_state)
                             save_settings(game_state)
+                            show_notification(game_state, "Settings saved", duration=1.5)
                             game_state.menu_cache = None
                             volume_adjusted = True
                             logger.debug(f"Adjusted music volume to {new_volume:.2f}")
@@ -1192,10 +1195,12 @@ def _process_menu_or_modal_click(
                         return True
                     elif action == "toggle_game_sounds":
                         toggle_game_sounds(game_state)
+                        show_notification(game_state, "Settings saved", duration=1.5)
                         game_state.menu_cache = None
                         return True
                     elif action == "toggle_background_music":
                         toggle_background_music(game_state)
+                        show_notification(game_state, "Settings saved", duration=1.5)
                         game_state.menu_cache = None
                         return True
                     elif action == "toggle_debug_overlay":
@@ -1280,6 +1285,7 @@ def _process_menu_or_modal_click(
                         show_notification(
                             game_state,
                             "Press 's', then click and drag to draw zone",
+                            duration=4.0,
                         )
                         game_state.current_state = CurrentGameState.PLAYING
                         game_state.submenu_active = None
@@ -1558,11 +1564,13 @@ def _process_menu_or_modal_click(
 
                     elif action == "back_to_replays":
                         game_state.submenu_active = "replays"
+                        game_state.confirm_delete_replay_id = None
                         game_state.menu_cache = None
                         return True
 
                     elif action == "back_to_view_replays":
                         game_state.submenu_active = "view_replays"
+                        game_state.confirm_delete_replay_id = None
                         game_state.menu_cache = None
                         return True
 
@@ -1634,32 +1642,50 @@ def _process_menu_or_modal_click(
                                 )
                         return True
 
-                    # Delete replay
+                    # Delete replay (requires confirmation, like Clear All Zones)
                     elif action.startswith("delete_replay_"):
                         if (
                             hasattr(game_state, "replay_manager")
                             and game_state.replay_manager
                         ):
                             replay_id = action[len("delete_replay_") :]
-                            try:
-                                success = game_state.replay_manager.delete_replay(
-                                    replay_id
-                                )
-                                if success:
-                                    game_state.selected_replay_id = None
-                                    show_notification(game_state, "Replay deleted")
-                                else:
+                            confirm_id = getattr(
+                                game_state, "confirm_delete_replay_id", None
+                            )
+                            if confirm_id == replay_id:
+                                # Second click - confirm delete
+                                try:
+                                    success = game_state.replay_manager.delete_replay(
+                                        replay_id
+                                    )
+                                    if success:
+                                        game_state.selected_replay_id = None
+                                        show_notification(game_state, "Replay deleted")
+                                    else:
+                                        show_notification(
+                                            game_state,
+                                            "Error deleting replay",
+                                            is_error=True,
+                                        )
+                                    game_state.confirm_delete_replay_id = None
+                                    game_state.menu_cache = None
+                                except Exception as e:
+                                    logger.error(f"Error deleting replay: {e}")
                                     show_notification(
                                         game_state,
                                         "Error deleting replay",
                                         is_error=True,
                                     )
-                                game_state.menu_cache = None
-                            except Exception as e:
-                                logger.error(f"Error deleting replay: {e}")
+                                    game_state.confirm_delete_replay_id = None
+                            else:
+                                # First click - require second click to confirm
+                                game_state.confirm_delete_replay_id = replay_id
                                 show_notification(
-                                    game_state, "Error deleting replay", is_error=True
+                                    game_state,
+                                    "Click Delete again to confirm. This cannot be undone.",
+                                    duration=3.0,
                                 )
+                                game_state.menu_cache = None
                         return True
 
                     # Export and share options
@@ -3881,9 +3907,6 @@ def _process_menu_or_modal_click(
     if 0 <= relative_x < menu_w and 0 <= relative_y < menu_h:
         # Click was inside the menu area but not on any interactive element checked
         logger.debug("Click inside menu bounds, but no specific item was hit.")
-        # Optionally reset feedback state here if needed
-        # if hasattr(game_state, 'click_feedback_state'):
-        #     game_state.click_feedback_state = None
     else:
         # Click was outside the menu bounds entirely
         logger.debug("Click outside menu bounds.")

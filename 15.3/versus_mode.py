@@ -240,7 +240,7 @@ def show_versus_results(game_state):
     # Draw instructions
     cv2.putText(
         frame,
-        "Press 'M' to return to menu",
+        "Press M or ESC to return to menu",
         (int(game_state.current_width / 2) - 150, game_state.current_height - 100),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.8,

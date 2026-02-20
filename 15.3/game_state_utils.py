@@ -91,14 +91,9 @@ def initialize_sounds() -> (
             low_time_sound = pygame.mixer.Sound(low_time_sound_path)
         else:
             logger.warning(f"File not found: {low_time_sound_path}")
-        # if os.path.exists(achievement_sound_path):
-        #     achievement_sound = pygame.mixer.Sound(achievement_sound_path)
-        # else:
-        #     logger.warning(f"File not found: {achievement_sound_path}")
 
     except Exception as e:
         logger.error(f"Sound init error: {e}")
-    # Remember to return achievement_sound if you add it
     return score_sound, low_time_sound
 
 

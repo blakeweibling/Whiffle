@@ -78,7 +78,7 @@ class BallTrail:
             except OverflowError:
                 pass
             except Exception as e:
-                print(f"Error drawing trail line: {e}")
+                logger.error(f"Error drawing trail line: {e}")
 
 
 class Explosion:

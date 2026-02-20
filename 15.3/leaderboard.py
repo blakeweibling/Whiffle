@@ -197,7 +197,7 @@ class Leaderboard:
                     try:
                         error_detail = response.json()
                         logger.error(f"Supabase error details: {error_detail}")
-                    except:
+                    except Exception:
                         logger.error(
                             f"Supabase error (no details available): {response.text[:500]}"
                         )
@@ -221,7 +221,7 @@ class Leaderboard:
                     if hasattr(e, "response") and e.response is not None:
                         content = e.response.text
                         logger.error(f"Error response content: {content[:500]}")
-                except:
+                except Exception:
                     pass
 
                 if attempt == retries - 1:
