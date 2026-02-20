@@ -16,23 +16,23 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 * **Game Modes:**
   * **Classic Mode:** First to reach the layout win score (2000 Whiffle / 5000 Five Star) wins. No game-over screen; win is recorded and game continues.
   * **Timed Mode:** 90-second time limit. **Game over only when time runs out** (not when reaching win score).
-  * **Survival Mode:** Starts with 45 seconds, gain 10 seconds per score; same win score rules. No game-over screen on time expiry (only timed mode shows game over).
+  * **Survival Mode:** Starts with 45 seconds, gain 10 seconds per score; same win score rules. Game over when time runs out.
   * **Retro Mode:** Classic gameplay with retro visuals and effects.
   * **Fun Mode:** Enhanced visuals and effects.
   * **Practice Mode:** Play without score limits or time pressure.
   * **Versus Mode:** Two players alternate turns; highest score wins, with results screen and stats comparison.
-* **Replay System:** Record, browse, play back, and manage replays; share to YouTube, Google Drive, and Discord; highlight extraction and storage management.
+* **Replay System:** Record, browse, play back, and manage replays; share to YouTube, Google Drive, and Discord; highlight extraction and storage management. Delete requires confirmation (click Delete twice).
 * **Player Management:** Multiple players with name editing and selection. Achievements and play history are stored **per player** (`data/achievements/achievements_status.json`, `data/achievements/play_dates.json`).
 * **Leaderboard:** Online Supabase leaderboard with local fallback.
 * **Achievements:** Per-player achievement tracking. Achievements list is **scrollable with the mouse wheel**; a scroll indicator appears on the side when there are more achievements than fit on screen. Unlocked achievements show the layout they were earned in (Whiffle or Five Star). Includes Victory Lap, Legend (3000 pts), Lucky Shot, Hole Hunter (special hole 2 times in one game), Architect, Tinkerer, Dual Threat, Against the Clock, Survivor, Mode Hopper, Triple Crown, Regular, Dedicated, Week Warrior, Recorded, Show Off, Highlight Reel, On the Board, Proof, Analyst, Inclusive, Take a Breather, Red Hot, Split Decision, Multiplier Master, and more.
 * **High-Score Proof:** Screenshots for score verification; only the **last 5** proof images are kept (`high_score_proof` folder).
 * **Menu System:** Interactive menus for settings, zone management, game modes, layouts, players, leaderboard, achievements (scrollable, mouse wheel), help, and about.
-* **Resolution Support:** Dynamic window sizing (e.g. 1080p, 720p).
+* **Resolution Support:** Dynamic window sizing; bottom-bar "1080p (click)" / "720p (click)" button cycles between 1080p and 720p.
 * **Configuration:** `.env` for Supabase; `configs/` for HSV, settings, Google credentials.
 * **Session Logging & Statistics:** Session stats, heatmaps, and data logging.
 * **Building:** **PyInstaller** (`game.spec`) produces a minimal "Whiffle" folder (onedir) with `Whiffle.exe` and `_internal` (Python runtime, torch, ultralytics, PIL, matplotlib, bundled data). See `BUILD_WHIFFLE.md`. **Inno Setup** (`WhiffleSetup.iss` v15.3) copies the entire folder and runs `icacls` so the install directory is read/write for saving configs, scores, and zones.
 * **Video Recording, Social Integration, Screenshot Utility:** Capture and share gameplay; upload to YouTube, Google Drive, Discord; score verification with screenshots.
-* **Loading Screen:** Loading screen during initialization.
+* **Loading Screen:** Loading screen during initialization (Windows); skipped on Linux/macOS.
 * **XP System:** Player XP and leveling (`xp_system.py`, `player_xp.json`).
 
 ## Key Files & Modules
@@ -97,6 +97,8 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 
 6. **Assets:** Include all assets (splash, game_over, static_fivestar, etc.) and `data/sounds/`.
 
+7. **Platform notes (Raspberry Pi / Linux):** Runs without a camera; uses static frame (`assets/last_frame.png` or `assets/static_fivestar.png`) as fallback. Optional env vars: `WHIFFLE_CAMERA_INDEX`, `WHIFFLE_CAMERA_BACKEND`. Set `WHIFFLE_DEBUG=1` for verbose logging.
+
 ## How to Run
 
 From the project root:
@@ -117,7 +119,7 @@ Output: `dist/Whiffle/` with `Whiffle.exe` and `_internal/` (all dependencies). 
 
 * **q** — Quit
 * **m** — Open menu during gameplay
-* **Resolution button** — Switch display resolution
+* **Resolution button** (1080p/720p) — Click to cycle display resolution
 * **Mouse** — Menus, zone editing, replay browsing
 * **Mouse wheel** — Scroll the Achievements submenu (when in Achievements)
 * **Versus Mode** — On-screen button to end turn
@@ -126,8 +128,10 @@ Output: `dist/Whiffle/` with `Whiffle.exe` and `_internal/` (all dependencies). 
 ## Changes in v15.3
 
 * **Layout switching:** When switching between Whiffle and Five Star, the correct `.pt` model and scoring zones are reloaded; zones are cleared first so scoring is correct after switching back.
-* **Game over:** Only triggered in Timed mode when time runs out; reaching win score no longer shows game over (win is still recorded and saved).
+* **Game over:** Triggered in Timed and Survival modes when time runs out; reaching win score no longer shows game over (win is still recorded and saved).
 * **Achievements:** Per-player storage; scrollable list with mouse wheel (OpenCV); layout label (Whiffle/Five Star) on unlocked achievements; Hole Hunter requires 2 special-hole scores; Legend at 3000 pts.
 * **High-score proof:** Only the last 5 screenshots are kept in `high_score_proof`.
+* **Raspberry Pi / Linux:** Platform-aware camera config; no-camera fallback to static frame; reduced error spam on startup.
+* **Replay delete:** Requires confirmation (click Delete twice).
 * **PyInstaller:** Onedir build (`Whiffle.exe` + `_internal`); hiddenimports for PIL, matplotlib, ultralytics, torch; openh264 DLL optional.
 * **Inno Setup:** Single recursive copy of `dist/Whiffle` (including `_internal`); post-install `icacls` grants Users full control on install dir for saving configs, scores, zones; icon paths use `_internal\assets\pinball_icon.ico`.
