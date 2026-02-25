@@ -97,6 +97,35 @@ def initialize_sounds() -> (
     return score_sound, low_time_sound
 
 
+def _cached_on_any_leaderboard(game_state: Any, ttl_seconds: float = 30.0) -> bool:
+    """Check if current player appears on any leaderboard. Cached to avoid 6 API calls every achievement check."""
+    cache = getattr(game_state, "_on_board_cache", None)
+    now = time.time()
+    try:
+        player = game_state.get_current_player() if hasattr(game_state, "get_current_player") else None
+        current_name = player.name if (player and hasattr(player, "name")) else None
+    except Exception:
+        current_name = None
+    if cache is not None and len(cache) == 3:
+        cached_name, cached_time, result = cache
+        if current_name == cached_name and (now - cached_time) < ttl_seconds:
+            return result
+    if not hasattr(game_state, "leaderboard") or game_state.leaderboard is None or not current_name:
+        setattr(game_state, "_on_board_cache", (current_name, now, False))
+        return False
+    for mode in ["classic", "timed", "survival", "fun", "practice", "retro"]:
+        try:
+            scores, _ = game_state.leaderboard.get_top_scores(mode=mode, limit=100)
+            for e in scores:
+                if e.get("player_name") == current_name:
+                    setattr(game_state, "_on_board_cache", (current_name, now, True))
+                    return True
+        except Exception:
+            continue
+    setattr(game_state, "_on_board_cache", (current_name, now, False))
+    return False
+
+
 def initialize_achievements() -> List[Achievement]:
     """Initialize the list of achievements."""
     return [
@@ -266,17 +295,7 @@ def initialize_achievements() -> List[Achievement]:
         Achievement(
             "On the Board",
             "Appear on any leaderboard",
-            lambda gs: (
-                hasattr(gs, "leaderboard")
-                and gs.leaderboard is not None
-                and hasattr(gs, "get_current_player")
-                and gs.get_current_player() is not None
-                and any(
-                    gs.get_current_player().name == e.get("player_name")
-                    for mode in ["classic", "timed", "survival", "fun", "practice", "retro"]
-                    for e in (gs.leaderboard.get_top_scores(mode=mode, limit=100)[0])
-                )
-            ),
+            lambda gs: _cached_on_any_leaderboard(gs),
         ),
         Achievement(
             "Proof",

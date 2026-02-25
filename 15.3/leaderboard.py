@@ -397,7 +397,7 @@ class Leaderboard:
                 "select": "player_name,score,created_at,screenshot_url",  # Added screenshot_url
             }
             scores = self._get_supabase(params)
-            logger.info(
+            logger.debug(
                 f"Successfully retrieved {len(scores)} scores from online leaderboard for mode: {mode}"
             )
             return scores, True
@@ -412,10 +412,10 @@ class Leaderboard:
                     key=lambda x: x.get("score", 0),  # Use .get for safety
                     reverse=True,
                 )[:limit]
-                logger.info(
+                logger.debug(
                     f"Using local leaderboard with {len(sorted_scores)} scores for mode: {mode}"
                 )
                 return sorted_scores, False
             # --- END UPDATE ---
-            logger.info(f"No scores found in local leaderboard for mode: {mode}")
+            logger.debug(f"No scores found in local leaderboard for mode: {mode}")
             return [], False
