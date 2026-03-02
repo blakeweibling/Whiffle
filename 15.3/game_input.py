@@ -762,41 +762,31 @@ def _handle_input(game_state: Any) -> Optional[int]:
 
             # --- General Menu Navigation (if not in specific edit mode handled above) ---
             if not key_handled_globally:
+                from interaction_utils import _reset_all_menu_editing_states
+
                 if key == ord("m"):  # 'm' always resumes from menu
                     game_state.current_state = CurrentGameState.PLAYING
-                    # Reset any lingering menu/edit state
-                    from interaction_utils import _reset_all_menu_editing_states
-
                     _reset_all_menu_editing_states(game_state)
                     game_state.submenu_active = None
+                    game_state.menu_cache = None
                     key_handled_globally = True
-                elif key == 8:  # Backspace (general menu back navigation)
+                elif key in (8, 27):  # Backspace or Escape
                     submenu = getattr(game_state, "submenu_active", None)
-                    # If in edit zones list, go back to manage zones submenu
                     if submenu == "edit_zones":
+                        # If in edit zones list, go back to manage zones submenu
                         game_state.submenu_active = "manage_zones"
                         game_state.menu_cache = None
-                    # If in any other submenu, go back to main menu
                     elif submenu is not None:
+                        # If in any other submenu, go back to main menu
                         game_state.submenu_active = None
                         game_state.menu_cache = None
-                    # If in main menu, backspace does nothing (or could resume?) - current behavior: nothing
-                    # else: game_state.current_state = CurrentGameState.PLAYING ...
-                    key_handled_globally = True
-                elif key == 27:  # Escape: back one menu level, or confirm quit from main menu
-                    from interaction_utils import _reset_all_menu_editing_states
-
-                    submenu = getattr(game_state, "submenu_active", None)
-                    if submenu is not None:
-                        game_state.submenu_active = None
-                        _reset_all_menu_editing_states(game_state)
-                        game_state.menu_cache = None
-                        key_handled_globally = True
                     else:
-                        game_state.previous_state_before_quit_confirm = CurrentGameState.MENU
-                        game_state.current_state = CurrentGameState.CONFIRM_QUIT
+                        # If already in main menu, close menu and resume game
+                        game_state.current_state = CurrentGameState.PLAYING
                         _reset_all_menu_editing_states(game_state)
-                        key_handled_globally = True
+                        game_state.submenu_active = None
+                        game_state.menu_cache = None
+                    key_handled_globally = True
 
         # Handle input in PLAYING state
         elif game_state.current_state == CurrentGameState.PLAYING:
