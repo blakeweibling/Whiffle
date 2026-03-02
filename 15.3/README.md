@@ -40,7 +40,7 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 | File | Purpose |
 |------|---------|
 | `game.py` | Main entry point |
-| `constants.py` | Game constants, file paths (e.g. `FIVESTAR_ZONES_FILE`, `FIVESTAR_MODEL_PATH`), win scores |
+| `constants.py` | Game constants, file paths (e.g. `FIVESTAR_ZONES_FILE`, `FIVESTAR_MODEL_PATH`, `STATIC_FIVESTAR_FRAME_FILE`), win scores |
 | `game_state.py` | Game state (scores, zones, players, modes, layouts, `win_score`); `set_playfield()` reloads detector and zones when switching layouts |
 | `game_loop.py` | Main loop (frame capture, processing, input) |
 | `game_input.py` | Keyboard and pygame input |
@@ -63,6 +63,8 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 | `replay_manager.py`, `versus_mode.py` | Replays and versus mode |
 | `loading_screen.py` | Loading screen wrapper |
 | `xp_system.py` | Player XP and levels |
+| `extract_frames.py`, `create_yolo_dataset.py`, `prepare_yolo_dataset.py` | Video frame extraction and YOLO dataset preparation for training |
+| `train_yolo_model.py` | YOLOv8 training (detect or segment); supports `--task segment`, `--device 0` for GPU |
 
 ## Data & Config Files
 
@@ -107,6 +109,8 @@ From the project root:
 python game.py
 ```
 
+**Launch flow:** After entering your player name, you'll see a **Select Playfield** screen. Press **1** or **W** for Whiffle, **2** or **F** for Five Star; **Enter**/**Esc** defaults to Whiffle. You can also switch layouts later from the menu (Layout).
+
 ## Building the Whiffle Folder (for Installer)
 
 ```bash
@@ -119,14 +123,30 @@ Output: `dist/Whiffle/` with `Whiffle.exe` and `_internal/` (all dependencies). 
 
 * **q** — Quit
 * **m** — Open menu during gameplay
+* **Select Playfield (at launch):** **1** or **W** — Whiffle; **2** or **F** — Five Star; **Enter**/**Esc** — Whiffle (default)
 * **Resolution button** (1080p/720p) — Click to cycle display resolution
 * **Mouse** — Menus, zone editing, replay browsing
 * **Mouse wheel** — Scroll the Achievements submenu (when in Achievements)
 * **Versus Mode** — On-screen button to end turn
 * Additional controls in specific modes (see in-game help)
 
+## Training Your Own Model
+
+Scripts are provided to extract frames from video, build a YOLO dataset, and train a custom model:
+
+```bash
+# Extract frames from video and create dataset in one step
+python prepare_yolo_dataset.py data/replays/your_video.mp4 data/my_dataset --interval-seconds 5 --val-split 0.15 --classes silver gold --empty-labels
+
+# Train (detection or segmentation); use --device 0 for GPU
+python train_yolo_model.py --data data/my_dataset --task segment --classes silver gold --epochs 100 --device 0
+```
+
+Label images with CVAT.ai (YOLO 1.1 for boxes, YOLO Segmentation for polygons), then copy the trained `best.pt` to `data/whiffle_new_best.pt` or `data/whiffle_new_best_fivestar.pt`. See `train_yolo_model.py` for full options.
+
 ## Changes in v15.3
 
+* **Playfield selection at launch:** After entering your name, choose Whiffle or Five Star; the correct model loads before gameplay.
 * **Layout switching:** When switching between Whiffle and Five Star, the correct `.pt` model and scoring zones are reloaded; zones are cleared first so scoring is correct after switching back.
 * **Game over:** Triggered in Timed and Survival modes when time runs out; reaching win score no longer shows game over (win is still recorded and saved).
 * **Achievements:** Per-player storage; scrollable list with mouse wheel (OpenCV); layout label (Whiffle/Five Star) on unlocked achievements; Hole Hunter requires 2 special-hole scores; Legend at 3000 pts.
