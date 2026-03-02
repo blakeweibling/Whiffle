@@ -1,8 +1,8 @@
 {
     "Blake": {
         "First Score": {
-            "unlocked": true,
-            "layout": "whiffle"
+            "unlocked": false,
+            "layout": null
         },
         "Half Grand": {
             "unlocked": false,
@@ -29,12 +29,12 @@
             "layout": null
         },
         "Zone Master": {
-            "unlocked": true,
-            "layout": "whiffle"
+            "unlocked": false,
+            "layout": null
         },
         "Architect": {
-            "unlocked": true,
-            "layout": "whiffle"
+            "unlocked": false,
+            "layout": null
         },
         "Tinkerer": {
             "unlocked": false,
@@ -93,8 +93,8 @@
             "layout": null
         },
         "On the Board": {
-            "unlocked": true,
-            "layout": "whiffle"
+            "unlocked": false,
+            "layout": null
         },
         "Proof": {
             "unlocked": false,
@@ -117,8 +117,8 @@
             "layout": null
         },
         "Split Decision": {
-            "unlocked": true,
-            "layout": "whiffle"
+            "unlocked": false,
+            "layout": null
         },
         "Multiplier Master": {
             "unlocked": false,
