@@ -1416,25 +1416,27 @@ def reset_game(game_state: Any) -> None:
     # Reset menu/editing state
     _reset_all_menu_editing_states(game_state)
 
-    # Start new data logging session if available
+    # Start new data logging session if available (only for live camera games)
     if data_logger:
         try:
-            current_player_name = "Player 1"
-            if game_state.players:
-                current_player = game_state.players[game_state.current_player_index]
-                current_player_name = current_player.name
-            data_logger.start_new_session(current_player_name, game_state.game_mode)
-            game_state.data_logger = data_logger
+            # In static-image mode (no live camera), skip creating session stats.
+            if getattr(game_state, "camera_available", True):
+                current_player_name = "Player 1"
+                if game_state.players:
+                    current_player = game_state.players[game_state.current_player_index]
+                    current_player_name = current_player.name
+                data_logger.start_new_session(current_player_name, game_state.game_mode)
+                game_state.data_logger = data_logger
 
-            # If the current game state is not PLAYING, pause the session timer immediately
-            current_state = getattr(game_state, "current_state", None)
-            if current_state in [CurrentGameState.MENU, CurrentGameState.PAUSED]:
-                session = data_logger.get_current_session_data()
-                if session:
-                    session.pause()
-                    logger.debug(
-                        f"Paused new session timer immediately because game state is {current_state}"
-                    )
+                # If the current game state is not PLAYING, pause the session timer immediately
+                current_state = getattr(game_state, "current_state", None)
+                if current_state in [CurrentGameState.MENU, CurrentGameState.PAUSED]:
+                    session = data_logger.get_current_session_data()
+                    if session:
+                        session.pause()
+                        logger.debug(
+                            f"Paused new session timer immediately because game state is {current_state}"
+                        )
 
         except Exception as e:
             logger.error(f"Error starting new data logging session: {e}")

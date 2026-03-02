@@ -341,15 +341,18 @@ class GameState:
         else:
             self.game_timer = None
 
-        # Start initial data logging session
+        # Start initial data logging session (only for live camera games)
         if self.data_logger:
-            current_player_name = "Player 1"
-            if self.players:
-                try:
-                    current_player_name = self.players[self.current_player_index].name
-                except (IndexError, AttributeError):
-                    pass
-            self.data_logger.start_new_session(current_player_name, self.game_mode)
+            # In static-image mode (no live camera), skip creating session stats.
+            # This avoids adding entries to session_stats_history.json for non-live games.
+            if getattr(self, "camera_available", True):
+                current_player_name = "Player 1"
+                if self.players:
+                    try:
+                        current_player_name = self.players[self.current_player_index].name
+                    except (IndexError, AttributeError):
+                        pass
+                self.data_logger.start_new_session(current_player_name, self.game_mode)
 
         # Initialize leaderboard with Supabase connection
         self.leaderboard = Leaderboard(supabase_url, supabase_key)
@@ -939,8 +942,8 @@ class GameState:
                 self.players.append(Player(player_name))
                 self.current_player_index = len(self.players) - 1
 
-        # Reset session data
-        if self.data_logger:
+        # Reset session data (only for live camera games)
+        if self.data_logger and getattr(self, "camera_available", True):
             self.data_logger.start_new_session(player_name, game_mode)
             self.current_session_stats = None
 
