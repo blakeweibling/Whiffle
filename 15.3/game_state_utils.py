@@ -357,6 +357,15 @@ def record_game_completed(game_state: Any) -> None:
     Call when a game ends (GAME_OVER). Updates current player's modes_played,
     modes_won, layouts_played, and appends today to play_dates for Week Warrior.
     """
+    # Treat completions from static-image (no live camera) runs as non-official:
+    # do not update persistent per-game stats (modes played/won, layouts, play dates).
+    if not getattr(game_state, "camera_available", True):
+        logger.info(
+            "Static image mode detected (no live camera). "
+            "Skipping record_game_completed persistence."
+        )
+        return
+
     try:
         player = (
             game_state.get_current_player()
@@ -1159,7 +1168,10 @@ def update_timers_and_state(game_state: Any, dt: float) -> None:
     # Update achievement checks and notifications (if not in initial name input state)
     if current_state != CurrentGameState.GETTING_PLAYER_NAME:
         # Check achievements only during active play
-        if current_state == CurrentGameState.PLAYING:
+        # Only allow achievements to unlock during live-camera games
+        if current_state == CurrentGameState.PLAYING and getattr(
+            game_state, "camera_available", True
+        ):
             check_achievements(game_state)  # Calls local check function
 
         # Update notification timers regardless of play state (except name input)
@@ -1304,13 +1316,16 @@ def reset_game(game_state: Any) -> None:
             current_player = preserved_objects["players"][
                 preserved_objects["current_player_index"]
             ]
-            if hasattr(current_player, "games_played"):
-                current_player.games_played += 1  # Increment games played count
+            # Only treat this as a real game for per-player stats when a live camera is used
+            if preserved_objects.get("camera_available", False):
+                if hasattr(current_player, "games_played"):
+                    current_player.games_played += 1  # Increment games played count
+                # Refresh XP data after clearing (will be level 1, 0 XP)
+                if hasattr(current_player, "refresh_xp"):
+                    current_player.refresh_xp()
+            # Always reset per-game score for UI consistency
             if hasattr(current_player, "score"):
-                current_player.score = 0  # Reset score for new game
-            # Refresh XP data after clearing (will be level 1, 0 XP)
-            if hasattr(current_player, "refresh_xp"):
-                current_player.refresh_xp()
+                current_player.score = 0
     except Exception as player_e:
         logger.error(f"Error updating player stats during reset: {player_e}")
 

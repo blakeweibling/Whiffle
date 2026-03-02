@@ -292,21 +292,29 @@ def update_scoring(game_state: Any) -> None:
                         current_player.consecutive_double_balls += 1
                     else:
                         current_player.consecutive_double_balls = 0
-                    
-                    # Add score and handle XP
-                    did_level_up = current_player.add_score(
-                        points_to_add,
-                        zone=zone,
-                        is_special_hole=is_sp
-                    )
-                    
-                    # Show level up notification if applicable
-                    if did_level_up:
-                        show_notification(
-                            game_state,
-                            f"Level Up! Now level {current_player.level}",
-                            duration=3.0
+
+                    # For static-image games (no live camera), keep per-run score
+                    # visible but do not award persistent XP or levels.
+                    if getattr(game_state, "camera_available", True):
+                        did_level_up = current_player.add_score(
+                            points_to_add,
+                            zone=zone,
+                            is_special_hole=is_sp
                         )
+
+                        # Show level up notification if applicable
+                        if did_level_up:
+                            show_notification(
+                                game_state,
+                                f"Level Up! Now level {current_player.level}",
+                                duration=3.0
+                            )
+                    else:
+                        # Static-image mode: mirror per-game score locally without XP.
+                        if hasattr(current_player, "score"):
+                            current_player.score += points_to_add
+                        if hasattr(current_player, "total_score"):
+                            current_player.total_score += points_to_add
                 else:
                     logger.error("Could not get current player to add score.")
             except Exception as e:
@@ -323,8 +331,12 @@ def update_scoring(game_state: Any) -> None:
                 except Exception as e:
                     logger.error(f"Error logging score event: {e}")
 
-            # Record score event in replay system if active
-            if hasattr(game_state, "replay_manager") and game_state.replay_manager:
+            # Record score event in replay system if active (only for live-camera games)
+            if (
+                getattr(game_state, "camera_available", True)
+                and hasattr(game_state, "replay_manager")
+                and game_state.replay_manager
+            ):
                 try:
                     game_state.replay_manager.record_score(
                         zone_id=zone_idx, points=points_to_add, ball_type=b_type

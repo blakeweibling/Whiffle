@@ -161,9 +161,10 @@ def save_score(game_state: Any, player_name: str, mode: Optional[str] = None) ->
             f"Saving score {player_name}: {score_to_save} Mode:{current_mode}{' (D)' if doubled else ''}"
         )
 
-        # Only capture/upload screenshots and submit to Supabase-based leaderboard
-        # when we are running with a live camera feed. In static-image mode we
-        # still update local high scores, but we do not post to the online leaderboard.
+        # Only capture/upload screenshots, submit to Supabase-based leaderboard,
+        # and update persistent per-game records when we are running with a live
+        # camera feed. In static-image mode we treat runs as non-official:
+        # no Supabase, no leaderboard queue, and no high-score file updates.
         if not is_static_image_mode:
             try:
                 current_frame = None
@@ -234,18 +235,21 @@ def save_score(game_state: Any, player_name: str, mode: Optional[str] = None) ->
         else:
             logger.info(
                 "Static image mode detected (no live camera). "
-                "Skipping Supabase screenshot upload and leaderboard submission."
+                "Skipping Supabase screenshot upload, leaderboard submission, "
+                "and high-score persistence."
             )
-        if (
-            current_mode == game_state.game_mode
-            and score_to_save > game_state.high_score
-        ):
-            logger.info(f"New high score '{current_mode}': {score_to_save}. Saving.")
-            game_state.score = score_to_save  # Ensure score attribute has final value
-            save_high_score(game_state)
-        else:
-            # Save anyway to ensure file consistency
-            save_high_score(game_state)
+        # Persist high scores only for live-camera games
+        if not is_static_image_mode:
+            if (
+                current_mode == game_state.game_mode
+                and score_to_save > game_state.high_score
+            ):
+                logger.info(f"New high score '{current_mode}': {score_to_save}. Saving.")
+                game_state.score = score_to_save  # Ensure score attribute has final value
+                save_high_score(game_state)
+            else:
+                # Save anyway to ensure file consistency
+                save_high_score(game_state)
     else:
         logger.info(f"Score {score_to_save}, not saving.")
 
