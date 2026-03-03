@@ -418,10 +418,10 @@ def update_scoring(game_state: Any) -> None:
                     f"Created explosion at ({explosion_center_x}, {explosion_center_y}) for score in zone {zone_idx}"
                 )
 
-            # Check Win Condition (classic, timed, survival) — do not trigger GAME_OVER;
-            # game over is only for timed mode when time runs out (see game_state_utils).
+            # Check Win Condition (timed, survival only). Classic has no score cap — play as long as you like.
+            # Game over is only for timed mode when time runs out (see game_state_utils).
             if (
-                game_state.game_mode in ["classic", "timed", "survival"]
+                game_state.game_mode in ["timed", "survival"]
                 and game_state.score >= game_state.win_score
                 and game_state.current_state != CurrentGameState.GAME_OVER
             ):

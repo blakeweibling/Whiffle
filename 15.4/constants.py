@@ -316,7 +316,7 @@ class GameConstants:
     SURVIVAL_MODE_START_TIME = 45.0  # Initial time for survival mode
     SURVIVAL_MODE_TIME_GAIN_PER_SCORE = 10.0  # Time added per score in survival
     SURVIVAL_MODE_WIN_SCORE = 2000  # Score to win in survival mode
-    CLASSIC_MODE_WIN_SCORE = 2000  # Score to win in classic mode
+    CLASSIC_MODE_WIN_SCORE = 2000  # Not used as win threshold (classic has no score cap); kept for achievements/display
     FIVESTAR_WIN_SCORE = 5000  # Score to win when playing Five Star layout (more achievable)
 
     # ... rest of the constants
