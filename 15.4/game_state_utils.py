@@ -1352,18 +1352,29 @@ def reset_game(game_state: Any) -> None:
     active_trails = {}
     active_explosions = []
 
-    # Reset game timer and win score based on mode and layout (Five Star uses higher win score)
+    # Reset game timer and win score based on mode and layout (Five Star uses higher win scores per mode)
     is_fivestar = getattr(game_state, "playfield_type", "whiffle") == "fivestar"
-    fivestar_win = getattr(GameConstants, "FIVESTAR_WIN_SCORE", 5000)
     timer = None
     if preserved_objects["game_mode"] == "timed":
         timer = GameConstants.TIMED_MODE_DURATION
-        game_state.win_score = fivestar_win if is_fivestar else GameConstants.TIMED_MODE_WIN_SCORE
+        game_state.win_score = (
+            GameConstants.FIVESTAR_TIMED_MODE_WIN_SCORE
+            if is_fivestar
+            else GameConstants.TIMED_MODE_WIN_SCORE
+        )
     elif preserved_objects["game_mode"] == "survival":
         timer = GameConstants.SURVIVAL_MODE_START_TIME
-        game_state.win_score = fivestar_win if is_fivestar else GameConstants.SURVIVAL_MODE_WIN_SCORE
+        game_state.win_score = (
+            GameConstants.FIVESTAR_SURVIVAL_MODE_WIN_SCORE
+            if is_fivestar
+            else GameConstants.SURVIVAL_MODE_WIN_SCORE
+        )
     else:
-        game_state.win_score = fivestar_win if is_fivestar else GameConstants.CLASSIC_MODE_WIN_SCORE
+        game_state.win_score = (
+            GameConstants.FIVESTAR_CLASSIC_MODE_WIN_SCORE
+            if is_fivestar
+            else GameConstants.CLASSIC_MODE_WIN_SCORE
+        )
 
     # Set all non-preserved attributes to defaults
     for attr_name in list(vars(game_state).keys()):

@@ -310,14 +310,18 @@ class GameConstants:
         [[0.272, 0.534, 0.131], [0.349, 0.686, 0.168], [0.393, 0.769, 0.189]]
     )
 
-    # Game Modes & Timers
+    # Game Modes & Timers — Whiffle layout (standard table)
     TIMED_MODE_DURATION = 90.0  # Seconds for timed mode
-    TIMED_MODE_WIN_SCORE = 2000  # Score to win in timed mode
+    TIMED_MODE_WIN_SCORE = 2000  # Score to win in timed mode (Whiffle)
     SURVIVAL_MODE_START_TIME = 45.0  # Initial time for survival mode
     SURVIVAL_MODE_TIME_GAIN_PER_SCORE = 10.0  # Time added per score in survival
-    SURVIVAL_MODE_WIN_SCORE = 2000  # Score to win in survival mode
-    CLASSIC_MODE_WIN_SCORE = 2000  # Not used as win threshold (classic has no score cap); kept for achievements/display
-    FIVESTAR_WIN_SCORE = 5000  # Score to win when playing Five Star layout (more achievable)
+    SURVIVAL_MODE_WIN_SCORE = 2000  # Score to win in survival mode (Whiffle)
+    CLASSIC_MODE_WIN_SCORE = 2000  # Not used as win threshold (classic has no score cap); kept for achievements/display (Whiffle)
+
+    # Five Star layout — higher win thresholds (easier to score on Five Star table)
+    FIVESTAR_TIMED_MODE_WIN_SCORE = 4000  # Score to win in timed mode (Five Star)
+    FIVESTAR_SURVIVAL_MODE_WIN_SCORE = 4000  # Score to win in survival mode (Five Star)
+    FIVESTAR_CLASSIC_MODE_WIN_SCORE = 4000  # For achievements/display only; classic has no score cap (Five Star)
 
     # ... rest of the constants
     FRAME_RATE: int = _assert_positive(30, "FRAME_RATE")
