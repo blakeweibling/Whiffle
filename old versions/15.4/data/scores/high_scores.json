@@ -1,0 +1,37 @@
+{
+    "classic": {
+        "high_score": 3201,
+        "player": "Dennis",
+        "date": "2026-01-19 15:43:01"
+    },
+    "timed": {
+        "high_score": 2104,
+        "player": "Blake",
+        "date": "2026-01-29 07:38:55"
+    },
+    "practice": {
+        "high_score": 2100,
+        "player": "Blake",
+        "date": "2026-01-19 15:41:40"
+    },
+    "fun": {
+        "high_score": 931,
+        "player": "Blake W",
+        "date": "2025-04-04 03:56:37"
+    },
+    "survival": {
+        "high_score": 2101,
+        "player": "Blake",
+        "date": "2026-01-29 07:39:04"
+    },
+    "retro": {
+        "high_score": 1011,
+        "player": "Blake W",
+        "date": "2025-04-18 17:28:44"
+    },
+    "versus": {
+        "high_score": 2,
+        "player": "Blake W",
+        "date": "2025-04-23 13:34:27"
+    }
+}
