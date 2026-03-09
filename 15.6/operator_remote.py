@@ -283,6 +283,8 @@ def update_remote_status_snapshot(game_state: Any) -> None:
             "show_scoring_zones": bool(getattr(game_state, "show_scoring_zones", False)),
             "background_music_on": bool(getattr(game_state, "background_music_on", True)),
             "game_sounds_on": bool(getattr(game_state, "game_sounds_on", True)),
+            "selected_music_track_index": int(getattr(game_state, "selected_music_track_index", 0)),
+            "music_track_count": len(getattr(GameConstants, "BACKGROUND_MUSIC_TRACKS", [])),
             "replay_recording": bool(getattr(game_state, "replay_recording", False)),
             "pending_scores": pending_scores,
             "remote_connected": active_remote_sessions > 0,
@@ -466,6 +468,12 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
     requested_player_name = (payload.get("player_name") or "").strip()
     requested_mode = str(payload.get("mode") or "").strip().lower()
     requested_playfield = str(payload.get("playfield") or "").strip().lower()
+    requested_track_index = payload.get("track_index")
+    if requested_track_index is not None:
+        try:
+            requested_track_index = int(requested_track_index)
+        except (TypeError, ValueError):
+            requested_track_index = None
 
     if action_name == "set_player_name":
         ok, message = _set_player_name(game_state, requested_player_name)
@@ -587,6 +595,16 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
         label = "ON" if getattr(game_state, "game_sounds_on", True) else "OFF"
         show_notification(game_state, f"Sound effects {label}", duration=1.5)
         return {"ok": True, "message": f"Sound effects {label}."}
+
+    if action_name == "set_music_track":
+        track_count = len(getattr(GameConstants, "BACKGROUND_MUSIC_TRACKS", []))
+        if track_count == 0:
+            return {"ok": False, "message": "No music tracks available."}
+        if requested_track_index is None or not (0 <= requested_track_index < track_count):
+            return {"ok": False, "message": f"Invalid track index. Use 0–{track_count - 1}."}
+        change_music_track(game_state, requested_track_index)
+        show_notification(game_state, f"Music track {requested_track_index + 1}", duration=1.5)
+        return {"ok": True, "message": f"Music track set to {requested_track_index + 1}."}
 
     return {"ok": False, "message": f"Unknown action: {action_name}"}
 
@@ -922,6 +940,16 @@ class OperatorRemoteService:
             </select>
             <button onclick="sendAction('set_playfield')" class="secondary">Apply Playfield</button>
           </div>
+          <div class="tile">
+            <div class="label">Music Track</div>
+            <select id="musicTrackSelect">
+              <option value="0">Track 1</option>
+              <option value="1">Track 2</option>
+              <option value="2">Track 3</option>
+              <option value="3">Track 4</option>
+            </select>
+            <button onclick="sendAction('set_music_track')" class="secondary">Apply Track</button>
+          </div>
         </div>
         <div class="actions" style="margin-top:14px;">
           <button id="autoRecordButton" onclick="sendAction('toggle_auto_record')" class="secondary">Toggle Auto-Record</button>
@@ -945,6 +973,7 @@ class OperatorRemoteService:
           <div class="tile"><div class="label">Scoring UI</div><div id="showZonesValue" class="value" style="font-size:18px;">-</div></div>
           <div class="tile"><div class="label">Music</div><div id="musicValue" class="value" style="font-size:18px;">-</div></div>
           <div class="tile"><div class="label">Sound Effects</div><div id="soundEffectsValue" class="value" style="font-size:18px;">-</div></div>
+          <div class="tile"><div class="label">Music Track</div><div id="musicTrackValue" class="value" style="font-size:18px;">-</div></div>
         </div>
         <div class="subgrid" style="margin-top:12px;">
           <div class="tile">
@@ -1049,6 +1078,18 @@ class OperatorRemoteService:
         document.getElementById('zonesFileValue').textContent = data.zones_file_path || '-';
         document.getElementById('modeSelect').value = data.mode_key || 'classic';
         document.getElementById('playfieldSelect').value = data.playfield_key || 'whiffle';
+        const trackCount = Math.max(1, data.music_track_count || 4);
+        const trackSelect = document.getElementById('musicTrackSelect');
+        if (trackSelect.options.length !== trackCount) {{
+          trackSelect.innerHTML = '';
+          for (let i = 0; i < trackCount; i++) {{
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = 'Track ' + (i + 1);
+            trackSelect.appendChild(opt);
+          }}
+        }}
+        trackSelect.value = String(Math.min(data.selected_music_track_index ?? 0, trackCount - 1));
         document.getElementById('autoRecordButton').textContent = 'Auto-Record: ' + onOff(data.auto_record);
         document.getElementById('debugOverlayButton').textContent = 'Debug Overlay: ' + onOff(data.debug_overlay);
         document.getElementById('colorblindButton').textContent = 'Colorblind: ' + onOff(data.colorblind_mode);
@@ -1057,6 +1098,7 @@ class OperatorRemoteService:
         document.getElementById('soundEffectsButton').textContent = 'Sound Effects: ' + onOff(data.game_sounds_on);
         document.getElementById('musicValue').textContent = onOff(data.background_music_on);
         document.getElementById('soundEffectsValue').textContent = onOff(data.game_sounds_on);
+        document.getElementById('musicTrackValue').textContent = (data.music_track_count > 0) ? ('Track ' + ((data.selected_music_track_index ?? 0) + 1)) : '-';
         if (!playerInputDirty) {{
           playerNameInput.value = data.player_name;
         }}
@@ -1070,7 +1112,8 @@ class OperatorRemoteService:
       const payload = {{
         player_name: playerNameInput.value,
         mode: document.getElementById('modeSelect').value,
-        playfield: document.getElementById('playfieldSelect').value
+        playfield: document.getElementById('playfieldSelect').value,
+        track_index: parseInt(document.getElementById('musicTrackSelect').value, 10)
       }};
       try {{
         const response = await fetch('/api/action', {{
