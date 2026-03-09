@@ -22,7 +22,9 @@ from game_state_utils import (
     change_music_track,
     reset_game,
     save_settings,
+    toggle_background_music,
     toggle_colorblind_mode,
+    toggle_game_sounds,
 )
 from game_types import CurrentGameState
 
@@ -279,6 +281,8 @@ def update_remote_status_snapshot(game_state: Any) -> None:
             "colorblind_mode": bool(getattr(game_state, "colorblind_mode", False)),
             "auto_record": bool(getattr(game_state, "auto_record_replays", False)),
             "show_scoring_zones": bool(getattr(game_state, "show_scoring_zones", False)),
+            "background_music_on": bool(getattr(game_state, "background_music_on", True)),
+            "game_sounds_on": bool(getattr(game_state, "game_sounds_on", True)),
             "replay_recording": bool(getattr(game_state, "replay_recording", False)),
             "pending_scores": pending_scores,
             "remote_connected": active_remote_sessions > 0,
@@ -571,6 +575,18 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
 
     if action_name == "toggle_show_scoring_zones":
         return _toggle_show_scoring_zones(game_state)
+
+    if action_name == "toggle_background_music":
+        toggle_background_music(game_state)
+        label = "ON" if getattr(game_state, "background_music_on", True) else "OFF"
+        show_notification(game_state, f"Background music {label}", duration=1.5)
+        return {"ok": True, "message": f"Background music {label}."}
+
+    if action_name == "toggle_game_sounds":
+        toggle_game_sounds(game_state)
+        label = "ON" if getattr(game_state, "game_sounds_on", True) else "OFF"
+        show_notification(game_state, f"Sound effects {label}", duration=1.5)
+        return {"ok": True, "message": f"Sound effects {label}."}
 
     return {"ok": False, "message": f"Unknown action: {action_name}"}
 
@@ -912,6 +928,8 @@ class OperatorRemoteService:
           <button id="debugOverlayButton" onclick="sendAction('toggle_debug_overlay')" class="secondary">Toggle Debug Overlay</button>
           <button id="colorblindButton" onclick="sendAction('toggle_colorblind_mode')" class="secondary">Toggle Colorblind Mode</button>
           <button id="showZonesButton" onclick="sendAction('toggle_show_scoring_zones')" class="secondary">Toggle Scoring UI</button>
+          <button id="musicButton" onclick="sendAction('toggle_background_music')" class="secondary">Music: ON</button>
+          <button id="soundEffectsButton" onclick="sendAction('toggle_game_sounds')" class="secondary">Sound Effects: ON</button>
         </div>
         <div class="pill">Mode and playfield changes stay available even during a live round and may reset the active round state.</div>
       </div>
@@ -925,6 +943,8 @@ class OperatorRemoteService:
           <div class="tile"><div class="label">Replay Recording</div><div id="replayRecordingValue" class="value" style="font-size:18px;">-</div></div>
           <div class="tile"><div class="label">Auto-Record</div><div id="autoRecordValue" class="value" style="font-size:18px;">-</div></div>
           <div class="tile"><div class="label">Scoring UI</div><div id="showZonesValue" class="value" style="font-size:18px;">-</div></div>
+          <div class="tile"><div class="label">Music</div><div id="musicValue" class="value" style="font-size:18px;">-</div></div>
+          <div class="tile"><div class="label">Sound Effects</div><div id="soundEffectsValue" class="value" style="font-size:18px;">-</div></div>
         </div>
         <div class="subgrid" style="margin-top:12px;">
           <div class="tile">
@@ -1033,6 +1053,10 @@ class OperatorRemoteService:
         document.getElementById('debugOverlayButton').textContent = 'Debug Overlay: ' + onOff(data.debug_overlay);
         document.getElementById('colorblindButton').textContent = 'Colorblind: ' + onOff(data.colorblind_mode);
         document.getElementById('showZonesButton').textContent = 'Scoring UI: ' + onOff(data.show_scoring_zones);
+        document.getElementById('musicButton').textContent = 'Music: ' + onOff(data.background_music_on);
+        document.getElementById('soundEffectsButton').textContent = 'Sound Effects: ' + onOff(data.game_sounds_on);
+        document.getElementById('musicValue').textContent = onOff(data.background_music_on);
+        document.getElementById('soundEffectsValue').textContent = onOff(data.game_sounds_on);
         if (!playerInputDirty) {{
           playerNameInput.value = data.player_name;
         }}
