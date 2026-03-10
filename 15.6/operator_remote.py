@@ -20,6 +20,7 @@ from game_state_helpers import save_score, show_notification
 from game_state_utils import (
     _reset_all_menu_editing_states,
     change_music_track,
+    load_achievements,
     reset_game,
     save_settings,
     toggle_background_music,
@@ -27,6 +28,7 @@ from game_state_utils import (
     toggle_game_sounds,
 )
 from game_types import CurrentGameState
+from player import Player
 
 logger = logging.getLogger(__name__)
 
@@ -236,6 +238,8 @@ def update_remote_status_snapshot(game_state: Any) -> None:
         current_player = (
             game_state.get_current_player() if hasattr(game_state, "get_current_player") else None
         )
+        players = list(getattr(game_state, "players", []) or [])
+        player_names = [str(getattr(player, "name", "") or f"Player {index + 1}") for index, player in enumerate(players)]
         player_name = ""
         if current_player is not None and hasattr(current_player, "name"):
             player_name = str(current_player.name)
@@ -261,6 +265,8 @@ def update_remote_status_snapshot(game_state: Any) -> None:
             "state": _state_name(game_state),
             "state_key": getattr(getattr(game_state, "current_state", None), "name", "UNKNOWN"),
             "player_name": player_name or "Player 1",
+            "players": player_names,
+            "current_player_index": int(getattr(game_state, "current_player_index", 0)),
             "score": int(getattr(game_state, "score", 0)),
             "mode": _format_mode(str(getattr(game_state, "game_mode", "classic"))),
             "mode_key": str(getattr(game_state, "game_mode", "classic")),
@@ -336,6 +342,109 @@ def _set_player_name(game_state: Any, player_name: str) -> Tuple[bool, str]:
         return False, "Could not update player name."
 
 
+def _add_player(game_state: Any, player_name: str) -> Dict[str, Any]:
+    is_valid, validated_name = _validate_player_name(player_name)
+    if not is_valid:
+        return {"ok": False, "message": validated_name}
+
+    players = getattr(game_state, "players", None)
+    if players is None:
+        game_state.players = []
+        players = game_state.players
+
+    max_players = 4
+    if len(players) >= max_players:
+        return {"ok": False, "message": f"Player limit reached. Max {max_players} players."}
+
+    normalized_name = validated_name.casefold()
+    for existing_player in players:
+        existing_name = str(getattr(existing_player, "name", "") or "")
+        if existing_name.casefold() == normalized_name:
+            return {"ok": False, "message": f"Player {validated_name} already exists."}
+
+    try:
+        new_player = Player(validated_name)
+        players.append(new_player)
+        game_state.current_player_index = len(players) - 1
+        game_state.last_player_name = validated_name
+        game_state.current_player_name_input = validated_name
+        game_state.pending_remote_player_name = ""
+        game_state.player_name_input_active = False
+        game_state.menu_cache = None
+
+        try:
+            load_achievements(game_state, GameConstants.ACHIEVEMENTS_FILE)
+        except Exception as exc:
+            logger.debug(f"Could not load achievements for added player: {exc}")
+
+        save_settings(game_state)
+        show_notification(game_state, f"Added player {validated_name}", duration=1.5)
+        return {"ok": True, "message": f"Added player {validated_name}."}
+    except Exception as exc:
+        logger.error(f"Failed to add player from operator remote: {exc}")
+        return {"ok": False, "message": "Could not add player."}
+
+
+def _select_player(game_state: Any, player_index: Optional[int]) -> Dict[str, Any]:
+    players = list(getattr(game_state, "players", []) or [])
+    if not players:
+        return {"ok": False, "message": "No players are available."}
+
+    if player_index is None or not (0 <= player_index < len(players)):
+        return {"ok": False, "message": "Select a valid player."}
+
+    try:
+        game_state.current_player_index = player_index
+        selected_player = players[player_index]
+        selected_name = str(getattr(selected_player, "name", "") or f"Player {player_index + 1}")
+        game_state.last_player_name = selected_name
+        game_state.current_player_name_input = selected_name
+        game_state.pending_remote_player_name = ""
+        game_state.player_name_input_active = False
+        game_state.menu_cache = None
+
+        try:
+            load_achievements(game_state, GameConstants.ACHIEVEMENTS_FILE)
+        except Exception as exc:
+            logger.debug(f"Could not load achievements for selected player: {exc}")
+
+        save_settings(game_state)
+        show_notification(game_state, f"Selected player: {selected_name}", duration=1.5)
+        return {"ok": True, "message": f"Selected player {selected_name}."}
+    except Exception as exc:
+        logger.error(f"Failed to select player from operator remote: {exc}")
+        return {"ok": False, "message": "Could not change player."}
+
+
+def _show_leaderboard(game_state: Any, current_state: Any) -> Dict[str, Any]:
+    allowed_states = {
+        CurrentGameState.PLAYING,
+        CurrentGameState.PAUSED,
+        CurrentGameState.MENU,
+        CurrentGameState.GAME_OVER,
+    }
+    if current_state not in allowed_states:
+        return {
+            "ok": False,
+            "message": "Leaderboard is only available during a round, while paused, in the menu, or after game over.",
+        }
+
+    if current_state == CurrentGameState.MENU and getattr(game_state, "submenu_active", None) == "leaderboard":
+        return {"ok": True, "message": "Leaderboard is already open."}
+
+    game_state.current_state = CurrentGameState.MENU
+    _reset_all_menu_editing_states(game_state)
+    game_state.submenu_active = "leaderboard"
+    game_state.menu_cache = None
+    game_state.drawing = False
+    game_state.temp_zone = None
+    game_state.start_x = None
+    game_state.start_y = None
+    game_state.drawing_points_input = ""
+    show_notification(game_state, "Showing leaderboard", duration=1.5)
+    return {"ok": True, "message": "Leaderboard opened."}
+
+
 def _enter_waiting_for_player_state(game_state: Any) -> None:
     game_state.current_state = CurrentGameState.GETTING_PLAYER_NAME
     game_state.player_name_input_active = True
@@ -345,6 +454,42 @@ def _enter_waiting_for_player_state(game_state: Any) -> None:
     game_state.submenu_active = None
     game_state.menu_cache = None
     game_state.win_condition_met = False
+
+
+def _restart_round(game_state: Any, current_state: Any) -> Dict[str, Any]:
+    restartable_states = {
+        CurrentGameState.PLAYING,
+        CurrentGameState.PAUSED,
+        CurrentGameState.MENU,
+        CurrentGameState.GAME_OVER,
+    }
+    if current_state not in restartable_states:
+        return {
+            "ok": False,
+            "message": "Restart Round is only available during a round, while paused, in the menu, or after game over.",
+        }
+
+    leaderboard = getattr(game_state, "leaderboard", None)
+    if leaderboard and hasattr(leaderboard, "flush_pending_scores"):
+        try:
+            flushed_scores = leaderboard.flush_pending_scores()
+            if flushed_scores > 0:
+                show_notification(
+                    game_state,
+                    "Score submitted to leaderboard",
+                    duration=2.0,
+                )
+        except Exception as exc:
+            logger.error(f"Error flushing leaderboard on Restart Round: {exc}")
+
+    reset_game(game_state)
+    game_state.current_state = CurrentGameState.PLAYING
+    game_state.player_name_input_active = False
+    game_state.submenu_active = None
+    game_state.menu_cache = None
+    _reset_all_menu_editing_states(game_state)
+    show_notification(game_state, "Round restarted", duration=1.5)
+    return {"ok": True, "message": "Round restarted."}
 
 
 def _change_game_mode(game_state: Any, new_mode: str) -> Dict[str, Any]:
@@ -466,6 +611,13 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
     payload = payload or {}
     current_state = getattr(game_state, "current_state", None)
     requested_player_name = (payload.get("player_name") or "").strip()
+    requested_add_player_name = (payload.get("add_player_name") or "").strip()
+    requested_selected_player_index = payload.get("selected_player_index")
+    if requested_selected_player_index is not None:
+        try:
+            requested_selected_player_index = int(requested_selected_player_index)
+        except (TypeError, ValueError):
+            requested_selected_player_index = None
     requested_mode = str(payload.get("mode") or "").strip().lower()
     requested_playfield = str(payload.get("playfield") or "").strip().lower()
     requested_track_index = payload.get("track_index")
@@ -484,6 +636,15 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
                 show_notification(game_state, f"Player updated: {message}", duration=1.5)
             return {"ok": True, "message": f"Player set to {message}."}
         return {"ok": False, "message": message}
+
+    if action_name == "add_player":
+        return _add_player(game_state, requested_add_player_name)
+
+    if action_name == "select_player":
+        return _select_player(game_state, requested_selected_player_index)
+
+    if action_name == "show_leaderboard":
+        return _show_leaderboard(game_state, current_state)
 
     if action_name == "start_game":
         if current_state == CurrentGameState.PLAYING:
@@ -563,6 +724,9 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
         _enter_waiting_for_player_state(game_state)
         show_notification(game_state, "Ready for next player", duration=1.5)
         return {"ok": True, "message": "Ready for next player. Enter a name, then tap Start Game."}
+
+    if action_name == "restart_round":
+        return _restart_round(game_state, current_state)
 
     if action_name == "set_mode":
         return _change_game_mode(game_state, requested_mode)
@@ -825,8 +989,9 @@ class OperatorRemoteService:
     body {{ font-family: Arial, sans-serif; background: #2c170f; color: #f7efe6; margin: 0; padding: 16px; }}
     .wrap {{ max-width: 1260px; margin: 0 auto; }}
     .topbar {{ display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }}
-    .status, .controls, .setup, .diagnostics {{ background: #52301f; border-radius: 14px; padding: 18px; margin-bottom: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.28); }}
-    .row {{ display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }}
+    .status, .controls, .setup, .diagnostics {{ background: #52301f; border-radius: 14px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.28); }}
+    .layout-columns {{ display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }}
+    .column {{ display: flex; flex-direction: column; gap: 16px; align-self: start; }}
     .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }}
     .tile {{ background: #7c442b; border-radius: 12px; padding: 14px; }}
     .label {{ font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #f0d2bd; margin-bottom: 8px; }}
@@ -852,7 +1017,7 @@ class OperatorRemoteService:
     #installAppButton {{ display: none; min-width: 120px; }}
     body.standalone {{ padding-top: max(16px, env(safe-area-inset-top)); padding-bottom: max(16px, env(safe-area-inset-bottom)); }}
     @media (max-width: 900px) {{
-      .row {{ grid-template-columns: 1fr; }}
+      .layout-columns {{ grid-template-columns: 1fr; }}
     }}
   </style>
 </head>
@@ -873,8 +1038,9 @@ class OperatorRemoteService:
 
     <div id="connectionBanner" class="connection-banner online">Connected to the Whiffle host.</div>
 
-    <div class="row">
-      <div class="status">
+    <div class="layout-columns">
+      <div class="column">
+        <div class="status">
         <h2 class="section-title">Live Status</h2>
         <div class="grid">
           <div class="tile"><div class="label">Player</div><div id="playerNameValue" class="value">{player_name}</div></div>
@@ -896,27 +1062,9 @@ class OperatorRemoteService:
             <div id="lastRemoteActionAgeValue" class="tiny">-</div>
           </div>
         </div>
-      </div>
-
-      <div class="controls">
-        <h2 class="section-title">Round Control</h2>
-        <div class="label">Player Name</div>
-        <input id="playerNameInput" type="text" maxlength="15" value="{player_name}" placeholder="Player name">
-        <div class="actions">
-          <button onclick="sendAction('set_player_name')">Update Player Name</button>
-          <button onclick="sendAction('start_game')">Start / Resume</button>
-          <button onclick="sendAction('pause')" class="secondary">Pause</button>
-          <button onclick="sendAction('resume')" class="secondary">Resume</button>
-          <button onclick="sendAction('open_menu')" class="secondary">Open Menu</button>
-          <button onclick="sendAction('close_menu')" class="secondary">Close Menu</button>
-          <button onclick="sendAction('reset_for_next_player')" class="danger">Reset For Next Player</button>
         </div>
-        <div id="message" class="message"></div>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="setup">
+        <div class="setup">
         <h2 class="section-title">Setup Controls</h2>
         <div class="subgrid">
           <div class="tile">
@@ -950,6 +1098,11 @@ class OperatorRemoteService:
             </select>
             <button onclick="sendAction('set_music_track')" class="secondary">Apply Track</button>
           </div>
+          <div class="tile">
+            <div class="label">Current Player</div>
+            <select id="playerSelect"></select>
+            <button onclick="sendAction('select_player')" class="secondary">Switch Player</button>
+          </div>
         </div>
         <div class="actions" style="margin-top:14px;">
           <button id="autoRecordButton" onclick="sendAction('toggle_auto_record')" class="secondary">Toggle Auto-Record</button>
@@ -960,9 +1113,32 @@ class OperatorRemoteService:
           <button id="soundEffectsButton" onclick="sendAction('toggle_game_sounds')" class="secondary">Sound Effects: ON</button>
         </div>
         <div class="pill">Mode and playfield changes stay available even during a live round and may reset the active round state.</div>
+        </div>
       </div>
 
-      <div class="diagnostics">
+      <div class="column">
+        <div class="controls">
+        <h2 class="section-title">Round Control</h2>
+        <div class="label">Player Name</div>
+        <input id="playerNameInput" type="text" maxlength="15" value="{player_name}" placeholder="Player name">
+        <div class="label" style="margin-top:10px;">New Player Name</div>
+        <input id="addPlayerNameInput" type="text" maxlength="15" value="" placeholder="New player name">
+        <div class="actions">
+          <button onclick="sendAction('set_player_name')">Update Player Name</button>
+          <button onclick="sendAction('add_player')">Add Player</button>
+          <button onclick="sendAction('start_game')">Start / Resume</button>
+          <button onclick="sendAction('restart_round')" class="secondary">Restart Round</button>
+          <button onclick="sendAction('pause')" class="secondary">Pause</button>
+          <button onclick="sendAction('resume')" class="secondary">Resume</button>
+          <button onclick="sendAction('show_leaderboard')" class="secondary">Show Leaderboard</button>
+          <button onclick="sendAction('open_menu')" class="secondary">Open Menu</button>
+          <button onclick="sendAction('close_menu')" class="secondary">Close Menu</button>
+          <button onclick="sendAction('reset_for_next_player')" class="danger">Reset For Next Player</button>
+        </div>
+        <div id="message" class="message"></div>
+        </div>
+
+        <div class="diagnostics">
         <h2 class="section-title">Diagnostics</h2>
         <div class="grid">
           <div class="tile"><div class="label">Resolution</div><div id="resolutionValue" class="value" style="font-size:18px;">-</div></div>
@@ -990,9 +1166,15 @@ class OperatorRemoteService:
   </div>
   <script>
     let playerInputDirty = false;
+    let playerSelectDirty = false;
     const playerNameInput = document.getElementById('playerNameInput');
+    const addPlayerNameInput = document.getElementById('addPlayerNameInput');
+    const playerSelect = document.getElementById('playerSelect');
     playerNameInput.addEventListener('input', () => {{
       playerInputDirty = true;
+    }});
+    playerSelect.addEventListener('change', () => {{
+      playerSelectDirty = true;
     }});
 
     function onOff(value) {{
@@ -1078,6 +1260,23 @@ class OperatorRemoteService:
         document.getElementById('zonesFileValue').textContent = data.zones_file_path || '-';
         document.getElementById('modeSelect').value = data.mode_key || 'classic';
         document.getElementById('playfieldSelect').value = data.playfield_key || 'whiffle';
+        const players = Array.isArray(data.players) ? data.players : [];
+        if (!playerSelectDirty) {{
+          playerSelect.innerHTML = '';
+          players.forEach((name, index) => {{
+            const opt = document.createElement('option');
+            opt.value = index;
+            opt.textContent = name || ('Player ' + (index + 1));
+            playerSelect.appendChild(opt);
+          }});
+          if (playerSelect.options.length > 0) {{
+            const selectedIndex = Math.min(
+              Math.max(data.current_player_index ?? 0, 0),
+              playerSelect.options.length - 1
+            );
+            playerSelect.value = String(selectedIndex);
+          }}
+        }}
         const trackCount = Math.max(1, data.music_track_count || 4);
         const trackSelect = document.getElementById('musicTrackSelect');
         if (trackSelect.options.length !== trackCount) {{
@@ -1111,6 +1310,8 @@ class OperatorRemoteService:
     async function sendAction(actionName) {{
       const payload = {{
         player_name: playerNameInput.value,
+        add_player_name: addPlayerNameInput.value,
+        selected_player_index: parseInt(playerSelect.value, 10),
         mode: document.getElementById('modeSelect').value,
         playfield: document.getElementById('playfieldSelect').value,
         track_index: parseInt(document.getElementById('musicTrackSelect').value, 10)
@@ -1136,6 +1337,10 @@ class OperatorRemoteService:
         document.getElementById('message').textContent = data.message || 'Action sent.';
         if (data.ok) {{
           playerInputDirty = false;
+          playerSelectDirty = false;
+          if (actionName === 'add_player') {{
+            addPlayerNameInput.value = '';
+          }}
         }}
         await fetchStatus();
       }} catch (error) {{
