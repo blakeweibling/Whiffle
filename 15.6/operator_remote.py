@@ -29,6 +29,7 @@ from game_state_utils import (
 )
 from game_types import CurrentGameState
 from player import Player
+from stats_calculator import calculate_session_stats
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +42,7 @@ APP_THEME_COLOR = "#7c442b"
 APP_BACKGROUND_COLOR = "#2c170f"
 _icon_cache: Dict[int, bytes] = {}
 PINBALL_ICON_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "pinball_icon.png")
+LEADERBOARD_MODES = ("classic", "timed", "survival", "fun", "practice", "retro")
 
 
 def _get_local_ip() -> str:
@@ -224,11 +226,218 @@ def _format_mode(mode_name: str) -> str:
     return str(mode_name or "").replace("_", " ").title()
 
 
-def _record_remote_action(game_state: Any, action_name: str, result: Dict[str, Any]) -> None:
+REMOTE_ACTION_DEFINITIONS: Dict[str, Dict[str, Any]] = {
+    "set_player_name": {
+        "label": "Update Player Name",
+    },
+    "add_player": {
+        "label": "Add Player",
+    },
+    "select_player": {
+        "label": "Switch Player",
+    },
+    "start_game": {
+        "label": "Start / Resume",
+        "allowed_states": (
+            CurrentGameState.GETTING_PLAYER_NAME,
+            CurrentGameState.PAUSED,
+            CurrentGameState.MENU,
+            CurrentGameState.GAME_OVER,
+        ),
+    },
+    "pause": {
+        "label": "Pause",
+        "allowed_states": (CurrentGameState.PLAYING,),
+    },
+    "resume": {
+        "label": "Resume",
+        "allowed_states": (CurrentGameState.PAUSED,),
+    },
+    "show_leaderboard": {
+        "label": "Show Leaderboard",
+        "allowed_states": (
+            CurrentGameState.PLAYING,
+            CurrentGameState.PAUSED,
+            CurrentGameState.MENU,
+            CurrentGameState.GAME_OVER,
+        ),
+    },
+    "show_heatmap": {
+        "label": "Show Heatmap",
+        "allowed_states": (
+            CurrentGameState.MENU,
+            CurrentGameState.PAUSED,
+            CurrentGameState.GAME_OVER,
+        ),
+    },
+    "open_menu": {
+        "label": "Open Menu",
+        "allowed_states": (
+            CurrentGameState.PLAYING,
+            CurrentGameState.GAME_OVER,
+        ),
+    },
+    "close_menu": {
+        "label": "Close Menu",
+        "allowed_states": (CurrentGameState.MENU,),
+    },
+    "reset_for_next_player": {
+        "label": "Reset For Next Player",
+        "destructive": True,
+        "confirm_message": "Reset for the next player? This will exit the current round flow and return to player entry.",
+    },
+    "restart_round": {
+        "label": "Restart Round",
+        "destructive": True,
+        "allowed_states": (
+            CurrentGameState.PLAYING,
+            CurrentGameState.PAUSED,
+            CurrentGameState.MENU,
+            CurrentGameState.GAME_OVER,
+        ),
+        "confirm_message": "Restart the current round? Pending scores will be flushed before the round resets.",
+    },
+    "set_mode": {
+        "label": "Apply Mode",
+        "destructive": True,
+        "confirm_message": "Change game mode? This may reset the active round state.",
+    },
+    "set_playfield": {
+        "label": "Apply Playfield",
+        "destructive": True,
+        "confirm_message": "Change playfield? This may reset the active round state.",
+    },
+    "set_music_track": {
+        "label": "Apply Track",
+    },
+    "set_leaderboard_mode": {
+        "label": "Apply Leaderboard Mode",
+    },
+    "toggle_auto_record": {
+        "label": "Toggle Auto-Record",
+    },
+    "toggle_debug_overlay": {
+        "label": "Toggle Debug Overlay",
+    },
+    "toggle_colorblind_mode": {
+        "label": "Toggle Colorblind Mode",
+    },
+    "toggle_show_scoring_zones": {
+        "label": "Toggle Scoring UI",
+    },
+    "toggle_background_music": {
+        "label": "Toggle Music",
+    },
+    "toggle_game_sounds": {
+        "label": "Toggle Sound Effects",
+    },
+}
+
+
+def _build_action_state_snapshot(current_state: Any) -> Dict[str, Dict[str, Any]]:
+    action_states: Dict[str, Dict[str, Any]] = {}
+    for action_name, definition in REMOTE_ACTION_DEFINITIONS.items():
+        allowed_states = definition.get("allowed_states")
+        action_states[action_name] = {
+            "enabled": True if allowed_states is None else current_state in allowed_states,
+            "label": str(definition.get("label", action_name)),
+            "destructive": bool(definition.get("destructive", False)),
+            "confirm_message": str(definition.get("confirm_message", "")),
+        }
+    return action_states
+
+
+def _build_live_session_stats_snapshot(game_state: Any) -> Dict[str, Any]:
+    if not getattr(game_state, "camera_available", True):
+        return {
+            "available": False,
+            "message": "Session stats are only available in live camera mode.",
+        }
+
+    data_logger = getattr(game_state, "data_logger", None)
+    if data_logger is None:
+        return {
+            "available": False,
+            "message": "Session stats are not available because the data logger is disabled.",
+        }
+
+    try:
+        current_session = data_logger.get_current_session_data()
+    except Exception as exc:
+        logger.debug(f"Could not read current session stats for remote: {exc}")
+        current_session = None
+
+    if current_session is None:
+        return {
+            "available": False,
+            "message": "No live session stats are available yet for this round.",
+        }
+
+    try:
+        stats = calculate_session_stats(current_session) or {}
+    except Exception as exc:
+        logger.debug(f"Could not calculate session stats for remote: {exc}")
+        return {
+            "available": False,
+            "message": "Session stats could not be calculated.",
+        }
+
+    live_score = int(getattr(game_state, "score", 0))
+    live_duration_seconds = (
+        float(game_state.get_duration()) if hasattr(game_state, "get_duration") else 0.0
+    )
+    live_duration_min = live_duration_seconds / 60.0 if live_duration_seconds > 0 else 0.0
+    live_score_rate = (live_score / live_duration_min) if live_duration_min > 0 else 0.0
+
+    points_by_ball_type = dict(stats.get("points_by_ball_type", {}) or {})
+    top_zones = []
+    for index, item in enumerate(stats.get("top_3_zones", []) or []):
+        try:
+            zone_id, zone_points = item
+        except (TypeError, ValueError):
+            continue
+        top_zones.append(
+            {
+                "rank": index + 1,
+                "zone_id": int(zone_id),
+                "zone_label": f"Zone {int(zone_id) + 1}",
+                "points": int(zone_points),
+            }
+        )
+
+    return {
+        "available": True,
+        "message": "",
+        "duration_seconds": live_duration_seconds,
+        "duration_display": f"{int(live_duration_seconds // 60):02d}:{int(live_duration_seconds % 60):02d}",
+        "total_score": live_score,
+        "score_rate_per_min": live_score_rate,
+        "points_by_ball_type": {
+            "silver": int(points_by_ball_type.get("silver", 0)),
+            "gold": int(points_by_ball_type.get("gold", 0)),
+        },
+        "top_3_zones": top_zones,
+    }
+
+
+def _is_heatmap_available(game_state: Any) -> bool:
+    session_stats = _build_live_session_stats_snapshot(game_state)
+    return bool(session_stats.get("available"))
+
+
+def _record_remote_action(
+    game_state: Any,
+    action_name: str,
+    result: Dict[str, Any],
+    action_id: Optional[int] = None,
+    session_id: str = "",
+) -> None:
     status_prefix = "OK" if result.get("ok") else "ERR"
     message = str(result.get("message", "") or action_name).strip()
     game_state.remote_last_action_text = f"{status_prefix}: {message}"
     game_state.remote_last_action_timestamp = time.time()
+    game_state.remote_last_action_id = int(action_id or 0)
+    game_state.remote_last_action_session_id = session_id
     logger.info(f"Operator remote action '{action_name}': {message}")
 
 
@@ -255,6 +464,7 @@ def update_remote_status_snapshot(game_state: Any) -> None:
         active_remote_sessions = (
             remote_service.get_active_session_count() if remote_service is not None else 0
         )
+        session_stats_snapshot = _build_live_session_stats_snapshot(game_state)
         current_width, current_height = (
             game_state.get_current_resolution_dimensions()
             if hasattr(game_state, "get_current_resolution_dimensions")
@@ -267,6 +477,8 @@ def update_remote_status_snapshot(game_state: Any) -> None:
             "player_name": player_name or "Player 1",
             "players": player_names,
             "current_player_index": int(getattr(game_state, "current_player_index", 0)),
+            "leaderboard_mode_key": str(getattr(game_state, "leaderboard_mode", "classic")),
+            "leaderboard_mode": _format_mode(str(getattr(game_state, "leaderboard_mode", "classic"))),
             "score": int(getattr(game_state, "score", 0)),
             "mode": _format_mode(str(getattr(game_state, "game_mode", "classic"))),
             "mode_key": str(getattr(game_state, "game_mode", "classic")),
@@ -296,12 +508,22 @@ def update_remote_status_snapshot(game_state: Any) -> None:
             "remote_connected": active_remote_sessions > 0,
             "active_remote_sessions": active_remote_sessions,
             "remote_last_action": str(getattr(game_state, "remote_last_action_text", "")),
+            "remote_last_action_id": int(getattr(game_state, "remote_last_action_id", 0) or 0),
             "remote_last_action_age": max(
                 0,
                 int(time.time() - float(getattr(game_state, "remote_last_action_timestamp", 0.0) or 0.0)),
             ),
             "replay_system_ready": replay_manager is not None,
+            "action_states": _build_action_state_snapshot(getattr(game_state, "current_state", None)),
+            "session_stats": session_stats_snapshot,
         }
+        heatmap_state = game_state.remote_status_snapshot["action_states"].get("show_heatmap")
+        if heatmap_state is not None and not bool(session_stats_snapshot.get("available")):
+            heatmap_state["enabled"] = False
+            heatmap_state["disabled_reason"] = str(
+                session_stats_snapshot.get("message")
+                or "Heatmap is not available for the current session."
+            )
     except Exception as exc:
         logger.debug(f"Failed to update remote status snapshot: {exc}")
 
@@ -443,6 +665,51 @@ def _show_leaderboard(game_state: Any, current_state: Any) -> Dict[str, Any]:
     game_state.drawing_points_input = ""
     show_notification(game_state, "Showing leaderboard", duration=1.5)
     return {"ok": True, "message": "Leaderboard opened."}
+
+
+def _show_heatmap(game_state: Any, current_state: Any) -> Dict[str, Any]:
+    allowed_states = {
+        CurrentGameState.MENU,
+        CurrentGameState.PAUSED,
+        CurrentGameState.GAME_OVER,
+    }
+    if current_state not in allowed_states:
+        return {
+            "ok": False,
+            "message": "Heatmap is only available from the menu, while paused, or after game over.",
+        }
+
+    if not _is_heatmap_available(game_state):
+        return {
+            "ok": False,
+            "message": "Heatmap is only available when live camera session stats exist.",
+        }
+
+    try:
+        import utils
+        from ui_screens import display_heatmap_modal
+
+        display_heatmap_modal(game_state, utils.mouse_callback, game_state)
+        return {"ok": True, "message": "Heatmap opened."}
+    except Exception as exc:
+        logger.exception(f"Error showing heatmap from operator remote: {exc}")
+        show_notification(game_state, "Error displaying heatmap", is_error=True)
+        return {"ok": False, "message": "Could not display heatmap."}
+
+
+def _change_leaderboard_mode(game_state: Any, new_mode: str) -> Dict[str, Any]:
+    normalized_mode = (new_mode or "").strip().lower()
+    if normalized_mode not in LEADERBOARD_MODES:
+        return {"ok": False, "message": "Unsupported leaderboard mode."}
+
+    if getattr(game_state, "leaderboard_mode", "classic") == normalized_mode:
+        return {"ok": True, "message": f"Leaderboard already set to {_format_mode(normalized_mode)}."}
+
+    game_state.leaderboard_mode = normalized_mode
+    game_state.menu_cache = None
+    save_settings(game_state)
+    show_notification(game_state, f"Leaderboard: {_format_mode(normalized_mode)}", duration=1.5)
+    return {"ok": True, "message": f"Leaderboard set to {_format_mode(normalized_mode)}."}
 
 
 def _enter_waiting_for_player_state(game_state: Any) -> None:
@@ -612,6 +879,7 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
     current_state = getattr(game_state, "current_state", None)
     requested_player_name = (payload.get("player_name") or "").strip()
     requested_add_player_name = (payload.get("add_player_name") or "").strip()
+    requested_leaderboard_mode = str(payload.get("leaderboard_mode") or "").strip().lower()
     requested_selected_player_index = payload.get("selected_player_index")
     if requested_selected_player_index is not None:
         try:
@@ -645,6 +913,12 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
 
     if action_name == "show_leaderboard":
         return _show_leaderboard(game_state, current_state)
+
+    if action_name == "show_heatmap":
+        return _show_heatmap(game_state, current_state)
+
+    if action_name == "set_leaderboard_mode":
+        return _change_leaderboard_mode(game_state, requested_leaderboard_mode)
 
     if action_name == "start_game":
         if current_state == CurrentGameState.PLAYING:
@@ -796,7 +1070,13 @@ def process_remote_actions(game_state: Any) -> None:
             logger.exception(f"Operator remote action failed: {exc}")
             result = {"ok": False, "message": "The operator action failed."}
 
-        _record_remote_action(game_state, queued_action.get("action", ""), result)
+        _record_remote_action(
+            game_state,
+            queued_action.get("action", ""),
+            result,
+            queued_action.get("action_id"),
+            str(queued_action.get("session_id", "") or ""),
+        )
         update_remote_status_snapshot(game_state)
         if response_queue is not None:
             try:
@@ -815,6 +1095,7 @@ class OperatorRemoteService:
         self.sessions: Dict[str, float] = {}
         self.session_lock = threading.Lock()
         self.failed_logins: Dict[str, Tuple[int, float]] = {}
+        self._next_action_id: int = 0
 
     def start(self) -> None:
         port = int(getattr(self.game_state, "operator_remote_port", DEFAULT_REMOTE_PORT))
@@ -856,6 +1137,11 @@ class OperatorRemoteService:
         with self.session_lock:
             expiry = self.sessions.get(session_id, 0.0)
         return max(0, int(expiry - time.time()))
+
+    def next_action_id(self) -> int:
+        with self.session_lock:
+            self._next_action_id += 1
+            return self._next_action_id
 
     def _build_handler(self):
         service = self
@@ -1002,11 +1288,17 @@ class OperatorRemoteService:
     button {{ padding: 14px; border: 0; border-radius: 10px; color: #fffaf4; background: #ff9f1c; font-size: 15px; font-weight: bold; }}
     button.secondary {{ background: #7c442b; }}
     button.danger {{ background: #b91c1c; }}
+    button[disabled] {{ opacity: 0.5; cursor: not-allowed; }}
+    select[disabled], input[disabled] {{ opacity: 0.65; }}
     .message {{ min-height: 24px; margin-top: 12px; color: #ffe2a8; }}
     .section-title {{ margin: 0 0 10px 0; font-size: 20px; }}
     .subgrid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }}
     .tiny {{ font-size: 12px; color: #f0d2bd; }}
     .pill {{ display: inline-block; padding: 6px 10px; border-radius: 999px; background: #7c442b; color: #fff8f0; font-size: 12px; margin-top: 8px; }}
+    .stats-list {{ display: grid; gap: 10px; }}
+    .stats-row {{ display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }}
+    .stats-row .name {{ color: #f0d2bd; }}
+    .stats-row .stat-value {{ color: #fff8f0; font-weight: bold; text-align: right; }}
     .connection-banner {{ margin-bottom: 16px; padding: 12px 16px; border-radius: 12px; font-weight: bold; display: none; }}
     .connection-banner.online {{ display: block; background: #5b6f3a; color: #fff8f0; }}
     .connection-banner.reconnecting {{ display: block; background: #8a5a1f; color: #fff8f0; }}
@@ -1078,7 +1370,7 @@ class OperatorRemoteService:
               <option value="retro">Retro</option>
               <option value="versus">Versus</option>
             </select>
-            <button onclick="sendAction('set_mode')" class="secondary">Apply Mode</button>
+            <button data-action="set_mode" onclick="sendAction('set_mode')" class="secondary">Apply Mode</button>
           </div>
           <div class="tile">
             <div class="label">Playfield</div>
@@ -1086,7 +1378,7 @@ class OperatorRemoteService:
               <option value="whiffle">Whiffle</option>
               <option value="fivestar">Five Star</option>
             </select>
-            <button onclick="sendAction('set_playfield')" class="secondary">Apply Playfield</button>
+            <button data-action="set_playfield" onclick="sendAction('set_playfield')" class="secondary">Apply Playfield</button>
           </div>
           <div class="tile">
             <div class="label">Music Track</div>
@@ -1096,21 +1388,33 @@ class OperatorRemoteService:
               <option value="2">Track 3</option>
               <option value="3">Track 4</option>
             </select>
-            <button onclick="sendAction('set_music_track')" class="secondary">Apply Track</button>
+            <button data-action="set_music_track" onclick="sendAction('set_music_track')" class="secondary">Apply Track</button>
           </div>
           <div class="tile">
             <div class="label">Current Player</div>
             <select id="playerSelect"></select>
-            <button onclick="sendAction('select_player')" class="secondary">Switch Player</button>
+            <button data-action="select_player" onclick="sendAction('select_player')" class="secondary">Switch Player</button>
+          </div>
+          <div class="tile">
+            <div class="label">Leaderboard Mode</div>
+            <select id="leaderboardModeSelect">
+              <option value="classic">Classic</option>
+              <option value="timed">Timed</option>
+              <option value="survival">Survival</option>
+              <option value="fun">Fun</option>
+              <option value="practice">Practice</option>
+              <option value="retro">Retro</option>
+            </select>
+            <button data-action="set_leaderboard_mode" onclick="sendAction('set_leaderboard_mode')" class="secondary">Apply Leaderboard Mode</button>
           </div>
         </div>
         <div class="actions" style="margin-top:14px;">
-          <button id="autoRecordButton" onclick="sendAction('toggle_auto_record')" class="secondary">Toggle Auto-Record</button>
-          <button id="debugOverlayButton" onclick="sendAction('toggle_debug_overlay')" class="secondary">Toggle Debug Overlay</button>
-          <button id="colorblindButton" onclick="sendAction('toggle_colorblind_mode')" class="secondary">Toggle Colorblind Mode</button>
-          <button id="showZonesButton" onclick="sendAction('toggle_show_scoring_zones')" class="secondary">Toggle Scoring UI</button>
-          <button id="musicButton" onclick="sendAction('toggle_background_music')" class="secondary">Music: ON</button>
-          <button id="soundEffectsButton" onclick="sendAction('toggle_game_sounds')" class="secondary">Sound Effects: ON</button>
+          <button id="autoRecordButton" data-action="toggle_auto_record" onclick="sendAction('toggle_auto_record')" class="secondary">Toggle Auto-Record</button>
+          <button id="debugOverlayButton" data-action="toggle_debug_overlay" onclick="sendAction('toggle_debug_overlay')" class="secondary">Toggle Debug Overlay</button>
+          <button id="colorblindButton" data-action="toggle_colorblind_mode" onclick="sendAction('toggle_colorblind_mode')" class="secondary">Toggle Colorblind Mode</button>
+          <button id="showZonesButton" data-action="toggle_show_scoring_zones" onclick="sendAction('toggle_show_scoring_zones')" class="secondary">Toggle Scoring UI</button>
+          <button id="musicButton" data-action="toggle_background_music" onclick="sendAction('toggle_background_music')" class="secondary">Music: ON</button>
+          <button id="soundEffectsButton" data-action="toggle_game_sounds" onclick="sendAction('toggle_game_sounds')" class="secondary">Sound Effects: ON</button>
         </div>
         <div class="pill">Mode and playfield changes stay available even during a live round and may reset the active round state.</div>
         </div>
@@ -1124,16 +1428,16 @@ class OperatorRemoteService:
         <div class="label" style="margin-top:10px;">New Player Name</div>
         <input id="addPlayerNameInput" type="text" maxlength="15" value="" placeholder="New player name">
         <div class="actions">
-          <button onclick="sendAction('set_player_name')">Update Player Name</button>
-          <button onclick="sendAction('add_player')">Add Player</button>
-          <button onclick="sendAction('start_game')">Start / Resume</button>
-          <button onclick="sendAction('restart_round')" class="secondary">Restart Round</button>
-          <button onclick="sendAction('pause')" class="secondary">Pause</button>
-          <button onclick="sendAction('resume')" class="secondary">Resume</button>
-          <button onclick="sendAction('show_leaderboard')" class="secondary">Show Leaderboard</button>
-          <button onclick="sendAction('open_menu')" class="secondary">Open Menu</button>
-          <button onclick="sendAction('close_menu')" class="secondary">Close Menu</button>
-          <button onclick="sendAction('reset_for_next_player')" class="danger">Reset For Next Player</button>
+          <button data-action="set_player_name" onclick="sendAction('set_player_name')">Update Player Name</button>
+          <button data-action="add_player" onclick="sendAction('add_player')">Add Player</button>
+          <button data-action="start_game" onclick="sendAction('start_game')">Start / Resume</button>
+          <button data-action="restart_round" onclick="sendAction('restart_round')" class="secondary">Restart Round</button>
+          <button data-action="pause" onclick="sendAction('pause')" class="secondary">Pause</button>
+          <button data-action="resume" onclick="sendAction('resume')" class="secondary">Resume</button>
+          <button data-action="show_leaderboard" onclick="sendAction('show_leaderboard')" class="secondary">Show Leaderboard</button>
+          <button data-action="open_menu" onclick="sendAction('open_menu')" class="secondary">Open Menu</button>
+          <button data-action="close_menu" onclick="sendAction('close_menu')" class="secondary">Close Menu</button>
+          <button data-action="reset_for_next_player" onclick="sendAction('reset_for_next_player')" class="danger">Reset For Next Player</button>
         </div>
         <div id="message" class="message"></div>
         </div>
@@ -1161,15 +1465,38 @@ class OperatorRemoteService:
             <div id="zonesFileValue" class="tiny">-</div>
           </div>
         </div>
+        </div>
+
+        <div class="diagnostics">
+        <h2 class="section-title">Session Stats</h2>
+        <div id="sessionStatsUnavailable" class="pill">Session stats unavailable.</div>
+        <div id="sessionStatsContent">
+          <div class="grid">
+            <div class="tile"><div class="label">Duration</div><div id="statsDurationValue" class="value" style="font-size:18px;">-</div></div>
+            <div class="tile"><div class="label">Score</div><div id="statsScoreValue" class="value" style="font-size:18px;">-</div></div>
+            <div class="tile"><div class="label">Score Per Minute</div><div id="statsScoreRateValue" class="value" style="font-size:18px;">-</div></div>
+            <div class="tile"><div class="label">Silver Ball Points</div><div id="statsSilverPointsValue" class="value" style="font-size:18px;">-</div></div>
+            <div class="tile"><div class="label">Gold Ball Points</div><div id="statsGoldPointsValue" class="value" style="font-size:18px;">-</div></div>
+          </div>
+          <div class="tile" style="margin-top:12px;">
+            <div class="label">Top Scoring Zones</div>
+            <div id="statsTopZonesValue" class="stats-list tiny">-</div>
+          </div>
+          <div class="actions" style="margin-top:12px;">
+            <button id="showHeatmapButton" data-action="show_heatmap" onclick="sendAction('show_heatmap')" class="secondary">Show Heatmap</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <script>
+    let latestStatus = null;
     let playerInputDirty = false;
     let playerSelectDirty = false;
     const playerNameInput = document.getElementById('playerNameInput');
     const addPlayerNameInput = document.getElementById('addPlayerNameInput');
     const playerSelect = document.getElementById('playerSelect');
+    const leaderboardModeSelect = document.getElementById('leaderboardModeSelect');
     playerNameInput.addEventListener('input', () => {{
       playerInputDirty = true;
     }});
@@ -1189,6 +1516,66 @@ class OperatorRemoteService:
       const banner = document.getElementById('connectionBanner');
       banner.className = 'connection-banner ' + state;
       banner.textContent = message;
+    }}
+
+    function setElementDisabled(id, disabled) {{
+      const element = document.getElementById(id);
+      if (element) {{
+        element.disabled = disabled;
+      }}
+    }}
+
+    function updateSessionStatsUI(data) {{
+      const stats = data.session_stats || {{}};
+      const unavailable = document.getElementById('sessionStatsUnavailable');
+      const content = document.getElementById('sessionStatsContent');
+      const topZones = document.getElementById('statsTopZonesValue');
+
+      if (!stats.available) {{
+        unavailable.style.display = 'inline-block';
+        unavailable.textContent = stats.message || 'Session stats unavailable.';
+        content.style.display = 'none';
+        return;
+      }}
+
+      unavailable.style.display = 'none';
+      content.style.display = 'block';
+      document.getElementById('statsDurationValue').textContent = stats.duration_display || '-';
+      document.getElementById('statsScoreValue').textContent = String(stats.total_score ?? 0);
+      document.getElementById('statsScoreRateValue').textContent = ((stats.score_rate_per_min ?? 0).toFixed(1)) + ' pts/min';
+      document.getElementById('statsSilverPointsValue').textContent = String((stats.points_by_ball_type || {{}}).silver ?? 0);
+      document.getElementById('statsGoldPointsValue').textContent = String((stats.points_by_ball_type || {{}}).gold ?? 0);
+
+      const zones = Array.isArray(stats.top_3_zones) ? stats.top_3_zones : [];
+      if (zones.length === 0) {{
+        topZones.innerHTML = '<div class="stats-row"><span class="name">No scores yet</span><span class="stat-value">-</span></div>';
+        return;
+      }}
+
+      topZones.innerHTML = zones.map((zone) =>
+        '<div class="stats-row">' +
+          '<span class="name">' + (zone.rank || '?') + '. ' + (zone.zone_label || 'Zone') + '</span>' +
+          '<span class="stat-value">' + (zone.points || 0) + ' pts</span>' +
+        '</div>'
+      ).join('');
+    }}
+
+    function applyActionStates(data) {{
+      const actionStates = data.action_states || {{}};
+      document.querySelectorAll('[data-action]').forEach((button) => {{
+        const actionName = button.dataset.action;
+        const actionState = actionStates[actionName];
+        let disabled = false;
+        let title = '';
+
+        if (actionState && actionState.enabled === false) {{
+          disabled = true;
+          title = actionState.disabled_reason || (actionState.label + ' is not available while the game is in ' + (data.state || 'this state') + '.');
+        }}
+
+        button.disabled = disabled;
+        button.title = title;
+      }});
     }}
 
     let deferredInstallPrompt = null;
@@ -1240,6 +1627,7 @@ class OperatorRemoteService:
         }}
 
         const data = await response.json();
+        latestStatus = data;
         document.getElementById('playerNameValue').textContent = data.player_name;
         document.getElementById('scoreValue').textContent = data.score;
         document.getElementById('stateValue').textContent = data.state;
@@ -1249,7 +1637,9 @@ class OperatorRemoteService:
         document.getElementById('remoteConnectedValue').textContent = yesNo(data.remote_connected);
         document.getElementById('sessionCountdownValue').textContent = 'Session expires in ' + (data.session_seconds_remaining || 0) + 's';
         document.getElementById('lastRemoteActionValue').textContent = data.remote_last_action || 'No remote action yet';
-        document.getElementById('lastRemoteActionAgeValue').textContent = data.remote_last_action ? ('Updated ' + data.remote_last_action_age + 's ago') : '';
+        document.getElementById('lastRemoteActionAgeValue').textContent = data.remote_last_action
+          ? ('Action #' + (data.remote_last_action_id || 0) + ' by ' + (data.remote_last_action_actor || 'operator') + ' • Updated ' + data.remote_last_action_age + 's ago')
+          : '';
         document.getElementById('resolutionValue').textContent = data.resolution + (data.resolution_key ? ' (' + data.resolution_key + ')' : '');
         document.getElementById('fpsValue').textContent = data.fps;
         document.getElementById('pendingScoresValue').textContent = data.pending_scores;
@@ -1260,6 +1650,7 @@ class OperatorRemoteService:
         document.getElementById('zonesFileValue').textContent = data.zones_file_path || '-';
         document.getElementById('modeSelect').value = data.mode_key || 'classic';
         document.getElementById('playfieldSelect').value = data.playfield_key || 'whiffle';
+        leaderboardModeSelect.value = data.leaderboard_mode_key || 'classic';
         const players = Array.isArray(data.players) ? data.players : [];
         if (!playerSelectDirty) {{
           playerSelect.innerHTML = '';
@@ -1301,6 +1692,8 @@ class OperatorRemoteService:
         if (!playerInputDirty) {{
           playerNameInput.value = data.player_name;
         }}
+        updateSessionStatsUI(data);
+        applyActionStates(data);
         setConnectionBanner('online', 'Connected to the Whiffle host.');
       }} catch (error) {{
         setConnectionBanner('reconnecting', 'Trying to reconnect to the Whiffle host...');
@@ -1308,10 +1701,17 @@ class OperatorRemoteService:
     }}
 
     async function sendAction(actionName) {{
+      const actionState = latestStatus ? (latestStatus.action_states || {{}})[actionName] : null;
+      const confirmMessage = actionState ? (actionState.confirm_message || '') : '';
+      if (confirmMessage && !window.confirm(confirmMessage)) {{
+        return;
+      }}
+
       const payload = {{
         player_name: playerNameInput.value,
         add_player_name: addPlayerNameInput.value,
         selected_player_index: parseInt(playerSelect.value, 10),
+        leaderboard_mode: leaderboardModeSelect.value,
         mode: document.getElementById('modeSelect').value,
         playfield: document.getElementById('playfieldSelect').value,
         track_index: parseInt(document.getElementById('musicTrackSelect').value, 10)
@@ -1334,7 +1734,8 @@ class OperatorRemoteService:
         }}
 
         const data = await response.json();
-        document.getElementById('message').textContent = data.message || 'Action sent.';
+        const actionPrefix = data.action_id ? ('Action #' + data.action_id + ': ') : '';
+        document.getElementById('message').textContent = actionPrefix + (data.message || 'Action sent.');
         if (data.ok) {{
           playerInputDirty = false;
           playerSelectDirty = false;
@@ -1396,11 +1797,20 @@ class OperatorRemoteService:
                     if not self._authenticated():
                         self._send_json({"ok": False, "message": "Authentication required."}, 401)
                         return
+                    session_id = self._cookies().get(SESSION_COOKIE_NAME)
                     status_payload = dict(
                         getattr(service.game_state, "remote_status_snapshot", {}) or {}
                     )
                     status_payload["session_seconds_remaining"] = service.get_session_seconds_remaining(
-                        self._cookies().get(SESSION_COOKIE_NAME)
+                        session_id
+                    )
+                    last_action_session_id = str(
+                        getattr(service.game_state, "remote_last_action_session_id", "") or ""
+                    )
+                    status_payload["remote_last_action_actor"] = (
+                        "You"
+                        if session_id and last_action_session_id == session_id
+                        else ("Another device" if last_action_session_id else "")
                     )
                     self._send_json(status_payload)
                     return
@@ -1493,6 +1903,9 @@ class OperatorRemoteService:
                     request_data = self._read_json()
                     action_name = str(request_data.get("action", "") or "").strip()
                     payload = request_data.get("payload", {})
+                    session_id = self._cookies().get(SESSION_COOKIE_NAME)
+
+                    action_id = service.next_action_id()
                     response_queue: "queue.Queue[Dict[str, Any]]" = queue.Queue(maxsize=1)
                     try:
                         service.game_state.remote_action_queue.put_nowait(
@@ -1500,6 +1913,8 @@ class OperatorRemoteService:
                                 "action": action_name,
                                 "payload": payload,
                                 "response_queue": response_queue,
+                                "action_id": action_id,
+                                "session_id": session_id,
                             }
                         )
                     except queue.Full:
@@ -1509,7 +1924,13 @@ class OperatorRemoteService:
                     try:
                         result = response_queue.get(timeout=ACTION_TIMEOUT_SECONDS)
                     except queue.Empty:
-                        result = {"ok": True, "message": "Action queued. The game will apply it shortly."}
+                        result = {
+                            "ok": True,
+                            "message": "Action queued. The game will apply it shortly.",
+                            "action_id": action_id,
+                        }
+                    else:
+                        result["action_id"] = action_id
                     self._send_json(result)
                     return
 
