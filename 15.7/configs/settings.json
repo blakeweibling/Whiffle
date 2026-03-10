@@ -15,5 +15,9 @@
     "replay_browser_sort": "newest",
     "operator_remote_enabled": true,
     "operator_remote_port": 8765,
-    "operator_remote_pin": "1234"
+    "operator_remote_pin": "1234",
+    "zone_alignment_enabled": false,
+    "zone_alignment_settings": {
+        "playfields": {}
+    }
 }

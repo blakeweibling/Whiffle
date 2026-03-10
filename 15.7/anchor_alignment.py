@@ -77,8 +77,6 @@ def ensure_zone_alignment_state(game_state: Any) -> None:
         if not hasattr(game_state, attr_name):
             setattr(game_state, attr_name, default_value)
 
-    update_alignment_reference_count(game_state)
-
 
 def get_current_playfield_key(game_state: Any) -> str:
     return str(getattr(game_state, "playfield_type", "whiffle") or "whiffle").strip().lower()
