@@ -441,6 +441,15 @@ def _record_remote_action(
     logger.info(f"Operator remote action '{action_name}': {message}")
 
 
+def _close_heatmap_directly(game_state: Any) -> Dict[str, Any]:
+    """Dismiss the heatmap without waiting on the main action queue."""
+    if not getattr(game_state, "show_heatmap", False):
+        return {"ok": True, "message": "Heatmap already closed."}
+
+    game_state.show_heatmap = False
+    return {"ok": True, "message": "Heatmap closed."}
+
+
 def update_remote_status_snapshot(game_state: Any) -> None:
     """Cache a thread-safe snapshot for the remote web UI to poll."""
     try:
@@ -465,6 +474,7 @@ def update_remote_status_snapshot(game_state: Any) -> None:
             remote_service.get_active_session_count() if remote_service is not None else 0
         )
         session_stats_snapshot = _build_live_session_stats_snapshot(game_state)
+        heatmap_visible = bool(getattr(game_state, "show_heatmap", False))
         current_width, current_height = (
             game_state.get_current_resolution_dimensions()
             if hasattr(game_state, "get_current_resolution_dimensions")
@@ -501,6 +511,7 @@ def update_remote_status_snapshot(game_state: Any) -> None:
             "show_scoring_zones": bool(getattr(game_state, "show_scoring_zones", False)),
             "background_music_on": bool(getattr(game_state, "background_music_on", True)),
             "game_sounds_on": bool(getattr(game_state, "game_sounds_on", True)),
+            "heatmap_visible": heatmap_visible,
             "selected_music_track_index": int(getattr(game_state, "selected_music_track_index", 0)),
             "music_track_count": len(getattr(GameConstants, "BACKGROUND_MUSIC_TRACKS", [])),
             "replay_recording": bool(getattr(game_state, "replay_recording", False)),
@@ -518,12 +529,14 @@ def update_remote_status_snapshot(game_state: Any) -> None:
             "session_stats": session_stats_snapshot,
         }
         heatmap_state = game_state.remote_status_snapshot["action_states"].get("show_heatmap")
-        if heatmap_state is not None and not bool(session_stats_snapshot.get("available")):
-            heatmap_state["enabled"] = False
-            heatmap_state["disabled_reason"] = str(
-                session_stats_snapshot.get("message")
-                or "Heatmap is not available for the current session."
-            )
+        if heatmap_state is not None:
+            heatmap_state["label"] = "Close Heatmap" if heatmap_visible else "Show Heatmap"
+            if not bool(session_stats_snapshot.get("available")) and not heatmap_visible:
+                heatmap_state["enabled"] = False
+                heatmap_state["disabled_reason"] = str(
+                    session_stats_snapshot.get("message")
+                    or "Heatmap is not available for the current session."
+                )
     except Exception as exc:
         logger.debug(f"Failed to update remote status snapshot: {exc}")
 
@@ -1575,6 +1588,9 @@ class OperatorRemoteService:
 
         button.disabled = disabled;
         button.title = title;
+        if (actionName === 'show_heatmap' && actionState && actionState.label) {{
+          button.textContent = actionState.label;
+        }}
       }});
     }}
 
@@ -1906,6 +1922,22 @@ class OperatorRemoteService:
                     session_id = self._cookies().get(SESSION_COOKIE_NAME)
 
                     action_id = service.next_action_id()
+                    if action_name == "show_heatmap" and bool(
+                        getattr(service.game_state, "show_heatmap", False)
+                    ):
+                        result = _close_heatmap_directly(service.game_state)
+                        _record_remote_action(
+                            service.game_state,
+                            action_name,
+                            result,
+                            action_id,
+                            str(session_id or ""),
+                        )
+                        update_remote_status_snapshot(service.game_state)
+                        result["action_id"] = action_id
+                        self._send_json(result)
+                        return
+
                     response_queue: "queue.Queue[Dict[str, Any]]" = queue.Queue(maxsize=1)
                     try:
                         service.game_state.remote_action_queue.put_nowait(

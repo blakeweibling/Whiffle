@@ -414,6 +414,12 @@ def display_heatmap_modal(
             game_state.show_heatmap = True
         if hasattr(game_state, "has_viewed_heatmap"):
             game_state.has_viewed_heatmap = True
+        try:
+            from operator_remote import update_remote_status_snapshot
+
+            update_remote_status_snapshot(game_state)
+        except Exception as exc:
+            logger.debug(f"Could not publish heatmap-open state to remote: {exc}")
 
         logger.info("Entering heatmap display loop...")
         while True:
@@ -495,6 +501,9 @@ def display_heatmap_modal(
                 cv2.imshow(UIConstants.WINDOW_NAME, blended_frame)
 
                 # Check for exit conditions
+                if not getattr(game_state, "show_heatmap", False):
+                    logger.info("Dismissing heatmap display from remote action")
+                    break
                 key = cv2.waitKey(30)
                 if key == 27 or key != -1 or dismiss_flag["clicked"]:
                     logger.info("Dismissing heatmap display")
@@ -517,6 +526,12 @@ def display_heatmap_modal(
             )
             if hasattr(game_state, "show_heatmap"):
                 game_state.show_heatmap = False
+            try:
+                from operator_remote import update_remote_status_snapshot
+
+                update_remote_status_snapshot(game_state)
+            except Exception as exc:
+                logger.debug(f"Could not publish heatmap-close state to remote: {exc}")
         except Exception as e:
             logger.exception(f"Error during heatmap cleanup: {e}")
 
