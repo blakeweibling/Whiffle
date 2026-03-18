@@ -169,7 +169,6 @@ def _get_mouse_event_handlers() -> MouseEventHandlers:
     # For states that just handle menu clicks
     for state in [
         CurrentGameState.MENU,
-        CurrentGameState.PAUSED,
         CurrentGameState.CONFIRM_QUIT,
     ]:
         handlers[state] = {cv2.EVENT_LBUTTONDOWN: menu_handler}
@@ -828,7 +827,6 @@ def _process_menu_or_modal_click(
     if current_state not in [
         CurrentGameState.MENU,
         CurrentGameState.CONFIRM_QUIT,
-        CurrentGameState.PAUSED,
     ]:
         return False
 
@@ -837,8 +835,8 @@ def _process_menu_or_modal_click(
         f"Menu click: processing at coordinates ({x}, {y}) in state {current_state}"
     )
 
-    # Check for stats panel heatmap button click (in MENU or PAUSED state)
-    if current_state in [CurrentGameState.MENU, CurrentGameState.PAUSED]:
+    # Check for stats panel heatmap button click when the menu is open.
+    if current_state == CurrentGameState.MENU:
         # Calculate stats panel dimensions and position - using the same calculations as _draw_stats_display in ui.py
         current_width, current_height = game_state.get_current_resolution_dimensions()
         menu_x, menu_y = getattr(game_state, "menu_pos", (0, 0))

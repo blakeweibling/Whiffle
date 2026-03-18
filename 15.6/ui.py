@@ -1125,8 +1125,6 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             UIConstants.BLACK,
             thickness=2,
         )
-        draw_scoring_zones(frame, game_state.scoring_zones, game_state.special_hole)
-        _draw_stats_display(frame, game_state)
     elif game_state.current_state == CurrentGameState.MENU:
         overlay = frame.copy()
         cv2.rectangle(overlay, (0, 0), (current_width, current_height), (0, 0, 0), -1)
