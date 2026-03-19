@@ -422,6 +422,8 @@ def display_heatmap_modal(
             logger.debug(f"Could not publish heatmap-open state to remote: {exc}")
 
         logger.info("Entering heatmap display loop...")
+        opened_at = time.time()
+        dismiss_input_guard_seconds = 0.2
         while True:
             try:
                 # Check if window is still valid
@@ -505,6 +507,13 @@ def display_heatmap_modal(
                     logger.info("Dismissing heatmap display from remote action")
                     break
                 key = cv2.waitKey(30)
+                elapsed_since_open = time.time() - opened_at
+                if elapsed_since_open < dismiss_input_guard_seconds:
+                    # Ignore the input that may have triggered the modal to open.
+                    if key != -1:
+                        key = -1
+                    if dismiss_flag["clicked"]:
+                        dismiss_flag["clicked"] = False
                 if key == 27 or key != -1 or dismiss_flag["clicked"]:
                     logger.info("Dismissing heatmap display")
                     break
