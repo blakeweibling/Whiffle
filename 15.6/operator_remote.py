@@ -450,6 +450,26 @@ def _close_heatmap_directly(game_state: Any) -> Dict[str, Any]:
     return {"ok": True, "message": "Heatmap closed."}
 
 
+def _set_remote_menu_return_state(game_state: Any, previous_state: Any) -> None:
+    """Remember which state a remote-opened menu should return to."""
+    if previous_state in (
+        CurrentGameState.PLAYING,
+        CurrentGameState.PAUSED,
+        CurrentGameState.GAME_OVER,
+    ):
+        game_state.remote_menu_return_state = previous_state
+    else:
+        game_state.remote_menu_return_state = None
+
+
+def _get_remote_menu_return_state(game_state: Any) -> Any:
+    return getattr(game_state, "remote_menu_return_state", None)
+
+
+def _clear_remote_menu_return_state(game_state: Any) -> None:
+    game_state.remote_menu_return_state = None
+
+
 def update_remote_status_snapshot(game_state: Any) -> None:
     """Cache a thread-safe snapshot for the remote web UI to poll."""
     try:
@@ -667,6 +687,7 @@ def _show_leaderboard(game_state: Any, current_state: Any) -> Dict[str, Any]:
     if current_state == CurrentGameState.MENU and getattr(game_state, "submenu_active", None) == "leaderboard":
         return {"ok": True, "message": "Leaderboard is already open."}
 
+    _set_remote_menu_return_state(game_state, current_state)
     game_state.current_state = CurrentGameState.MENU
     _reset_all_menu_editing_states(game_state)
     game_state.submenu_active = "leaderboard"
@@ -734,6 +755,7 @@ def _enter_waiting_for_player_state(game_state: Any) -> None:
     game_state.submenu_active = None
     game_state.menu_cache = None
     game_state.win_condition_met = False
+    _clear_remote_menu_return_state(game_state)
 
 
 def _restart_round(game_state: Any, current_state: Any) -> Dict[str, Any]:
@@ -767,6 +789,7 @@ def _restart_round(game_state: Any, current_state: Any) -> Dict[str, Any]:
     game_state.player_name_input_active = False
     game_state.submenu_active = None
     game_state.menu_cache = None
+    _clear_remote_menu_return_state(game_state)
     _reset_all_menu_editing_states(game_state)
     show_notification(game_state, "Round restarted", duration=1.5)
     return {"ok": True, "message": "Round restarted."}
@@ -800,6 +823,7 @@ def _change_game_mode(game_state: Any, new_mode: str) -> Dict[str, Any]:
 
     game_state.game_mode = normalized_mode
     game_state.menu_cache = None
+    _clear_remote_menu_return_state(game_state)
 
     if normalized_mode == "versus":
         try:
@@ -857,6 +881,7 @@ def _change_playfield(game_state: Any, new_layout: str) -> Dict[str, Any]:
         logger.debug(f"Could not refresh XP after playfield change: {exc}")
 
     reset_game(game_state)
+    _clear_remote_menu_return_state(game_state)
     if previous_state == CurrentGameState.GETTING_PLAYER_NAME:
         _enter_waiting_for_player_state(game_state)
 
@@ -948,6 +973,7 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
             _reset_all_menu_editing_states(game_state)
             game_state.submenu_active = None
             game_state.menu_cache = None
+            _clear_remote_menu_return_state(game_state)
             return {"ok": True, "message": "Menu closed. Back to game."}
 
         player_name_to_use = (
@@ -965,6 +991,7 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
         game_state.current_state = CurrentGameState.PLAYING
         game_state.player_name_input_active = False
         game_state.pending_remote_player_name = ""
+        _clear_remote_menu_return_state(game_state)
         show_notification(game_state, f"Starting game for {message}", duration=1.5)
         return {"ok": True, "message": f"Started game for {message}."}
 
@@ -988,6 +1015,7 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
             return {"ok": True, "message": "Menu is already open."}
         if current_state not in (CurrentGameState.PLAYING, CurrentGameState.GAME_OVER):
             return {"ok": False, "message": "Menu can only be opened from a live round or game over."}
+        _set_remote_menu_return_state(game_state, current_state)
         game_state.current_state = CurrentGameState.MENU
         game_state.submenu_active = None
         game_state.menu_cache = None
@@ -1001,14 +1029,27 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
     if action_name == "close_menu":
         if current_state != CurrentGameState.MENU:
             return {"ok": False, "message": "Menu is not currently open."}
-        game_state.current_state = CurrentGameState.PLAYING
+        return_state = _get_remote_menu_return_state(game_state)
+        if return_state not in (
+            CurrentGameState.PLAYING,
+            CurrentGameState.PAUSED,
+            CurrentGameState.GAME_OVER,
+        ):
+            return_state = CurrentGameState.PLAYING
+        game_state.current_state = return_state
         _reset_all_menu_editing_states(game_state)
         game_state.submenu_active = None
         game_state.menu_cache = None
-        return {"ok": True, "message": "Menu closed."}
+        _clear_remote_menu_return_state(game_state)
+        if return_state == CurrentGameState.GAME_OVER:
+            return {"ok": True, "message": "Menu closed. Returned to game over."}
+        if return_state == CurrentGameState.PAUSED:
+            return {"ok": True, "message": "Menu closed. Returned to paused game."}
+        return {"ok": True, "message": "Menu closed. Back to game."}
 
     if action_name == "reset_for_next_player":
         _enter_waiting_for_player_state(game_state)
+        _clear_remote_menu_return_state(game_state)
         show_notification(game_state, "Ready for next player", duration=1.5)
         return {"ok": True, "message": "Ready for next player. Enter a name, then tap Start Game."}
 
@@ -1751,7 +1792,8 @@ class OperatorRemoteService:
 
         const data = await response.json();
         const actionPrefix = data.action_id ? ('Action #' + data.action_id + ': ') : '';
-        document.getElementById('message').textContent = actionPrefix + (data.message || 'Action sent.');
+        const statusSuffix = data.pending ? ' Check Last Remote Action for the final result.' : '';
+        document.getElementById('message').textContent = actionPrefix + (data.message || 'Action sent.') + statusSuffix;
         if (data.ok) {{
           playerInputDirty = false;
           playerSelectDirty = false;
@@ -1957,13 +1999,15 @@ class OperatorRemoteService:
                         result = response_queue.get(timeout=ACTION_TIMEOUT_SECONDS)
                     except queue.Empty:
                         result = {
-                            "ok": True,
-                            "message": "Action queued. The game will apply it shortly.",
+                            "ok": False,
+                            "pending": True,
+                            "message": "Action accepted. Waiting for the game to finish applying it.",
                             "action_id": action_id,
                         }
                     else:
                         result["action_id"] = action_id
-                    self._send_json(result)
+                    status_code = 202 if result.get("pending") else 200
+                    self._send_json(result, status_code)
                     return
 
                 self._send_json({"ok": False, "message": "Not found."}, 404)

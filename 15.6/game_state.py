@@ -140,6 +140,7 @@ class GameState:
         self.operator_remote_url: str = ""
         self.remote_status_snapshot: Dict[str, Any] = {}
         self.remote_action_queue: "queue.Queue[Dict[str, Any]]" = queue.Queue(maxsize=32)
+        self.remote_menu_return_state: Optional[CurrentGameState] = None
         self.pending_remote_player_name: str = ""
         self.remote_last_action_text: str = ""
         self.remote_last_action_timestamp: float = 0.0
