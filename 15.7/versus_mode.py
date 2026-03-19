@@ -136,7 +136,7 @@ def _render_results_frame(game_state) -> np.ndarray:
         winner_color = UIConstants.YELLOW
     else:
         winner_text = f"WINNER: {game_state.versus_players[winners[0]].name}"
-        winner_color = UIConstants.GREEN
+        winner_color = UIConstants.ACCENT
 
     (ww, _wh), _ = cv2.getTextSize(winner_text, cv2.FONT_HERSHEY_SIMPLEX, 1.2, 2)
     cv2.putText(
@@ -150,7 +150,7 @@ def _render_results_frame(game_state) -> np.ndarray:
     for i in range(player_count):
         player = game_state.versus_players[i]
         score = scores[i]
-        color = UIConstants.GREEN if i in winners and not is_tie else UIConstants.WHITE
+        color = UIConstants.ACCENT if i in winners and not is_tie else UIConstants.WHITE
         if is_tie and i in winners:
             color = UIConstants.YELLOW
 
@@ -205,11 +205,11 @@ def _render_results_frame(game_state) -> np.ndarray:
     from menu_utils import _draw_button
 
     rematch_rect = (btn_start_x, btn_y, btn_w, btn_h)
-    _draw_button(frame, btn_start_x, btn_y, btn_w, btn_h, "Rematch (R)", UIConstants.CV2_BLUE, game_state=game_state)
+    _draw_button(frame, btn_start_x, btn_y, btn_w, btn_h, "Rematch (R)", UIConstants.PRIMARY, game_state=game_state)
 
     menu_btn_x = btn_start_x + btn_w + btn_spacing
     menu_rect = (menu_btn_x, btn_y, btn_w, btn_h)
-    _draw_button(frame, menu_btn_x, btn_y, btn_w, btn_h, "Menu (M)", UIConstants.CV2_BLUE, game_state=game_state)
+    _draw_button(frame, menu_btn_x, btn_y, btn_w, btn_h, "Menu (M)", UIConstants.PRIMARY, game_state=game_state)
 
     game_state.versus_results_buttons = {
         "rematch": rematch_rect,

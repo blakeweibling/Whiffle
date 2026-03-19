@@ -1,124 +1,100 @@
-import cv2
+import argparse
 import os
-import tkinter as tk
-from tkinter import filedialog, messagebox
-import threading
+from pathlib import Path
+
+import cv2
 
 
-class VideoFrameExtractorGUI:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Video Frame Extractor")
-        self.root.geometry("400x300")
+def extract_frames(video_path, output_dir, interval_seconds, start_seconds, end_seconds):
+    cap = cv2.VideoCapture(str(video_path))
+    if not cap.isOpened():
+        raise RuntimeError(f"Could not open video: {video_path}")
 
-        # Variables
-        self.video_path = tk.StringVar()
-        self.output_dir = tk.StringVar()
-        self.frame_interval = tk.IntVar(value=10)
-        self.is_processing = False
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    if fps and fps > 0:
+        interval_frames = max(1, int(round(fps * interval_seconds)))
+    else:
+        interval_frames = None
 
-        # GUI Elements
-        tk.Label(root, text="Video File:").pack(pady=5)
-        tk.Entry(root, textvariable=self.video_path, width=40).pack()
-        tk.Button(root, text="Browse", command=self.select_video).pack()
+    if start_seconds and start_seconds > 0:
+        cap.set(cv2.CAP_PROP_POS_MSEC, start_seconds * 1000)
 
-        tk.Label(root, text="Output Directory:").pack(pady=5)
-        tk.Entry(root, textvariable=self.output_dir, width=40).pack()
-        tk.Button(root, text="Browse", command=self.select_output_dir).pack()
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-        tk.Label(root, text="Frame Interval:").pack(pady=5)
-        tk.Entry(root, textvariable=self.frame_interval, width=10).pack()
+    saved = 0
+    frame_idx = 0
+    next_capture_ms = (start_seconds or 0) * 1000
 
-        self.status = tk.Label(root, text="Ready")
-        self.status.pack(pady=10)
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
 
-        self.extract_btn = tk.Button(
-            root, text="Extract Frames", command=self.start_extraction
-        )
-        self.extract_btn.pack(pady=10)
+        current_ms = cap.get(cv2.CAP_PROP_POS_MSEC)
+        current_s = current_ms / 1000.0 if current_ms else 0.0
 
-    def select_video(self):
-        path = filedialog.askopenfilename(
-            filetypes=[("Video files", "*.mp4 *.avi *.mov")]
-        )
-        if path:
-            self.video_path.set(path)
+        if end_seconds is not None and current_s > end_seconds:
+            break
 
-    def select_output_dir(self):
-        path = filedialog.askdirectory()
-        if path:
-            self.output_dir.set(path)
+        should_save = False
+        if interval_frames is not None:
+            if frame_idx % interval_frames == 0:
+                should_save = True
+        else:
+            if current_ms >= next_capture_ms:
+                should_save = True
 
-    def extract_frames(self):
-        video_path = self.video_path.get()
-        output_dir = self.output_dir.get()
-        frame_interval = self.frame_interval.get()
+        if should_save:
+            filename = f"frame_{saved:06d}_t{current_s:.2f}.jpg"
+            cv2.imwrite(str(output_dir / filename), frame)
+            saved += 1
+            if interval_frames is None:
+                next_capture_ms += interval_seconds * 1000
 
-        # Validation
-        if not video_path or not output_dir:
-            messagebox.showerror(
-                "Error", "Please select both video file and output directory"
-            )
-            self.update_status("Ready")
-            return
+        frame_idx += 1
 
-        if frame_interval <= 0:
-            messagebox.showerror("Error", "Frame interval must be positive")
-            self.update_status("Ready")
-            return
+    cap.release()
+    return saved
 
-        # Create output directory if it doesn't exist
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
 
-        # Open the video file
-        cap = cv2.VideoCapture(video_path)
-        if not cap.isOpened():
-            messagebox.showerror("Error", f"Could not open video file {video_path}")
-            self.update_status("Ready")
-            return
+def main():
+    parser = argparse.ArgumentParser(
+        description="Extract frames from a video at a fixed time interval."
+    )
+    parser.add_argument("video", help="Path to input video (mp4)")
+    parser.add_argument(
+        "output_dir",
+        help="Directory to save frames",
+    )
+    parser.add_argument(
+        "--interval-seconds",
+        type=float,
+        default=5.0,
+        help="Time between frames in seconds (default: 5)",
+    )
+    parser.add_argument(
+        "--start-seconds",
+        type=float,
+        default=0.0,
+        help="Start time in seconds (default: 0)",
+    )
+    parser.add_argument(
+        "--end-seconds",
+        type=float,
+        default=None,
+        help="End time in seconds (default: until video ends)",
+    )
+    args = parser.parse_args()
 
-        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        self.update_status(f"Extracting {total_frames} total frames...")
-
-        frame_count = 0
-        saved_count = 0
-
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            if frame_count % frame_interval == 0:
-                frame_filename = os.path.join(
-                    output_dir, f"frame_{saved_count:04d}.jpg"
-                )
-                cv2.imwrite(frame_filename, frame)
-                saved_count += 1
-                self.update_status(f"Saved {saved_count} frames...")
-
-            frame_count += 1
-            self.root.update()
-
-        cap.release()
-        self.update_status(f"Done! Extracted {saved_count} frames")
-        messagebox.showinfo(
-            "Success", f"Extracted {saved_count} frames to {output_dir}"
-        )
-        self.is_processing = False
-        self.extract_btn.config(state="normal")
-
-    def update_status(self, message):
-        self.status.config(text=message)
-
-    def start_extraction(self):
-        if not self.is_processing:
-            self.is_processing = True
-            self.extract_btn.config(state="disabled")
-            threading.Thread(target=self.extract_frames, daemon=True).start()
+    saved = extract_frames(
+        video_path=Path(args.video),
+        output_dir=Path(args.output_dir),
+        interval_seconds=args.interval_seconds,
+        start_seconds=args.start_seconds,
+        end_seconds=args.end_seconds,
+    )
+    print(f"Saved {saved} frames to {args.output_dir}")
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = VideoFrameExtractorGUI(root)
-    root.mainloop()
+    main()

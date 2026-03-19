@@ -291,7 +291,7 @@ class GameState:
         # Notifications
         self.notification_text: Optional[str] = None
         self.notification_timer: float = 0.0
-        self.notification_color: Tuple[int, int, int] = UIConstants.GREEN
+        self.notification_color: Tuple[int, int, int] = UIConstants.ACCENT
 
         # Fun Mode Effects
         self.active_trails: Dict[int, BallTrail] = {}

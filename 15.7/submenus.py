@@ -52,7 +52,7 @@ def _draw_game_mode_submenu(menu_frame: np.ndarray, game_state: GameState) -> No
     for mode in modes:
         label = mode.capitalize()
         color = (
-            UIConstants.GREEN if game_state.game_mode == mode else UIConstants.CV2_BLUE
+            UIConstants.ACCENT if game_state.game_mode == mode else UIConstants.PRIMARY
         )
         action_key = f"set_mode_{mode}"
 
@@ -85,7 +85,7 @@ def _draw_game_mode_submenu(menu_frame: np.ndarray, game_state: GameState) -> No
         menu_frame.shape[1] - 40,
         item_height,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         # <<< ADDED game_state parameter >>>
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
@@ -132,7 +132,7 @@ def _draw_layout_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
         )
         
         # Use green for currently selected layout, normal color for others
-        color = UIConstants.GREEN if is_current else UIConstants.CV2_BLUE
+        color = UIConstants.ACCENT if is_current else UIConstants.PRIMARY
         action_key = f"set_layout_{layout}"
 
         _draw_button(
@@ -163,7 +163,7 @@ def _draw_layout_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
         menu_frame.shape[1] - 40,
         item_height,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
     )
@@ -201,7 +201,7 @@ def _draw_zone_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
             menu_frame.shape[1] - 40,
             item_height,
             label,
-            UIConstants.CV2_BLUE,
+            UIConstants.PRIMARY,
             # <<< ADDED game_state parameter >>>
             game_state=game_state,
             font_scale=UIConstants.FONT_SCALE_MEDIUM,
@@ -273,7 +273,7 @@ def draw_submenu(menu_frame: np.ndarray, game_state: GameState) -> None:
                 menu_frame.shape[1] - 40,
                 35,
                 "Back",
-                UIConstants.CV2_BLUE,
+                UIConstants.PRIMARY,
                 # <<< ADDED game_state parameter >>>
                 game_state=game_state,
                 font_scale=UIConstants.FONT_SCALE_MEDIUM,

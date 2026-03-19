@@ -44,7 +44,7 @@ def _draw_button(
     # <<< ADDED click_color PARAMETER (Optional) >>>
     click_color: Tuple[int, int, int] = UIConstants.YELLOW,  # Color when clicked
     # <<< ADDED hover_color PARAMETER (Optional) >>>
-    hover_color: Tuple[int, int, int] = UIConstants.LIGHT_BLUE,  # Color when hovered
+    hover_color: Tuple[int, int, int] = UIConstants.PRIMARY_LIGHT,  # Color when hovered
 ) -> None:
     """
     Draws a button with centered text, specified color, and a drop shadow.
@@ -58,18 +58,18 @@ def _draw_button(
         colorblind_mode = getattr(game_state, "colorblind_mode", False)
         if colorblind_mode:
             # Replace standard colors with colorblind-friendly alternatives
-            if color == UIConstants.CV2_BLUE:
-                color = UIConstants.CB_BLUE
-            elif color == UIConstants.LIGHT_BLUE:
-                color = UIConstants.CB_LIGHT_BLUE
-            elif color == UIConstants.GREEN:
+            if color == UIConstants.PRIMARY:
+                color = UIConstants.CB_PRIMARY
+            elif color == UIConstants.PRIMARY_LIGHT:
+                color = UIConstants.CB_PRIMARY_LIGHT
+            elif color == UIConstants.ACCENT:
                 color = UIConstants.CB_SELECT
             elif color == UIConstants.RED:
                 color = UIConstants.CB_HIGHLIGHT
 
             # Also replace highlight colors
-            if hover_color == UIConstants.LIGHT_BLUE:
-                hover_color = UIConstants.CB_LIGHT_BLUE
+            if hover_color == UIConstants.PRIMARY_LIGHT:
+                hover_color = UIConstants.CB_PRIMARY_LIGHT
             if click_color == UIConstants.YELLOW:
                 click_color = UIConstants.CB_HIGHLIGHT
 

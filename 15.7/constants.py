@@ -63,40 +63,40 @@ class UIConstants:
     """Constants for user interface and display settings."""
 
     # Colors in BGR format for OpenCV (Blue, Green, Red)
-    GREEN: Tuple[int, int, int] = (0, 165, 255) # BGR format (Blue=0, Green=165, Red=255) (orange)
+    ACCENT: Tuple[int, int, int] = (0, 165, 255)  # Orange accent color (BGR)
+    GREEN = ACCENT  # Legacy alias
     RED: Tuple[int, int, int] = (0, 0, 255)
     YELLOW: Tuple[int, int, int] = (0, 255, 255)
     WHITE: Tuple[int, int, int] = (255, 255, 255)
-    CV2_BLUE: Tuple[int, int, int] = (28, 45, 82) # Brown in BGR format
-    LIGHT_BLUE: Tuple[int, int, int] = (43, 68, 124)  # Light brown in BGR format
+    PRIMARY: Tuple[int, int, int] = (28, 45, 82)  # Dark brown / mahogany (BGR)
+    CV2_BLUE = PRIMARY  # Legacy alias
+    PRIMARY_LIGHT: Tuple[int, int, int] = (43, 68, 124)  # Medium brown (BGR)
+    LIGHT_BLUE = PRIMARY_LIGHT  # Legacy alias
     CV2_ORANGE: Tuple[int, int, int] = (
         0,
         165,
         255,
-    )  # BGR format (Blue=0, Green=165, Red=255)
+    )  # Orange, same as ACCENT (BGR)
     BLACK: Tuple[int, int, int] = (0, 0, 0)
     GREY_BG: Tuple[int, int, int] = (100, 100, 100)
-    SLIDER_BG: Tuple[int, int, int] = (50, 50, 50)  # Color for slider background
-    SLIDER_HANDLE: Tuple[int, int, int] = (200, 200, 200)  # Color for slider handle
+    SLIDER_BG: Tuple[int, int, int] = (50, 50, 50)
+    SLIDER_HANDLE: Tuple[int, int, int] = (200, 200, 200)
 
-    # Colorblind-friendly colors (BGR format)
-    # These are selected to work well for most types of color blindness
-    CB_BLUE: Tuple[int, int, int] = (
-        28,
-        45,
-        82,
-    )  # Dark orange in BGR (appears as distinctive blue to colorblind users)
-    CB_LIGHT_BLUE: Tuple[int, int, int] = (43, 68, 124)  # Lighter orange in BGR
+    # Colorblind-friendly palette (BGR format)
+    CB_PRIMARY: Tuple[int, int, int] = (28, 45, 82)  # Dark brown (BGR)
+    CB_BLUE = CB_PRIMARY  # Legacy alias
+    CB_PRIMARY_LIGHT: Tuple[int, int, int] = (43, 68, 124)  # Medium brown (BGR)
+    CB_LIGHT_BLUE = CB_PRIMARY_LIGHT  # Legacy alias
     CB_HIGHLIGHT: Tuple[int, int, int] = (
         0,
         193,
         222,
-    )  # Yellow-orange in BGR (appears distinct from blues)
+    )  # Yellow-orange accent (BGR)
     CB_SELECT: Tuple[int, int, int] = (
         69,
         182,
         255,
-    )  # Bright blue-ish color that works well for selections
+    )  # Warm amber for selections (BGR)
 
     # Default colorblind mode state
     DEFAULT_COLORBLIND_MODE: bool = False

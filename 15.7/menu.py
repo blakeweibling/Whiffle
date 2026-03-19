@@ -38,7 +38,7 @@ def draw_menu(frame: np.ndarray, game_state: GameState) -> None:
             UIConstants.MENU_BUTTON_WIDTH,
             UIConstants.MENU_BUTTON_HEIGHT,
             "Menu",
-            UIConstants.CV2_BLUE,
+            UIConstants.PRIMARY,
             game_state=game_state,
         )
 
@@ -72,7 +72,7 @@ def _draw_menu_content(menu_frame: np.ndarray, game_state: GameState) -> None:
                 item_rect[2],
                 item_rect[3],
                 label,
-                UIConstants.CV2_BLUE,
+                UIConstants.PRIMARY,
                 game_state=game_state,
                 font_scale=UIConstants.FONT_SCALE_MEDIUM,
             )

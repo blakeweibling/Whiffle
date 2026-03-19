@@ -88,7 +88,7 @@ def show_notification(
     """Display a notification message by updating game_state attributes."""
     game_state.notification_text = text
     game_state.notification_timer = duration
-    game_state.notification_color = UIConstants.RED if is_error else UIConstants.GREEN
+    game_state.notification_color = UIConstants.RED if is_error else UIConstants.ACCENT
     log_level = logging.WARNING if is_error else logging.DEBUG
     logger.log(log_level, f"Notify: {text}")
 

@@ -92,7 +92,7 @@ def _draw_existing_zones(
     for zone in scoring_zones:
         x, y, w, h, points = zone
         # Use blue for the special hole, green for others
-        color = UIConstants.CV2_BLUE if zone == special_hole else UIConstants.GREEN
+        color = UIConstants.PRIMARY if zone == special_hole else UIConstants.ACCENT
         cv2.rectangle(overlay, (x, y), (x + w, y + h), color, FONT_THICKNESS)
         text_x, text_y = _get_text_position(
             x, y, w, h, overlay.shape[1], overlay.shape[0]
@@ -270,7 +270,7 @@ def draw_scoring_zones(
     for zone in scoring_zones:
         x, y, w, h, points = zone
         # Use blue for the special hole, green for others
-        color = UIConstants.CV2_BLUE if zone == special_hole else UIConstants.GREEN
+        color = UIConstants.PRIMARY if zone == special_hole else UIConstants.ACCENT
         cv2.rectangle(frame, (x, y), (x + w, y + h), color, FONT_THICKNESS)
         text_x, text_y = _get_text_position(x, y, w, h, frame.shape[1], frame.shape[0])
         # Add "Special Hole" label if this is the special hole

@@ -233,7 +233,7 @@ def _draw_status_badges(frame: np.ndarray, game_state: "GameState") -> None:
             recording_seconds = max(0, int(time.time() - getattr(current_replay, "creation_time", time.time())))
         badge_entries.append((f"REC {recording_seconds}s", UIConstants.WHITE, UIConstants.RED))
     elif getattr(game_state, "auto_record_replays", False):
-        badge_entries.append(("Auto-Rec On", UIConstants.WHITE, UIConstants.CV2_BLUE))
+        badge_entries.append(("Auto-Rec On", UIConstants.WHITE, UIConstants.PRIMARY))
 
     if not getattr(game_state, "camera_available", True):
         badge_entries.append(("Static Mode", UIConstants.BLACK, UIConstants.YELLOW))
@@ -249,13 +249,13 @@ def _draw_status_badges(frame: np.ndarray, game_state: "GameState") -> None:
         remote_label = (
             "Remote Connected" if active_remote_sessions == 1 else f"{active_remote_sessions} Remote Sessions"
         )
-        badge_entries.append((remote_label, UIConstants.WHITE, UIConstants.LIGHT_BLUE))
+        badge_entries.append((remote_label, UIConstants.WHITE, UIConstants.PRIMARY_LIGHT))
 
     last_remote_action = str(snapshot.get("remote_last_action", "") or "").strip()
     last_remote_action_age = int(snapshot.get("remote_last_action_age", 9999) or 9999)
     if last_remote_action and last_remote_action_age <= 8:
         action_text = last_remote_action[:28]
-        badge_entries.append((action_text, UIConstants.WHITE, UIConstants.CV2_BLUE))
+        badge_entries.append((action_text, UIConstants.WHITE, UIConstants.PRIMARY))
 
     start_x = current_width - 210
     start_y = 92
@@ -568,7 +568,7 @@ def _draw_stats_display(frame: np.ndarray, game_state: "GameState") -> None:
             w=heatmap_button_width,
             h=button_height,
             text="Show Heatmap",
-            color=UIConstants.CV2_BLUE,
+            color=UIConstants.PRIMARY,
             game_state=game_state,
             font_scale=UIConstants.FONT_SCALE_MEDIUM,
         )
@@ -1237,7 +1237,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             button_width,
             button_height,
             "Yes (Y)",
-            UIConstants.CV2_BLUE,
+            UIConstants.PRIMARY,
             game_state=game_state,
             font_scale=UIConstants.FONT_SCALE_MEDIUM,
         )
@@ -1249,7 +1249,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
             button_width,
             button_height,
             "No (N)",
-            UIConstants.CV2_BLUE,
+            UIConstants.PRIMARY,
             game_state=game_state,
             font_scale=UIConstants.FONT_SCALE_MEDIUM,
         )
@@ -1334,7 +1334,7 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
                 ach_text,
                 (nx_ach, final_ny_ach),
                 UIConstants.FONT_SCALE_LARGE,
-                UIConstants.GREEN,
+                UIConstants.ACCENT,
                 UIConstants.BLACK,
                 thickness=UIConstants.FONT_THICKNESS,
                 alpha=0.7,

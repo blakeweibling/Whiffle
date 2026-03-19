@@ -115,7 +115,7 @@ def _draw_game_over_screen(frame: np.ndarray, game_state: "GameState") -> None:
     # Always draw title and final score on top of whatever background is shown
     win_condition = getattr(game_state, "win_condition_met", False)
     title_text = "You Win!" if win_condition else "Game Over!"
-    title_color = UIConstants.GREEN if win_condition else UIConstants.RED
+    title_color = UIConstants.ACCENT if win_condition else UIConstants.RED
     title_font_scale = UIConstants.FONT_SCALE_XLARGE
     title_thickness = UIConstants.FONT_THICKNESS + 1
     (tw, th), _ = cv2.getTextSize(
@@ -204,7 +204,7 @@ def _draw_game_over_screen(frame: np.ndarray, game_state: "GameState") -> None:
         button_width,
         button_height,
         "Play Again (N)",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
 
@@ -218,7 +218,7 @@ def _draw_game_over_screen(frame: np.ndarray, game_state: "GameState") -> None:
         button_width,
         button_height,
         "Main Menu (M)",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
 
@@ -232,7 +232,7 @@ def _draw_game_over_screen(frame: np.ndarray, game_state: "GameState") -> None:
         button_width,
         button_height,
         "Show Heatmap (H)",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
 
@@ -1004,7 +1004,7 @@ def _draw_playfield_selection(frame: np.ndarray, game_state: "GameState") -> Non
             game_state.playfield_option_rects[playfield_key] = card_rect
             is_selected = selected_playfield == playfield_key
             fill_color = (92, 68, 48) if is_selected else (58, 58, 58)
-            border_color = UIConstants.GREEN if is_selected else UIConstants.WHITE
+            border_color = UIConstants.ACCENT if is_selected else UIConstants.WHITE
             cv2.rectangle(
                 frame,
                 (card_x, cards_y),

@@ -3107,22 +3107,35 @@ def _process_menu_or_modal_click(
                                                 None  # Force UI update
                                             )
 
-                                        show_notification(
-                                            game_state,
-                                            f"Generating {export_format} file...",
-                                            duration=2.0,
-                                        )
-
-                                        # Generate the video based on selected format
-                                        video_path = (
-                                            game_state.replay_manager.generate_video(
-                                                replay_id, format=export_format
+                                            show_notification(
+                                                game_state,
+                                                f"Generating {export_format} file...",
+                                                duration=2.0,
                                             )
-                                        )
 
-                                        # Update status
-                                        if hasattr(game_state, "replay_sharing"):
-                                            if video_path:
+                                            video_path = (
+                                                game_state.replay_manager.generate_video(
+                                                    replay_id, format=export_format
+                                                )
+                                            )
+
+                                            if not video_path:
+                                                if hasattr(game_state, "replay_sharing"):
+                                                    game_state.replay_sharing[
+                                                        "export_status"
+                                                    ] = f"Error generating {export_format} file"
+                                                    game_state.replay_sharing[
+                                                        "export_progress"
+                                                    ] = 0.0
+                                                    game_state.menu_cache = None
+                                                show_notification(
+                                                    game_state,
+                                                    f"Error generating {export_format} file",
+                                                    is_error=True,
+                                                )
+                                                return True
+
+                                            if hasattr(game_state, "replay_sharing"):
                                                 game_state.replay_sharing[
                                                     "last_export_path"
                                                 ] = video_path
@@ -3130,29 +3143,13 @@ def _process_menu_or_modal_click(
                                                     "export_progress"
                                                 ] = 0.5
                                                 game_state.menu_cache = None
-                                            else:  # This else corresponds to the 'if video_path:' above it
-                                                game_state.replay_sharing[
-                                                    "export_status"
-                                                ] = f"Error generating {export_format} file"
-                                                game_state.replay_sharing[
-                                                    "export_progress"
-                                                ] = 0.0
-                                                game_state.menu_cache = None
 
-                                                show_notification(
-                                                    game_state,
-                                                    f"Error generating {export_format} file",
-                                                    is_error=True,
-                                                )
-                                                return True
-                                        # Add the missing except block for the YouTube try block
                                     except Exception as e:
                                         logger.error(
                                             f"Error preparing video for YouTube: {e}"
                                         )
                                         logger.error(traceback.format_exc())
 
-                                        # Update UI status
                                         if hasattr(game_state, "replay_sharing"):
                                             game_state.replay_sharing[
                                                 "export_status"
@@ -3167,11 +3164,8 @@ def _process_menu_or_modal_click(
                                             "Error preparing video for YouTube",
                                             is_error=True,
                                         )
-                                        # It's often good practice to return True here as the click action was handled, even if it resulted in an error.
-                                        # Depending on the desired flow, you might want to change this.
                                         return True
 
-                                        # Add the actual YouTube upload logic here, inside the try block if video_path is valid
                                     if video_path:
                                         try:
                                             # Set status in UI
@@ -3856,17 +3850,166 @@ def _process_menu_or_modal_click(
 
                                         # Now use the appropriate sharing method for the platform
                                         if platform == "Discord":
-                                            # Handle Discord sharing
-                                            # Similar to share_to_Discord code but for highlights
-                                            pass
+                                            webhook_url = getattr(
+                                                game_state, "discord_webhook_url", None
+                                            )
+                                            if not webhook_url:
+                                                logger.error("Discord webhook URL not configured.")
+                                                show_notification(
+                                                    game_state,
+                                                    "Discord webhook URL not set!",
+                                                    is_error=True,
+                                                )
+                                                if hasattr(game_state, "replay_sharing"):
+                                                    game_state.replay_sharing["export_status"] = "Discord URL missing"
+                                                    game_state.replay_sharing["export_progress"] = 0.0
+                                            else:
+                                                try:
+                                                    export_fmt = game_state.replay_sharing.get("selected_format", "MP4") if hasattr(game_state, "replay_sharing") else "MP4"
+                                                    payload = {
+                                                        "content": f"Check out this Whiffleball highlight! ({export_fmt})"
+                                                    }
+                                                    with open(video_path, "rb") as f:
+                                                        files = {
+                                                            "file": (
+                                                                os.path.basename(video_path),
+                                                                f,
+                                                                f"image/{export_fmt.lower()}" if export_fmt == "GIF" else f"video/{export_fmt.lower()}",
+                                                            )
+                                                        }
+                                                        response = requests.post(
+                                                            webhook_url,
+                                                            data=payload,
+                                                            files=files,
+                                                        )
+                                                    if 200 <= response.status_code < 300:
+                                                        logger.info("Successfully posted highlight to Discord.")
+                                                        if hasattr(game_state, "replay_sharing"):
+                                                            game_state.replay_sharing["export_status"] = "Shared to Discord!"
+                                                            game_state.replay_sharing["export_progress"] = 1.0
+                                                        game_state.has_shared_replay = True
+                                                        show_notification(
+                                                            game_state,
+                                                            "Highlight shared to Discord!",
+                                                            duration=3.0,
+                                                        )
+                                                    else:
+                                                        logger.error(f"Discord webhook failed: {response.status_code}")
+                                                        if hasattr(game_state, "replay_sharing"):
+                                                            game_state.replay_sharing["export_status"] = f"Discord Error: {response.status_code}"
+                                                            game_state.replay_sharing["export_progress"] = 0.0
+                                                        show_notification(
+                                                            game_state,
+                                                            f"Discord share failed ({response.status_code})",
+                                                            is_error=True,
+                                                        )
+                                                except requests.exceptions.RequestException as req_err:
+                                                    logger.error(f"Discord request error: {req_err}")
+                                                    if hasattr(game_state, "replay_sharing"):
+                                                        game_state.replay_sharing["export_status"] = "Network Error"
+                                                        game_state.replay_sharing["export_progress"] = 0.0
+                                                    show_notification(game_state, "Error connecting to Discord", is_error=True)
+                                                except FileNotFoundError:
+                                                    logger.error(f"Highlight file not found: {video_path}")
+                                                    if hasattr(game_state, "replay_sharing"):
+                                                        game_state.replay_sharing["export_status"] = "File Not Found"
+                                                        game_state.replay_sharing["export_progress"] = 0.0
+                                                    show_notification(game_state, "Error: Highlight file not found", is_error=True)
+                                                except Exception as inner_e:
+                                                    logger.error(f"Unexpected error during Discord highlight upload: {inner_e}")
+                                                    if hasattr(game_state, "replay_sharing"):
+                                                        game_state.replay_sharing["export_status"] = "Upload Error"
+                                                        game_state.replay_sharing["export_progress"] = 0.0
+                                                    show_notification(game_state, "Error uploading highlight to Discord", is_error=True)
+                                                finally:
+                                                    game_state.menu_cache = None
+
                                         elif platform == "Share Link":
-                                            # Handle Google Drive sharing
-                                            # Similar to share_to_Share_Link code but for highlights
-                                            pass
+                                            try:
+                                                from google_drive_utils import upload_video_to_drive
+
+                                                replay = game_state.replay_manager.load_replay(replay_id)
+                                                player_name = replay.player_name if replay and hasattr(replay, "player_name") else "Player"
+                                                score = replay.frames[-1].score if replay and hasattr(replay, "frames") and replay.frames else 0
+                                                game_mode = replay.game_mode if replay and hasattr(replay, "game_mode") else "classic"
+                                                title = f"Whiffle Highlight ({player_name} - {game_mode.capitalize()} - Score {score})"
+
+                                                if hasattr(game_state, "replay_sharing"):
+                                                    game_state.replay_sharing["export_status"] = "Uploading to Google Drive..."
+                                                    game_state.replay_sharing["export_progress"] = 0.7
+                                                    game_state.menu_cache = None
+
+                                                success, result_message = upload_video_to_drive(video_path, title=title)
+
+                                                if success:
+                                                    shareable_link = result_message
+                                                    logger.info(f"Highlight uploaded to Google Drive: {shareable_link}")
+                                                    if hasattr(game_state, "replay_sharing"):
+                                                        game_state.replay_sharing["export_status"] = f"Share Link Ready: {shareable_link}"
+                                                        game_state.replay_sharing["export_progress"] = 1.0
+                                                    game_state.has_shared_replay = True
+                                                    show_notification(
+                                                        game_state,
+                                                        "Highlight link created!",
+                                                        duration=5.0,
+                                                    )
+                                                else:
+                                                    raise Exception(f"Google Drive upload failed: {result_message}")
+                                            except Exception as upload_err:
+                                                logger.error(f"Google Drive highlight upload failed: {upload_err}")
+                                                logger.error(traceback.format_exc())
+                                                if hasattr(game_state, "replay_sharing"):
+                                                    game_state.replay_sharing["export_status"] = f"Upload Error: {str(upload_err)[:50]}..."
+                                                    game_state.replay_sharing["export_progress"] = 0.0
+                                                show_notification(game_state, "Error uploading highlight to Google Drive", is_error=True)
+                                            finally:
+                                                game_state.menu_cache = None
+
                                         elif platform == "YouTube":
-                                            # Handle YouTube sharing
-                                            # Similar to share_to_YouTube code but for highlights
-                                            pass
+                                            try:
+                                                replay = game_state.replay_manager.load_replay(replay_id)
+                                                player_name = replay.player_name if replay and hasattr(replay, "player_name") else "Player"
+                                                score = replay.frames[-1].score if replay and hasattr(replay, "frames") and replay.frames else 0
+                                                game_mode = replay.game_mode if replay and hasattr(replay, "game_mode") else "classic"
+
+                                                if hasattr(game_state, "replay_sharing"):
+                                                    game_state.replay_sharing["export_status"] = "Uploading highlight to YouTube..."
+                                                    game_state.replay_sharing["export_progress"] = 0.7
+                                                    game_state.menu_cache = None
+
+                                                show_notification(game_state, "Uploading highlight to YouTube...", duration=3.0)
+
+                                                success, result_message = youtube_utils.upload_video_to_youtube(
+                                                    video_path,
+                                                    player_name=player_name,
+                                                    score=score,
+                                                    game_mode=game_mode,
+                                                )
+
+                                                if success:
+                                                    game_state.has_shared_replay = True
+                                                    video_url = result_message
+                                                    if hasattr(game_state, "replay_sharing"):
+                                                        game_state.replay_sharing["export_status"] = f"YouTube: {video_url}"
+                                                        game_state.replay_sharing["export_progress"] = 1.0
+                                                    show_notification(game_state, "Highlight uploaded to YouTube!", duration=5.0)
+                                                    logger.info(f"Highlight uploaded to YouTube: {video_url}")
+                                                else:
+                                                    if hasattr(game_state, "replay_sharing"):
+                                                        game_state.replay_sharing["export_status"] = "YouTube upload failed"
+                                                        game_state.replay_sharing["export_progress"] = 0.0
+                                                    show_notification(game_state, "Failed to upload highlight to YouTube", is_error=True)
+                                                    logger.error("YouTube highlight upload failed.")
+                                            except Exception as yt_err:
+                                                logger.error(f"Error uploading highlight to YouTube: {yt_err}")
+                                                logger.error(traceback.format_exc())
+                                                if hasattr(game_state, "replay_sharing"):
+                                                    game_state.replay_sharing["export_status"] = f"YouTube Error: {str(yt_err)[:50]}..."
+                                                    game_state.replay_sharing["export_progress"] = 0.0
+                                                show_notification(game_state, "Error uploading highlight to YouTube", is_error=True)
+                                            finally:
+                                                game_state.menu_cache = None
+
                                         else:
                                             # Local sharing
                                             show_notification(

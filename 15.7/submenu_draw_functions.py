@@ -116,7 +116,7 @@ def _draw_volume_slider(
     mute_button_x = current_x
     mute_button_y = y_pos
     mute_text = "Mute" if is_on else "Unmute"
-    mute_color = UIConstants.RED if is_on else UIConstants.GREEN
+    mute_color = UIConstants.RED if is_on else UIConstants.ACCENT
     _draw_button(
         menu_frame,
         mute_button_x,
@@ -196,7 +196,7 @@ def _draw_settings_submenu(menu_frame: np.ndarray, game_state: "GameState") -> N
         button_width,
         item_height,
         track_display_text,
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_SMALL,
     )
@@ -224,7 +224,7 @@ def _draw_settings_submenu(menu_frame: np.ndarray, game_state: "GameState") -> N
         state = get_state()
         label_text = f"{label}:"
         state_text = "ON" if state else "OFF"
-        state_color = UIConstants.GREEN if state else UIConstants.RED
+        state_color = UIConstants.ACCENT if state else UIConstants.RED
         cv2.putText(
             menu_frame,
             label_text,
@@ -265,7 +265,7 @@ def _draw_settings_submenu(menu_frame: np.ndarray, game_state: "GameState") -> N
         state = get_state()
         label_text = f"{label}:"
         state_text = "ON" if state else "OFF"
-        state_color = UIConstants.GREEN if state else UIConstants.RED
+        state_color = UIConstants.ACCENT if state else UIConstants.RED
         cv2.putText(
             menu_frame,
             label_text,
@@ -301,7 +301,7 @@ def _draw_settings_submenu(menu_frame: np.ndarray, game_state: "GameState") -> N
         menu_frame.shape[1] - 40,
         back_button_height,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
     )
@@ -346,7 +346,7 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
             limit=10, mode=getattr(game_state, "leaderboard_mode", "classic")
         )
     status_text = "Online" if is_online else "Local (Offline)"
-    status_color = UIConstants.GREEN if is_online else UIConstants.YELLOW
+    status_color = UIConstants.ACCENT if is_online else UIConstants.YELLOW
     cv2.putText(
         menu_frame,
         status_text,
@@ -441,9 +441,9 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
 
     # First row buttons
     classic_color = (
-        UIConstants.GREEN
+        UIConstants.ACCENT
         if getattr(game_state, "leaderboard_mode", "classic") == "classic"
-        else UIConstants.CV2_BLUE
+        else UIConstants.PRIMARY
     )
     _draw_button(
         menu_frame,
@@ -465,9 +465,9 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
     )
 
     timed_color = (
-        UIConstants.GREEN
+        UIConstants.ACCENT
         if getattr(game_state, "leaderboard_mode", "classic") == "timed"
-        else UIConstants.CV2_BLUE
+        else UIConstants.PRIMARY
     )
     _draw_button(
         menu_frame,
@@ -489,9 +489,9 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
     )
 
     survival_color = (
-        UIConstants.GREEN
+        UIConstants.ACCENT
         if getattr(game_state, "leaderboard_mode", "classic") == "survival"
-        else UIConstants.CV2_BLUE
+        else UIConstants.PRIMARY
     )
     _draw_button(
         menu_frame,
@@ -514,9 +514,9 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
 
     # Second row buttons
     fun_color = (
-        UIConstants.GREEN
+        UIConstants.ACCENT
         if getattr(game_state, "leaderboard_mode", "classic") == "fun"
-        else UIConstants.CV2_BLUE
+        else UIConstants.PRIMARY
     )
     _draw_button(
         menu_frame,
@@ -538,9 +538,9 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
     )
 
     practice_color = (
-        UIConstants.GREEN
+        UIConstants.ACCENT
         if getattr(game_state, "leaderboard_mode", "classic") == "practice"
-        else UIConstants.CV2_BLUE
+        else UIConstants.PRIMARY
     )
     _draw_button(
         menu_frame,
@@ -562,9 +562,9 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
     )
 
     retro_color = (
-        UIConstants.GREEN
+        UIConstants.ACCENT
         if getattr(game_state, "leaderboard_mode", "classic") == "retro"
-        else UIConstants.CV2_BLUE
+        else UIConstants.PRIMARY
     )
     _draw_button(
         menu_frame,
@@ -595,7 +595,7 @@ def _draw_leaderboard_submenu(menu_frame: np.ndarray, game_state: "GameState") -
         menu_frame.shape[1] - 40,
         back_button_height,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
     )
@@ -660,7 +660,7 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
             and game_state.editing_player_mode == "edit_name"
         ):
             display_name = f"Edit: [{game_state.editing_player_name_input or ''}_]"
-            name_color = UIConstants.GREEN
+            name_color = UIConstants.ACCENT
         max_name_len = name_width // 8
         cv2.putText(
             menu_frame,
@@ -675,10 +675,10 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
         edit_x = 20 + name_width + button_spacing
         edit_rect = (edit_x, y_offset, button_width, item_height)
         edit_color = (
-            UIConstants.GREEN
+            UIConstants.ACCENT
             if game_state.editing_player_index == i
             and game_state.editing_player_mode == "edit_name"
-            else UIConstants.CV2_BLUE
+            else UIConstants.PRIMARY
         )
         _draw_button(
             menu_frame,
@@ -698,7 +698,7 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
         select_x = edit_x + button_width + button_spacing
         select_rect = (select_x, y_offset, button_width, item_height)
         is_current = i == game_state.current_player_index
-        select_color = UIConstants.GREEN if is_current else UIConstants.CV2_BLUE
+        select_color = UIConstants.ACCENT if is_current else UIConstants.PRIMARY
         select_text = "Current" if is_current else "Select"
         if (
             game_state.editing_player_index == i
@@ -736,7 +736,7 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
 
     add_y = y_offset + 5
     add_color = (
-        UIConstants.CV2_BLUE if len(game_state.players) < 4 else UIConstants.GREY_BG
+        UIConstants.PRIMARY if len(game_state.players) < 4 else UIConstants.GREY_BG
     )
     _draw_button(
         menu_frame,
@@ -767,7 +767,7 @@ def _draw_players_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
         menu_frame.shape[1] - 40,
         item_height,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
     )
@@ -840,7 +840,7 @@ def _draw_achievements_submenu(menu_frame: np.ndarray, game_state: "GameState") 
             if achievement.unlocked and getattr(achievement, "unlocked_layout", None):
                 layout_suffix = " (Five Star)" if achievement.unlocked_layout == "fivestar" else " (Whiffle)"
             text = f"- {achievement.name}{layout_suffix}: {achievement.description}"
-            color = UIConstants.GREEN if achievement.unlocked else UIConstants.WHITE
+            color = UIConstants.ACCENT if achievement.unlocked else UIConstants.WHITE
             max_len = 55
             if len(text) > max_len:
                 break_point = text.rfind(" ", 0, max_len)
@@ -924,7 +924,7 @@ def _draw_achievements_submenu(menu_frame: np.ndarray, game_state: "GameState") 
         menu_w - 40,
         back_button_height,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
     )
@@ -992,7 +992,7 @@ def _draw_help_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
         menu_frame.shape[1] - 40,
         item_height,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
     )
@@ -1051,7 +1051,7 @@ def _draw_faq_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None:
         menu_frame.shape[1] - 40,
         item_height,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
     )
@@ -1105,7 +1105,7 @@ def _draw_about_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None
         menu_frame.shape[1] - 40,
         item_height,
         "Show Splash",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
     )
@@ -1126,7 +1126,7 @@ def _draw_about_submenu(menu_frame: np.ndarray, game_state: "GameState") -> None
         menu_frame.shape[1] - 40,
         item_height,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
     )
@@ -1163,7 +1163,7 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: "GameState") ->
         move_all_color = (
             UIConstants.ZONE_EDIT_MOVE_COLOR
             if getattr(game_state, "move_all_zones", False)
-            else UIConstants.CV2_BLUE
+            else UIConstants.PRIMARY
         )
         _draw_button(
             menu_frame,
@@ -1266,7 +1266,7 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: "GameState") ->
             ):
                 input_display = game_state.editing_zone_points_input or "___"
                 zone_label += f"[ {input_display} ]"
-                label_color = UIConstants.GREEN
+                label_color = UIConstants.ACCENT
             else:
                 zone_label += str(points)
             if game_state.selected_zone_for_edit == original_index:
@@ -1284,10 +1284,10 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: "GameState") ->
             button_x = 20 + list_width + button_spacing
             edit_rect = (button_x, y_offset, button_width, item_height)
             edit_color = (
-                UIConstants.GREEN
+                UIConstants.ACCENT
                 if game_state.editing_zone_index == original_index
                 and game_state.editing_zone_mode == "edit_points"
-                else UIConstants.CV2_BLUE
+                else UIConstants.PRIMARY
             )
             _draw_button(
                 menu_frame,
@@ -1317,7 +1317,7 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: "GameState") ->
             ):
                 move_color = UIConstants.ZONE_EDIT_MOVE_COLOR
             else:
-                move_color = UIConstants.CV2_BLUE
+                move_color = UIConstants.PRIMARY
             _draw_button(
                 menu_frame,
                 button_x,
@@ -1347,7 +1347,7 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: "GameState") ->
             ):
                 resize_color = UIConstants.ZONE_EDIT_RESIZE_COLOR
             else:
-                resize_color = UIConstants.CV2_BLUE
+                resize_color = UIConstants.PRIMARY
             _draw_button(
                 menu_frame,
                 button_x,
@@ -1375,7 +1375,7 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: "GameState") ->
             ):
                 delete_color = UIConstants.RED
             else:
-                delete_color = UIConstants.CV2_BLUE
+                delete_color = UIConstants.PRIMARY
             _draw_button(
                 menu_frame,
                 button_x,
@@ -1417,7 +1417,7 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: "GameState") ->
 
     prev_button_x = 20
     prev_enabled = current_page > 1
-    prev_color = UIConstants.CV2_BLUE if prev_enabled else UIConstants.GREY_BG
+    prev_color = UIConstants.PRIMARY if prev_enabled else UIConstants.GREY_BG
     _draw_button(
         menu_frame,
         prev_button_x,
@@ -1440,7 +1440,7 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: "GameState") ->
 
     next_button_x = menu_frame.shape[1] - page_button_width - 20
     next_enabled = current_page < total_pages
-    next_color = UIConstants.CV2_BLUE if next_enabled else UIConstants.GREY_BG
+    next_color = UIConstants.PRIMARY if next_enabled else UIConstants.GREY_BG
     _draw_button(
         menu_frame,
         next_button_x,
@@ -1471,7 +1471,7 @@ def _draw_edit_zones_submenu(menu_frame: np.ndarray, game_state: "GameState") ->
         menu_frame.shape[1] - 40,
         back_button_height,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
         font_scale=UIConstants.FONT_SCALE_MEDIUM,
     )
@@ -1509,7 +1509,7 @@ def _draw_replays_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
 
     # Record/Stop Recording toggle button
     recording_active = getattr(game_state, "replay_recording", False)
-    record_color = UIConstants.RED if recording_active else UIConstants.CV2_BLUE
+    record_color = UIConstants.RED if recording_active else UIConstants.PRIMARY
     record_text = "Stop Recording" if recording_active else "Start Recording"
     record_action = "stop_recording" if recording_active else "start_recording"
 
@@ -1535,7 +1535,7 @@ def _draw_replays_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
         menu_frame.shape[1] - 40,
         40,
         "Browse Replays",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -1587,7 +1587,7 @@ def _draw_replays_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
 
     # Auto-record option
     auto_record = getattr(game_state, "auto_record_replays", False)
-    auto_record_color = UIConstants.GREEN if auto_record else UIConstants.CV2_BLUE
+    auto_record_color = UIConstants.ACCENT if auto_record else UIConstants.PRIMARY
     auto_record_text = "Auto-Record: ON" if auto_record else "Auto-Record: OFF"
 
     _draw_button(
@@ -1616,7 +1616,7 @@ def _draw_replays_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
         menu_frame.shape[1] - 40,
         35,
         "Manage Replay Storage",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -1636,7 +1636,7 @@ def _draw_replays_submenu(menu_frame: np.ndarray, game_state: "GameState") -> No
         100,
         30,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -1793,9 +1793,9 @@ def _draw_replay_browser_submenu(
     for idx, (label, sort_key) in enumerate(sort_buttons):
         button_x = sort_x + idx * (sort_width + sort_gap)
         button_color = (
-            UIConstants.GREEN
+            UIConstants.ACCENT
             if sort_mode == sort_key
-            else UIConstants.CV2_BLUE
+            else UIConstants.PRIMARY
         )
         _draw_button(
             menu_frame,
@@ -1857,7 +1857,7 @@ def _draw_replay_browser_submenu(
             100,
             30,
             "Back",
-            UIConstants.CV2_BLUE,
+            UIConstants.PRIMARY,
             game_state=game_state,
         )
         game_state.submenu_items.append(
@@ -1893,7 +1893,7 @@ def _draw_replay_browser_submenu(
         x = grid_x + col * (thumb_width + spacing_x)
         y = grid_y + row * (cell_height + spacing_y)
         is_selected = replay.get("id") == game_state.selected_replay_id
-        border_color = UIConstants.GREEN if is_selected else UIConstants.WHITE
+        border_color = UIConstants.ACCENT if is_selected else UIConstants.WHITE
         cv2.rectangle(
             menu_frame,
             (x, y),
@@ -2033,7 +2033,7 @@ def _draw_replay_browser_submenu(
                 button_width,
                 button_height,
                 "Previous",
-                UIConstants.CV2_BLUE,
+                UIConstants.PRIMARY,
                 game_state=game_state,
             )
             game_state.submenu_items.append(
@@ -2047,7 +2047,7 @@ def _draw_replay_browser_submenu(
                 button_width,
                 button_height,
                 "Next",
-                UIConstants.CV2_BLUE,
+                UIConstants.PRIMARY,
                 game_state=game_state,
             )
             game_state.submenu_items.append(
@@ -2061,9 +2061,9 @@ def _draw_replay_browser_submenu(
         button_height = 30
         button_spacing = 10
         buttons = [
-            ("Play Replay", UIConstants.CV2_BLUE, f"play_replay_{selected_replay_id}", "Play selected replay"),
-            ("Share", UIConstants.CV2_BLUE, f"share_replay_{selected_replay_id}", "Share selected replay"),
-            ("Highlights", UIConstants.CV2_BLUE, f"highlights_replay_{selected_replay_id}", "View highlights"),
+            ("Play Replay", UIConstants.PRIMARY, f"play_replay_{selected_replay_id}", "Play selected replay"),
+            ("Share", UIConstants.PRIMARY, f"share_replay_{selected_replay_id}", "Share selected replay"),
+            ("Highlights", UIConstants.PRIMARY, f"highlights_replay_{selected_replay_id}", "View highlights"),
             ("Delete", UIConstants.RED, f"delete_replay_{selected_replay_id}", "Delete selected replay"),
         ]
         for idx, (label, color, action, help_text) in enumerate(buttons):
@@ -2090,7 +2090,7 @@ def _draw_replay_browser_submenu(
         100,
         30,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -2172,7 +2172,7 @@ def _draw_replay_playback_submenu(
             100,
             30,
             "Back",
-            UIConstants.CV2_BLUE,
+            UIConstants.PRIMARY,
             game_state=game_state,
         )
         game_state.submenu_items.append(
@@ -2335,7 +2335,7 @@ def _draw_replay_playback_submenu(
         button_width,
         button_height,
         "<<",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -2351,7 +2351,7 @@ def _draw_replay_playback_submenu(
         button_width,
         button_height,
         "<",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -2371,7 +2371,7 @@ def _draw_replay_playback_submenu(
         button_width,
         button_height,
         ">" if not game_state.replay_playback["playing"] else "||",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -2391,7 +2391,7 @@ def _draw_replay_playback_submenu(
         button_width,
         button_height,
         ">",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -2411,7 +2411,7 @@ def _draw_replay_playback_submenu(
         button_width,
         button_height,
         ">>",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -2455,7 +2455,7 @@ def _draw_replay_playback_submenu(
         speed_button_width,
         speed_button_height,
         "-",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -2475,7 +2475,7 @@ def _draw_replay_playback_submenu(
         speed_button_width,
         speed_button_height,
         "+",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -2557,7 +2557,7 @@ def _draw_replay_playback_submenu(
         button_width,
         button_height,
         "Share Replay",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -2577,7 +2577,7 @@ def _draw_replay_playback_submenu(
         button_width,
         button_height,
         "Export as Video",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -2691,7 +2691,7 @@ def _draw_replay_share_submenu(menu_frame: np.ndarray, game_state: "GameState") 
 
         for i, format_type in enumerate(ReplayConstants.EXPORT_FORMATS):
             is_selected = game_state.replay_sharing["selected_format"] == format_type
-            button_color = UIConstants.GREEN if is_selected else UIConstants.CV2_BLUE
+            button_color = UIConstants.ACCENT if is_selected else UIConstants.PRIMARY
 
             button_x = 30 + i * (format_button_width + format_button_spacing)
             _draw_button(
@@ -2742,7 +2742,7 @@ def _draw_replay_share_submenu(menu_frame: np.ndarray, game_state: "GameState") 
             col = i % platform_buttons_per_row
 
             is_selected = game_state.replay_sharing["selected_platform"] == platform
-            button_color = UIConstants.GREEN if is_selected else UIConstants.CV2_BLUE
+            button_color = UIConstants.ACCENT if is_selected else UIConstants.PRIMARY
 
             button_x = 30 + col * (platform_button_width + platform_button_spacing)
             button_y = platform_buttons_y + row * platform_row_spacing
@@ -2780,7 +2780,7 @@ def _draw_replay_share_submenu(menu_frame: np.ndarray, game_state: "GameState") 
                 (30, action_y - 20),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 UIConstants.FONT_SCALE_SMALL,
-                UIConstants.GREEN,
+                UIConstants.ACCENT,
                 UIConstants.FONT_THICKNESS,
             )
 
@@ -2808,7 +2808,7 @@ def _draw_replay_share_submenu(menu_frame: np.ndarray, game_state: "GameState") 
                     menu_frame,
                     (progress_x, progress_y),
                     (progress_x + fill_width, progress_y + progress_height),
-                    UIConstants.GREEN,
+                    UIConstants.ACCENT,
                     -1,
                 )
 
@@ -2833,7 +2833,7 @@ def _draw_replay_share_submenu(menu_frame: np.ndarray, game_state: "GameState") 
             action_button_width,
             action_button_height,
             "Export Full Video",
-            UIConstants.CV2_BLUE,
+            UIConstants.PRIMARY,
             game_state=game_state,
         )
         game_state.submenu_items.append(
@@ -2854,7 +2854,7 @@ def _draw_replay_share_submenu(menu_frame: np.ndarray, game_state: "GameState") 
             action_button_width,
             action_button_height,
             share_text,
-            UIConstants.CV2_BLUE,
+            UIConstants.PRIMARY,
             game_state=game_state,
         )
         game_state.submenu_items.append(
@@ -2907,7 +2907,7 @@ def _draw_replay_share_submenu(menu_frame: np.ndarray, game_state: "GameState") 
                         menu_frame.shape[1] // 2 - 40,
                         action_button_height,
                         f"#{i+1}: {description}",
-                        UIConstants.CV2_BLUE,
+                        UIConstants.PRIMARY,
                         game_state=game_state,
                     )
                     game_state.submenu_items.append(
@@ -2931,7 +2931,7 @@ def _draw_replay_share_submenu(menu_frame: np.ndarray, game_state: "GameState") 
                         menu_frame.shape[1] // 2 - 40,
                         action_button_height,
                         f"Share #{i+1}",
-                        UIConstants.CV2_BLUE,
+                        UIConstants.PRIMARY,
                         game_state=game_state,
                     )
                     game_state.submenu_items.append(
@@ -3000,7 +3000,7 @@ def _draw_replay_share_submenu(menu_frame: np.ndarray, game_state: "GameState") 
         100,
         30,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -3071,7 +3071,7 @@ def _draw_manage_replay_storage_submenu(
         menu_frame.shape[1] - 40,
         35,
         "Browse Replays",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
@@ -3112,7 +3112,7 @@ def _draw_manage_replay_storage_submenu(
         100,
         30,
         "Back",
-        UIConstants.CV2_BLUE,
+        UIConstants.PRIMARY,
         game_state=game_state,
     )
     game_state.submenu_items.append(
