@@ -127,6 +127,7 @@ def save_high_score(game_state: Any):
             f"Updating high score for '{game_state.game_mode}' to {game_state.score} by {player_name}"
         )
         game_state.high_score = game_state.score  # Update attribute too
+        game_state.high_score_player = player_name
     try:
         with open(high_score_file, "w") as f:
             json.dump(data, f, indent=4)

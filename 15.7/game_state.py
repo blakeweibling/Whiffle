@@ -129,6 +129,8 @@ class GameState:
         self.zones_file_path: str = GameConstants.ZONES_FILE
         self.game_mode: str = "classic"
         self.leaderboard_mode: str = "classic"
+        self.high_score: int = 0
+        self.high_score_player: str = ""
         self.last_player_name: str = ""
         self.auto_record_replays: bool = False
         self.replay_browser_sort: str = "newest"

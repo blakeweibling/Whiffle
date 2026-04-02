@@ -780,12 +780,17 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
         player_name = "Error"
     score = game_state.score
     high_score = game_state.high_score
+    high_score_player = str(getattr(game_state, "high_score_player", "") or "")
+    if len(high_score_player) > 18:
+        high_score_player = high_score_player[:15] + "..."
     player_text = f"Player: {player_name}"
     score_text = f"Score: {score}"
     high_score_text = f"High Score: {high_score}"
+    high_score_player_text = f"By: {high_score_player}" if high_score_player else "By: Unknown"
 
     # Font and color
     font_scale = UIConstants.FONT_SCALE_LARGE
+    detail_font_scale = UIConstants.FONT_SCALE_MEDIUM
     font_color = UIConstants.WHITE
     font_thickness = UIConstants.FONT_THICKNESS
     font = cv2.FONT_HERSHEY_SIMPLEX
@@ -794,11 +799,15 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
     (player_tw, player_th), _ = cv2.getTextSize(player_text, font, font_scale, font_thickness)
     (score_tw, score_th), _ = cv2.getTextSize(score_text, font, font_scale, font_thickness)
     (high_score_tw, high_score_th), _ = cv2.getTextSize(high_score_text, font, font_scale, font_thickness)
+    (high_score_player_tw, high_score_player_th), _ = cv2.getTextSize(
+        high_score_player_text, font, detail_font_scale, font_thickness
+    )
 
     # Calculate different vertical positions for each text element
     player_text_y = (BAR_HEIGHT + player_th) // 2 - 35  # Moved down 10px (was -45)
     score_text_y = (BAR_HEIGHT + score_th) // 2 + 30    # Keeping score position
     high_score_text_y = (BAR_HEIGHT + high_score_th) // 2 - 35  # Moved down 10px (was -45)
+    high_score_player_text_y = high_score_text_y + high_score_player_th + 16
 
     # Player name: left aligned at 150px from left
     player_x = 150
@@ -811,6 +820,17 @@ def draw_ui(frame: np.ndarray, game_state: "GameState") -> None:
     # High score: right aligned at 150px from right
     high_score_x = current_width - high_score_tw - 150
     cv2.putText(frame, high_score_text, (high_score_x, high_score_text_y), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
+    high_score_player_x = high_score_x
+    cv2.putText(
+        frame,
+        high_score_player_text,
+        (high_score_player_x, high_score_player_text_y),
+        font,
+        detail_font_scale,
+        font_color,
+        font_thickness,
+        cv2.LINE_AA,
+    )
 
     if game_state.current_state == CurrentGameState.GETTING_PLAYER_NAME:
         # Initialize cursor position if not done yet

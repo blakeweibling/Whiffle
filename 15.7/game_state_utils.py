@@ -1173,6 +1173,7 @@ def load_initial_state(game_state: Any):
             game_state, "game_mode", "classic"
         )  # Default to classic if mode not set
         game_state.high_score = 0  # Default high score
+        game_state.high_score_player = ""
 
         if os.path.exists(high_score_file) and os.path.getsize(high_score_file) > 0:
             with open(high_score_file, "r") as f:
@@ -1181,6 +1182,7 @@ def load_initial_state(game_state: Any):
                 mode_data = data.get(current_mode, {})
                 if isinstance(mode_data, dict):
                     game_state.high_score = mode_data.get("high_score", 0)
+                    game_state.high_score_player = str(mode_data.get("player", "") or "")
                 else:
                     logger.warning(
                         f"Data for mode '{current_mode}' in high score file is not a dict."
@@ -1194,9 +1196,11 @@ def load_initial_state(game_state: Any):
     except (IOError, json.JSONDecodeError) as e:
         logger.error(f"Failed load high score file '{high_score_file}': {e}")
         game_state.high_score = 0  # Reset on error
+        game_state.high_score_player = ""
     except Exception as e:
         logger.exception(f"Unexpected error loading high score: {e}")
         game_state.high_score = 0  # Reset on error
+        game_state.high_score_player = ""
 
 
 def check_achievements(game_state: Any) -> None:
@@ -1438,6 +1442,7 @@ def reset_game(game_state: Any) -> None:
         "hsv_ranges": getattr(game_state, "hsv_ranges", {}),
         "achievements": getattr(game_state, "achievements", []),
         "high_score": getattr(game_state, "high_score", 0),
+        "high_score_player": getattr(game_state, "high_score_player", ""),
         "win_score": getattr(
             game_state, "win_score", GameConstants.CLASSIC_MODE_WIN_SCORE
         ),
