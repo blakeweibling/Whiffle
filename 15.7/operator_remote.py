@@ -16,7 +16,7 @@ import cv2
 import numpy as np
 
 from constants import GameConstants, PlayerConstants
-from game_state_helpers import save_score, show_notification
+from game_state_helpers import finalize_round_before_reset, save_score, show_notification
 from game_state_utils import (
     _reset_all_menu_editing_states,
     change_music_track,
@@ -1048,6 +1048,7 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
         return {"ok": True, "message": "Menu closed. Back to game."}
 
     if action_name == "reset_for_next_player":
+        finalize_round_before_reset(game_state, context="operator remote next player reset")
         _enter_waiting_for_player_state(game_state)
         _clear_remote_menu_return_state(game_state)
         show_notification(game_state, "Ready for next player", duration=1.5)

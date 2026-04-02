@@ -1571,6 +1571,8 @@ def reset_game(game_state: Any) -> None:
 
     # Set new game state basics
     game_state.score = score
+    game_state.final_score = 0
+    game_state.score_saved_for_current_round = False
     game_state.tracked_balls = tracked_balls
     game_state.next_ball_id = next_ball_id
     game_state.frame_count = frame_count

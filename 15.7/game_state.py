@@ -198,6 +198,7 @@ class GameState:
         self.has_viewed_heatmap: bool = False
         self.has_paused_and_resumed: bool = False
         self.has_uploaded_screenshot: bool = False
+        self.score_saved_for_current_round: bool = False
         self.has_shared_replay: bool = False
         self.has_exported_highlight: bool = False
         self.scored_red_ball_this_session: bool = False
@@ -947,6 +948,7 @@ class GameState:
         # Reset game state variables
         self.score = 0
         self.final_score = 0
+        self.score_saved_for_current_round = False
 
         # Set the game mode
         self.game_mode = game_mode

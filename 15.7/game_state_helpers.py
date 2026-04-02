@@ -144,6 +144,9 @@ def save_score(game_state: Any, player_name: str, mode: Optional[str] = None) ->
     score_to_save = final_score
     game_state.final_score = final_score  # Set the final_score attribute
     current_mode = mode or game_state.game_mode
+    if score_to_save > 0 and getattr(game_state, "score_saved_for_current_round", False):
+        logger.info("Score for current round already saved; skipping duplicate save.")
+        return
     if hasattr(game_state, "is_fivestar_playfield"):
         is_fivestar = game_state.is_fivestar_playfield()
     else:
@@ -157,6 +160,7 @@ def save_score(game_state: Any, player_name: str, mode: Optional[str] = None) ->
     is_static_image_mode = not getattr(game_state, "camera_available", True)
 
     if score_to_save > 0:
+        game_state.score_saved_for_current_round = True
         logger.info(
             f"Saving score {player_name}: {score_to_save} Mode:{current_mode}{' (D)' if doubled else ''}"
         )
@@ -252,6 +256,37 @@ def save_score(game_state: Any, player_name: str, mode: Optional[str] = None) ->
                 save_high_score(game_state)
     else:
         logger.info(f"Score {score_to_save}, not saving.")
+
+
+def finalize_round_before_reset(game_state: Any, context: str = "reset") -> None:
+    """Save/submit the current round once before entering a fresh round flow."""
+    if not getattr(game_state, "score_saved_for_current_round", False):
+        player_name = "Unknown"
+        if hasattr(game_state, "get_current_player"):
+            try:
+                player = game_state.get_current_player()
+                if player is not None and hasattr(player, "name"):
+                    player_name = str(player.name or "Unknown")
+            except Exception as exc:
+                logger.debug(f"Could not resolve player name before {context}: {exc}")
+
+        try:
+            save_score(game_state, player_name, mode=getattr(game_state, "game_mode", None))
+        except Exception as exc:
+            logger.error(f"Error saving score before {context}: {exc}")
+
+    leaderboard = getattr(game_state, "leaderboard", None)
+    if leaderboard and hasattr(leaderboard, "flush_pending_scores"):
+        try:
+            flushed_scores = leaderboard.flush_pending_scores()
+            if flushed_scores > 0:
+                show_notification(
+                    game_state,
+                    "Score submitted to leaderboard",
+                    duration=2.0,
+                )
+        except Exception as exc:
+            logger.error(f"Error flushing leaderboard on {context}: {exc}")
 
 
 def set_special_hole(

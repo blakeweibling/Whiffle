@@ -30,6 +30,7 @@ if TYPE_CHECKING:
 # Import the necessary utility functions from CORRECT locations
 from game_state_helpers import (
     clear_zones,
+    finalize_round_before_reset,
     save_zones,
     load_zones,
     save_score,
@@ -645,17 +646,7 @@ def _process_game_over_click(
         if bx <= x < bx + bw and by <= y < by + bh:
             logger.info("Play Again button clicked.")
             game_state.click_feedback_state = (play_again_rect, time.time())
-            # Upload pending scores (screenshot + score) to leaderboard before starting new game
-            if hasattr(game_state, "leaderboard") and game_state.leaderboard:
-                if hasattr(game_state.leaderboard, "flush_pending_scores"):
-                    try:
-                        n = game_state.leaderboard.flush_pending_scores()
-                        if n > 0:
-                            show_notification(
-                                game_state, "Score submitted to leaderboard", duration=2.0
-                            )
-                    except Exception as e:
-                        logger.error(f"Error flushing leaderboard on Play Again: {e}")
+            finalize_round_before_reset(game_state, context="Play Again")
             reset_game(game_state)
             game_state.current_state = CurrentGameState.PLAYING
             return True
@@ -1180,19 +1171,7 @@ def _process_menu_or_modal_click(
                         _reset_all_menu_editing_states(game_state)
                         return True
                     elif action == "new_game":
-                        # Flush pending leaderboard scores before starting new game flow
-                        if hasattr(game_state, "leaderboard") and game_state.leaderboard:
-                            if hasattr(game_state.leaderboard, "flush_pending_scores"):
-                                try:
-                                    n = game_state.leaderboard.flush_pending_scores()
-                                    if n > 0:
-                                        show_notification(
-                                            game_state,
-                                            "Score submitted to leaderboard",
-                                            duration=2.0,
-                                        )
-                                except Exception as e:
-                                    logger.error(f"Error flushing leaderboard on New Game: {e}")
+                        finalize_round_before_reset(game_state, context="New Game")
                         # Reset score and all game state so the new game starts clean
                         reset_game(game_state)
                         # Then show player name + board type flow instead of going straight to PLAYING

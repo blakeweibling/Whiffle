@@ -23,6 +23,7 @@ from constants import (
 
 # Import necessary utility functions from the CORRECT files
 from game_state_helpers import (
+    finalize_round_before_reset,
     set_special_hole,
     show_notification,  # Import relevant helpers
     save_zones,
@@ -874,19 +875,7 @@ def _handle_input(game_state: Any) -> Optional[int]:
         # Handle input in GAME_OVER state
         elif game_state.current_state == CurrentGameState.GAME_OVER:
             if key == ord("n"):  # 'n' starts new game
-                # Upload pending scores (screenshot + score) to leaderboard before starting new game
-                if hasattr(game_state, "leaderboard") and game_state.leaderboard:
-                    if hasattr(game_state.leaderboard, "flush_pending_scores"):
-                        try:
-                            n = game_state.leaderboard.flush_pending_scores()
-                            if n > 0:
-                                show_notification(
-                                    game_state,
-                                    "Score submitted to leaderboard",
-                                    duration=2.0,
-                                )
-                        except Exception as e:
-                            logger.error(f"Error flushing leaderboard on new game: {e}")
+                finalize_round_before_reset(game_state, context="keyboard new game")
                 reset_game(game_state)  # Resets score, timer, logger session, etc.
                 game_state.current_state = (
                     CurrentGameState.PLAYING
