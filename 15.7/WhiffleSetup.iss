@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Whiffle"
-#define MyAppVersion "15.3"
+#define MyAppVersion "15.7"
 #define MyAppPublisher "Whiffle Co"
 #define MyAppURL "https://whiffle.co/"
 #define MyAppExeName "Whiffle.exe"
