@@ -6,7 +6,7 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 
 ## Features
 
-* **Ball Detection:** Detects white, red, and half-red/half-white Whiffle balls using YOLOv8 (separate models for Whiffle and Five Star layouts).
+* **Ball Detection:** Detects white, red, and half-red/half-white Whiffle balls using YOLOv8 or Silver and Gold balls for Fivestar (separate models for Whiffle and Five Star layouts).
 * **Ball Tracking:** Assigns unique IDs to balls and tracks their movement across frames.
 * **Scoring Zones:** Define, edit, and manage rectangular scoring zones with specific point values.
 * **Scoring Logic:** Awards points when a ball comes to rest in a scoring zone, with multipliers for special ball types and a "Special Hole" mechanic.
