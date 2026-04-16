@@ -95,6 +95,28 @@ def _upload_drive_async(video_path: str, title: str, game_state) -> None:
     when the upload completes.
     """
 
+    def _apply_success(shareable_link: str, clipboard_success: bool) -> None:
+        if hasattr(game_state, "replay_sharing"):
+            game_state.replay_sharing["export_status"] = (
+                f"Share Link Ready: {shareable_link}"
+            )
+            game_state.replay_sharing["export_progress"] = 1.0
+        game_state.has_shared_replay = True
+        game_state.menu_cache = None
+        msg = (
+            "Share Link created and copied!"
+            if clipboard_success
+            else f"Link created (copy manually): {shareable_link}"
+        )
+        show_notification(game_state, msg, duration=5.0)
+
+    def _apply_failure(status_text: str, notification_text: str) -> None:
+        if hasattr(game_state, "replay_sharing"):
+            game_state.replay_sharing["export_status"] = status_text
+            game_state.replay_sharing["export_progress"] = 0.0
+        game_state.menu_cache = None
+        show_notification(game_state, notification_text, is_error=True)
+
     def _worker():
         try:
             from google_drive_utils import upload_video_to_drive
@@ -105,40 +127,22 @@ def _upload_drive_async(video_path: str, title: str, game_state) -> None:
                 shareable_link = result_message
                 logger.info(f"[async] Google Drive upload complete: {shareable_link}")
                 clipboard_success = _copy_to_clipboard(shareable_link)
-                if hasattr(game_state, "replay_sharing"):
-                    game_state.replay_sharing["export_status"] = (
-                        f"Share Link Ready: {shareable_link}"
-                    )
-                    game_state.replay_sharing["export_progress"] = 1.0
-                game_state.has_shared_replay = True
-                if clipboard_success:
-                    msg = "Share Link created and copied!"
-                else:
-                    msg = f"Link created (copy manually): {shareable_link}"
-                show_notification(game_state, msg, duration=5.0)
+                game_state.post_to_main_thread(
+                    lambda: _apply_success(shareable_link, clipboard_success)
+                )
             else:
                 logger.error(f"[async] Google Drive upload failed: {result_message}")
-                if hasattr(game_state, "replay_sharing"):
-                    game_state.replay_sharing["export_status"] = (
-                        f"Upload Error: {str(result_message)[:50]}..."
-                    )
-                    game_state.replay_sharing["export_progress"] = 0.0
-                show_notification(
-                    game_state, "Error uploading to Google Drive", is_error=True
+                status = f"Upload Error: {str(result_message)[:50]}..."
+                game_state.post_to_main_thread(
+                    lambda: _apply_failure(status, "Error uploading to Google Drive")
                 )
         except Exception as upload_err:
             logger.error(f"[async] Google Drive upload exception: {upload_err}")
             logger.error(traceback.format_exc())
-            if hasattr(game_state, "replay_sharing"):
-                game_state.replay_sharing["export_status"] = (
-                    f"Upload Error: {str(upload_err)[:50]}..."
-                )
-                game_state.replay_sharing["export_progress"] = 0.0
-            show_notification(
-                game_state, "Error uploading to Google Drive", is_error=True
+            status = f"Upload Error: {str(upload_err)[:50]}..."
+            game_state.post_to_main_thread(
+                lambda: _apply_failure(status, "Error uploading to Google Drive")
             )
-        finally:
-            game_state.menu_cache = None
 
     _run_in_background(_worker)
 
@@ -151,6 +155,23 @@ def _upload_youtube_async(
     game_state,
 ) -> None:
     """Upload a video to YouTube in a background thread, updating UI on completion."""
+
+    def _apply_success(video_url: str) -> None:
+        game_state.has_shared_replay = True
+        if hasattr(game_state, "replay_sharing"):
+            game_state.replay_sharing["export_status"] = f"YouTube: {video_url}"
+            game_state.replay_sharing["export_progress"] = 1.0
+        game_state.menu_cache = None
+        show_notification(
+            game_state, "Successfully uploaded to YouTube!", duration=5.0
+        )
+
+    def _apply_failure(status_text: str, notification_text: str) -> None:
+        if hasattr(game_state, "replay_sharing"):
+            game_state.replay_sharing["export_status"] = status_text
+            game_state.replay_sharing["export_progress"] = 0.0
+        game_state.menu_cache = None
+        show_notification(game_state, notification_text, is_error=True)
 
     def _worker():
         try:
@@ -165,32 +186,21 @@ def _upload_youtube_async(
             )
             if success:
                 video_url = result_message
-                game_state.has_shared_replay = True
-                if hasattr(game_state, "replay_sharing"):
-                    game_state.replay_sharing["export_status"] = f"YouTube: {video_url}"
-                    game_state.replay_sharing["export_progress"] = 1.0
-                show_notification(
-                    game_state, "Successfully uploaded to YouTube!", duration=5.0
-                )
                 logger.info(f"[async] YouTube upload complete: {video_url}")
+                game_state.post_to_main_thread(lambda: _apply_success(video_url))
             else:
                 logger.error(f"[async] YouTube upload failed: {result_message}")
-                if hasattr(game_state, "replay_sharing"):
-                    game_state.replay_sharing["export_status"] = "YouTube upload failed"
-                    game_state.replay_sharing["export_progress"] = 0.0
-                show_notification(
-                    game_state, "Failed to upload to YouTube", is_error=True
+                game_state.post_to_main_thread(
+                    lambda: _apply_failure(
+                        "YouTube upload failed", "Failed to upload to YouTube"
+                    )
                 )
         except Exception as e:
             logger.error(f"[async] YouTube upload exception: {e}")
             logger.error(traceback.format_exc())
-            if hasattr(game_state, "replay_sharing"):
-                game_state.replay_sharing["export_status"] = (
-                    f"YouTube Upload Error: {str(e)[:50]}..."
-                )
-                game_state.replay_sharing["export_progress"] = 0.0
-            show_notification(
-                game_state, "Error sharing video to YouTube", is_error=True
+            status = f"YouTube Upload Error: {str(e)[:50]}..."
+            game_state.post_to_main_thread(
+                lambda: _apply_failure(status, "Error sharing video to YouTube")
             )
         finally:
             game_state.menu_cache = None
@@ -1348,6 +1358,13 @@ def _process_menu_or_modal_click(
                         game_state.submenu_active = action
                         game_state.menu_cache = None  # Force menu redraw
                         game_state.confirm_clear_zones = False  # Clear any pending clear confirmation
+                        # Reset per-submenu scroll state so the user always lands
+                        # at the top of the list on fresh entry. Without this the
+                        # achievements submenu opens scrolled to wherever the user
+                        # last left it, often showing a blank region and hiding
+                        # the scroll thumb indicator.
+                        if action == "achievements":
+                            game_state.achievements_scroll_offset = 0
                         return True
 
                     if action == "quit":

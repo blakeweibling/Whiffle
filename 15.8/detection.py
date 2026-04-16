@@ -4,6 +4,7 @@ Ball detection and tracking using YOLOv8 for the Whiffle Tracker project.
 """
 
 import logging
+import os
 from typing import Any, List, Optional, Tuple
 
 import cv2
@@ -248,17 +249,25 @@ class BallDetector:
                     else:
                         gold_balls.append((int(x_center), int(y_center), radius, ball_type))
 
-        # Debug frame drawing
-        if debug_mode:
+        # Debug frame drawing.
+        #
+        # Historically this block called ``cv2.imshow("Ball Detection", ...)``
+        # unconditionally whenever ``debug_mode`` was True. That opened a SECOND
+        # OpenCV window separate from the main game window, which never received
+        # ``cv2.waitKey`` drain calls in the main loop and showed up as a blank
+        # "Ball Detection" window that could not be closed cleanly. The
+        # ``debug_mode`` argument is never passed as True by any caller, so the
+        # simplest correct fix is to gate the debug overlay behind an explicit
+        # environment variable AND keep the window out of the picture unless the
+        # developer has opted in.
+        if debug_mode and os.environ.get("WHIFFLE_BALL_DETECTION_DEBUG") == "1":
             debug_frame = frame.copy()
-            # Use different colors for different ball types based on class names
-            # Handle both old format (x, y, r) and new format (x, y, r, type)
             for ball in silver_balls:
-                x, y, radius = ball[:3]  # Get first 3 elements
-                cv2.circle(debug_frame, (x, y), int(radius), (0, 0, 255), 2)  # Red color
+                x, y, radius = ball[:3]
+                cv2.circle(debug_frame, (x, y), int(radius), (0, 0, 255), 2)
             for ball in gold_balls:
-                x, y, radius = ball[:3]  # Get first 3 elements
-                cv2.circle(debug_frame, (x, y), int(radius), (0, 215, 255), 2)  # Gold/Orange color
+                x, y, radius = ball[:3]
+                cv2.circle(debug_frame, (x, y), int(radius), (0, 215, 255), 2)
             cv2.imshow("Ball Detection", debug_frame)
 
         return silver_balls, gold_balls

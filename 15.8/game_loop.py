@@ -237,6 +237,14 @@ def run_game_loop(game_state: GameState) -> None:
         game_state.frame_count = 0
     try:
         while True:
+            # Drain any mutations scheduled by background worker threads
+            # (upload finishers, leaderboard flushes, operator-remote handlers).
+            # Running these here guarantees that game_state writes happen on the
+            # same thread that reads them for rendering/input.
+            try:
+                game_state.drain_pending_updates()
+            except Exception as e:
+                logger.error(f"drain_pending_updates failed: {e}")
             process_remote_actions(game_state)
             current_time = time.time()
             dt = max(1e-6, current_time - last_time)

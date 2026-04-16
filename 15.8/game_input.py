@@ -714,15 +714,10 @@ def _handle_input(game_state: Any) -> Optional[int]:
                         game_state.menu_cache = None
                     menu_key_handled = True
 
-                elif key == 13:  # Enter key to save
-                    # Trigger the save_zone_points action
-                    from interaction_utils import _process_menu_or_modal_click
-
-                    # Simulate a click on a save button by calling the action directly
-                    _process_menu_or_modal_click(
-                        0, 0, game_state, override_action="save_zone_points"
-                    )
-                    menu_key_handled = True
+                # NOTE: A second ``elif key == 13`` branch used to live here that
+                # called ``_process_menu_or_modal_click`` with a simulated save
+                # button. It was unreachable dead code (the first ``if key == 13``
+                # above already consumes the Enter key) and has been removed.
 
                 # Handle digit input for zone points
                 elif ord("0") <= key <= ord("9"):

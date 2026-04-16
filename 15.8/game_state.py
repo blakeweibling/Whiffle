@@ -70,6 +70,15 @@ class GameState:
     def __init__(self, supabase_url: str, supabase_key: str) -> None:
         logger.info("Starting GameState initialization...")
 
+        # Thread-safe inbox used by background workers (uploads, leaderboard flushes,
+        # operator-remote handlers) to post mutations that must run on the main game
+        # loop thread. Without this, workers mutated ``replay_sharing`` /
+        # ``menu_cache`` / etc. directly and raced the renderer.
+        import threading as _threading
+
+        self._main_thread_queue: "queue.Queue[Any]" = queue.Queue()
+        self._state_lock = _threading.RLock()
+
         # Ensure XP data is loaded from disk at startup. XP is persistent
         # across sessions — do NOT wipe it here.
         try:
@@ -839,19 +848,34 @@ class GameState:
             logger.warning(
                 "Attempting to revert to previous resolution due to camera init failure..."
             )
-            self.current_resolution_key = old_key
-            self.current_width, self.current_height = (
+            # At this point the zones have already been scaled from
+            # (previous_width, previous_height) -> (current_width, current_height).
+            # We need to undo that by scaling from the NEW dims back to the ORIGINAL
+            # dims. Capture the post-switch dims BEFORE we overwrite them, otherwise
+            # the revert call becomes a no-op (scaling from X -> X) and zones remain
+            # stuck in the wrong coordinate space.
+            failed_width, failed_height = self.current_width, self.current_height
+            original_width, original_height = (
                 self.previous_width,
                 self.previous_height,
             )
-            # Rescale zones back
-            if self.current_width > 0 and self.current_height > 0:
+            self.current_resolution_key = old_key
+            self.current_width, self.current_height = (
+                original_width,
+                original_height,
+            )
+            if (
+                failed_width > 0
+                and failed_height > 0
+                and original_width > 0
+                and original_height > 0
+            ):
                 self._scale_scoring_zones(
-                    self.current_width,
-                    self.current_height,
-                    self.previous_width,
-                    self.previous_height,
-                )  # Note: Reversed order might be needed
+                    failed_width,
+                    failed_height,
+                    original_width,
+                    original_height,
+                )
             else:
                 logger.warning("Cannot scale zones back, target dimensions invalid.")
             # Try re-initializing camera with old settings
@@ -942,6 +966,35 @@ class GameState:
             elif not isinstance(self.players[0], Player):
                 self.players[0] = Player("FallbackPlayer")
             return self.players[0]
+
+    def post_to_main_thread(self, callback: Any) -> None:
+        """Schedule ``callback`` to run on the main game-loop thread.
+
+        Background threads (upload workers, leaderboard flushes, operator-remote
+        handlers) MUST NOT touch ``game_state`` attributes directly, because the
+        render thread reads them concurrently. Instead, schedule a zero-arg
+        callable via this method; it will be drained once per frame.
+        """
+        try:
+            self._main_thread_queue.put_nowait(callback)
+        except Exception as e:
+            logger.error(f"Failed to enqueue main-thread callback: {e}")
+
+    def drain_pending_updates(self) -> None:
+        """Run all callbacks queued by ``post_to_main_thread``.
+
+        Called once per frame from the main game loop. Each callback is wrapped
+        in a try/except so a misbehaving worker cannot take down the loop.
+        """
+        while True:
+            try:
+                cb = self._main_thread_queue.get_nowait()
+            except queue.Empty:
+                return
+            try:
+                cb()
+            except Exception as e:
+                logger.error(f"Error in main-thread callback: {e}")
 
     def reset_game(self, player_name: str = "Player", game_mode: str = "classic"):
         """Reset the game state to initial values.

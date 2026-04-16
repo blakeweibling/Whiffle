@@ -64,6 +64,15 @@ class Leaderboard:
         self.pending_scores: List[Dict[str, Any]] = (
             []
         )  # Queue for batch updates (Change 4)
+        # Serialize reads/writes to ``pending_scores``. Without this, a score
+        # appended between the ``copy()`` and ``clear()`` inside
+        # ``flush_pending_scores`` would be silently dropped, and two overlapping
+        # flushes (e.g. operator-remote restart + auto-flush on game over) could
+        # double-submit or wipe each other's queues.
+        import threading as _threading
+
+        self._pending_lock: _threading.Lock = _threading.Lock()
+        self._flush_lock: _threading.Lock = _threading.Lock()
 
         # Warning about disabled SSL verification (log once per process)
         global _ssl_warning_logged
@@ -325,7 +334,8 @@ class Leaderboard:
         self._save_local_scores()
 
         # Queue for batch submission (Change 4)
-        self.pending_scores.append(score_entry)
+        with self._pending_lock:
+            self.pending_scores.append(score_entry)
         logger.info(
             f"Score queued for batch submission: {player_name} - {score} ({mode}, {playfield_type or 'unspecified'})"
         )
@@ -340,36 +350,49 @@ class Leaderboard:
         Returns:
             Number of scores successfully submitted (0 if none or on failure).
         """
-        if not self.pending_scores:
-            logger.debug("No pending scores to flush")
+        # ``_flush_lock`` ensures at most one HTTP submission is in-flight at a
+        # time. ``_pending_lock`` guards the list itself so new append() calls
+        # during the HTTP round-trip can't be lost.
+        if not self._flush_lock.acquire(blocking=False):
+            logger.debug("flush_pending_scores skipped; another flush already in progress")
             return 0
-
-        # Make a copy of the scores to avoid modifying during iteration
-        scores_to_submit = self.pending_scores.copy()
-        count = len(scores_to_submit)
-
         try:
-            logger.info(
-                f"Attempting to flush {count} pending score(s) to online leaderboard"
-            )
-            self._post_supabase(scores_to_submit, retries, delay)
-            logger.info(
-                f"Successfully submitted {count} scores to online leaderboard"
-            )
-            self.pending_scores.clear()
-            return count
-        except requests.RequestException as e:
-            logger.warning(f"Failed to submit scores to online leaderboard: {e}")
-            # We keep the scores in pending_scores for possible future submission
-            logger.warning(
-                f"Failed to submit {len(self.pending_scores)} scores to online leaderboard, keeping in queue"
-            )
-            return 0
-        except Exception as e:
-            # Catch any other exceptions to ensure game can still exit gracefully
-            logger.error(f"Unexpected error when flushing scores: {e}")
-            # Don't clear pending_scores, but don't let the exception propagate either
-            return 0
+            with self._pending_lock:
+                if not self.pending_scores:
+                    logger.debug("No pending scores to flush")
+                    return 0
+                scores_to_submit = self.pending_scores[:]
+
+            count = len(scores_to_submit)
+            try:
+                logger.info(
+                    f"Attempting to flush {count} pending score(s) to online leaderboard"
+                )
+                self._post_supabase(scores_to_submit, retries, delay)
+                logger.info(
+                    f"Successfully submitted {count} scores to online leaderboard"
+                )
+                # Remove only the entries we actually submitted. Any scores
+                # appended during the HTTP call remain queued for the next flush.
+                submitted_ids = [id(s) for s in scores_to_submit]
+                with self._pending_lock:
+                    self.pending_scores = [
+                        s for s in self.pending_scores if id(s) not in submitted_ids
+                    ]
+                return count
+            except requests.RequestException as e:
+                logger.warning(f"Failed to submit scores to online leaderboard: {e}")
+                with self._pending_lock:
+                    remaining = len(self.pending_scores)
+                logger.warning(
+                    f"Failed to submit {remaining} scores to online leaderboard, keeping in queue"
+                )
+                return 0
+            except Exception as e:
+                logger.error(f"Unexpected error when flushing scores: {e}")
+                return 0
+        finally:
+            self._flush_lock.release()
 
     def get_top_scores(
         self, mode: str, limit: int = 5

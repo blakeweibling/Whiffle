@@ -310,12 +310,29 @@ def main() -> None:
             cv2.imshow(game_state.window_name, error_frame)
             cv2.waitKey(5000)  # Wait for 5 seconds or key press
 
-        # Try to handle any score saving if possible
+        # Try to handle any score saving if possible.
+        # The real signature is ``save_score(game_state, player_name, mode=None)``; the
+        # previous positional/keyword args here (reason=..., error_message=...) did not
+        # match and raised TypeError, swallowing the original exception and preventing
+        # the emergency save from actually running.
         try:
             if hasattr(game_state, "score") and game_state.score > 0:
-                # Attempt to save final score if reasonable
-                save_score(game_state, reason="error", error_message=str(e))
-                logger.info(f"Saved final score of {game_state.score} despite error.")
+                player_name = "Unknown"
+                try:
+                    if hasattr(game_state, "get_current_player"):
+                        current_player = game_state.get_current_player()
+                        if current_player and hasattr(current_player, "name"):
+                            player_name = current_player.name
+                except Exception:
+                    pass
+                save_score(
+                    game_state,
+                    player_name,
+                    mode=getattr(game_state, "game_mode", None),
+                )
+                logger.info(
+                    f"Saved final score of {game_state.score} for {player_name} despite error: {e}"
+                )
         except Exception as save_error:
             logger.error(f"Failed to save score after error: {save_error}")
 

@@ -781,10 +781,14 @@ def _restart_round(game_state: Any, current_state: Any) -> Dict[str, Any]:
             try:
                 flushed_scores = leaderboard.flush_pending_scores()
                 if flushed_scores > 0:
-                    show_notification(
-                        game_state,
-                        "Score submitted to leaderboard",
-                        duration=2.0,
+                    # show_notification writes to game_state; marshal back to the
+                    # main thread to avoid racing the renderer.
+                    game_state.post_to_main_thread(
+                        lambda: show_notification(
+                            game_state,
+                            "Score submitted to leaderboard",
+                            duration=2.0,
+                        )
                     )
             except Exception as exc:
                 logger.error(f"Error flushing leaderboard on Restart Round: {exc}")
