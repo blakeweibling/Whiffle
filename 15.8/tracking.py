@@ -326,15 +326,12 @@ class BallTracker:
             Tuple of (tracked_detected_balls, next_ball_id), where tracked_detected_balls is a list of
             (x, y, radius, ball_id, ball_type) tuples for all tracked balls in the current frame.
         """
-        # Throttle tracking for performance improvement
+        # Previously this method skipped real tracking on every other frame when balls were
+        # already tracked, returning cached positions. Combined with DETECTION_FRAME_INTERVAL,
+        # that made tracked positions up to several frames stale and produced visible scoring
+        # lag on fast shots. We now run tracking every frame; the inner track_balls helper is
+        # already optimized for the common case.
         self._skip_counter += 1
-        if self._skip_counter % 2 != 0 and len(tracked_balls) > 0:
-            # Skip tracking on some frames if we already have tracked balls
-            # Just return existing tracked balls
-            return [
-                (x, y, r, ball_id, ball_type)
-                for x, y, r, ball_id, _, ball_type in tracked_balls
-            ], next_ball_id
 
         # Repackage balls with type information
         # Handle both old format (x, y, r) and new format (x, y, r, ball_type)
@@ -359,11 +356,14 @@ class BallTracker:
         # Combine all balls with type information
         all_balls = silver_balls_with_type + gold_balls_with_type
 
-        # If tracking too many balls, limit new additions for performance
-        if len(tracked_balls) > 15 and len(all_balls) > 5:
-            # Sample only a subset of new balls to process
-            # This significantly reduces computational load when there are many balls
-            all_balls = all_balls[:5]
+        # If tracking far more balls than a realistic playfield, cap the number of new
+        # detections we attempt to match this frame to bound CPU work. Previous limits
+        # (>15 tracked, keep only 5 detections) dropped real balls during busy play and
+        # caused missed scores. The new cap is high enough to never drop actual balls on a
+        # standard Whiffle / Five Star table (max ~8-9 live balls) but still protects
+        # against runaway detection spam.
+        if len(tracked_balls) > 30 and len(all_balls) > 20:
+            all_balls = all_balls[:20]
 
         # Perform the actual tracking
         tracked_detected_balls, next_ball_id = track_balls(

@@ -351,7 +351,10 @@ class GameConstants:
     REST_THRESHOLD_DISTANCE: float = _assert_non_negative(
         10.0, "REST_THRESHOLD_DISTANCE"
     )
-    ZONE_STABILITY_FRAMES: int = _assert_positive(30, "ZONE_STABILITY_FRAMES")
+    # Number of frames a ball must remain in a zone before it scores. 30 (~1 s at 30 FPS)
+    # made scoring feel laggy on real shots; 12 (~0.4 s) keeps the rest/stability filter
+    # effective against false positives while registering legitimate hits much faster.
+    ZONE_STABILITY_FRAMES: int = _assert_positive(12, "ZONE_STABILITY_FRAMES")
     SCORE_COOLDOWN_DURATION: float = _assert_non_negative(
         9000.0, "SCORE_COOLDOWN_DURATION"
     )
@@ -474,6 +477,11 @@ class ReplayConstants:
 
     MAX_REPLAY_HISTORY = 50  # Maximum number of replays to keep in history
     KEYFRAME_INTERVAL = 60  # Save a frame every 60 frames (2 seconds at 30fps)
+    # Assumed capture frame rate. Used when exporting a replay video to map captured
+    # frame_count gaps back to real-time seconds so the generated video plays at
+    # real speed instead of the ~48x fast-forward that resulted from writing one
+    # video frame per keyframe.
+    CAPTURE_FPS = 30
     REPLAY_VIDEO_FPS = (
         24  # FPS for generated replay videos (higher for smoother playback)
     )

@@ -227,11 +227,13 @@ class Replay:
                 f"Added frame #{len(self.frames)} to replay (game frame #{frame_count})"
             )
 
-        # Limit frames if needed for performance (unlikely to be needed)
-        if len(self.frames) > 100000:  # ~55 minutes at 30fps
-            # Remove oldest frames but keep keyframes
-            self.frames = self.frames[-50000:]
-            logger.warning("Replay exceeds 100,000 frames, truncating to last 50,000")
+        # Cap replay frame history at ~20 minutes at 30 fps. The previous cap of 100000
+        # (~55 min) let long sessions balloon RAM usage and caused gradual slowdown; no
+        # realistic round runs longer than a few minutes so 36000 is comfortably large.
+        if len(self.frames) > 36000:
+            # Remove oldest frames; keyframe JPEGs are still on disk so export works.
+            self.frames = self.frames[-18000:]
+            logger.warning("Replay exceeds 36,000 frames, truncating to last 18,000")
 
     def add_score_event(self, zone_id: int, points: int, ball_type: str) -> None:
         """
@@ -702,9 +704,16 @@ class Replay:
                     # Create a clear status message
                     logger.info(f"Creating GIF from {len(keyframe_files)} keyframes")
 
+                    # Pre-compute duplication counts so the GIF plays at real time instead of
+                    # ~20x fast-forward. See the MP4 path below for the same logic.
+                    capture_fps_gif = max(1, getattr(ReplayConstants, "CAPTURE_FPS", 30))
+                    keyframe_counts_gif = sorted(
+                        int(kf.split(".")[0]) for kf in keyframe_files
+                    )
+
                     # Collect frames for GIF
                     gif_frames = []
-                    for keyframe_file in keyframe_files:
+                    for i_gif, keyframe_file in enumerate(keyframe_files):
                         # Extract frame number for finding matching data
                         frame_count = int(keyframe_file.split(".")[0])
                         img_path = os.path.join(keyframes_dir, keyframe_file)
@@ -784,7 +793,25 @@ class Replay:
 
                         # Convert BGR to RGB for GIF
                         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                        gif_frames.append(img_rgb)
+
+                        # Duplicate each keyframe so the GIF runs at real time.
+                        next_count_gif = (
+                            keyframe_counts_gif[i_gif + 1]
+                            if i_gif + 1 < len(keyframe_counts_gif)
+                            else None
+                        )
+                        if next_count_gif is not None:
+                            gap_seconds = max(
+                                1, next_count_gif - frame_count
+                            ) / capture_fps_gif
+                        else:
+                            gap_seconds = (
+                                ReplayConstants.KEYFRAME_INTERVAL / capture_fps_gif
+                            )
+                        # gif_fps is clamped below; reference it here after it's set.
+                        # We'll multiply later once gif_fps is known, so temporarily store
+                        # the gap in seconds alongside the image.
+                        gif_frames.append((img_rgb, gap_seconds))
 
                     # Check if we have frames to create the GIF
                     if not gif_frames:
@@ -801,6 +828,15 @@ class Replay:
 
                     # Use a simpler FPS for GIFs to avoid size issues
                     gif_fps = min(fps, 10)  # Limit to 10 FPS for GIFs
+
+                    # Expand the (image, gap_seconds) tuples into a real frame sequence at
+                    # gif_fps so the GIF plays at real time. Without this, keyframes were
+                    # shown 1-per-frame and the GIF played ~20x too fast.
+                    expanded_gif_frames = []
+                    for img_rgb, gap_seconds in gif_frames:
+                        duplicate_n = max(1, int(round(gap_seconds * gif_fps)))
+                        expanded_gif_frames.extend([img_rgb] * duplicate_n)
+                    gif_frames = expanded_gif_frames
 
                     # Ensure any existing file is removed to avoid permission issues
                     if os.path.exists(output_path):
@@ -881,8 +917,30 @@ class Replay:
                     font_color = (255, 255, 255)
                     font_thickness = 1
 
+                    # Pre-compute how many video frames each keyframe should occupy so the
+                    # exported video plays at real time. Keyframes are captured every
+                    # KEYFRAME_INTERVAL game frames at ~CAPTURE_FPS; each one therefore
+                    # represents (KEYFRAME_INTERVAL / CAPTURE_FPS) real seconds. At the
+                    # video FPS (REPLAY_VIDEO_FPS), that spans the corresponding number of
+                    # video frames. Previously each keyframe was written once, which made
+                    # the generated video play ~48x faster than real time.
+                    capture_fps = max(1, getattr(ReplayConstants, "CAPTURE_FPS", 30))
+                    keyframe_counts_sorted = sorted(
+                        int(kf.split(".")[0]) for kf in keyframe_files
+                    )
+
+                    def _frames_per_keyframe(
+                        this_count: int, next_count: Optional[int]
+                    ) -> int:
+                        if next_count is not None:
+                            gap_frames = max(1, next_count - this_count)
+                        else:
+                            gap_frames = ReplayConstants.KEYFRAME_INTERVAL
+                        seconds = gap_frames / capture_fps
+                        return max(1, int(round(seconds * fps)))
+
                     frames_written = 0
-                    for keyframe_file in keyframe_files:
+                    for i, keyframe_file in enumerate(keyframe_files):
                         frame_count = int(keyframe_file.split(".")[0])
                         img_path = os.path.join(keyframes_dir, keyframe_file)
 
@@ -951,8 +1009,15 @@ class Replay:
                                     font_thickness,
                                 )
 
-                        video_writer.write(img)
-                        frames_written += 1
+                        next_count = (
+                            keyframe_counts_sorted[i + 1]
+                            if i + 1 < len(keyframe_counts_sorted)
+                            else None
+                        )
+                        duplicate_n = _frames_per_keyframe(frame_count, next_count)
+                        for _ in range(duplicate_n):
+                            video_writer.write(img)
+                        frames_written += duplicate_n
 
                     logger.info(
                         f"Generated video with {frames_written} frames at {output_path}"

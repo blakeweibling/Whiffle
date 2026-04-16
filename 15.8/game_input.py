@@ -2,8 +2,8 @@
 import logging
 from typing import Any, Optional
 
-import cv2
 import string
+import cv2
 import pygame  # Keep for key constants like K_RETURN, K_ESCAPE if needed elsewhere
 import time
 import ctypes
@@ -36,7 +36,7 @@ from game_state_utils import reset_game, save_settings  # Import reset_game, sav
 from game_types import CurrentGameState  # Correct location
 
 # Import interaction_utils functions
-from interaction_utils import _process_menu_or_modal_click, _process_zone_editing_event
+from interaction_utils import _process_menu_or_modal_click
 from menu import draw_menu_window
 from ui_screens import display_modal_splash
 
@@ -1005,14 +1005,16 @@ def _handle_input(game_state: Any) -> Optional[int]:
                 )
                 key_handled_globally = True  # Mark handled
 
-    # Mouse input handling
+    # Pygame event pump — only used for window QUIT detection.
+    # All mouse input is handled by the OpenCV mouse_callback in utils.py; the Pygame
+    # display is a 1x1 hidden surface so pygame.mouse.get_pos() would return garbage
+    # coordinates that don't match the real game window. Routing mouse events through
+    # both pipelines caused double-handled clicks and misaligned hit-testing.
     try:
-        # Important: Use pygame.event.get() without filtering to capture ALL events
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
                 logger.info("Pygame QUIT event received")
-                # Handle window closure here
                 clean_exit(
                     getattr(game_state, "cap", None),
                     getattr(game_state, "background_music", None),
@@ -1020,164 +1022,10 @@ def _handle_input(game_state: Any) -> Optional[int]:
                     game_state,
                 )
                 return None  # Signal exit to main loop
-
-            elif event.type == pygame.MOUSEWHEEL:
-                # Achievements submenu: scroll with mouse wheel
-                if (
-                    game_state.current_state == CurrentGameState.MENU
-                    and getattr(game_state, "submenu_active", None) == "achievements"
-                ):
-                    scroll = getattr(game_state, "achievements_scroll_offset", 0)
-                    step = 50
-                    game_state.achievements_scroll_offset = max(
-                        0, scroll - int(event.y) * step
-                    )
-                    game_state.menu_cache = None
-                    return key
-
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                x, y = pygame.mouse.get_pos()
-                logger.debug(
-                    f"Mouse button down at ({x}, {y}) in state {game_state.current_state}"
-                )
-
-                # Handle mouse press for menu button in PLAYING state
-                if game_state.current_state == CurrentGameState.PLAYING:
-                    # Check if we're in drawing mode first
-                    if getattr(game_state, "drawing", False):
-                        _process_drawing_event(cv2.EVENT_LBUTTONDOWN, x, y, game_state)
-                        return key
-
-                    menu_button_rect = (
-                        UIConstants.MENU_BUTTON_X,
-                        UIConstants.MENU_BUTTON_Y,
-                        UIConstants.MENU_BUTTON_WIDTH,
-                        UIConstants.MENU_BUTTON_HEIGHT,
-                    )
-                    menu_btn_x, menu_btn_y, menu_btn_w, menu_btn_h = menu_button_rect
-                    if (
-                        menu_btn_x <= x < menu_btn_x + menu_btn_w
-                        and menu_btn_y <= y < menu_btn_y + menu_btn_h
-                    ):
-                        logger.debug(f"Menu button clicked at ({x}, {y})")
-                        game_state.click_feedback_state = (
-                            menu_button_rect,
-                            time.time(),
-                        )
-                        game_state.current_state = CurrentGameState.MENU
-                        game_state.menu_cache = None  # Force menu redraw
-                        return key
-
-                # Handle mouse press for timeline scrubber
-                if (
-                    game_state.current_state == CurrentGameState.MENU
-                    and game_state.submenu_active == "replay_playback"
-                    and hasattr(game_state, "replay_playback")
-                    and _process_replay_timeline_drag(x, y, game_state)
-                ):
-                    return key
-
-                # Handle mouse press for menu or modal
-                if game_state.current_state in [
-                    CurrentGameState.MENU,
-                    CurrentGameState.CONFIRM_QUIT,
-                ]:
-                    logger.debug(f"Processing menu click at ({x}, {y})")
-                    # No need to import UIConstants here as it's already imported at the top
-                    if _process_menu_or_modal_click(x, y, game_state):
-                        logger.debug("Menu click was processed successfully")
-                        return key
-                    else:
-                        logger.debug("Menu click was not handled by any menu item")
-
-                # Handle mouse press for zone editing (dragging/resizing)
-                if (
-                    game_state.current_state == CurrentGameState.PLAYING
-                    and game_state.submenu_active == "edit_zones"
-                    and _process_zone_editing_event(x, y, game_state)
-                ):
-                    return key
-
-            elif event.type == pygame.MOUSEBUTTONUP:
-                x, y = pygame.mouse.get_pos()
-
-                # Handle drawing mode MOUSEUP
-                if game_state.current_state == CurrentGameState.PLAYING and getattr(
-                    game_state, "drawing", False
-                ):
-                    _process_drawing_event(cv2.EVENT_LBUTTONUP, x, y, game_state)
-                    return key
-
-                # Handle replay timeline
-                if (
-                    hasattr(game_state, "replay_playback")
-                    and game_state.replay_playback
-                    and game_state.replay_playback.get("timeline_dragging", False)
-                ):
-                    game_state.replay_playback["timeline_dragging"] = False
-                    return key
-
-                # The rest of the event handling for MOUSEBUTTONUP
-                if game_state.drag_start_pos is not None:
-                    if game_state.current_state == CurrentGameState.ZONE_EDITING:
-                        _process_zone_editing_event(
-                            cv2.EVENT_LBUTTONUP, x, y, game_state
-                        )
-                    elif (
-                        game_state.current_state == CurrentGameState.PLAYING
-                        and game_state.submenu_active == "edit_zones"
-                    ):
-                        _process_zone_editing_event(
-                            cv2.EVENT_LBUTTONUP, x, y, game_state
-                        )
-                    game_state.drag_start_pos = None
-                    return key
-
-            elif event.type == pygame.MOUSEMOTION:
-                x, y = pygame.mouse.get_pos()
-
-                # Handle mouse motion for drawing zones
-                if game_state.current_state == CurrentGameState.PLAYING and getattr(
-                    game_state, "drawing", False
-                ):
-                    _process_drawing_event(cv2.EVENT_MOUSEMOVE, x, y, game_state)
-                    return key
-
-                # Handle mouse motion for timeline scrubbing
-                if (
-                    hasattr(game_state, "replay_playback")
-                    and game_state.replay_playback
-                    and game_state.replay_playback.get("timeline_dragging", False)
-                ):
-                    _process_replay_timeline_drag(x, y, game_state)
-
-                # Handle mouse motion for zone editing
-                if (
-                    game_state.current_state == CurrentGameState.ZONE_EDITING
-                    and game_state.drag_start_pos is not None
-                ):
-                    _process_zone_editing_event(
-                        cv2.EVENT_MOUSEMOVE, x, y, game_state, is_dragging=True
-                    )
-                    return key
-
-                # Also catch mouse move for regular zone editing mode
-                if (
-                    game_state.current_state == CurrentGameState.PLAYING
-                    and game_state.submenu_active == "edit_zones"
-                    and game_state.drag_start_pos is not None
-                ):
-                    _process_zone_editing_event(
-                        cv2.EVENT_MOUSEMOVE, x, y, game_state, is_dragging=True
-                    )
-                    return key
     except pygame.error as e:
-        logger.warning(
-            f"Pygame event handling error: {e}. Mouse events will be handled through OpenCV."
-        )
-        # Mouse events will be handled through OpenCV's mouse callback instead
+        logger.warning(f"Pygame event pump error: {e}")
     except Exception as e:
-        logger.error(f"Unexpected error in mouse event handling: {e}")
+        logger.error(f"Unexpected error in pygame event pump: {e}")
 
     # Return the key code that was pressed (or -1 if none / window closed)
     # The main loop can use this for general checks (like window closing independent of game state)

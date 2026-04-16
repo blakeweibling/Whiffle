@@ -125,18 +125,27 @@ class XPSystem:
         logger.warning("Cleared ALL player XP data.")
 
     def get_player_level(self, player_name: str) -> Tuple[int, int, int]:
-        """Get player's current level, XP, and XP needed for next level."""
+        """Get player's current level, XP, and XP needed for next level.
+
+        ``LEVEL_THRESHOLDS`` is indexed so that ``LEVEL_THRESHOLDS[L-1]`` is the XP
+        required to advance from level ``L`` to level ``L+1`` (consistent with
+        ``add_xp`` below). A level-1 player therefore needs ``LEVEL_THRESHOLDS[0]``
+        XP, not ``LEVEL_THRESHOLDS[1]``, to reach level 2; the previous code was
+        off by one and every XP-progress bar / label in the UI was wrong.
+        """
         entry = self.player_data.get(player_name)
         if not entry:
             return 1, 0, LEVEL_THRESHOLDS[0]
 
         current_xp = int(entry.get("xp", 0))
         current_level = int(entry.get("level", 1))
-        next_level_xp = (
-            LEVEL_THRESHOLDS[current_level]
-            if current_level < len(LEVEL_THRESHOLDS)
-            else LEVEL_THRESHOLDS[-1]
-        )
+        idx = current_level - 1
+        if idx < 0:
+            idx = 0
+        if idx >= len(LEVEL_THRESHOLDS):
+            next_level_xp = LEVEL_THRESHOLDS[-1]
+        else:
+            next_level_xp = LEVEL_THRESHOLDS[idx]
 
         return current_level, current_xp, next_level_xp
 

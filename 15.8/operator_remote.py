@@ -773,16 +773,23 @@ def _restart_round(game_state: Any, current_state: Any) -> Dict[str, Any]:
 
     leaderboard = getattr(game_state, "leaderboard", None)
     if leaderboard and hasattr(leaderboard, "flush_pending_scores"):
-        try:
-            flushed_scores = leaderboard.flush_pending_scores()
-            if flushed_scores > 0:
-                show_notification(
-                    game_state,
-                    "Score submitted to leaderboard",
-                    duration=2.0,
-                )
-        except Exception as exc:
-            logger.error(f"Error flushing leaderboard on Restart Round: {exc}")
+        # Run the flush on a background thread. flush_pending_scores makes blocking HTTP calls
+        # to Supabase with retry/sleep behavior that previously stalled the main game loop (and
+        # thus the remote API) for several seconds on flaky networks, making Restart Round feel
+        # broken. The queue is preserved across restarts, so firing and forgetting is safe.
+        def _flush_worker():
+            try:
+                flushed_scores = leaderboard.flush_pending_scores()
+                if flushed_scores > 0:
+                    show_notification(
+                        game_state,
+                        "Score submitted to leaderboard",
+                        duration=2.0,
+                    )
+            except Exception as exc:
+                logger.error(f"Error flushing leaderboard on Restart Round: {exc}")
+
+        threading.Thread(target=_flush_worker, daemon=True).start()
 
     reset_game(game_state)
     game_state.current_state = CurrentGameState.PLAYING

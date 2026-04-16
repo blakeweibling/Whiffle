@@ -966,6 +966,29 @@ class GameState:
         else:
             self.game_timer = None
 
+        # Set win_score based on mode AND layout (Whiffle vs Five Star).
+        # Shallow reset must mirror the logic in game_state_utils.reset_game, or Five Star rounds
+        # play with the Whiffle threshold and leaderboard/achievements trigger at the wrong score.
+        is_fivestar = getattr(self, "playfield_type", "whiffle") == "fivestar"
+        if game_mode == "timed":
+            self.win_score = (
+                GameConstants.FIVESTAR_TIMED_MODE_WIN_SCORE
+                if is_fivestar
+                else GameConstants.TIMED_MODE_WIN_SCORE
+            )
+        elif game_mode == "survival":
+            self.win_score = (
+                GameConstants.FIVESTAR_SURVIVAL_MODE_WIN_SCORE
+                if is_fivestar
+                else GameConstants.SURVIVAL_MODE_WIN_SCORE
+            )
+        else:
+            self.win_score = (
+                GameConstants.FIVESTAR_CLASSIC_MODE_WIN_SCORE
+                if is_fivestar
+                else GameConstants.CLASSIC_MODE_WIN_SCORE
+            )
+
         # Reset player if provided
         if player_name and len(player_name.strip()) > 0:
             # Find the player or create a new one

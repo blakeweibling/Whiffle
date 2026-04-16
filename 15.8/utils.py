@@ -203,6 +203,50 @@ def mouse_callback(event: int, x: int, y: int, flags: int, param: Any) -> None:
         game_state.show_heatmap = False
         return
 
+    # Replay timeline scrubber (MENU + replay_playback submenu): support click + drag.
+    # Ported from the previous Pygame pipeline which used incorrect coordinates from the
+    # hidden 1x1 pygame display.
+    if (
+        current_state == CurrentGameState.MENU
+        and getattr(game_state, "submenu_active", None) == "replay_playback"
+        and hasattr(game_state, "replay_playback")
+        and game_state.replay_playback
+    ):
+        from game_input import _process_replay_timeline_drag
+
+        if event == cv2.EVENT_LBUTTONDOWN:
+            if _process_replay_timeline_drag(x, y, game_state):
+                return
+        elif event == cv2.EVENT_MOUSEMOVE:
+            if game_state.replay_playback.get("timeline_dragging", False):
+                _process_replay_timeline_drag(x, y, game_state)
+                return
+        elif event == cv2.EVENT_LBUTTONUP:
+            if game_state.replay_playback.get("timeline_dragging", False):
+                game_state.replay_playback["timeline_dragging"] = False
+                return
+
+    # Zone editing during PLAYING when the edit_zones submenu is open.
+    # The ZONE_EDITING state handler in EVENT_HANDLERS covers the dedicated state, but not
+    # this submenu path which was previously served only by the Pygame pipeline.
+    if (
+        current_state == CurrentGameState.PLAYING
+        and getattr(game_state, "submenu_active", None) == "edit_zones"
+        and event in (cv2.EVENT_LBUTTONDOWN, cv2.EVENT_LBUTTONUP, cv2.EVENT_MOUSEMOVE)
+    ):
+        from interaction_utils import _process_zone_editing_event
+
+        is_dragging = (
+            event == cv2.EVENT_MOUSEMOVE
+            and getattr(game_state, "drag_start_pos", None) is not None
+        )
+        if _process_zone_editing_event(
+            event, x, y, game_state, is_dragging=is_dragging
+        ):
+            if event == cv2.EVENT_LBUTTONUP:
+                game_state.drag_start_pos = None
+            return
+
     # Handle direct game over clicks
     if current_state == CurrentGameState.GAME_OVER and event == cv2.EVENT_LBUTTONDOWN:
         from interaction_utils import _process_game_over_click

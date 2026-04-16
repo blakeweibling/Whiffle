@@ -449,6 +449,10 @@ def display_heatmap_modal(
         logger.info("Entering heatmap display loop...")
         opened_at = time.time()
         dismiss_input_guard_seconds = 0.2
+        # Keys that explicitly dismiss the heatmap. Previously "any key" dismissed, which made
+        # the modal close on accidental keypresses and collided with keystrokes that were meant
+        # to start another action.
+        _DISMISS_KEYS = {27, 13, 32, ord("h"), ord("H"), ord("q"), ord("Q")}
         while True:
             try:
                 # Check if window is still valid
@@ -458,6 +462,16 @@ def display_heatmap_modal(
                 ):
                     logger.info("Heatmap window closed by user")
                     break
+
+                # Let the operator-remote action queue be drained so the remote can dismiss the
+                # heatmap or trigger other actions while the modal is open. Without this, the
+                # whole game freezes on the main thread until the player closes the heatmap.
+                try:
+                    from operator_remote import process_remote_actions
+
+                    process_remote_actions(game_state)
+                except Exception as exc:
+                    logger.debug(f"Could not process remote actions during heatmap: {exc}")
 
                 # Get background frame
                 background_frame = None
@@ -539,7 +553,8 @@ def display_heatmap_modal(
                         key = -1
                     if dismiss_flag["clicked"]:
                         dismiss_flag["clicked"] = False
-                if key == 27 or key != -1 or dismiss_flag["clicked"]:
+                key_masked = (key & 0xFF) if key != -1 else -1
+                if key_masked in _DISMISS_KEYS or dismiss_flag["clicked"]:
                     logger.info("Dismissing heatmap display")
                     break
 

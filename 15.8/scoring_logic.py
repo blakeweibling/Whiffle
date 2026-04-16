@@ -438,15 +438,17 @@ def update_scoring(game_state: Any) -> None:
                 )
 
             # Check Win Condition (timed, survival only). Classic has no score cap — play as long as you like.
-            # Game over is only for timed mode when time runs out (see game_state_utils).
+            # Reaching the win score transitions to GAME_OVER so the timer doesn't keep running
+            # and overwrite the win with a time-expiry loss.
             if (
                 game_state.game_mode in ["timed", "survival"]
                 and game_state.score >= game_state.win_score
                 and game_state.current_state != CurrentGameState.GAME_OVER
             ):
                 game_state.win_condition_met = True
+                game_state.current_state = CurrentGameState.GAME_OVER
                 logger.info(
-                    f"Win condition met! Score {game_state.score} >= {game_state.win_score}"
+                    f"Win condition met! Score {game_state.score} >= {game_state.win_score}. Transitioning to GAME_OVER."
                 )
                 try:
                     from game_state_utils import record_game_completed
@@ -460,7 +462,7 @@ def update_scoring(game_state: Any) -> None:
                         player = game_state.get_current_player()
                         if player and hasattr(player, "name"):
                             player_name = player.name
-                    save_score(game_state, player_name)
+                    save_score(game_state, player_name, mode=game_state.game_mode)
                 except Exception as e:
                     logger.error(f"Error saving score on win condition: {e}")
 
@@ -505,18 +507,3 @@ def update_scoring(game_state: Any) -> None:
     # Play score sound if any points were scored this frame
     if newly_scored_pts_this_frame > 0:
         play_sound(game_state, game_state.score_sound)
-
-    def _process_frame(
-        self, frame: np.ndarray, game_state: "GameState"
-    ) -> Tuple[np.ndarray, List[Dict[str, Any]]]:
-        """Process a frame and update game state."""
-        # Track balls in the frame
-        tracked_balls = self.ball_tracker.track(frame)
-
-        # Log ball positions if tracking is active
-        game_state.log_ball_positions(tracked_balls)
-
-        # Draw tracking visualization
-        annotated_frame = self._draw_tracking(frame, tracked_balls)
-
-        return annotated_frame, tracked_balls
