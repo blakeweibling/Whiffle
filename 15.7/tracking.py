@@ -49,6 +49,7 @@ def _match_balls(
     new_balls: List[Tuple[int, int, float, str]],
     tracked_balls: List[Tuple[int, int, float, int, int, str]],
     distance_threshold: float,
+    frame_count: int,
     debug_mode: bool = False,
 ) -> Tuple[List[Tuple[int, int, float, int, str]], List[int]]:
     """
@@ -56,8 +57,9 @@ def _match_balls(
 
     Args:
         new_balls: List of new balls as (x, y, radius, ball_type) tuples.
-        tracked_balls: List of tracked balls as (x, y, radius, ball_id, age, ball_type) tuples.
+        tracked_balls: List of tracked balls as (x, y, radius, ball_id, last_seen_frame, ball_type) tuples.
         distance_threshold: Maximum distance for matching balls.
+        frame_count: Current frame number; stamped onto matched balls so they remain "fresh".
         debug_mode: If True, log debug information.
 
     Returns:
@@ -91,18 +93,19 @@ def _match_balls(
                 and idx not in used_tracked_indices
             ):
                 new_x, new_y, radius, ball_type = new_balls[i]
-                tracked_x, tracked_y, _, ball_id, age, tracked_type = tracked_balls[idx]
+                _, _, _, ball_id, _, _ = tracked_balls[idx]
                 matched_balls.append((new_x, new_y, radius, ball_id, ball_type))
                 matched_new_indices.append(i)
                 used_tracked_indices.append(idx)
+                # Refresh last-seen frame so continuously-matched balls don't age out.
                 tracked_balls[idx] = (
                     new_x,
                     new_y,
                     radius,
                     ball_id,
-                    age,
+                    frame_count,
                     ball_type,
-                )  # Update position and type
+                )
                 if debug_mode:
                     logger.debug(
                         f"Matched ball ID {ball_id} at ({new_x}, {new_y}) with distance {dist}, type {ball_type}"
@@ -126,18 +129,17 @@ def _match_balls(
                     min_dist = dist_squared
                     closest_ball_idx = j
             if closest_ball_idx is not None:
-                tracked_x, tracked_y, _, ball_id, age, tracked_type = tracked_balls[
-                    closest_ball_idx
-                ]
+                _, _, _, ball_id, _, _ = tracked_balls[closest_ball_idx]
                 matched_balls.append((new_x, new_y, radius, ball_id, ball_type))
                 matched_new_indices.append(i)
                 used_tracked_indices.append(closest_ball_idx)
+                # Refresh last-seen frame so continuously-matched balls don't age out.
                 tracked_balls[closest_ball_idx] = (
                     new_x,
                     new_y,
                     radius,
                     ball_id,
-                    age,
+                    frame_count,
                     ball_type,
                 )
                 if debug_mode:
@@ -262,7 +264,7 @@ def track_balls(
     # Match existing balls with new detections
     distance_threshold = TrackingConstants.TRACKING_DISTANCE_THRESHOLD
     matched_balls, matched_new_indices = _match_balls(
-        new_balls, tracked_balls, distance_threshold, debug_mode
+        new_balls, tracked_balls, distance_threshold, frame_count, debug_mode
     )
 
     # Add new unmatched balls
@@ -356,14 +358,19 @@ class BallTracker:
                 x, y, r = ball
                 gold_balls_with_type.append((x, y, r, "gold"))  # Fallback to "gold" for old format
 
-        # Combine all balls with type information
-        all_balls = silver_balls_with_type + gold_balls_with_type
-
-        # If tracking too many balls, limit new additions for performance
-        if len(tracked_balls) > 15 and len(all_balls) > 5:
-            # Sample only a subset of new balls to process
-            # This significantly reduces computational load when there are many balls
-            all_balls = all_balls[:5]
+        # If tracking too many balls, limit new additions for performance.
+        # There is only 1 gold ball in the stack, so always reserve room for it
+        # rather than letting a flood of silver detections starve it out.
+        SAMPLE_LIMIT = 5
+        if (
+            len(tracked_balls) > 15
+            and len(silver_balls_with_type) + len(gold_balls_with_type) > SAMPLE_LIMIT
+        ):
+            gold_sample = gold_balls_with_type[:SAMPLE_LIMIT]
+            silver_sample = silver_balls_with_type[: SAMPLE_LIMIT - len(gold_sample)]
+            all_balls = silver_sample + gold_sample
+        else:
+            all_balls = silver_balls_with_type + gold_balls_with_type
 
         # Perform the actual tracking
         tracked_detected_balls, next_ball_id = track_balls(
