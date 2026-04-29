@@ -49,7 +49,6 @@ def _match_balls(
     new_balls: List[Tuple[int, int, float, str]],
     tracked_balls: List[Tuple[int, int, float, int, int, str]],
     distance_threshold: float,
-    frame_count: int,
     debug_mode: bool = False,
 ) -> Tuple[List[Tuple[int, int, float, int, str]], List[int]]:
     """
@@ -57,9 +56,8 @@ def _match_balls(
 
     Args:
         new_balls: List of new balls as (x, y, radius, ball_type) tuples.
-        tracked_balls: List of tracked balls as (x, y, radius, ball_id, last_seen_frame, ball_type) tuples.
+        tracked_balls: List of tracked balls as (x, y, radius, ball_id, age, ball_type) tuples.
         distance_threshold: Maximum distance for matching balls.
-        frame_count: Current frame number; stamped onto matched balls so they remain "fresh".
         debug_mode: If True, log debug information.
 
     Returns:
@@ -93,19 +91,18 @@ def _match_balls(
                 and idx not in used_tracked_indices
             ):
                 new_x, new_y, radius, ball_type = new_balls[i]
-                _, _, _, ball_id, _, _ = tracked_balls[idx]
+                tracked_x, tracked_y, _, ball_id, age, tracked_type = tracked_balls[idx]
                 matched_balls.append((new_x, new_y, radius, ball_id, ball_type))
                 matched_new_indices.append(i)
                 used_tracked_indices.append(idx)
-                # Refresh last-seen frame so continuously-matched balls don't age out.
                 tracked_balls[idx] = (
                     new_x,
                     new_y,
                     radius,
                     ball_id,
-                    frame_count,
+                    age,
                     ball_type,
-                )
+                )  # Update position and type
                 if debug_mode:
                     logger.debug(
                         f"Matched ball ID {ball_id} at ({new_x}, {new_y}) with distance {dist}, type {ball_type}"
@@ -129,17 +126,18 @@ def _match_balls(
                     min_dist = dist_squared
                     closest_ball_idx = j
             if closest_ball_idx is not None:
-                _, _, _, ball_id, _, _ = tracked_balls[closest_ball_idx]
+                tracked_x, tracked_y, _, ball_id, age, tracked_type = tracked_balls[
+                    closest_ball_idx
+                ]
                 matched_balls.append((new_x, new_y, radius, ball_id, ball_type))
                 matched_new_indices.append(i)
                 used_tracked_indices.append(closest_ball_idx)
-                # Refresh last-seen frame so continuously-matched balls don't age out.
                 tracked_balls[closest_ball_idx] = (
                     new_x,
                     new_y,
                     radius,
                     ball_id,
-                    frame_count,
+                    age,
                     ball_type,
                 )
                 if debug_mode:
@@ -172,7 +170,6 @@ def _is_scored_recently(
 def _add_new_balls(
     new_balls: List[Tuple[int, int, float, str]],
     tracked_balls: List[Tuple[int, int, float, int, int, str]],
-    matched_balls: List[Tuple[int, int, float, int, str]],
     matched_new_indices: List[int],
     next_ball_id: int,
     scored_positions: Dict[Tuple[int, int], int],
@@ -185,7 +182,6 @@ def _add_new_balls(
     Args:
         new_balls: List of newly detected balls as (x, y, radius, ball_type) tuples.
         tracked_balls: List of currently tracked balls as (x, y, radius, ball_id, age, ball_type) tuples.
-        matched_balls: List of balls matched this frame as (x, y, radius, ball_id, ball_type) tuples.
         matched_new_indices: Indices of new balls already matched.
         next_ball_id: Next available ball ID to assign.
         scored_positions: Dictionary of (x, y) positions that have already scored, mapping to ball IDs.
@@ -194,16 +190,12 @@ def _add_new_balls(
 
     Returns:
         Tuple of (tracked_detected_balls, next_ball_id), where tracked_detected_balls is a list of
-        (x, y, radius, ball_id, ball_type) tuples for balls actually detected (matched or newly added)
-        in the current frame.
+        (x, y, radius, ball_id, ball_type) tuples for all tracked balls in the current frame.
     """
-    # Start from balls that were matched to detections in this frame.
-    # Tracked balls that were NOT matched this frame are retained in `tracked_balls`
-    # (so they can still match in future frames until they age out), but they are
-    # intentionally omitted from the returned list so downstream consumers don't
-    # see ghost balls reported as "detected this frame".
-    tracked_detected_balls: List[Tuple[int, int, float, int, str]] = list(matched_balls)
-    matched_indices_set = set(matched_new_indices)
+    tracked_detected_balls = [
+        (x, y, radius, ball_id, ball_type)
+        for x, y, radius, ball_id, _, ball_type in tracked_balls
+    ]
 
     # Throttle adding new balls if we're tracking too many already
     # This improves performance by not adding unnecessary balls
@@ -211,11 +203,9 @@ def _add_new_balls(
         return tracked_detected_balls, next_ball_id
 
     for i, (x, y, radius, ball_type) in enumerate(new_balls):
-        if i not in matched_indices_set:
+        if i not in matched_new_indices:
             # Skip if this position has been scored recently
-            if _is_scored_recently(
-                x, y, scored_positions, TrackingConstants.SCORED_DISTANCE_THRESHOLD
-            ):
+            if _is_scored_recently(x, y, scored_positions, radius * 2):
                 if debug_mode:
                     logger.debug(
                         f"Skipped adding new ball at ({x}, {y}) - recently scored position"
@@ -272,14 +262,13 @@ def track_balls(
     # Match existing balls with new detections
     distance_threshold = TrackingConstants.TRACKING_DISTANCE_THRESHOLD
     matched_balls, matched_new_indices = _match_balls(
-        new_balls, tracked_balls, distance_threshold, frame_count, debug_mode
+        new_balls, tracked_balls, distance_threshold, debug_mode
     )
 
     # Add new unmatched balls
     tracked_detected_balls, next_ball_id = _add_new_balls(
         new_balls,
         tracked_balls,
-        matched_balls,
         matched_new_indices,
         next_ball_id,
         scored_positions,
@@ -308,6 +297,9 @@ class BallTracker:
         else:
             logger.info("SciPy not available - using fallback ball tracking method")
 
+        # Throttling state variables
+        self._skip_counter = 0
+
     def track_balls(
         self,
         silver_balls: List[Tuple[int, int, float]],
@@ -334,6 +326,16 @@ class BallTracker:
             Tuple of (tracked_detected_balls, next_ball_id), where tracked_detected_balls is a list of
             (x, y, radius, ball_id, ball_type) tuples for all tracked balls in the current frame.
         """
+        # Throttle tracking for performance improvement
+        self._skip_counter += 1
+        if self._skip_counter % 2 != 0 and len(tracked_balls) > 0:
+            # Skip tracking on some frames if we already have tracked balls
+            # Just return existing tracked balls
+            return [
+                (x, y, r, ball_id, ball_type)
+                for x, y, r, ball_id, _, ball_type in tracked_balls
+            ], next_ball_id
+
         # Repackage balls with type information
         # Handle both old format (x, y, r) and new format (x, y, r, ball_type)
         silver_balls_with_type = []
@@ -344,7 +346,7 @@ class BallTracker:
             else:
                 x, y, r = ball
                 silver_balls_with_type.append((x, y, r, "silver"))  # Fallback to "silver" for old format
-
+        
         gold_balls_with_type = []
         for ball in gold_balls:
             if len(ball) == 4:
@@ -354,11 +356,14 @@ class BallTracker:
                 x, y, r = ball
                 gold_balls_with_type.append((x, y, r, "gold"))  # Fallback to "gold" for old format
 
-        # Pass every detection into matching. Throttling of NEW ball additions
-        # is handled inside `_add_new_balls`; truncating the detection list
-        # here would only starve the matcher of data needed to refresh IDs on
-        # already-tracked balls.
+        # Combine all balls with type information
         all_balls = silver_balls_with_type + gold_balls_with_type
+
+        # If tracking too many balls, limit new additions for performance
+        if len(tracked_balls) > 15 and len(all_balls) > 5:
+            # Sample only a subset of new balls to process
+            # This significantly reduces computational load when there are many balls
+            all_balls = all_balls[:5]
 
         # Perform the actual tracking
         tracked_detected_balls, next_ball_id = track_balls(
