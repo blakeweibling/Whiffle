@@ -340,6 +340,7 @@ def update_scoring(game_state: Any) -> None:
                 scored_balls=scored_balls,
                 active_explosions=active_explosions,
                 zone_balls_this_frame=zone_balls_this_frame,
+                live_ids=live_ids,
                 debug_mode=debug_mode,
             )
             if awarded > 0:
@@ -382,7 +383,8 @@ def _try_award_score(
     scored_balls: List[int],
     active_explosions: List[Any],
     zone_balls_this_frame: Dict[int, List[int]],
-    debug_mode: bool,
+    live_ids: Optional[set] = None,
+    debug_mode: bool = False,
 ) -> int:
     """Apply scoring for one stable ball/zone pair. Returns points awarded (0 if blocked).
 
@@ -413,7 +415,7 @@ def _try_award_score(
         return 0
 
     # Same physical spot already scored under a different tracker id?
-    if _position_already_scored(game_state, center):
+    if _position_already_scored(game_state, center, ball_id, live_ids):
         if debug_mode:
             logger.debug(
                 "Position %s already scored under a different ball id; suppressing.",
@@ -579,11 +581,22 @@ def _try_award_score(
     return points
 
 
-def _position_already_scored(game_state: Any, center: Tuple[int, int]) -> bool:
-    """True if any previously scored position is close enough to count as the same ball.
+def _position_already_scored(
+    game_state: Any,
+    center: Tuple[int, int],
+    ball_id: int,
+    live_ids: Optional[set] = None,
+) -> bool:
+    """True if a nearby scored position should suppress this ball as a duplicate.
 
-    We use a generous radius so that tracker-id flips (which can happen across
-    detection gaps) don't accidentally award the same hit twice.
+    Nearby positions only count as "the same physical ball" when the original
+    scoring tracker id is no longer live. If the originally-scoring tracker is
+    still being tracked this frame, this must be a *different* physical ball
+    that just happens to have landed near the first one (multiple balls in the
+    same zone), and we must let it score.
+
+    A match against the caller's own ``ball_id`` always suppresses, so a single
+    ball never double-scores from a single entry.
     """
     sp = getattr(game_state, "scored_positions", None)
     if not isinstance(sp, dict) or not sp:
@@ -591,9 +604,17 @@ def _position_already_scored(game_state: Any, center: Tuple[int, int]) -> bool:
     suppress_radius = 60
     cx, cy = int(center[0]), int(center[1])
     r_sq = suppress_radius * suppress_radius
-    for (sx, sy) in sp.keys():
-        if (cx - sx) ** 2 + (cy - sy) ** 2 < r_sq:
+    for (sx, sy), recorded_id in sp.items():
+        if (cx - sx) ** 2 + (cy - sy) ** 2 >= r_sq:
+            continue
+        if recorded_id == ball_id:
             return True
+        # If the original ball is still alive as a *distinct* tracker, this is
+        # a physically different ball -- don't suppress it.
+        if live_ids is not None and recorded_id in live_ids:
+            continue
+        # Original tracker is gone -> treat as tracker-id flip and suppress.
+        return True
     return False
 
 
