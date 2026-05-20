@@ -21,11 +21,69 @@ def _is_linux() -> bool:
     """Returns True when running on Linux (including Raspberry Pi)."""
     return sys.platform in ("linux", "linux2")
 
+
+def _detect_raspberry_pi() -> bool:
+    """Best-effort detection of a Raspberry Pi host.
+
+    Order of precedence:
+
+    1. ``WHIFFLE_LOW_POWER`` env var (``1/true/yes`` forces on, ``0/false/no``
+       forces off). Useful for forcing the low-power profile on any machine
+       (e.g. benchmarking) or disabling it on a Pi for an experiment.
+    2. ``/proc/device-tree/model`` -- canonical on Pi OS, contains a string
+       like ``Raspberry Pi 4 Model B Rev 1.4``.
+    3. ``/proc/cpuinfo`` ``Hardware``/``Model`` fields -- fallback for older
+       images.
+
+    Returns False on anything that isn't clearly a Pi (Windows, macOS, generic
+    x86 Linux, other ARM SBCs).
+    """
+    override = os.environ.get("WHIFFLE_LOW_POWER", "").strip().lower()
+    if override in ("1", "true", "yes", "on"):
+        return True
+    if override in ("0", "false", "no", "off"):
+        return False
+
+    if not _is_linux():
+        return False
+
+    try:
+        with open("/proc/device-tree/model", "rb") as fh:
+            model = fh.read().decode("utf-8", errors="ignore").strip("\x00").strip()
+        if "raspberry pi" in model.lower():
+            return True
+    except (OSError, IOError):
+        pass
+
+    try:
+        with open("/proc/cpuinfo", "r", encoding="utf-8", errors="ignore") as fh:
+            cpuinfo = fh.read().lower()
+        if "raspberry pi" in cpuinfo:
+            return True
+        # Pi 3/4 expose BCM27xx / BCM28xx; Pi 5 uses BCM2712.
+        if any(tag in cpuinfo for tag in ("bcm2708", "bcm2709", "bcm2711", "bcm2712", "bcm2835", "bcm2836", "bcm2837")):
+            return True
+    except (OSError, IOError):
+        pass
+
+    return False
+
+
+_IS_RASPBERRY_PI: bool = _detect_raspberry_pi()
+
+
 # Set up logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+
+if _IS_RASPBERRY_PI:
+    logger.info(
+        "Raspberry Pi detected -- enabling low-power detection profile "
+        "(YOLO imgsz=640, inference scale=0.5, detection every 4th frame). "
+        "Set WHIFFLE_LOW_POWER=0 to override."
+    )
 
 
 # Validation function to ensure positive values
@@ -301,7 +359,10 @@ class GameConstants:
     STATIC_FIVESTAR_FRAME_FILE = "assets/static_fivestar.png"  # Static image for fivestar mode if no camera
     FRAME_RATE = 30  # Target frame rate
     DEBUG_MODE = False  # Debug mode flag
-    DETECTION_FRAME_INTERVAL = 2  # Process every Nth frame for detection
+    # Process every Nth frame for detection. The Pi CPU cannot keep up with
+    # YOLO inference at every-other-frame, so we space detections out further
+    # when running on low-power hardware (see _detect_raspberry_pi()).
+    DETECTION_FRAME_INTERVAL = 4 if _IS_RASPBERRY_PI else 2
 
     # Retro mode constants
     RETRO_PIXEL_FACTOR = 2  # Pixelation factor for retro mode (higher = more pixelated)
@@ -326,7 +387,9 @@ class GameConstants:
     # ... rest of the constants
     FRAME_RATE: int = _assert_positive(30, "FRAME_RATE")
     WAIT_KEY_DELAY: int = max(1, int(1000 / FRAME_RATE) // 3)
-    DETECTION_FRAME_INTERVAL: int = _assert_positive(2, "DETECTION_FRAME_INTERVAL")
+    DETECTION_FRAME_INTERVAL: int = _assert_positive(
+        4 if _IS_RASPBERRY_PI else 2, "DETECTION_FRAME_INTERVAL"
+    )
 
     ZONES_FILE: str = "data/game/scoring_zones.json"
     FIVESTAR_ZONES_FILE: str = "data/game/fivestar_scoring_zones.json"
@@ -448,12 +511,22 @@ class DetectionConstants:
     # near the playfield edges remain detectable. 1.0 (full source resolution)
     # combined with a 1920 imgsz override is the maximum information density
     # we can give YOLO; required to recover balls in the leftmost holes that
-    # perspective makes physically small and dim.
-    YOLO_INFERENCE_SCALE: float = _assert_fractional(1.0, "YOLO_INFERENCE_SCALE")
+    # perspective makes physically small and dim. On a Raspberry Pi the CPU
+    # cannot sustain that workload, so we drop to half resolution there;
+    # combined with imgsz=640 below this is ~10x faster per frame and keeps
+    # the game playable. Override with WHIFFLE_LOW_POWER=0/1.
+    YOLO_INFERENCE_SCALE: float = _assert_fractional(
+        0.5 if _IS_RASPBERRY_PI else 1.0, "YOLO_INFERENCE_SCALE"
+    )
     YOLO_IOU_THRESHOLD: float = _assert_fractional(0.45, "YOLO_IOU_THRESHOLD")
     # 0 = let Ultralytics choose imgsz from the model (usually 640). Override
-    # to 1920 so far-edge balls aren't decimated by YOLO's internal letterbox.
-    YOLO_INFERENCE_IMG_SIZE: int = _assert_non_negative(1920, "YOLO_INFERENCE_IMG_SIZE")
+    # to 1920 on capable hardware so far-edge balls aren't decimated by YOLO's
+    # internal letterbox. On a Raspberry Pi we drop back to the model's native
+    # 640 -- inference cost scales roughly as imgsz^2, so this is the single
+    # biggest speedup available without changing the model itself.
+    YOLO_INFERENCE_IMG_SIZE: int = _assert_non_negative(
+        640 if _IS_RASPBERRY_PI else 1920, "YOLO_INFERENCE_IMG_SIZE"
+    )
 
     DETECTION_NMS_MIN_DISTANCE_PX: float = _assert_positive(
         20.0, "DETECTION_NMS_MIN_DISTANCE_PX"
