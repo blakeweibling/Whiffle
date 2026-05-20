@@ -6,6 +6,16 @@ import os
 
 _binaries = [('openh264-1.8.0-win64.dll', '.')] if os.path.isfile('openh264-1.8.0-win64.dll') else []
 
+# Only include .env if it actually exists at build time. Avoids hard-failing
+# fresh checkouts / CI builds where the file hasn't been populated yet.
+_datas = [
+    ('assets', 'assets'),
+    ('configs', 'configs'),
+    ('data', 'data'),
+]
+if os.path.isfile('.env'):
+    _datas.append(('.env', '.'))
+
 a = Analysis(
     ['game.py', 'game_loop.py', 'game_state.py', 'game_input.py', 'ui.py', 'ui_screens.py',
      'menu.py', 'menu_utils.py', 'submenus.py', 'submenu_draw_functions.py', 'scoring.py',
@@ -17,22 +27,30 @@ a = Analysis(
      'loading_screen.py', 'xp_system.py', 'operator_remote.py'],
     pathex=[],
     binaries=_binaries,
-    datas=[
-        ('assets', 'assets'),
-        ('configs', 'configs'),
-        ('data', 'data'),
-        ('.env', '.'),
-    ],
+    datas=_datas,
     hiddenimports=[
+        # Core game/runtime
         'pygame',
+        'pygame.mixer',
         'numpy',
         'cv2',
         'PIL',
         'PIL.Image',
+        'dotenv',
+        # matplotlib is not imported by Whiffle directly, but ultralytics pulls
+        # it in for results plotting; keep listed so the PyInstaller hook for
+        # ultralytics is satisfied at freeze time.
         'matplotlib',
         'matplotlib.pyplot',
+        # ML / detection
         'ultralytics',
         'torch',
+        # HTTP / networking (leaderboard, Supabase storage, Discord webhook,
+        # version checks, operator-remote helpers, YouTube upload pipeline)
+        'requests',
+        'urllib3',
+        'httplib2',
+        # Google / OAuth (Drive + YouTube uploads)
         'google.oauth2.credentials',
         'google_auth_oauthlib.flow',
         'googleapiclient.discovery',
@@ -47,6 +65,9 @@ a = Analysis(
     hooksconfig={},
     runtime_hooks=[],
     excludes=[
+        # scipy is imported lazily via try/except in tracking.py; excluding it
+        # only suppresses *accidental* inclusion -- if it's installed in the
+        # build env, PyInstaller will still bundle it via the explicit import.
         'tkinter', 'pandas', 'scipy', 'sklearn', 'pytest',
         'IPython', 'jupyter', 'notebook',
     ],
