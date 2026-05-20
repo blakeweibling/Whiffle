@@ -29,13 +29,23 @@ a = Analysis(
     binaries=[],
     datas=_datas,
     hiddenimports=[
+        # Core game/runtime
         'pygame',
+        'pygame.mixer',
         'numpy',
         'cv2',
         'PIL',
         'PIL.Image',
+        'dotenv',
+        # ML / detection
         'ultralytics',
         'torch',
+        # HTTP / networking (used by leaderboard, screenshot upload,
+        # interaction_utils, youtube_utils)
+        'requests',
+        'urllib3',
+        'httplib2',
+        # Google / OAuth (Drive + YouTube uploads)
         'google.oauth2.credentials',
         'google_auth_oauthlib.flow',
         'googleapiclient.discovery',
