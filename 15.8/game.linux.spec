@@ -40,6 +40,12 @@ a = Analysis(
         # ML / detection
         'ultralytics',
         'torch',
+        # Required transitively by ultralytics.models.yolo.semantic.train,
+        # which is imported by `from ultralytics import YOLO`. PyInstaller's
+        # static analysis sometimes loses it through ultralytics' lazy-import
+        # shims, so list it explicitly.
+        'matplotlib',
+        'matplotlib.pyplot',
         # HTTP / networking (used by leaderboard, screenshot upload,
         # interaction_utils, youtube_utils)
         'requests',
@@ -62,7 +68,10 @@ a = Analysis(
     excludes=[
         'tkinter', 'pandas', 'sklearn', 'pytest',
         'IPython', 'jupyter', 'notebook',
-        'matplotlib',
+        # NOTE: do NOT exclude matplotlib here. It is *not* used by Whiffle
+        # itself, but ultralytics.models.yolo.semantic.train imports
+        # matplotlib.pyplot unconditionally at module load time. Excluding it
+        # makes `from ultralytics import YOLO` raise ModuleNotFoundError.
         # Triton is an x86_64 / NVIDIA-CUDA JIT. The aarch64 wheel that gets
         # pulled in transitively by torch on the Pi segfaults inside
         # triton/knobs.py during import (CPU-feature / CUDA stub detection).
