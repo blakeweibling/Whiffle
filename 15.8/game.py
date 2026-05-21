@@ -12,6 +12,22 @@ import threading
 import time
 import warnings
 import contextlib
+import faulthandler
+
+# Print a native-stack trace if the interpreter is killed by SIGSEGV / SIGABRT /
+# SIGFPE / SIGBUS / SIGILL. Without this a crash inside cv2 / torch / pygame /
+# numpy just prints "Segmentation fault" with no clue which library died.
+# The trace is written to stderr (and also to crash.log when the env var is set)
+# *before* the process actually exits, so we always see where it crashed.
+try:
+    _fh_log_path = os.environ.get("WHIFFLE_FAULT_LOG", "")
+    if _fh_log_path:
+        _fh_log = open(_fh_log_path, "a", buffering=1)
+        faulthandler.enable(file=_fh_log, all_threads=True)
+    else:
+        faulthandler.enable(all_threads=True)
+except Exception:
+    pass
 
 # Configure logging to filter out libpng warnings
 class LibPNGFilter(logging.Filter):
