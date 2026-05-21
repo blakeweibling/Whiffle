@@ -72,6 +72,52 @@ def _detect_raspberry_pi() -> bool:
 _IS_RASPBERRY_PI: bool = _detect_raspberry_pi()
 
 
+def _env_positive_int(name: str, default: int) -> int:
+    """Read an int from the environment; fall back to ``default`` on any error.
+
+    Used to expose Pi-specific tuning knobs (imgsz, detection interval) as
+    env vars so they can be dialled on the actual hardware without
+    rebuilding the bundle. A value of ``0`` or any non-int falls back to
+    ``default``; negatives also fall back since none of the consumers
+    accept them.
+    """
+    raw = os.environ.get(name, "").strip()
+    if not raw:
+        return default
+    try:
+        value = int(raw)
+    except ValueError:
+        return default
+    if value <= 0:
+        return default
+    return value
+
+
+# Pi-specific detection tuning knobs. Only consulted when _IS_RASPBERRY_PI
+# is True. Defaults chosen so far-edge balls (leftmost / far-perspective
+# holes) stay detectable on a Pi 5 while still leaving enough headroom for
+# 30 fps gameplay:
+#
+#   * imgsz=960 (was 640) -- matches the 0.5x pre-resized frame width
+#     exactly, so YOLO's internal letterbox doesn't decimate edge pixels
+#     a second time. This is the single biggest recovery lever for the
+#     "balls near the edges are missed" failure mode.
+#   * detection interval=4 -- unchanged; spatial resolution (imgsz) is
+#     the bottleneck for missed-at-edge balls, not temporal.
+#
+# Both are env-overridable:
+#   WHIFFLE_PI_IMGSZ                -- int, multiples of 32 recommended.
+#                                      Try 800 if 960 is too slow,
+#                                      or 1280 on a Pi 5 with headroom.
+#   WHIFFLE_PI_DETECTION_INTERVAL   -- int >= 1. Lower = detect more
+#                                      often (smoother tracking, more CPU);
+#                                      higher = detect less often.
+_PI_YOLO_IMG_SIZE: int = _env_positive_int("WHIFFLE_PI_IMGSZ", 960)
+_PI_DETECTION_FRAME_INTERVAL: int = _env_positive_int(
+    "WHIFFLE_PI_DETECTION_INTERVAL", 4
+)
+
+
 # Set up logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
@@ -81,8 +127,12 @@ logger = logging.getLogger(__name__)
 if _IS_RASPBERRY_PI:
     logger.info(
         "Raspberry Pi detected -- enabling low-power detection profile "
-        "(YOLO imgsz=640, inference scale=0.5, detection every 4th frame). "
-        "Set WHIFFLE_LOW_POWER=0 to override."
+        "(YOLO imgsz=%d, inference scale=0.5, detection every %dth frame). "
+        "Override with WHIFFLE_LOW_POWER=0 (disable profile), "
+        "WHIFFLE_PI_IMGSZ=<int> (e.g. 800 for more speed, 1280 for more "
+        "edge accuracy), or WHIFFLE_PI_DETECTION_INTERVAL=<int>.",
+        _PI_YOLO_IMG_SIZE,
+        _PI_DETECTION_FRAME_INTERVAL,
     )
 
 
@@ -362,7 +412,10 @@ class GameConstants:
     # Process every Nth frame for detection. The Pi CPU cannot keep up with
     # YOLO inference at every-other-frame, so we space detections out further
     # when running on low-power hardware (see _detect_raspberry_pi()).
-    DETECTION_FRAME_INTERVAL = 4 if _IS_RASPBERRY_PI else 2
+    # On Pi the interval is configurable via WHIFFLE_PI_DETECTION_INTERVAL.
+    DETECTION_FRAME_INTERVAL = (
+        _PI_DETECTION_FRAME_INTERVAL if _IS_RASPBERRY_PI else 2
+    )
 
     # Retro mode constants
     RETRO_PIXEL_FACTOR = 2  # Pixelation factor for retro mode (higher = more pixelated)
@@ -388,7 +441,8 @@ class GameConstants:
     FRAME_RATE: int = _assert_positive(30, "FRAME_RATE")
     WAIT_KEY_DELAY: int = max(1, int(1000 / FRAME_RATE) // 3)
     DETECTION_FRAME_INTERVAL: int = _assert_positive(
-        4 if _IS_RASPBERRY_PI else 2, "DETECTION_FRAME_INTERVAL"
+        _PI_DETECTION_FRAME_INTERVAL if _IS_RASPBERRY_PI else 2,
+        "DETECTION_FRAME_INTERVAL",
     )
 
     ZONES_FILE: str = "data/game/scoring_zones.json"
@@ -512,20 +566,32 @@ class DetectionConstants:
     # combined with a 1920 imgsz override is the maximum information density
     # we can give YOLO; required to recover balls in the leftmost holes that
     # perspective makes physically small and dim. On a Raspberry Pi the CPU
-    # cannot sustain that workload, so we drop to half resolution there;
-    # combined with imgsz=640 below this is ~10x faster per frame and keeps
-    # the game playable. Override with WHIFFLE_LOW_POWER=0/1.
+    # cannot sustain that workload, so we drop to half resolution there
+    # (1920x1080 -> 960x540); paired with the matching imgsz default below
+    # this keeps far-edge balls detectable while still being playable.
+    # Override with WHIFFLE_LOW_POWER=0/1.
     YOLO_INFERENCE_SCALE: float = _assert_fractional(
         0.5 if _IS_RASPBERRY_PI else 1.0, "YOLO_INFERENCE_SCALE"
     )
     YOLO_IOU_THRESHOLD: float = _assert_fractional(0.45, "YOLO_IOU_THRESHOLD")
     # 0 = let Ultralytics choose imgsz from the model (usually 640). Override
     # to 1920 on capable hardware so far-edge balls aren't decimated by YOLO's
-    # internal letterbox. On a Raspberry Pi we drop back to the model's native
-    # 640 -- inference cost scales roughly as imgsz^2, so this is the single
-    # biggest speedup available without changing the model itself.
+    # internal letterbox.
+    #
+    # On a Raspberry Pi the source frame is already downsized to 0.5x via
+    # YOLO_INFERENCE_SCALE (so a 1920x1080 source arrives at YOLO as
+    # 960x540). The Pi default of imgsz=960 is chosen so YOLO's letterbox
+    # *matches* the pre-resized width exactly -- no second decimation,
+    # just vertical padding -- which is what keeps far-edge / leftmost-hole
+    # balls detectable. Inference cost scales roughly as imgsz^2, so the
+    # 640 -> 960 bump is ~2.25x more compute per inference; with detection
+    # running every 4th frame on a Pi 5 this still fits the frame budget.
+    #
+    # WHIFFLE_PI_IMGSZ tunes this per-device (e.g. 800 if 960 is too slow
+    # on a Pi 4, or 1280 on a Pi 5 with headroom).
     YOLO_INFERENCE_IMG_SIZE: int = _assert_non_negative(
-        640 if _IS_RASPBERRY_PI else 1920, "YOLO_INFERENCE_IMG_SIZE"
+        _PI_YOLO_IMG_SIZE if _IS_RASPBERRY_PI else 1920,
+        "YOLO_INFERENCE_IMG_SIZE",
     )
 
     DETECTION_NMS_MIN_DISTANCE_PX: float = _assert_positive(
