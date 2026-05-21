@@ -79,6 +79,16 @@ fi
 pip install -r requirements.txt
 pip install pyinstaller
 
+# Triton is an x86_64 / NVIDIA-CUDA JIT compiler. On aarch64 it gets pulled in
+# as a transitive dep of torch, but its native .so segfaults inside
+# triton/knobs.py at import time on the Pi (CPU-feature / CUDA stub detection
+# that's invalid on ARM). Torch only uses triton for the dynamo compile path,
+# which we don't need for inference. Removing it makes
+# torch.utils._triton.has_triton_package() return False cleanly and torch
+# falls back to its non-triton code paths. PyInstaller also excludes triton
+# in game.linux.spec; this is belt-and-suspenders.
+pip uninstall -y triton pytorch-triton >/dev/null 2>&1 || true
+
 # --- Run PyInstaller ---------------------------------------------------------
 
 echo "[5/5] Running PyInstaller (this is the slow step -- 10-30 min on a Pi 5)..."

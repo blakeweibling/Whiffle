@@ -63,6 +63,13 @@ a = Analysis(
         'tkinter', 'pandas', 'sklearn', 'pytest',
         'IPython', 'jupyter', 'notebook',
         'matplotlib',
+        # Triton is an x86_64 / NVIDIA-CUDA JIT. The aarch64 wheel that gets
+        # pulled in transitively by torch on the Pi segfaults inside
+        # triton/knobs.py during import (CPU-feature / CUDA stub detection).
+        # With triton absent, torch's has_triton_package() returns False
+        # cleanly and torch falls back to its non-triton code paths -- which
+        # is what we want for inference-only use on a Pi anyway.
+        'triton', 'pytorch_triton',
     ],
     noarchive=False,
     optimize=1,
