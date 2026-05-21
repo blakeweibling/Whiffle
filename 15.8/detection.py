@@ -57,6 +57,7 @@ import numpy as np
 from ultralytics import YOLO
 
 from constants import DetectionConstants, GameConstants, GameSpecificConstants
+from path_utils import resolve_resource_path
 
 logger = logging.getLogger(__name__)
 
@@ -215,7 +216,8 @@ class BallDetector:
     """Run YOLO inference on a frame and bucket detections as silver vs. gold balls."""
 
     def __init__(self, model_path: Optional[str] = None) -> None:
-        self.model_path: str = model_path or GameConstants.WHIFFLE_MODEL_PATH
+        raw = model_path or GameConstants.WHIFFLE_MODEL_PATH
+        self.model_path: str = resolve_resource_path(raw)
         self.model = YOLO(self.model_path)
         self.class_names_by_id: Dict[int, str] = self._extract_class_names()
         self.class_names: List[str] = [

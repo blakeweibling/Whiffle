@@ -124,6 +124,7 @@ from game_state_utils import save_score  # For exception handling
 from ui_screens import show_splash_screen  # Assuming this is correct
 from utils import mouse_callback  # Assuming mouse_callback remains in utils
 from loading_screen import wrap_initialization  # Import the loading screen wrapper
+from path_utils import bootstrap_frozen_paths, get_app_dir, get_bundle_dir, is_frozen
 
 
 def validate_config(supabase_url: str, supabase_key: str) -> None:
@@ -136,11 +137,25 @@ def validate_config(supabase_url: str, supabase_key: str) -> None:
         raise ValueError("Invalid Supabase key")
 
 
-def _get_app_dir():
-    """Return the directory containing the app (for .env/config). When frozen (installer/exe), use exe dir."""
-    if getattr(sys, "frozen", False):
-        return os.path.dirname(os.path.abspath(sys.executable))
-    return os.path.dirname(os.path.abspath(__file__))
+def _resolve_env_path() -> str:
+    """Return the path to the .env file to load.
+
+    When frozen (PyInstaller), bundled data files land under ``sys._MEIPASS``
+    (the ``_internal/`` folder), not next to the executable. We check there
+    first, then fall back to ``.env`` beside the binary so a deployed Pi can
+    override secrets without rebuilding.
+    """
+    candidates: list[str] = []
+    bundle = get_bundle_dir()
+    if bundle:
+        candidates.append(os.path.join(bundle, ".env"))
+    candidates.append(os.path.join(get_app_dir(), ".env"))
+    if not is_frozen():
+        candidates.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
+    for path in candidates:
+        if os.path.isfile(path):
+            return path
+    return candidates[0] if candidates else os.path.join(get_app_dir(), ".env")
 
 
 def initialize_game_state():
@@ -148,9 +163,15 @@ def initialize_game_state():
     Initialize the game state with proper configuration.
     This function encapsulates the initialization process to be wrapped by the loading screen.
     """
-    app_dir = _get_app_dir()
-    env_path = os.path.join(app_dir, ".env")
-    load_dotenv(env_path)
+    env_path = _resolve_env_path()
+    if os.path.isfile(env_path):
+        load_dotenv(env_path)
+        logger.debug("Loaded environment from %s", env_path)
+    else:
+        logger.warning(
+            "No .env file found (looked for bundled and local copies). "
+            "Set SUPABASE_URL and SUPABASE_KEY in the environment or add .env next to the app."
+        )
     supabase_url = os.getenv("SUPABASE_URL")  # Get URL from env
     supabase_key = os.getenv("SUPABASE_KEY")  # Get Key from env
 
@@ -170,6 +191,7 @@ def initialize_game_state():
 
 def main() -> None:
     """Run the main game loop for Whiffle Tracker."""
+    bootstrap_frozen_paths()
     # Use the loading screen wrapper for initialization
     game_state = wrap_initialization(initialize_game_state)
 

@@ -6,8 +6,8 @@
 
 import os
 
-# Only include the .env file if it actually exists in the build tree.
-# (Avoids "file does not exist" failures on CI / fresh checkouts.)
+# Bundle .env when present in the repo root at build time (build_pi.sh requires it).
+# At runtime game.py loads from sys._MEIPASS first, then .env beside the executable.
 _datas = [
     ('assets', 'assets'),
     ('configs', 'configs'),
@@ -24,7 +24,7 @@ a = Analysis(
      'ui_elements.py', 'cleanup_utils.py', 'achievement.py', 'player.py', 'game_types.py',
      'game_state_utils.py', 'game_state_helpers.py', 'interaction_utils.py', 'youtube_utils.py',
      'google_drive_utils.py', 'screenshot_utils.py', 'replay_manager.py', 'versus_mode.py',
-     'loading_screen.py', 'xp_system.py', 'operator_remote.py'],
+     'loading_screen.py', 'xp_system.py', 'operator_remote.py', 'path_utils.py'],
     pathex=[],
     binaries=[],
     datas=_datas,

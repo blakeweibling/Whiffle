@@ -89,6 +89,29 @@ pip install pyinstaller
 # in game.linux.spec; this is belt-and-suspenders.
 pip uninstall -y triton pytorch-triton >/dev/null 2>&1 || true
 
+# --- .env (bundled into dist/Whiffle via game.linux.spec) --------------------
+# PyInstaller only packs .env if it exists in the repo root at build time.
+if [[ ! -f "$REPO_DIR/.env" ]]; then
+    echo
+    echo "ERROR: $REPO_DIR/.env is missing."
+    echo "       Create it with SUPABASE_URL and SUPABASE_KEY before building,"
+    echo "       or copy your working .env from your dev machine into the repo root."
+    exit 1
+fi
+echo "       Found .env -- will bundle into dist/Whiffle/_internal/"
+
+for model in \
+    "$REPO_DIR/data/whiffle_new_best.pt" \
+    "$REPO_DIR/data/whiffle_new_best_fivestar.pt"; do
+    if [[ ! -f "$model" ]]; then
+        echo
+        echo "ERROR: Required YOLO model missing: $model"
+        echo "       Copy the .pt files from your dev machine into data/ before building."
+        exit 1
+    fi
+done
+echo "       Found YOLO models in data/ -- will bundle into dist/Whiffle/_internal/data/"
+
 # --- Run PyInstaller ---------------------------------------------------------
 
 echo "[5/5] Running PyInstaller (this is the slow step -- 10-30 min on a Pi 5)..."
@@ -105,6 +128,10 @@ if [[ ! -x "$OUTPUT_DIR/Whiffle" ]]; then
 fi
 
 BUNDLE_SIZE="$(du -sh "$OUTPUT_DIR" | cut -f1)"
+
+# Also place .env next to the executable so it is easy to edit on the Pi
+# without digging into _internal/. Runtime prefers _MEIPASS first, then this copy.
+cp "$REPO_DIR/.env" "$OUTPUT_DIR/.env"
 
 echo
 echo "============================================================"
