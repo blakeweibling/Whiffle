@@ -93,6 +93,50 @@ def show_notification(
     logger.log(log_level, f"Notify: {text}")
 
 
+def award_special_hole_credit(
+    game_state: Any, *, source: str = "manual"
+) -> Dict[str, Any]:
+    """Mark the special hole as hit for this session (final saved score is doubled).
+
+    Used when YOLO scores the special zone and when an operator manually credits
+    a missed detection (e.g. low-resolution Pi inference on the leftmost hole).
+    """
+    if getattr(game_state, "playfield_type", "whiffle") == "fivestar":
+        return {
+            "ok": False,
+            "message": "Special hole bonus is not used on the Five Star playfield.",
+        }
+
+    first_hit = not bool(getattr(game_state, "special_hole_hit_this_session", False))
+    game_state.special_hole_hit_this_session = True
+    game_state.special_hole_hits_this_session = (
+        int(getattr(game_state, "special_hole_hits_this_session", 0)) + 1
+    )
+
+    if first_hit:
+        logger.info(
+            "*** Special-hole credit awarded (%s) -- end score will double. ***",
+            source,
+        )
+        show_notification(
+            game_state, "Special Hole Hit! Score will double!", duration=3.0
+        )
+        message = "Special hole credited. Final score will be doubled when the round is saved."
+    else:
+        show_notification(
+            game_state,
+            "Special hole counted again (x2 bonus already active).",
+            duration=2.0,
+        )
+        message = "Special hole hit count updated (x2 bonus already active)."
+
+    return {
+        "ok": True,
+        "message": message,
+        "first_hit_this_session": first_hit,
+    }
+
+
 def save_high_score(game_state: Any):
     """Saves high score data for all modes based on game_state."""
     data = {}

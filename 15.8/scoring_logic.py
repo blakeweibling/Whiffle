@@ -33,6 +33,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from constants import GameConstants
 from effects import BallTrail, Explosion
 from game_state_helpers import (
+    award_special_hole_credit,
     is_ball_at_rest,
     play_sound,
     save_score,
@@ -431,21 +432,9 @@ def _try_award_score(
     base_pts = int(zone[4]) if len(zone) >= 5 else 0
     is_special = zone == getattr(game_state, "special_hole", None)
     if is_special:
-        # The special hole's "reward" is the end-of-session score doubling;
-        # the immediate points are whatever the zone's own value is so that
-        # the running total matches the per-ball/per-zone arithmetic the
-        # player sees on the playfield (no surprise +100 bonus).
-        if not getattr(game_state, "special_hole_hit_this_session", False):
-            logger.info(
-                "*** First special-hole hit this session -- end score will double. ***"
-            )
-            show_notification(
-                game_state, "Special Hole Hit! Score will double!", duration=3.0
-            )
-        game_state.special_hole_hit_this_session = True
-        game_state.special_hole_hits_this_session = (
-            int(getattr(game_state, "special_hole_hits_this_session", 0)) + 1
-        )
+        # End-of-session x2 is tracked on game_state; immediate points stay at
+        # the zone's base value (see award_special_hole_credit).
+        award_special_hole_credit(game_state, source="detection")
 
     multiplier = _score_multiplier(b_type)
     points = int(round(base_pts * multiplier))

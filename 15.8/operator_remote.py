@@ -16,10 +16,16 @@ import cv2
 import numpy as np
 
 from constants import GameConstants, PlayerConstants
-from game_state_helpers import finalize_round_before_reset, save_score, show_notification
+from game_state_helpers import (
+    award_special_hole_credit,
+    finalize_round_before_reset,
+    save_score,
+    show_notification,
+)
 from game_state_utils import (
     _reset_all_menu_editing_states,
     change_music_track,
+    check_achievements,
     load_achievements,
     reset_game,
     save_settings,
@@ -331,6 +337,18 @@ REMOTE_ACTION_DEFINITIONS: Dict[str, Dict[str, Any]] = {
     "toggle_game_sounds": {
         "label": "Toggle Sound Effects",
     },
+    "award_special_hole": {
+        "label": "Award Special Hole (x2)",
+        "allowed_states": (
+            CurrentGameState.PLAYING,
+            CurrentGameState.PAUSED,
+            CurrentGameState.GAME_OVER,
+        ),
+        "confirm_message": (
+            "Credit the special hole for this session? "
+            "The final score will be doubled when the round is saved."
+        ),
+    },
 }
 
 
@@ -510,6 +528,12 @@ def update_remote_status_snapshot(game_state: Any) -> None:
             "leaderboard_mode_key": str(getattr(game_state, "leaderboard_mode", "classic")),
             "leaderboard_mode": _format_mode(str(getattr(game_state, "leaderboard_mode", "classic"))),
             "score": int(getattr(game_state, "score", 0)),
+            "special_hole_bonus_active": bool(
+                getattr(game_state, "special_hole_hit_this_session", False)
+            ),
+            "special_hole_hits": int(
+                getattr(game_state, "special_hole_hits_this_session", 0) or 0
+            ),
             "mode": _format_mode(str(getattr(game_state, "game_mode", "classic"))),
             "mode_key": str(getattr(game_state, "game_mode", "classic")),
             "playfield": "Five Star"
@@ -1099,6 +1123,15 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
         show_notification(game_state, f"Music track {requested_track_index + 1}", duration=1.5)
         return {"ok": True, "message": f"Music track set to {requested_track_index + 1}."}
 
+    if action_name == "award_special_hole":
+        result = award_special_hole_credit(game_state, source="operator_remote")
+        if result.get("ok"):
+            if getattr(game_state, "camera_available", True) and getattr(
+                game_state, "current_state", None
+            ) in (CurrentGameState.PLAYING, CurrentGameState.PAUSED):
+                check_achievements(game_state)
+        return result
+
     return {"ok": False, "message": f"Unknown action: {action_name}"}
 
 
@@ -1490,6 +1523,7 @@ class OperatorRemoteService:
           <button data-action="pause" onclick="sendAction('pause')" class="secondary">Pause</button>
           <button data-action="resume" onclick="sendAction('resume')" class="secondary">Resume</button>
           <button data-action="show_leaderboard" onclick="sendAction('show_leaderboard')" class="secondary">Show Leaderboard</button>
+          <button id="specialHoleButton" data-action="award_special_hole" onclick="sendAction('award_special_hole')" class="secondary">Award Special Hole (x2)</button>
           <button data-action="open_menu" onclick="sendAction('open_menu')" class="secondary">Open Menu</button>
           <button data-action="close_menu" onclick="sendAction('close_menu')" class="secondary">Close Menu</button>
           <button data-action="reset_for_next_player" onclick="sendAction('reset_for_next_player')" class="danger">Reset For Next Player</button>
@@ -1509,6 +1543,7 @@ class OperatorRemoteService:
           <div class="tile"><div class="label">Music</div><div id="musicValue" class="value" style="font-size:18px;">-</div></div>
           <div class="tile"><div class="label">Sound Effects</div><div id="soundEffectsValue" class="value" style="font-size:18px;">-</div></div>
           <div class="tile"><div class="label">Music Track</div><div id="musicTrackValue" class="value" style="font-size:18px;">-</div></div>
+          <div class="tile"><div class="label">Special Hole x2</div><div id="specialHoleBonusValue" class="value" style="font-size:18px;">-</div></div>
         </div>
         <div class="subgrid" style="margin-top:12px;">
           <div class="tile">
@@ -1687,7 +1722,9 @@ class OperatorRemoteService:
         const data = await response.json();
         latestStatus = data;
         document.getElementById('playerNameValue').textContent = data.player_name;
-        document.getElementById('scoreValue').textContent = data.score;
+        const rawScore = data.score;
+        const displayScore = data.special_hole_bonus_active ? (rawScore + ' (x2 at save)') : String(rawScore);
+        document.getElementById('scoreValue').textContent = displayScore;
         document.getElementById('stateValue').textContent = data.state;
         document.getElementById('modeValue').textContent = data.mode;
         document.getElementById('playfieldValue').textContent = data.playfield;
@@ -1744,6 +1781,14 @@ class OperatorRemoteService:
         document.getElementById('showZonesButton').textContent = 'Scoring UI: ' + onOff(data.show_scoring_zones);
         document.getElementById('musicButton').textContent = 'Music: ' + onOff(data.background_music_on);
         document.getElementById('soundEffectsButton').textContent = 'Sound Effects: ' + onOff(data.game_sounds_on);
+        const specialActive = !!data.special_hole_bonus_active;
+        const specialHits = data.special_hole_hits || 0;
+        document.getElementById('specialHoleBonusValue').textContent = specialActive
+          ? ('Active (' + specialHits + ' hit' + (specialHits === 1 ? '' : 's') + ')')
+          : 'Off';
+        document.getElementById('specialHoleButton').textContent = specialActive
+          ? 'Special Hole x2: ON'
+          : 'Award Special Hole (x2)';
         document.getElementById('musicValue').textContent = onOff(data.background_music_on);
         document.getElementById('soundEffectsValue').textContent = onOff(data.game_sounds_on);
         document.getElementById('musicTrackValue').textContent = (data.music_track_count > 0) ? ('Track ' + ((data.selected_music_track_index ?? 0) + 1)) : '-';
