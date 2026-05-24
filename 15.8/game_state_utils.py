@@ -1611,6 +1611,13 @@ def reset_game(game_state: Any) -> None:
     game_state.scored_half_red_this_session = False
     game_state.current_session_stats = None
 
+    detector = getattr(game_state, "detector", None)
+    if detector is not None and hasattr(detector, "reset_session_state"):
+        try:
+            detector.reset_session_state()
+        except Exception as exc:
+            logger.debug("Could not reset detector session state: %s", exc)
+
     # Initialize notification attributes
     game_state.achievement_notification = None
     game_state.achievement_notification_timer = 0.0

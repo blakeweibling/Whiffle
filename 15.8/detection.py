@@ -250,6 +250,11 @@ class BallDetector:
             self.class_names_by_id,
         )
 
+    def reset_session_state(self) -> None:
+        """Clear per-round detection caches so the next game does not inherit ghosts."""
+        self._small_ball_sticky.clear()
+        self._ghost_table.clear()
+
     # ------------------------------------------------------------------ helpers
 
     def _extract_class_names(self) -> Dict[int, str]:

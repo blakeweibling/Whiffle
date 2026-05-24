@@ -290,7 +290,10 @@ REMOTE_ACTION_DEFINITIONS: Dict[str, Dict[str, Any]] = {
     "reset_for_next_player": {
         "label": "Reset For Next Player",
         "destructive": True,
-        "confirm_message": "Reset for the next player? This will exit the current round flow and return to player entry.",
+        "confirm_message": (
+            "Save the current player's score and reset for the next player? "
+            "The live score will return to 0 and ball detection will start fresh."
+        ),
     },
     "restart_round": {
         "label": "Restart Round",
@@ -1073,10 +1076,15 @@ def _execute_remote_action(game_state: Any, action_name: str, payload: Optional[
 
     if action_name == "reset_for_next_player":
         finalize_round_before_reset(game_state, context="operator remote next player reset")
+        # Match in-game "New Game": clear score, tracking, zone cooldowns, special-hole
+        # flags, and detection caches before the next player name is entered.
+        reset_game(game_state)
         _enter_waiting_for_player_state(game_state)
-        _clear_remote_menu_return_state(game_state)
         show_notification(game_state, "Ready for next player", duration=1.5)
-        return {"ok": True, "message": "Ready for next player. Enter a name, then tap Start Game."}
+        return {
+            "ok": True,
+            "message": "Previous score saved. Score cleared — enter a name, then tap Start Game.",
+        }
 
     if action_name == "restart_round":
         return _restart_round(game_state, current_state)
