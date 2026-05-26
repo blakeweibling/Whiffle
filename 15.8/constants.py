@@ -98,21 +98,20 @@ def _env_positive_int(name: str, default: int) -> int:
 # holes) stay detectable on a Pi 5 while still leaving enough headroom for
 # 30 fps gameplay:
 #
-#   * imgsz=960 (was 640) -- matches the 0.5x pre-resized frame width
-#     exactly, so YOLO's internal letterbox doesn't decimate edge pixels
-#     a second time. This is the single biggest recovery lever for the
-#     "balls near the edges are missed" failure mode.
+#   * imgsz=1280 (testing default; was 960, originally 640) -- upscales the
+#     0.5x pre-resized frame (960x540) inside YOLO's letterbox for maximum
+#     edge-ball recovery while keeping scale=0.5 and interval=4 unchanged.
 #   * detection interval=4 -- unchanged; spatial resolution (imgsz) is
 #     the bottleneck for missed-at-edge balls, not temporal.
 #
 # Both are env-overridable:
 #   WHIFFLE_PI_IMGSZ                -- int, multiples of 32 recommended.
-#                                      Try 800 if 960 is too slow,
-#                                      or 1280 on a Pi 5 with headroom.
+#                                      Try 960 for a balanced default,
+#                                      or 800 on a Pi 4 if 1280 is too slow.
 #   WHIFFLE_PI_DETECTION_INTERVAL   -- int >= 1. Lower = detect more
 #                                      often (smoother tracking, more CPU);
 #                                      higher = detect less often.
-_PI_YOLO_IMG_SIZE: int = _env_positive_int("WHIFFLE_PI_IMGSZ", 960)
+_PI_YOLO_IMG_SIZE: int = _env_positive_int("WHIFFLE_PI_IMGSZ", 1280)
 _PI_DETECTION_FRAME_INTERVAL: int = _env_positive_int(
     "WHIFFLE_PI_DETECTION_INTERVAL", 4
 )
@@ -129,8 +128,8 @@ if _IS_RASPBERRY_PI:
         "Raspberry Pi detected -- enabling low-power detection profile "
         "(YOLO imgsz=%d, inference scale=0.5, detection every %dth frame). "
         "Override with WHIFFLE_LOW_POWER=0 (disable profile), "
-        "WHIFFLE_PI_IMGSZ=<int> (e.g. 800 for more speed, 1280 for more "
-        "edge accuracy), or WHIFFLE_PI_DETECTION_INTERVAL=<int>.",
+        "WHIFFLE_PI_IMGSZ=<int> (e.g. 960 for balanced speed, 800 on Pi 4), "
+        "or WHIFFLE_PI_DETECTION_INTERVAL=<int>.",
         _PI_YOLO_IMG_SIZE,
         _PI_DETECTION_FRAME_INTERVAL,
     )
@@ -580,15 +579,12 @@ class DetectionConstants:
     #
     # On a Raspberry Pi the source frame is already downsized to 0.5x via
     # YOLO_INFERENCE_SCALE (so a 1920x1080 source arrives at YOLO as
-    # 960x540). The Pi default of imgsz=960 is chosen so YOLO's letterbox
-    # *matches* the pre-resized width exactly -- no second decimation,
-    # just vertical padding -- which is what keeps far-edge / leftmost-hole
-    # balls detectable. Inference cost scales roughly as imgsz^2, so the
-    # 640 -> 960 bump is ~2.25x more compute per inference; with detection
-    # running every 4th frame on a Pi 5 this still fits the frame budget.
+    # 960x540). The Pi default of imgsz=1280 upscales inside YOLO's
+    # letterbox for maximum edge-ball recovery (testing); scale=0.5 and
+    # detection every 4th frame stay unchanged. Inference cost scales
+    # roughly as imgsz^2 (~4x vs the old 640 default).
     #
-    # WHIFFLE_PI_IMGSZ tunes this per-device (e.g. 800 if 960 is too slow
-    # on a Pi 4, or 1280 on a Pi 5 with headroom).
+    # WHIFFLE_PI_IMGSZ tunes this per-device (e.g. 960 for balanced speed).
     YOLO_INFERENCE_IMG_SIZE: int = _assert_non_negative(
         _PI_YOLO_IMG_SIZE if _IS_RASPBERRY_PI else 1920,
         "YOLO_INFERENCE_IMG_SIZE",
