@@ -98,20 +98,19 @@ def _env_positive_int(name: str, default: int) -> int:
 # holes) stay detectable on a Pi 5 while still leaving enough headroom for
 # 30 fps gameplay:
 #
-#   * imgsz=1280 (testing default; was 960, originally 640) -- upscales the
-#     0.5x pre-resized frame (960x540) inside YOLO's letterbox for maximum
-#     edge-ball recovery while keeping scale=0.5 and interval=4 unchanged.
+#   * imgsz=960 -- matches the 0.5x pre-resized frame (960x540 from 1080p)
+#     inside YOLO's letterbox; 1280 was tested for edge cases but did not
+#     improve detection enough to justify the extra CPU cost.
 #   * detection interval=4 -- unchanged; spatial resolution (imgsz) is
 #     the bottleneck for missed-at-edge balls, not temporal.
 #
 # Both are env-overridable:
 #   WHIFFLE_PI_IMGSZ                -- int, multiples of 32 recommended.
-#                                      Try 960 for a balanced default,
-#                                      or 800 on a Pi 4 if 1280 is too slow.
+#                                      Default 960; try 800 on a Pi 4 if slow.
 #   WHIFFLE_PI_DETECTION_INTERVAL   -- int >= 1. Lower = detect more
 #                                      often (smoother tracking, more CPU);
 #                                      higher = detect less often.
-_PI_YOLO_IMG_SIZE: int = _env_positive_int("WHIFFLE_PI_IMGSZ", 1280)
+_PI_YOLO_IMG_SIZE: int = _env_positive_int("WHIFFLE_PI_IMGSZ", 960)
 _PI_DETECTION_FRAME_INTERVAL: int = _env_positive_int(
     "WHIFFLE_PI_DETECTION_INTERVAL", 4
 )
@@ -579,12 +578,10 @@ class DetectionConstants:
     #
     # On a Raspberry Pi the source frame is already downsized to 0.5x via
     # YOLO_INFERENCE_SCALE (so a 1920x1080 source arrives at YOLO as
-    # 960x540). The Pi default of imgsz=1280 upscales inside YOLO's
-    # letterbox for maximum edge-ball recovery (testing); scale=0.5 and
-    # detection every 4th frame stay unchanged. Inference cost scales
-    # roughly as imgsz^2 (~4x vs the old 640 default).
+    # 960x540). The Pi default imgsz=960 matches that letterbox without
+    # upscaling; scale=0.5 and detection every 4th frame stay unchanged.
     #
-    # WHIFFLE_PI_IMGSZ tunes this per-device (e.g. 960 for balanced speed).
+    # WHIFFLE_PI_IMGSZ tunes this per-device (e.g. 800 on a Pi 4 if slow).
     YOLO_INFERENCE_IMG_SIZE: int = _assert_non_negative(
         _PI_YOLO_IMG_SIZE if _IS_RASPBERRY_PI else 1920,
         "YOLO_INFERENCE_IMG_SIZE",
