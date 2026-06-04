@@ -1,4 +1,4 @@
-# Whiffle Tracker — v15.7
+# Whiffle Tracker — v15.8
 
 ## Description
 
@@ -31,7 +31,8 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 * **Configuration:** `.env` for Supabase; `configs/` for HSV, settings, Google credentials.
 * **Session Logging & Statistics:** Session stats, heatmaps, and data logging.
 * **Operator Remote:** Built-in local-network web remote with PIN login, live status polling, round controls, player management, setup toggles, leaderboard and heatmap access, and installable PWA support for phones/tablets. Sessions expire automatically and access is limited to loopback/private-network clients.
-* **Building:** **PyInstaller** (`game.spec`) produces a minimal "Whiffle" folder (onedir) with `Whiffle.exe` and `_internal` (Python runtime, torch, ultralytics, PIL, matplotlib, bundled data). See `BUILD_WHIFFLE.md`. **Inno Setup** (`WhiffleSetup.iss`) copies the entire folder and runs `icacls` so the install directory is read/write for saving configs, scores, and zones.
+* **Building (Windows):** **PyInstaller** (`game.spec`) produces a onedir `dist/Whiffle/` folder with `Whiffle.exe` and `_internal`. **Inno Setup** (`WhiffleSetup.iss`, v15.8) installs that bundle and grants Users write access for configs, scores, and zones.
+* **Building (Raspberry Pi):** **`build_pi.sh`** + **`game.linux.spec`** build a copy-and-run `dist/Whiffle/` bundle on Pi 4/5 (aarch64 Bookworm, Python 3.11 or 3.13). **`path_utils.py`** seeds bundled `data/`, `configs/`, and `assets/` beside the executable on first launch.
 * **Video Recording, Social Integration, Screenshot Utility:** Capture and share gameplay; upload to YouTube, Google Drive, Discord; score verification with screenshots.
 * **Loading Screen:** Loading screen during initialization (Windows); skipped on Linux/macOS.
 * **XP System:** Player XP and leveling (`xp_system.py`, `player_xp.json`).
@@ -63,8 +64,13 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 | `heatmap_utils.py`, `stats_calculator.py`, `data_logger.py` | Heatmaps, stats, logging |
 | `replay_manager.py`, `versus_mode.py` | Replays and versus mode |
 | `operator_remote.py` | Local operator web server, PIN auth, remote status snapshot, and browser-based game controls |
+| `path_utils.py` | Frozen-bundle paths: resolve models/assets from `_internal/`, seed writable `data/` / `configs/` / `assets/` beside the executable |
 | `loading_screen.py` | Loading screen wrapper |
 | `xp_system.py` | Player XP and levels |
+| `game.spec` | Windows PyInstaller spec (onedir → Inno Setup) |
+| `game.linux.spec` | Linux / Raspberry Pi PyInstaller spec |
+| `build_pi.sh` | One-shot Pi build script (venv, deps, PyInstaller) |
+| `WhiffleSetup.iss` | Windows installer (Inno Setup) |
 | `extract_frames.py`, `create_yolo_dataset.py`, `prepare_yolo_dataset.py` | Video frame extraction and YOLO dataset preparation for training |
 | `train_yolo_model.py` | YOLOv8 training (detect or segment); supports `--task segment`, `--device 0` for GPU |
 
@@ -85,10 +91,11 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 ## Installation & Setup
 
 1. **Clone and install:**
-   * Python 3.10 or higher required.
+   * **Python 3.10+** required for development on Windows/macOS/Linux.
+   * **Raspberry Pi (Bookworm 64-bit):** Python **3.11** or **3.13** (3.13 is typical on current Pi OS). Use `build_pi.sh` for the frozen bundle rather than running from source on the cabinet if possible.
    ```bash
-   git clone <your-repository-url>
-   cd <repository-folder>
+   git clone https://github.com/blakeweibling/Whiffle.git
+   cd Whiffle/15.8
    pip install -r requirements.txt
    ```
 
@@ -104,7 +111,19 @@ Whiffle Tracker is a computer vision-based application designed to detect, track
 
 7. **Operator Remote (optional):** The remote starts automatically when `operator_remote_enabled` is `true`. Configure the listening port with `operator_remote_port` and set a non-default PIN with `operator_remote_pin` before using it on your local network.
 
-8. **Platform notes (Raspberry Pi / Linux):** Runs without a camera; uses static frame (`assets/last_frame.png` or `assets/static_fivestar.png`) as fallback. Optional env vars: `WHIFFLE_CAMERA_INDEX`, `WHIFFLE_CAMERA_BACKEND`. Set `WHIFFLE_DEBUG=1` for verbose logging.
+8. **Platform notes (Raspberry Pi / Linux):**
+   * Runs without a camera; uses static frame (`assets/last_frame.png` or `assets/static_fivestar.png`) as fallback.
+   * **Auto-detects Raspberry Pi** and enables a low-power detection profile (half-resolution inference, `imgsz=960`, detection every 4th frame) unless disabled.
+   * **Optional environment variables:**
+
+     | Variable | Purpose |
+     |----------|---------|
+     | `WHIFFLE_CAMERA_INDEX` | Camera device index |
+     | `WHIFFLE_CAMERA_BACKEND` | OpenCV capture backend |
+     | `WHIFFLE_DEBUG=1` | Verbose logging and detection debug overlay |
+     | `WHIFFLE_LOW_POWER=0` | Disable Pi profile (desktop-like detection; much slower) |
+     | `WHIFFLE_PI_IMGSZ` | YOLO letterbox size on Pi (default `960`; try `1280` for edge testing, `800` on Pi 4 if slow) |
+     | `WHIFFLE_PI_DETECTION_INTERVAL` | Run detection every N frames on Pi (default `4`) |
 
 ## How to Run
 
@@ -135,13 +154,42 @@ Security notes:
 * Sessions expire after 30 minutes of inactivity.
 * Failed logins are rate-limited after repeated incorrect PIN attempts.
 
-## Building the Whiffle Folder (for Installer)
+## Building
+
+### Windows (installer)
+
+**Prerequisites at build time:** `.env` in the repo root (Supabase), both YOLO models under `data/`, and full `assets/` / `configs/` / `data/` trees (see `game.spec` `datas`).
 
 ```bash
 pyinstaller game.spec --clean
 ```
 
-Output: `dist/Whiffle/` with `Whiffle.exe` and `_internal/` (all dependencies). Use this entire folder as the "Whiffle" source for `WhiffleSetup.iss`; the installer copies everything including `_internal` and sets read/write permissions on the install dir. See `BUILD_WHIFFLE.md` for size-reduction options and openh264 DLL.
+Output: `dist/Whiffle/` with `Whiffle.exe` and `_internal/` (Python runtime, Torch, Ultralytics, bundled `assets`, `configs`, `data`, and `.env` if present).
+
+**Inno Setup:** `WhiffleSetup.iss` expects a folder named `Whiffle\` next to the script. Before compiling the installer, copy the PyInstaller output:
+
+```powershell
+# From the 15.8 project root (PowerShell)
+Remove-Item -Recurse -Force Whiffle -ErrorAction SilentlyContinue
+Copy-Item -Recurse dist\Whiffle Whiffle
+```
+
+Then compile `WhiffleSetup.iss` in Inno Setup. The installer recursively copies `Whiffle\*` to `{app}` and runs `icacls` so Users can save configs, scores, and zones. Optional: place `openh264-1.8.0-win64.dll` in the project root before PyInstaller if you need that codec bundled.
+
+### Raspberry Pi (standalone bundle)
+
+Build **on the Pi** (PyInstaller cannot cross-compile to aarch64 from Windows):
+
+```bash
+chmod +x build_pi.sh
+./build_pi.sh
+```
+
+Requires `.env`, `data/whiffle_new_best.pt`, and `data/whiffle_new_best_fivestar.pt` in the repo root before building. Output: `dist/Whiffle/Whiffle` plus `_internal/`. Copy the entire `dist/Whiffle/` folder to another matching Pi, or `tar -czf Whiffle-pi.tar.gz -C dist Whiffle`.
+
+Run: `cd dist/Whiffle && ./Whiffle`
+
+See **[RELEASE_NOTES_v15.8.md](RELEASE_NOTES_v15.8.md)** for upgrade notes and env-var reference.
 
 ## Game Controls
 
@@ -167,6 +215,16 @@ python train_yolo_model.py --data data/my_dataset --task segment --classes silve
 ```
 
 Label images with CVAT.ai (YOLO 1.1 for boxes, YOLO Segmentation for polygons), then copy the trained `best.pt` to `data/whiffle_new_best.pt` or `data/whiffle_new_best_fivestar.pt`. See `train_yolo_model.py` for full options.
+
+## Changes in v15.8
+
+See **[RELEASE_NOTES_v15.8.md](RELEASE_NOTES_v15.8.md)** for the full public release notes (comparison to v15.7, Pi build, detection tuning, and upgrade steps).
+
+* **Raspberry Pi bundle:** `build_pi.sh` + `game.linux.spec` produce a copy-and-run `dist/Whiffle/` folder on aarch64 Bookworm (Python 3.11/3.13).
+* **Pi detection profile:** Auto-detects Raspberry Pi; defaults to half-resolution inference, `imgsz=960`, detection every 4th frame; tunable via `WHIFFLE_PI_IMGSZ` and `WHIFFLE_PI_DETECTION_INTERVAL`.
+* **Edge / in-hole detection:** Improved YOLO pipeline (near-zone bypass, HSV gates, temporal ghost filter, half-red relabeling).
+* **Frozen app paths:** `path_utils.py` bootstraps models and writable data beside the executable on Windows and Linux bundles.
+* **Packaging:** Expanded PyInstaller hiddenimports; conditional `.env` on Windows; Triton excluded on Pi; `requirements.txt` updated for Python 3.13 / ARM wheels.
 
 ## Changes in v15.7
 

@@ -24,7 +24,7 @@ a = Analysis(
      'ui_elements.py', 'cleanup_utils.py', 'achievement.py', 'player.py', 'game_types.py',
      'game_state_utils.py', 'game_state_helpers.py', 'interaction_utils.py', 'youtube_utils.py',
      'google_drive_utils.py', 'screenshot_utils.py', 'replay_manager.py', 'versus_mode.py',
-     'loading_screen.py', 'xp_system.py', 'operator_remote.py'],
+     'loading_screen.py', 'xp_system.py', 'operator_remote.py', 'path_utils.py'],
     pathex=[],
     binaries=_binaries,
     datas=_datas,

@@ -1,4 +1,4 @@
-# Whiffle Tracker — v15.7
+# Whiffle Tracker — v15.8
 
 ## Description
 
@@ -152,6 +152,16 @@ Scripts are provided to extract frames from video, build a YOLO dataset, and tra
   python train_yolo_model.py --data data/my_dataset --task segment --classes silver gold --epochs 100 --device 0
 
 Label images with CVAT.ai (YOLO 1.1 for boxes, YOLO Segmentation for polygons), then copy the trained best.pt to data/whiffle_new_best.pt or data/whiffle_new_best_fivestar.pt. See train_yolo_model.py for full options.
+
+## Changes in v15.8
+
+See RELEASE_NOTES_v15.8.md for full release notes (vs v15.7 on GitHub).
+
+* Raspberry Pi bundle: build_pi.sh + game.linux.spec for aarch64 Bookworm.
+* Pi detection profile: Auto Pi detection; imgsz=960 default; WHIFFLE_PI_IMGSZ / WHIFFLE_PI_DETECTION_INTERVAL overrides.
+* Edge / in-hole detection: Improved detection pipeline (near-zone bypass, HSV gates, ghost filter).
+* Frozen paths: path_utils.py for PyInstaller bundles on Windows and Linux.
+* Packaging / deps: PyInstaller hiddenimports, Python 3.13 ARM wheels, requirements cleanup.
 
 ## Changes in v15.7
 
